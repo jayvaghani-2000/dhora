@@ -8,6 +8,13 @@
       "when": 1707136220536,
       "tag": "0000_majestic_blue_blade",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1707149583640,
+      "tag": "0001_motionless_paper_doll",
+      "breakpoints": true
     }
   ]
 }
