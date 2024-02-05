@@ -15,7 +15,8 @@
     "migration:push": "node -r esbuild-register src/db/migrate.ts",
     "migrate": "drizzle-kit generate:pg --schema=./src/db/schema.ts && node -r esbuild-register src/db/migrate.ts",
     "db:seed": "node -r esbuild-register src/db/seed.ts",
-    "docker-build": "docker build -t app ."
+    "docker-build": "docker build -t app .",
+    "studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
