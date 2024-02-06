@@ -1,0 +1,75 @@
+variables:
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  DOCKER_DRIVER: overlay2
+  GIT_SSL_NO_VERIFY: "true"
+
+stages:
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  image: docker:latest
+  stage: build
+  environment:
+    name: stage
+  except:
+    - production
+  services:
+    - docker:dind
+  before_script:
+    - until docker info; do sleep 1; done
+  script:
+    - cat $ENV > ./.env
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - >
+      docker build --build-arg NODE_ENV="stage" -t $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+
+deploy:
+  image: appscode/kubectl:v1.22.5
+  stage: deploy
+  environment:
+    name: stage
+  only:
+    - main
+  script:
+    - echo $KUBE_CONFIG | base64 -d > ./config
+    - kubectl set image deploy/app app=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA --kubeconfig ./config -n dhora-stage
+    - kubectl rollout status deploy/app --kubeconfig ./config -n dhora-stage
+
+production:build:
+  image: docker:latest
+  stage: build
+  environment:
+    name: production
+  only:
+    - production
+  services:
+    - docker:dind
+  before_script:
+    - until docker info; do sleep 1; done
+  script:
+    - cat $ENV > ./.env
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - >
+      docker build --build-arg NODE_ENV="production" -t $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+
+production:deploy:
+  image: appscode/kubectl:v1.22.5
+  stage: deploy
+  environment:
+    name: production
+  only:
+    - production
+  script:
+    - echo $KUBE_CONFIG | base64 -d > ./config
+    - kubectl set image deploy/app app=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA --kubeconfig ./config -n dhora
+    - kubectl rollout status deploy/app --kubeconfig ./config -n dhora
