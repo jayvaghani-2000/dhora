@@ -23,19 +23,19 @@ export const business = pgTable("business", {
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  firstName: text("first_name"),
-  lastName: text("last_name"),
-  email: varchar("email", { length: 256 }),
+  first_name: text("first_name"),
+  last_name: text("last_name"),
+  email: varchar("email", { length: 256 }).unique(),
   username: varchar("username", { length: 256 }),
   password: text("password"),
-  businessId: bigint("business_id", { mode: "bigint" }).references(
-    () => business.id
-  ),
+  business_id: bigint("business_id", { mode: "bigint" })
+    .references(() => business.id)
+    .unique(),
 });
 
 export const businessRelations = relations(business, ({ one }) => ({
   user: one(users, {
     fields: [business.id],
-    references: [users.businessId],
+    references: [users.business_id],
   }),
 }));

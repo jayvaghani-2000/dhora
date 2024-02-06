@@ -15,15 +15,9 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { HTMLProps } from "react";
+import { LoginUserSchema } from "@/app/api/models/authenticate/schema";
 
-const formSchema = z.object({
-  email: z.string().email({
-    message: "Provide valid email.",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-});
+const formSchema = LoginUserSchema;
 
 export function LoginForm() {
   const router = useRouter();

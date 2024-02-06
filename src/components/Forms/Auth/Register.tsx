@@ -1,3 +1,4 @@
+import { RegisterUserSchema } from "@/app/api/models/authenticate/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -8,40 +9,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { HTMLProps } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { HTMLProps } from "react";
-import { cn } from "@/lib/utils";
 
-const formSchema = z
-  .object({
-    first_name: z.string().min(3, {
-      message: "First name must be at least 3 characters.",
-    }),
-    last_name: z.string().min(3, {
-      message: "Last name must be at least 3 characters.",
-    }),
-    email: z.string().email({
-      message: "Provide valid email.",
-    }),
-    username: z.string().min(6, {
-      message: "User name must be at least 6 characters.",
-    }),
-    password: z.string().min(6, {
-      message: "Password must be at least 6 characters.",
-    }),
-    confirm_password: z.string().min(6, {
-      message: "Password must match.",
-    }),
-  })
-  .refine(data => data.password === data.confirm_password, {
-    message: "Passwords do not match.",
-    path: ["confirm_password"],
-  });
+const formSchema = RegisterUserSchema.extend({
+  confirm_password: z.string().min(6, {
+    message: "Password must match.",
+  }),
+}).refine(data => data.password === data.confirm_password, {
+  message: "Passwords do not match.",
+  path: ["confirm_password"],
+});
 
 export function RegisterForm() {
   const router = useRouter();
