@@ -1,0 +1,35 @@
+{
+  "files.autoSave": "afterDelay",
+  "workbench.iconTheme": "a-file-icon-vscode",
+  "files.autoSaveDelay": 10000,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "eslint.lintTask.enable": "explicit",
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "editor.action.showHover": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.formatOnPaste": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "workbench.colorCustomizations": {
+    "editorUnnecessaryCode.border": "#fc9985"
+  },
+  "editor.guides.bracketPairs": "active",
+  "eslint.validate": ["javascript", "typescript"],
+  "cSpell.words": ["millis", "nextval", "plpgsql"]
+}

@@ -1,4 +1,4 @@
-# NextJS 14 + ShadCN UI + Redux + Docker
+# Dhora
 
 ## Prerequisites
 
@@ -18,8 +18,8 @@ Follow these steps to set up the project:
 1. **Clone the repository:**
 
    ```bash
-   git clone git@gitlab.com:siddharth1708/test-task-nextjs14-shadcn.git
-   cd test-task-nextjs14-shadcn
+   git clone git@gitlab.zerosoftapps.com:dhora.app/dhora.app.git
+   cd dhora.app
    ```
 
 2. **Install dependencies:**
@@ -68,4 +68,16 @@ yarn studio
 
 ```bash
 yarn docker-build
+```
+
+To build app
+
+```bash
+yarn build
+```
+
+To run build app
+
+```bash
+yarn start
 ```

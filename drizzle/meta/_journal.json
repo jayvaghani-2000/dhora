@@ -15,6 +15,13 @@
       "when": 1707149583640,
       "tag": "0001_motionless_paper_doll",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1707205942376,
+      "tag": "0002_ancient_lifeguard",
+      "breakpoints": true
     }
   ]
 }
