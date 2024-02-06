@@ -1,3 +1,4 @@
+import { LoginUserSchema } from "@/app/api/models/authenticate/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,18 +10,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { HTMLProps, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { HTMLProps } from "react";
-import { LoginUserSchema } from "@/app/api/models/authenticate/schema";
 
 const formSchema = LoginUserSchema;
 
 export function LoginForm() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,7 +32,7 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Perform client-side validation if needed
-
+    setLoading(true);
     const result = await signIn("credentials", {
       redirect: false,
       email: values.email,
@@ -39,11 +40,10 @@ export function LoginForm() {
     });
 
     if (result?.error) {
-      // Handle login error
     } else {
-      // Redirect to the desired page after successful login
       router.push("/");
     }
+    setLoading(false);
   }
 
   const InputClass: HTMLProps<HTMLElement>["className"] =
@@ -95,6 +95,7 @@ export function LoginForm() {
             <Button
               className="w-full md:col-span-2 bg-white text-black hover:bg-white"
               type="submit"
+              disabled={loading}
             >
               Login
             </Button>

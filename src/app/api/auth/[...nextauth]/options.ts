@@ -1,6 +1,6 @@
+import axios from "axios";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 
 export const options: NextAuthOptions = {
   pages: {
@@ -11,26 +11,29 @@ export const options: NextAuthOptions = {
     newUser: "/auth/register",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "john-doe" },
+        email: { label: "Email", type: "email", placeholder: "john-doe" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const user = { id: "42", name: "Jay", password: "Test@123" };
+        try {
+          const res = await axios.post(
+            "http://localhost:3000/api/authenticate/signin",
+            {
+              email: credentials?.email,
+              password: credentials?.password,
+            }
+          );
 
-        if (
-          credentials?.username === user.name &&
-          credentials?.password === user.password
-        ) {
-          return user;
+          if (res.data.data) {
+            return res.data.data;
+          }
+          return null;
+        } catch (err) {
+          return null;
         }
-        return null;
       },
     }),
   ],

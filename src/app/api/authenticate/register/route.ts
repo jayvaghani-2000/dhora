@@ -36,7 +36,7 @@ async function handler(req: Request) {
       return NextResponse.json({ error: errorObj }, { status: 400 });
     }
     return NextResponse.json(
-      { error: "Something went wrong" },
+      { error: "Something went wrong", success: false },
       { status: 500 }
     );
   }

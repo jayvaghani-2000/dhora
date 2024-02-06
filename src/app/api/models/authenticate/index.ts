@@ -32,5 +32,5 @@ export async function authenticateUser(data: unknown) {
   ) {
     return user[0];
   }
-  return false;
+  return null;
 }
