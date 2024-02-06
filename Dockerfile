@@ -6,11 +6,12 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
-RUN npm prune --production
 
 FROM base AS release
 COPY package.json .env ./
-COPY --from=build /usr/src/app/node_modules ./node_modules
+
+RUN yarn install --frozen-lockfile --production
+
 COPY --from=build /usr/src/app/.next ./.next
 COPY --from=build /usr/src/app/public ./public
 
