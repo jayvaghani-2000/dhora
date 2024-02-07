@@ -1,8 +1,10 @@
+"use client";
 import { RegisterUserSchema } from "@/app/api/models/authenticate/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -11,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RadioGroup } from "@radix-ui/react-radio-group";
 import axios, { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -18,11 +21,26 @@ import { useRouter } from "next/navigation";
 import { HTMLProps, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { assets } from "@/assets";
+import Image from "next/image";
 const formSchema = RegisterUserSchema.extend({
   confirm_password: z.string().min(6, {
     message: "Password must match.",
   }),
+  is_bussiness_user: z.enum(["no", "yes"], {
+    required_error: "You need to select a user type.",
+  }),
+  business_category: z.string().optional(),
+  business_name: z.string().optional(),
+  "t&c": z.string(),
 }).refine(data => data.password === data.confirm_password, {
   message: "Passwords do not match.",
   path: ["confirm_password"],
@@ -42,6 +60,7 @@ export function RegisterForm() {
       username: "",
       email: "",
       password: "",
+      is_bussiness_user: "no",
     },
   });
 
@@ -76,7 +95,6 @@ export function RegisterForm() {
   }
   const InputClass: HTMLProps<HTMLElement>["className"] =
     "bg-black text-white border-none outline-none focus:outline-none focus:border-none";
-
   return (
     <main className="after:content-[''] after:absolute after:inset-0 after:bg-body-bg after:-z-10 relative min-h-screen min-w-screen flex justify-center items-center  bg-mix-gradient ">
       <section className="max-w-[100%] p-4 w-[600px] text-white">
@@ -91,7 +109,7 @@ export function RegisterForm() {
           )}
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid md:grid-cols-2 gap-4"
+            className="grid md:grid-cols-2  gap-4"
           >
             <FormField
               control={form.control}
@@ -102,7 +120,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert First name"
+                      placeholder=" First name"
                       {...field}
                     />
                   </FormControl>
@@ -119,7 +137,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Last name"
+                      placeholder=" Last name"
                       {...field}
                     />
                   </FormControl>
@@ -136,7 +154,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={cn([InputClass])}
-                      placeholder="Insert Email"
+                      placeholder=" Email"
                       {...field}
                     />
                   </FormControl>
@@ -153,7 +171,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Username"
+                      placeholder=" Username"
                       {...field}
                     />
                   </FormControl>
@@ -170,7 +188,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Password"
+                      placeholder=" Password"
                       type="password"
                       {...field}
                     />
@@ -197,9 +215,151 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
-            <p className="text-sm my-2 font-semibold md:col-span-2">
-              By signing up, you agree to our Terms & Privacy Policy
-            </p>
+
+            <FormField
+              control={form.control}
+              name="is_bussiness_user"
+              render={({ field: { onChange, value } }) => (
+                <FormItem className="space-y-3 col-span-2">
+                  <FormControl>
+                    <RadioGroup
+                      onChange={e => onChange(e)}
+                      onValueChange={onChange}
+                      defaultValue={value}
+                      className="flex flex-row gap-3"
+                    >
+                      <FormItem
+                        className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
+                        onClick={() => onChange("no")}
+                      >
+                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                          <Image
+                            src={assets.svg.AVATAR}
+                            alt="avatar"
+                            width={50}
+                            height={35}
+                          />
+                          <div className="relative  w-full">
+                            <input
+                              type="radio"
+                              value={"no"}
+                              checked={value === "no"}
+                              className="absolute right-0 accent-white "
+                              onClick={() => onChange("no")}
+                            />
+
+                            <FormLabel className="font-normal">
+                              Regular User
+                            </FormLabel>
+                            <FormDescription className="text-xs my-1">
+                              For users that are not signing up as a business or
+                              service provider
+                            </FormDescription>
+                          </div>
+                        </div>
+                      </FormItem>
+                      <FormItem
+                        onClick={() => onChange("yes")}
+                        className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
+                      >
+                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                          <Image
+                            src={assets.svg.AVATAR}
+                            alt="avatar"
+                            width={50}
+                            height={35}
+                          />
+                          <div className="relative  w-full">
+                            <input
+                              type="radio"
+                              value={"yes"}
+                              checked={value === "yes"}
+                              className="absolute right-0 accent-white"
+                              onChange={() => onChange("yes")}
+                            />
+                            <FormLabel className="font-normal">
+                              Business User
+                            </FormLabel>
+                            <FormDescription className="text-xs my-1">
+                              For users that are signing up as a business or
+                              service provider
+                            </FormDescription>
+                          </div>
+                        </div>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.getValues("is_bussiness_user") === "yes" && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="business_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          className={InputClass}
+                          placeholder="Business Name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="business_category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="it">IT</SelectItem>
+                          <SelectItem value="finance">Finance</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+            <FormField
+              control={form.control}
+              name="t&c"
+              render={({ field }) => (
+                <FormItem className="w-full flex flex-row items-start col-span-2 space-x-3 space-y-0 rounded-md  py-4 ">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value as any}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none w-full text-sm my-2 font-semibol">
+                    <FormLabel>
+                      By signing up, you agree to our Terms & Privacy Policy
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+
             <Button
               className="w-full md:col-span-2 bg-white text-black hover:bg-white"
               type="submit"
