@@ -26,11 +26,15 @@ export async function authenticateUser(data: unknown) {
     .from(users)
     .where(eq(users.email, payload.email));
 
+  if (user.length === 0) {
+    throw new Error("Invalid email");
+  }
+
   if (
     user.length > 0 &&
     (await bcrypt.compare(payload.password, user[0].password!))
   ) {
     return user[0];
   }
-  return null;
+  throw new Error("Invalid password");
 }

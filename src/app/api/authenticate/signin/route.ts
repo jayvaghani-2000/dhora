@@ -34,10 +34,20 @@ async function handler(req: Request) {
   } catch (err) {
     if (err instanceof ZodError) {
       const errorObj = handleErrorMsg(err);
-      return NextResponse.json({ error: errorObj }, { status: 400 });
+      return NextResponse.json(
+        { error: errorObj.message, success: false },
+        { status: 400 }
+      );
+    }
+
+    if (err instanceof Error) {
+      return NextResponse.json(
+        { error: err.message, success: false },
+        { status: 404 }
+      );
     }
     return NextResponse.json(
-      { error: "Something went wrong" },
+      { error: "Something went wrong", success: false },
       { status: 500 }
     );
   }

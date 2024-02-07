@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -26,13 +26,14 @@ export const options: NextAuthOptions = {
               password: credentials?.password,
             }
           );
-
           if (res.data.data) {
             return res.data.data;
           }
-          return null;
         } catch (err) {
-          return null;
+          if (err instanceof AxiosError) {
+            throw new Error(err.response?.data.error);
+          }
+          throw new Error("Something went wrong!");
         }
       },
     }),

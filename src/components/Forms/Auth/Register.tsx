@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -31,6 +31,7 @@ const formSchema = RegisterUserSchema.extend({
 export function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,26 +47,32 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    const registeredUser = await axios.post("/api/authenticate/register", {
-      first_name: values.first_name,
-      last_name: values.last_name,
-      username: values.username,
-      email: values.email,
-      password: values.password,
-    });
 
-    if (registeredUser.data.success) {
-      const result = await signIn("credentials", {
-        redirect: false,
+    try {
+      const registeredUser = await axios.post("/api/authenticate/register", {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        username: values.username,
         email: values.email,
         password: values.password,
       });
-      if (result?.error) {
-      } else {
+
+      if (registeredUser.data.success) {
+        await signIn("credentials", {
+          redirect: false,
+          email: values.email,
+          password: values.password,
+        });
+
         router.push("/");
       }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setError(err.response?.data.error);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
   const InputClass: HTMLProps<HTMLElement>["className"] =
     "bg-black text-white border-none outline-none focus:outline-none focus:border-none";
@@ -77,6 +84,11 @@ export function RegisterForm() {
           Join us today!
         </p>
         <Form {...form}>
+          {!!error && (
+            <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
+              {error}
+            </p>
+          )}
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="grid md:grid-cols-2 gap-4"

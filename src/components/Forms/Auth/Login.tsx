@@ -22,6 +22,7 @@ const formSchema = LoginUserSchema;
 export function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,19 +32,23 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Perform client-side validation if needed
     setLoading(true);
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
 
-    if (result?.error) {
-    } else {
-      router.push("/");
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        router.push("/");
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   const InputClass: HTMLProps<HTMLElement>["className"] =
@@ -56,6 +61,11 @@ export function LoginForm() {
           Welcome back!
         </p>
         <Form {...form}>
+          {!!error && (
+            <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
+              {error}
+            </p>
+          )}
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
@@ -84,7 +94,7 @@ export function LoginForm() {
                     <Input
                       className={InputClass}
                       placeholder="Insert Password"
-                      type="  password"
+                      type="password"
                       {...field}
                     />
                   </FormControl>
