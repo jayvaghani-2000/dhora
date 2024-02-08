@@ -4,11 +4,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 export const options: NextAuthOptions = {
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/login",
     signOut: "/auth/signout",
     error: "/auth/error",
     verifyRequest: "/auth/verify-request",
-    newUser: "/auth/register",
+    newUser: "/register",
   },
   providers: [
     CredentialsProvider({
@@ -20,7 +20,7 @@ export const options: NextAuthOptions = {
       async authorize(credentials) {
         try {
           const res = await axios.post(
-            "http://localhost:3000/api/authenticate/signin",
+            `${process.env.NEXT_APP_URL}/api/authenticate/signin`,
             {
               email: credentials?.email,
               password: credentials?.password,

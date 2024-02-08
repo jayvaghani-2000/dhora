@@ -1,6 +1,8 @@
 "use client";
 import { RegisterUserSchema } from "@/app/api/models/authenticate/schema";
+import { assets } from "@/assets";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -11,16 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RadioGroup } from "@radix-ui/react-radio-group";
-import axios, { AxiosError } from "axios";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { HTMLProps, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   Select,
   SelectContent,
@@ -28,9 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { assets } from "@/assets";
+import { businessTypeEnum } from "@/db/schema";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RadioGroup } from "@radix-ui/react-radio-group";
+import axios, { AxiosError } from "axios";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { HTMLProps, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 const formSchema = RegisterUserSchema.extend({
   confirm_password: z.string().min(6, {
     message: "Password must match.",
@@ -50,6 +52,8 @@ export function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const businessTypeOptions = Object.values(businessTypeEnum)[1] as string[];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -93,8 +97,10 @@ export function RegisterForm() {
       setLoading(false);
     }
   }
+
   const InputClass: HTMLProps<HTMLElement>["className"] =
     "bg-black text-white border-none outline-none focus:outline-none focus:border-none";
+
   return (
     <main className="after:content-[''] after:absolute after:inset-0 after:bg-body-bg after:-z-10 relative min-h-screen min-w-screen flex justify-center items-center  bg-mix-gradient ">
       <section className="max-w-[100%] p-4 w-[600px] text-white">
@@ -325,12 +331,19 @@ export function RegisterForm() {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select Category" />
+                            <SelectValue
+                              placeholder={
+                                <span className="text-muted-foreground ">
+                                  Select Category
+                                </span>
+                              }
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="it">IT</SelectItem>
-                          <SelectItem value="finance">Finance</SelectItem>
+                          {businessTypeOptions.map(i => (
+                            <SelectItem value={i}>{i}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
 

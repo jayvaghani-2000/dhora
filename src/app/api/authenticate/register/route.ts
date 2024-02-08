@@ -40,12 +40,21 @@ async function handler(req: Request) {
       );
     } else if (err instanceof DatabaseError) {
       const errorObj = handleErrorMsg(err);
+
       if (
         errorObj.message === DB_ERROR_ROUTINE._bt_check_unique &&
         errorObj.constraint === "users_email_unique"
       ) {
         return NextResponse.json(
           { error: "The email is already registered", success: false },
+          { status: 404 }
+        );
+      } else if (
+        errorObj.message === DB_ERROR_ROUTINE._bt_check_unique &&
+        errorObj.constraint === "users_username_unique"
+      ) {
+        return NextResponse.json(
+          { error: "Username already taken", success: false },
           { status: 404 }
         );
       } else {

@@ -76,7 +76,7 @@ export function LoginForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Email"
+                      placeholder="Email"
                       {...field}
                     />
                   </FormControl>
@@ -93,7 +93,7 @@ export function LoginForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Password"
+                      placeholder="Password"
                       type="password"
                       {...field}
                     />
@@ -114,7 +114,7 @@ export function LoginForm() {
 
         <div className="mt-16 mb-4 gap-1 flex justify-center">
           Don&apos;t have account?
-          <Link href="/auth/register">{` Register`}</Link>
+          <Link href="/register">{` Register`}</Link>
         </div>
       </section>
     </main>

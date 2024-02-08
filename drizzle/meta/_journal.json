@@ -29,6 +29,27 @@
       "when": 1707215558753,
       "tag": "0003_concerned_squadron_supreme",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1707373060351,
+      "tag": "0004_graceful_golden_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1707373108200,
+      "tag": "0005_famous_mimic",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1707375914040,
+      "tag": "0006_safe_black_tom",
+      "breakpoints": true
     }
   ]
 }
