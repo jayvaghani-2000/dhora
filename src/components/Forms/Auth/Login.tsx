@@ -1,4 +1,4 @@
-import { LoginUserSchema } from "@/app/api/models/authenticate/schema";
+import { LoginUserSchema } from "@/app/api/auth/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,

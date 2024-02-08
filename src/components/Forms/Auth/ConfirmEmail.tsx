@@ -38,7 +38,7 @@ export function ConfirmEmailForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      await axios.post("/api/authenticate/confirm-email", values);
+      await axios.post("/api/auth/confirm-email", values);
     } catch (err) {
       if (err instanceof AxiosError) {
         setError(err.response?.data.error);
