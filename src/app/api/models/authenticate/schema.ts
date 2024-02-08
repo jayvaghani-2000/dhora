@@ -1,3 +1,4 @@
+import { userTypeEnum } from "@/db/schema";
 import { z } from "zod";
 
 export const RegisterUserSchema = z.object({
@@ -16,6 +17,7 @@ export const RegisterUserSchema = z.object({
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
   }),
+  user_type: z.enum(Object.values(userTypeEnum)[1]),
 });
 
 export type RegisterUser = z.infer<typeof RegisterUserSchema>;
@@ -30,3 +32,27 @@ export const LoginUserSchema = z.object({
 });
 
 export type LoginUser = z.infer<typeof LoginUserSchema>;
+
+export const GetUserSchema = z.object({
+  email: z.string().email({
+    message: "Provide valid email.",
+  }),
+});
+
+export type GetUser = z.infer<typeof GetUserSchema>;
+
+export const ConfirmEmailSchema = z.object({
+  email: z.string().email({
+    message: "Provide valid email.",
+  }),
+  verification_code: z
+    .string()
+    .min(6, {
+      message: "Code must be of 6 characters.",
+    })
+    .max(6, {
+      message: "Code must be of 6 characters.",
+    }),
+});
+
+export type ConfirmEmail = z.infer<typeof ConfirmEmailSchema>;

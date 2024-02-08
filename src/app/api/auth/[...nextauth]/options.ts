@@ -1,3 +1,4 @@
+import { config } from "@/config";
 import axios, { AxiosError } from "axios";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -20,7 +21,7 @@ export const options: NextAuthOptions = {
       async authorize(credentials) {
         try {
           const res = await axios.post(
-            `${process.env.NEXT_APP_URL}/api/authenticate/signin`,
+            `${config.env.NEXT_APP_URL}/api/authenticate/signin`,
             {
               email: credentials?.email,
               password: credentials?.password,
@@ -38,4 +39,13 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session }) {
+      if (session.user) {
+        // @ts-ignore
+        session.user.verified = "My name is khan";
+      }
+      return Promise.resolve(session);
+    },
+  },
 };
