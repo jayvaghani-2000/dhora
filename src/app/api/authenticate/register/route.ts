@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { generateOtp } from "../../utils/generateOtp";
 import { sendEmail } from "../../utils/sendEmail";
+import { stripeInstance } from "../../utils/stripe";
 import { RegisterUserSchema } from "../schema";
 async function handler(req: Request) {
   try {
@@ -17,12 +18,18 @@ async function handler(req: Request) {
       const hashedPassword = await bcrypt.hash(payload.password, 10);
       const hashedVerificationCode = await bcrypt.hash(verification_code, 10);
 
+      const customer = await stripeInstance.customers.create({
+        email: payload.email,
+        name: `${payload.first_name} ${payload.last_name}`,
+      });
+
       const user = await db
         .insert(users)
         .values({
           ...rest,
           password: hashedPassword,
           verification_code: hashedVerificationCode,
+          stripe_id: customer.id,
         })
         .returning();
 

@@ -8,6 +8,7 @@ const env = createEnv({
     NEXTAUTH_SECRET: z.string(),
     NEXT_APP_URL: z.string(),
     SENDGRID_API_KEY: z.string(),
+    STRIPE_SECRET_KEY: z.string(),
   },
   runtimeEnv: process.env,
 });

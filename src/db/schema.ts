@@ -28,6 +28,7 @@ export const users = pgTable("users", {
   last_name: text("last_name"),
   email: varchar("email", { length: 256 }).unique(),
   username: varchar("username", { length: 256 }).unique(),
+  stripe_id: varchar("stripe_id", { length: 256 }).unique(),
   password: text("password"),
   verification_code: text("verification_code"),
   verified: boolean("verified").default(false),
