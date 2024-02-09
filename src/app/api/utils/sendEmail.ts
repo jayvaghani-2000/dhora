@@ -1,5 +1,5 @@
 import { config } from "@/config";
-import { mailClient } from "./sendgrid";
+import { mailClient } from "../../../lib/sendgrid";
 
 export async function sendEmail(
   title: string,
@@ -177,9 +177,9 @@ export async function sendEmail(
                                             <tr>
                                             <td style="width: 54px">
                                                 <a
-                                                href="${config.env.NEXT_APP_URL}"
+                                                href="${config.env.NEXTAUTH_URL}"
                                                 target="_blank"
-                                                ><img height: 54px width: 54px src="${config.env.NEXT_APP_URL}/favicon.svg"
+                                                ><img height: 54px width: 54px src="${config.env.NEXTAUTH_URL}/favicon.svg"
                                                 /></a>
                                             </td>
                                             </tr>
@@ -645,7 +645,7 @@ export async function sendEmail(
                                             "
                                             valign="middle">
                                             <a
-                                                href="${config.env.NEXT_APP_URL}"
+                                                href="${config.env.NEXTAUTH_URL}"
                                                 style="
                                                 display: inline-block;
                                                 background: none;

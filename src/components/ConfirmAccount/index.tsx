@@ -51,15 +51,16 @@ export function ConfirmAccount() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      await axios.post("/api/authenticate/confirm-email", values);
-      dispatch(
-        setAuthData({
-          profile: { ...profile!, verified: true },
-        })
-      );
+      await axios.post("/api/authenticate/confirm-email", values).then(() => {
+        dispatch(
+          setAuthData({
+            profile: { ...profile!, verified: true },
+          })
+        );
+      });
     } catch (err) {
       if (err instanceof AxiosError) {
-        setError(err.response?.data.error);
+        setError("Invalid OTP");
       }
     } finally {
       setLoading(false);

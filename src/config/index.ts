@@ -6,7 +6,7 @@ const env = createEnv({
     NODE_ENV: z.enum(["development", "production"]),
     DATABASE_URL: z.string(),
     NEXTAUTH_SECRET: z.string(),
-    NEXT_APP_URL: z.string(),
+    NEXTAUTH_URL: z.string(),
     SENDGRID_API_KEY: z.string(),
     STRIPE_SECRET_KEY: z.string(),
   },

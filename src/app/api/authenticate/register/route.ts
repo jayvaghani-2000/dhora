@@ -8,9 +8,9 @@ import {
 } from "@/db/schema";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
+import { stripe } from "../../../../lib/stripe";
 import { generateOtp } from "../../utils/generateOtp";
 import { sendEmail } from "../../utils/sendEmail";
-import { stripe } from "../../utils/stripe";
 async function handler(req: Request) {
   try {
     const body = await req.json();
