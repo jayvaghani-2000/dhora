@@ -9,6 +9,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+
 export const businessTypeEnum = pgEnum("businessType", [
   "Event Planner",
   "Venue",
@@ -21,37 +23,63 @@ export const businessTypeEnum = pgEnum("businessType", [
 ]);
 
 export const users = pgTable("users", {
-  id: bigint("id", { mode: "bigint" })
+  id: bigint("id", { mode: "number" })
     .primaryKey()
     .default(sql`public.id_generator()`),
-  first_name: text("first_name"),
-  last_name: text("last_name"),
-  email: varchar("email", { length: 256 }).unique(),
-  username: varchar("username", { length: 256 }).unique(),
-  stripe_id: varchar("stripe_id", { length: 256 }).unique(),
-  password: text("password"),
+  first_name: text("first_name").notNull(),
+  last_name: text("last_name").notNull(),
+  email: varchar("email", { length: 256 }).unique().notNull(),
+  username: varchar("username", { length: 256 }).unique().notNull(),
+  password: text("password").notNull(),
   verification_code: text("verification_code"),
   verified: boolean("verified").default(false),
-  created_at: timestamp("created_at").defaultNow(),
-  updated_at: timestamp("updated_at").defaultNow(),
+  stripe_id: text("stripe_id").notNull(),
+  business_id: bigint("business_id", { mode: "number" }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const business = pgTable("business", {
-  id: bigint("id", { mode: "bigint" })
-    .primaryKey()
-    .default(sql`public.id_generator()`),
-  business_type: businessTypeEnum("type"),
-  name: text("name"),
-  created_at: timestamp("created_at").defaultNow(),
-  updated_at: timestamp("updated_at").defaultNow(),
-  user_id: bigint("user_id", { mode: "bigint" })
-    .references(() => users.id, { onDelete: "cascade" })
-    .notNull(),
-});
-
-export const businessRelations = relations(business, ({ one }) => ({
-  user: one(users, {
-    fields: [business.user_id],
-    references: [users.id],
+export const usersRelations = relations(users, ({ one }) => ({
+  business: one(businesses, {
+    fields: [users.business_id],
+    references: [businesses.id],
   }),
 }));
+
+export const businesses = pgTable("business", {
+  id: bigint("id", { mode: "number" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  type: businessTypeEnum("type").notNull(),
+  name: text("name").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const businessRelations = relations(businesses, ({ many }) => ({
+  users: many(users),
+}));
+
+export const insertUserSchema = createInsertSchema(users).omit({
+  verification_code: true,
+  stripe_id: true,
+});
+
+export const selectUserSchema = createSelectSchema(users);
+
+export const loginUserSchema = createSelectSchema(users).pick({
+  username: true,
+  password: true,
+});
+
+export const mailVerificationUserSchema = createSelectSchema(users).pick({
+  verification_code: true,
+});
+
+export const meUserSchema = createSelectSchema(users).pick({
+  email: true,
+});
+
+export const insertBusinessSchema = createInsertSchema(businesses);
+
+export const selectBusinessSchema = createSelectSchema(businesses);

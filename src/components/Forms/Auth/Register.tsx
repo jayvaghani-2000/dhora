@@ -1,5 +1,4 @@
 "use client";
-import { RegisterUserSchema } from "@/app/api/authenticate/schema";
 import { useAppDispatch } from "@/app/store";
 import { setAuthData } from "@/app/store/authentication";
 import { assets } from "@/assets";
@@ -35,12 +34,31 @@ import { HTMLProps, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const formSchema = RegisterUserSchema.extend({
-  confirm_password: z.string().min(6, {
-    message: "Password must match.",
-  }),
-  "t&c": z.boolean(),
-})
+const formSchema = z
+  .object({
+    first_name: z.string().min(3, {
+      message: "First name must be at least 3 characters.",
+    }),
+    last_name: z.string().min(3, {
+      message: "Last name must be at least 3 characters.",
+    }),
+    email: z.string().email({
+      message: "Provide valid email.",
+    }),
+    username: z.string().min(6, {
+      message: "User name must be at least 6 characters.",
+    }),
+    password: z.string().min(6, {
+      message: "Password must be at least 6 characters.",
+    }),
+    user_type: z.enum(["regular_user", "business_user"]),
+    business_type: z.enum(businessTypeEnum.enumValues).optional(),
+    business_name: z.string().optional().optional(),
+    confirm_password: z.string().min(6, {
+      message: "Password must match.",
+    }),
+    "t&c": z.boolean(),
+  })
   .refine(data => data.password === data.confirm_password, {
     message: "Passwords do not match.",
     path: ["confirm_password"],
@@ -98,7 +116,7 @@ export function RegisterForm() {
       if (registeredUser.data.success) {
         await signIn("credentials", {
           redirect: false,
-          email: values.email,
+          username: values.username,
           password: values.password,
         });
 

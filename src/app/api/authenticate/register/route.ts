@@ -1,35 +1,47 @@
 import { errorHandler } from "@/common/api/error";
 import { db } from "@/db";
-import { business, users } from "@/db/schema";
+import {
+  businesses,
+  insertBusinessSchema,
+  insertUserSchema,
+  users,
+} from "@/db/schema";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { generateOtp } from "../../utils/generateOtp";
 import { sendEmail } from "../../utils/sendEmail";
-import { stripeInstance } from "../../utils/stripe";
-import { RegisterUserSchema } from "../schema";
+import { stripe } from "../../utils/stripe";
 async function handler(req: Request) {
   try {
     const body = await req.json();
     if (req.method === "POST") {
-      const payload = RegisterUserSchema.parse(body);
-      const { business_name, business_type, user_type, ...rest } = payload;
+      const userPayload = insertUserSchema.parse(body);
+      const businessPayload = body.business
+        ? insertBusinessSchema.parse(body.business)
+        : null;
+      const payload = insertUserSchema.parse(body);
       const verification_code = generateOtp();
 
       const hashedPassword = await bcrypt.hash(payload.password, 10);
       const hashedVerificationCode = await bcrypt.hash(verification_code, 10);
 
-      const customer = await stripeInstance.customers.create({
-        email: payload.email,
-        name: `${payload.first_name} ${payload.last_name}`,
+      const stripeAccount = await stripe.customers.create({
+        email: userPayload.email,
+        name: `${userPayload.first_name} ${userPayload.last_name}`,
       });
+
+      const business = businessPayload
+        ? await db.insert(businesses).values(businessPayload).returning()
+        : null;
 
       const user = await db
         .insert(users)
         .values({
-          ...rest,
+          ...userPayload,
           password: hashedPassword,
           verification_code: hashedVerificationCode,
-          stripe_id: customer.id,
+          business_id: business ? business[0].id : null,
+          stripe_id: stripeAccount.id,
         })
         .returning();
 
@@ -37,14 +49,6 @@ async function handler(req: Request) {
         email: payload.email,
         verification_code: verification_code,
       });
-
-      if (user_type === "business_user") {
-        await db.insert(business).values({
-          name: business_name,
-          business_type: business_type,
-          user_id: user[0].id,
-        });
-      }
 
       return NextResponse.json(
         {

@@ -1,5 +1,5 @@
 "use client";
-import { ConfirmEmailSchema } from "@/app/api/authenticate/schema";
+
 import { useAppDispatch } from "@/app/store";
 import { setAuthData, useAuthStore } from "@/app/store/authentication";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const formSchema = ConfirmEmailSchema.omit({
-  email: true,
+const formSchema = z.object({
+  verification_code: z
+    .string()
+    .min(6, {
+      message: "Code must be of 6 characters.",
+    })
+    .max(6, {
+      message: "Code must be of 6 characters.",
+    }),
 });
 
 export function ConfirmAccount() {

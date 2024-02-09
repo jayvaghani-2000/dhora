@@ -14,7 +14,7 @@ export const options: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "john-doe" },
+        username: { label: "Username", placeholder: "john-doe" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -22,7 +22,7 @@ export const options: NextAuthOptions = {
           const res = await axios.post(
             `${process.env.NEXT_APP_URL}/api/authenticate/signin`,
             {
-              email: credentials?.email,
+              username: credentials?.username,
               password: credentials?.password,
             }
           );

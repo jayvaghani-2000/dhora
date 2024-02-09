@@ -4,26 +4,23 @@ import { users } from "@/db/schema";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { LoginUserSchema } from "../schema";
 
 async function handler(req: Request) {
   try {
     const body = await req.json();
     if (req.method === "POST") {
-      const payload = LoginUserSchema.parse(body);
-
       const user = await db
         .select()
         .from(users)
-        .where(eq(users.email, payload.email));
+        .where(eq(users.username, body.username));
 
       if (user.length === 0) {
-        throw new Error("Invalid email");
+        throw new Error("Invalid Username");
       }
 
       if (
         user.length > 0 &&
-        (await bcrypt.compare(payload.password, user[0].password!))
+        (await bcrypt.compare(body.password, user[0].password!))
       ) {
         return NextResponse.json(
           {

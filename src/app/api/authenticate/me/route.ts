@@ -2,7 +2,7 @@ import { errorHandler } from "@/common/api/error";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getProfile } from ".";
-import { GetUserSchema } from "../schema";
+import { meUserSchema } from "@/db/schema";
 
 async function handler(req: Request) {
   const session = await getServerSession();
@@ -15,7 +15,7 @@ async function handler(req: Request) {
   }
   try {
     if (req.method === "GET") {
-      const payload = GetUserSchema.parse({ email });
+      const payload = meUserSchema.parse({ email });
 
       const user = await getProfile(payload.email);
 
