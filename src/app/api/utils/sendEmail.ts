@@ -701,6 +701,6 @@ export async function sendEmail(
     await mailClient.send(mailOptions);
     return true;
   } catch (err) {
-    return false;
+    throw new Error("Enable to send email");
   }
 }

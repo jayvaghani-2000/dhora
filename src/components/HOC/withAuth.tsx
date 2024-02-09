@@ -4,12 +4,13 @@ import { setAuthData, useAuthStore } from "@/app/store/authentication";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
+import { ConfirmAccount } from "../ConfirmAccount";
 
 const privateTillAuthRoute = ["/login", "/register", "/"];
 
 const WithAuth = ({ children }: { children: React.ReactNode }) => {
   const path = usePathname();
-  const { authCheck } = useAuthStore();
+  const { authCheck, profile, authenticated } = useAuthStore();
   const dispatch = useAppDispatch();
 
   const handleVerifySession = async () => {
@@ -18,7 +19,7 @@ const WithAuth = ({ children }: { children: React.ReactNode }) => {
       if (res.data.success) {
         dispatch(
           setAuthData({
-            profile: res.data.success,
+            profile: res.data.data,
             authenticated: true,
             token: "",
             authCheck: true,
@@ -68,7 +69,7 @@ const WithAuth = ({ children }: { children: React.ReactNode }) => {
       </div>
     </div>
   ) : (
-    children
+    <>{authenticated && !profile?.verified ? <ConfirmAccount /> : children}</>
   );
 };
 

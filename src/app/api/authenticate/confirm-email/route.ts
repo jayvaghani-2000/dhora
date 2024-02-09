@@ -17,6 +17,7 @@ async function handler(req: Request) {
   try {
     if (req.method === "POST") {
       const body = await req.json();
+
       const payload = ConfirmEmailSchema.parse({ email, ...body });
 
       const user = await db
@@ -39,7 +40,7 @@ async function handler(req: Request) {
         return NextResponse.json(
           {
             success: true,
-            data: response[0],
+            data: { ...response[0], id: BigInt(response[0]!.id).toString() },
           },
           { status: 200 }
         );

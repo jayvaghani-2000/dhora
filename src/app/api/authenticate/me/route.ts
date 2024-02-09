@@ -1,9 +1,7 @@
 import { errorHandler } from "@/common/api/error";
-import { db } from "@/db";
-import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { getProfile } from ".";
 import { GetUserSchema } from "../schema";
 
 async function handler(req: Request) {
@@ -19,17 +17,7 @@ async function handler(req: Request) {
     if (req.method === "GET") {
       const payload = GetUserSchema.parse({ email });
 
-      const user = await db.query.users.findFirst({
-        where: eq(users.email, payload.email),
-        columns: {
-          email: true,
-          first_name: true,
-          last_name: true,
-          username: true,
-          id: true,
-          verified: true,
-        },
-      });
+      const user = await getProfile(payload.email);
 
       if (user) {
         return NextResponse.json(

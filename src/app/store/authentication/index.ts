@@ -1,8 +1,9 @@
+import { profileType } from "@/app/api/utils/types";
 import { createSlice } from "@reduxjs/toolkit";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../index";
-import { AuthType, profileType } from "./authentication.types";
+import { AuthType } from "./authentication.types";
 
 export const initialState = {
   loading: false,
