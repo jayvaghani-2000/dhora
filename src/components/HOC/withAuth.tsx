@@ -43,7 +43,7 @@ const WithAuth = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     handleVerifySession();
-  }, []);
+  }, [authenticated]);
 
   return !authCheck && privateTillAuthRoute.includes(path!) ? (
     <div className="h-[calc(100dvh-60px)] sm:h-[calc(100dvh-85px)] flex justify-center items-center">

@@ -1,5 +1,7 @@
 "use client";
 import { RegisterUserSchema } from "@/app/api/authenticate/schema";
+import { useAppDispatch } from "@/app/store";
+import { setAuthData } from "@/app/store/authentication";
 import { assets } from "@/assets";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -58,6 +60,7 @@ const formSchema = RegisterUserSchema.extend({
 
 export function RegisterForm() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -99,6 +102,7 @@ export function RegisterForm() {
           password: values.password,
         });
 
+        dispatch(setAuthData({ authenticated: true }));
         router.push("/");
       }
     } catch (err) {

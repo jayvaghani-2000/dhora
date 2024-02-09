@@ -1,4 +1,6 @@
 import { LoginUserSchema } from "@/app/api/authenticate/schema";
+import { useAppDispatch } from "@/app/store";
+import { setAuthData } from "@/app/store/authentication";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,6 +23,7 @@ const formSchema = LoginUserSchema;
 
 export function LoginForm() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,6 +46,7 @@ export function LoginForm() {
       if (result?.error) {
         setError(result.error);
       } else {
+        dispatch(setAuthData({ authenticated: true }));
         router.push("/");
       }
     } catch (err) {
