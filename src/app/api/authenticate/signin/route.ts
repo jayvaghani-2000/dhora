@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
 import { errorHandler } from "@/common/api/error";
-import { LoginUserSchema } from "../schema";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
+import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
+import { LoginUserSchema } from "../schema";
 
 async function handler(req: Request) {
   try {
@@ -28,7 +28,7 @@ async function handler(req: Request) {
         return NextResponse.json(
           {
             success: true,
-            data: user[0],
+            data: { ...user[0], id: BigInt(user[0].id).toString() },
           },
           {
             status: 200,
@@ -42,4 +42,4 @@ async function handler(req: Request) {
   }
 }
 
-export { handler as DELETE, handler as GET, handler as POST };
+export { handler as POST };

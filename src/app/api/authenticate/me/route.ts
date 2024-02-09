@@ -21,18 +21,26 @@ async function handler(req: Request) {
 
       const user = await db.query.users.findFirst({
         where: eq(users.email, payload.email),
-        with: {
-          business: true,
+        columns: {
+          email: true,
+          first_name: true,
+          last_name: true,
+          username: true,
+          id: true,
+          verified: true,
         },
       });
 
-      return NextResponse.json(
-        {
-          success: true,
-          data: user,
-        },
-        { status: 200 }
-      );
+      if (user) {
+        return NextResponse.json(
+          {
+            success: true,
+            data: { ...user, id: BigInt(user!.id).toString() },
+          },
+          { status: 200 }
+        );
+      }
+      throw new Error("User not found");
     }
   } catch (err) {
     return errorHandler(err);

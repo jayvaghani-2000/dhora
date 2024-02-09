@@ -1,5 +1,5 @@
 "use client";
-import { RegisterUserSchema } from "@/app/api/auth/schema";
+import { RegisterUserSchema } from "@/app/api/authenticate/schema";
 import { assets } from "@/assets";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -81,7 +81,7 @@ export function RegisterForm() {
     setLoading(true);
 
     try {
-      const registeredUser = await axios.post("/api/auth/register", {
+      const registeredUser = await axios.post("/api/authenticate/register", {
         first_name: values.first_name,
         last_name: values.last_name,
         username: values.username,

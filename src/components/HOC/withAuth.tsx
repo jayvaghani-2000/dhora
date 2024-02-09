@@ -14,7 +14,7 @@ const WithAuth = ({ children }: { children: React.ReactNode }) => {
 
   const handleVerifySession = async () => {
     try {
-      const res = await axios("api/auth/me");
+      const res = await axios("api/authenticate/me");
       if (res.data.success) {
         dispatch(
           setAuthData({

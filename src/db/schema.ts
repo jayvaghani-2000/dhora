@@ -5,6 +5,7 @@ import {
   pgEnum,
   pgTable,
   text,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -19,17 +20,6 @@ export const businessTypeEnum = pgEnum("businessType", [
   "Other",
 ]);
 
-export const business = pgTable("business", {
-  id: bigint("id", { mode: "bigint" })
-    .primaryKey()
-    .default(sql`public.id_generator()`),
-  business_type: businessTypeEnum("type"),
-  name: text("name"),
-  user_id: bigint("user_id", { mode: "bigint" })
-    .references(() => users.id, { onDelete: "cascade" })
-    .notNull(),
-});
-
 export const users = pgTable("users", {
   id: bigint("id", { mode: "bigint" })
     .primaryKey()
@@ -41,6 +31,21 @@ export const users = pgTable("users", {
   password: text("password"),
   verification_code: text("verification_code"),
   verified: boolean("verified").default(false),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+export const business = pgTable("business", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  business_type: businessTypeEnum("type"),
+  name: text("name"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+  user_id: bigint("user_id", { mode: "bigint" })
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
 });
 
 export const businessRelations = relations(business, ({ one }) => ({

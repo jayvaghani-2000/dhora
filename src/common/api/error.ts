@@ -38,6 +38,11 @@ export const errorHandler = (err: unknown) => {
         { status: 404 }
       );
     }
+  } else if (err instanceof Error) {
+    return NextResponse.json(
+      { error: err.message, success: false },
+      { status: 500 }
+    );
   }
   return NextResponse.json(
     { error: "Something went wrong", success: false },

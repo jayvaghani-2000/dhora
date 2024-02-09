@@ -1,11 +1,11 @@
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
 import { errorHandler } from "@/common/api/error";
-import { ConfirmEmailSchema } from "../schema";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
+import { eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
+import { ConfirmEmailSchema } from "../schema";
 
 async function handler(req: Request) {
   const session = await getServerSession();

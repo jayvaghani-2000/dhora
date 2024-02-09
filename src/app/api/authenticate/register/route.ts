@@ -32,9 +32,8 @@ async function handler(req: Request) {
       });
 
       if (user_type === "business_user") {
-        // @ts-ignore
         await db.insert(business).values({
-          name: business_name!,
+          name: business_name,
           business_type: business_type,
           user_id: user[0].id,
         });
@@ -43,7 +42,7 @@ async function handler(req: Request) {
       return NextResponse.json(
         {
           success: true,
-          data: user[0],
+          data: { ...user[0], id: BigInt(user[0].id).toString() },
         },
         { status: 201 }
       );
