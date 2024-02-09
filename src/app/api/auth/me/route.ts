@@ -1,10 +1,10 @@
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
 import { errorHandler } from "@/common/api/error";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { GetUserSchema } from "../schema";
 import { eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
+import { GetUserSchema } from "../schema";
 
 async function handler(req: Request) {
   const session = await getServerSession();
@@ -19,15 +19,17 @@ async function handler(req: Request) {
     if (req.method === "GET") {
       const payload = GetUserSchema.parse({ email });
 
-      const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.email, payload.email));
+      const user = await db.query.users.findFirst({
+        where: eq(users.email, payload.email),
+        with: {
+          business: true,
+        },
+      });
 
       return NextResponse.json(
         {
           success: true,
-          data: user[0],
+          data: user,
         },
         { status: 200 }
       );

@@ -4,7 +4,6 @@ import {
   boolean,
   pgEnum,
   pgTable,
-  serial,
   text,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -20,11 +19,6 @@ export const businessTypeEnum = pgEnum("businessType", [
   "Other",
 ]);
 
-export const userTypeEnum = pgEnum("userType", [
-  "regular_user",
-  "business_user",
-]);
-
 export const business = pgTable("business", {
   id: bigint("id", { mode: "bigint" })
     .primaryKey()
@@ -37,13 +31,14 @@ export const business = pgTable("business", {
 });
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
   first_name: text("first_name"),
   last_name: text("last_name"),
   email: varchar("email", { length: 256 }).unique(),
   username: varchar("username", { length: 256 }).unique(),
   password: text("password"),
-  user_type: userTypeEnum("user_type"),
   verification_code: text("verification_code"),
   verified: boolean("verified").default(false),
 });

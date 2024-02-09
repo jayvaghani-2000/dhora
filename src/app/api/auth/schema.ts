@@ -1,4 +1,4 @@
-import { userTypeEnum } from "@/db/schema";
+import { businessTypeEnum } from "@/db/schema";
 import { z } from "zod";
 
 export const RegisterUserSchema = z.object({
@@ -17,7 +17,9 @@ export const RegisterUserSchema = z.object({
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
   }),
-  user_type: z.enum(Object.values(userTypeEnum)[1]),
+  user_type: z.enum(["regular_user", "business_user"]),
+  business_type: z.enum(businessTypeEnum.enumValues).optional(),
+  business_name: z.string().optional().optional(),
 });
 
 export type RegisterUser = z.infer<typeof RegisterUserSchema>;

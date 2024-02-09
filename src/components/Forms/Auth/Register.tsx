@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { businessTypeEnum } from "@/db/schema";
-import { userTypeEnum } from "@/lib/enums";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup } from "@radix-ui/react-radio-group";
@@ -38,14 +37,24 @@ const formSchema = RegisterUserSchema.extend({
   confirm_password: z.string().min(6, {
     message: "Password must match.",
   }),
-  is_business_user: z.enum(["no", "yes"]),
-  business_type: z.string().optional(),
-  business_name: z.string().optional(),
   "t&c": z.boolean(),
-}).refine(data => data.password === data.confirm_password, {
-  message: "Passwords do not match.",
-  path: ["confirm_password"],
-});
+})
+  .refine(data => data.password === data.confirm_password, {
+    message: "Passwords do not match.",
+    path: ["confirm_password"],
+  })
+  .refine(
+    data => {
+      if (data.user_type === "business_user") {
+        return !!data.business_type && !!data.business_name;
+      }
+      return true;
+    },
+    {
+      message: "Business category and name are required for business users.",
+      path: ["user_type"],
+    }
+  );
 
 export function RegisterForm() {
   const router = useRouter();
@@ -63,7 +72,7 @@ export function RegisterForm() {
       username: "",
       email: "",
       password: "",
-      is_business_user: "no",
+      user_type: "regular_user",
       "t&c": false,
     },
   });
@@ -78,10 +87,7 @@ export function RegisterForm() {
         username: values.username,
         email: values.email,
         password: values.password,
-        user_type:
-          values.is_business_user === "yes"
-            ? userTypeEnum.business_user
-            : userTypeEnum.regular_user,
+        user_type: values.user_type,
         business_type: values.business_type,
         business_name: values.business_name,
       });
@@ -230,14 +236,14 @@ export function RegisterForm() {
 
             <FormField
               control={form.control}
-              name="is_business_user"
+              name="user_type"
               render={({ field: { onChange, value } }) => (
                 <FormItem className="space-y-3 col-span-2  mt-4">
                   <FormControl>
                     <RadioGroup className="flex flex-row gap-3">
                       <FormItem
                         className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
-                        onClick={() => onChange("no")}
+                        onClick={() => onChange("regular_user")}
                       >
                         <div className="bg-black w-full rounded-md p-2 flex gap-4">
                           <Image
@@ -249,9 +255,9 @@ export function RegisterForm() {
                           <div className="relative  w-full">
                             <input
                               type="radio"
-                              value={"no"}
-                              checked={value === "no"}
-                              onClick={() => onChange("no")}
+                              value={"regular_user"}
+                              checked={value === "regular_user"}
+                              onClick={() => onChange("regular_user")}
                               className="absolute right-0 accent-white "
                             />
 
@@ -266,7 +272,7 @@ export function RegisterForm() {
                         </div>
                       </FormItem>
                       <FormItem
-                        onClick={() => onChange("yes")}
+                        onClick={() => onChange("business_user")}
                         className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
                       >
                         <div className="bg-black w-full rounded-md p-2 flex gap-4">
@@ -279,9 +285,9 @@ export function RegisterForm() {
                           <div className="relative  w-full">
                             <input
                               type="radio"
-                              value={"yes"}
-                              checked={value === "yes"}
-                              onClick={() => onChange("yes")}
+                              value={"business_user"}
+                              checked={value === "business_user"}
+                              onClick={() => onChange("business_user")}
                               className="absolute right-0 accent-white"
                             />
                             <FormLabel className="font-normal">
@@ -301,7 +307,7 @@ export function RegisterForm() {
               )}
             />
 
-            {form.getValues("is_business_user") === "yes" && (
+            {form.getValues("user_type") === "business_user" && (
               <>
                 <FormField
                   control={form.control}

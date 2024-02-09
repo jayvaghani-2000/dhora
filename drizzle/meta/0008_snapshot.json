@@ -1,6 +1,6 @@
 {
-  "id": "017b895e-507c-4d89-b8ec-aba4ecfcd451",
-  "prevId": "51c979d3-6518-4842-bdb5-61c0da7414ff",
+  "id": "96e7a269-6394-4321-b54c-63057f22a524",
+  "prevId": "2aa5b500-5b3f-4cd1-8d9d-33df5e5e674a",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -55,9 +55,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "bigint",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "public.id_generator()"
         },
         "first_name": {
           "name": "first_name",
@@ -86,12 +87,6 @@
         "password": {
           "name": "password",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "user_type": {
-          "name": "user_type",
-          "type": "userType",
           "primaryKey": false,
           "notNull": false
         },
@@ -138,13 +133,6 @@
         "Apparel": "Apparel",
         "Health & Beauty": "Health & Beauty",
         "Other": "Other"
-      }
-    },
-    "userType": {
-      "name": "userType",
-      "values": {
-        "regular_user": "regular_user",
-        "business_user": "business_user"
       }
     }
   },

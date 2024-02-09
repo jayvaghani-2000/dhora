@@ -9,7 +9,7 @@
     "lint": "npx lint-staged",
     "tsc": "bash -c tsc --noEmit",
     "prepare": "husky install",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "lint:staged": "eslint",
     "migration:generate": "drizzle-kit generate:pg --schema=./src/db/schema.ts",
     "migration:push": "node -r esbuild-register src/db/migrate.ts",

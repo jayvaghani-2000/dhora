@@ -692,7 +692,7 @@ export async function sendEmail(
 
   const mailOptions = {
     to: user.email,
-    from: "siddharth.vaishnav@propelius.tech",
+    from: "info@dhora.app",
     subject: `Dhora – Email Verification`,
     html,
   };

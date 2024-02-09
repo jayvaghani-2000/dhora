@@ -1,0 +1,22 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react-hooks/exhaustive-deps": "off",
+    "@next/next/no-img-element": "off",
+    "react/jsx-filename-extension": "off",
+    "no-param-reassign": "off",
+    "react/prop-types": "off",
+    "react/require-default-props": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "off",
+    "no-shadow": "off",
+    "import/no-cycle": "off",
+    "prefer-destructuring": "off",
+    "import/no-extraneous-dependencies": "off",
+    "react/display-name": "off",
+    "import/no-unresolved": ["off", { "caseSensitive": false }],
+    "no-unused-vars": "error",
+    "no-console": "error",
+    "no-warning-comments": "error"
+  }
+}

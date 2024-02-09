@@ -80,12 +80,8 @@
           "name": "users_business_id_business_id_fk",
           "tableFrom": "users",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -95,16 +91,12 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "users_business_id_unique": {
           "name": "users_business_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "business_id"
-          ]
+          "columns": ["business_id"]
         }
       }
     }

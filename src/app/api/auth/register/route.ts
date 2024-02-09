@@ -1,18 +1,17 @@
-import { NextResponse } from "next/server";
 import { errorHandler } from "@/common/api/error";
-import { RegisterUserSchema } from "../schema";
-import { generateOtp } from "../../utils/generateOtp";
-import bcrypt from "bcrypt";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { business, users } from "@/db/schema";
+import bcrypt from "bcrypt";
+import { NextResponse } from "next/server";
+import { generateOtp } from "../../utils/generateOtp";
 import { sendEmail } from "../../utils/sendEmail";
+import { RegisterUserSchema } from "../schema";
 async function handler(req: Request) {
   try {
     const body = await req.json();
     if (req.method === "POST") {
       const payload = RegisterUserSchema.parse(body);
-
-      const { user_type, ...rest } = payload;
+      const { business_name, business_type, user_type, ...rest } = payload;
       const verification_code = generateOtp();
 
       const hashedPassword = await bcrypt.hash(payload.password, 10);
@@ -24,7 +23,6 @@ async function handler(req: Request) {
           ...rest,
           password: hashedPassword,
           verification_code: hashedVerificationCode,
-          user_type: user_type,
         })
         .returning();
 
@@ -32,6 +30,15 @@ async function handler(req: Request) {
         email: payload.email,
         verification_code: verification_code,
       });
+
+      if (user_type === "business_user") {
+        // @ts-ignore
+        await db.insert(business).values({
+          name: business_name!,
+          business_type: business_type,
+          user_id: user[0].id,
+        });
+      }
 
       return NextResponse.json(
         {
