@@ -1,21 +1,38 @@
+"use client";
+import { useAppDispatch } from "@/app/store";
+import { setAuthData } from "@/app/store/authentication";
+import { assets } from "@/assets";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { businessTypeEnum } from "@/db/schema";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RadioGroup } from "@radix-ui/react-radio-group";
+import axios, { AxiosError } from "axios";
+import { signIn } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { HTMLProps, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { HTMLProps } from "react";
-import { cn } from "@/lib/utils";
 
 const formSchema = z
   .object({
@@ -34,17 +51,39 @@ const formSchema = z
     password: z.string().min(6, {
       message: "Password must be at least 6 characters.",
     }),
+    user_type: z.enum(["regular_user", "business_user"]),
+    business_type: z.enum(businessTypeEnum.enumValues).optional(),
+    business_name: z.string().optional().optional(),
     confirm_password: z.string().min(6, {
       message: "Password must match.",
     }),
+    "t&c": z.boolean(),
   })
   .refine(data => data.password === data.confirm_password, {
     message: "Passwords do not match.",
     path: ["confirm_password"],
-  });
+  })
+  .refine(
+    data => {
+      if (data.user_type === "business_user") {
+        return !!data.business_type && !!data.business_name;
+      }
+      return true;
+    },
+    {
+      message: "Business category and name are required for business users.",
+      path: ["user_type"],
+    }
+  );
 
 export function RegisterForm() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const businessTypeOptions = Object.values(businessTypeEnum)[1] as string[];
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,25 +93,45 @@ export function RegisterForm() {
       username: "",
       email: "",
       password: "",
+      user_type: "regular_user",
+      "t&c": false,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Perform client-side validation if needed
+    setLoading(true);
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      const registeredUser = await axios.post("/api/authenticate/register", {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        user_type: values.user_type,
+        business_type: values.business_type,
+        business_name: values.business_name,
+      });
 
-    if (result?.error) {
-      // Handle login error
-    } else {
-      // Redirect to the desired page after successful login
-      router.push("/");
+      if (registeredUser.data.success) {
+        await signIn("credentials", {
+          redirect: false,
+          username: values.username,
+          password: values.password,
+        });
+
+        dispatch(setAuthData({ authenticated: true }));
+        router.push("/");
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setError(err.response?.data.error);
+      }
+    } finally {
+      setLoading(false);
     }
   }
+
   const InputClass: HTMLProps<HTMLElement>["className"] =
     "bg-black text-white border-none outline-none focus:outline-none focus:border-none";
 
@@ -83,9 +142,14 @@ export function RegisterForm() {
           Join us today!
         </p>
         <Form {...form}>
+          {!!error && (
+            <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
+              {error}
+            </p>
+          )}
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid md:grid-cols-2 gap-4"
+            className="grid md:grid-cols-2  gap-4"
           >
             <FormField
               control={form.control}
@@ -96,7 +160,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert First name"
+                      placeholder=" First name"
                       {...field}
                     />
                   </FormControl>
@@ -113,7 +177,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Last name"
+                      placeholder=" Last name"
                       {...field}
                     />
                   </FormControl>
@@ -130,7 +194,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={cn([InputClass])}
-                      placeholder="Insert Email"
+                      placeholder=" Email"
                       {...field}
                     />
                   </FormControl>
@@ -147,7 +211,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Username"
+                      placeholder=" Username"
                       {...field}
                     />
                   </FormControl>
@@ -164,7 +228,7 @@ export function RegisterForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Password"
+                      placeholder=" Password"
                       type="password"
                       {...field}
                     />
@@ -191,12 +255,159 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
-            <p className="text-sm my-2 font-semibold md:col-span-2">
-              By signing up, you agree to our Terms & Privacy Policy
-            </p>
+
+            <FormField
+              control={form.control}
+              name="user_type"
+              render={({ field: { onChange, value } }) => (
+                <FormItem className="space-y-3 col-span-2  mt-4">
+                  <FormControl>
+                    <RadioGroup className="flex flex-row gap-3">
+                      <FormItem
+                        className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
+                        onClick={() => onChange("regular_user")}
+                      >
+                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                          <Image
+                            src={assets.svg.AVATAR}
+                            alt="avatar"
+                            width={50}
+                            height={35}
+                          />
+                          <div className="relative  w-full">
+                            <input
+                              type="radio"
+                              value={"regular_user"}
+                              checked={value === "regular_user"}
+                              onClick={() => onChange("regular_user")}
+                              className="absolute right-0 accent-white "
+                            />
+
+                            <FormLabel className="font-normal">
+                              Regular User
+                            </FormLabel>
+                            <FormDescription className="text-xs my-1">
+                              For users that are not signing up as a business or
+                              service provider
+                            </FormDescription>
+                          </div>
+                        </div>
+                      </FormItem>
+                      <FormItem
+                        onClick={() => onChange("business_user")}
+                        className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
+                      >
+                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                          <Image
+                            src={assets.svg.AVATAR}
+                            alt="avatar"
+                            width={50}
+                            height={35}
+                          />
+                          <div className="relative  w-full">
+                            <input
+                              type="radio"
+                              value={"business_user"}
+                              checked={value === "business_user"}
+                              onClick={() => onChange("business_user")}
+                              className="absolute right-0 accent-white"
+                            />
+                            <FormLabel className="font-normal">
+                              Business User
+                            </FormLabel>
+                            <FormDescription className="text-xs my-1">
+                              For users that are signing up as a business or
+                              service provider
+                            </FormDescription>
+                          </div>
+                        </div>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.getValues("user_type") === "business_user" && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="business_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          className={InputClass}
+                          placeholder="Business Name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="business_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                <span className="text-muted-foreground ">
+                                  Select Category
+                                </span>
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {businessTypeOptions.map(i => (
+                            <SelectItem key={i} value={i}>
+                              {i}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+            <FormField
+              control={form.control}
+              name="t&c"
+              render={({ field }) => (
+                <FormItem className="w-full flex flex-row items-start col-span-2 space-x-3 space-y-0 rounded-md  py-4 ">
+                  <FormControl>
+                    <Checkbox
+                      checked={form.getValues()["t&c"]}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none w-full text-sm my-2 font-semibold">
+                    <FormLabel>
+                      By signing up, you agree to our Terms & Privacy Policy
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+
             <Button
               className="w-full md:col-span-2 bg-white text-black hover:bg-white"
               type="submit"
+              disabled={loading}
             >
               Get Started
             </Button>
@@ -205,7 +416,7 @@ export function RegisterForm() {
 
         <div className="mt-16 mb-4 gap-1 flex justify-center">
           Already have an account?
-          <Link href="/auth/signin">{` Login`}</Link>
+          <Link href="/login">{` Login`}</Link>
         </div>
       </section>
     </main>

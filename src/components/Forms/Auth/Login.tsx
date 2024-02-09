@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@/app/store";
+import { setAuthData } from "@/app/store/authentication";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,16 +11,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { HTMLProps, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { HTMLProps } from "react";
 
 const formSchema = z.object({
-  email: z.string().email({
-    message: "Provide valid email.",
+  username: z.string({
+    required_error: "Username is required",
   }),
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
@@ -27,28 +29,35 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Perform client-side validation if needed
+    setLoading(true);
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        username: values.username,
+        password: values.password,
+      });
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    });
-
-    if (result?.error) {
-      // Handle login error
-    } else {
-      // Redirect to the desired page after successful login
-      router.push("/");
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        dispatch(setAuthData({ authenticated: true }));
+        router.push("/");
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -62,17 +71,22 @@ export function LoginForm() {
           Welcome back!
         </p>
         <Form {...form}>
+          {!!error && (
+            <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
+              {error}
+            </p>
+          )}
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="email"
+              name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Email"
+                      placeholder="Username"
                       {...field}
                     />
                   </FormControl>
@@ -89,8 +103,8 @@ export function LoginForm() {
                   <FormControl>
                     <Input
                       className={InputClass}
-                      placeholder="Insert Password"
-                      type="  password"
+                      placeholder="Password"
+                      type="password"
                       {...field}
                     />
                   </FormControl>
@@ -101,6 +115,7 @@ export function LoginForm() {
             <Button
               className="w-full md:col-span-2 bg-white text-black hover:bg-white"
               type="submit"
+              disabled={loading}
             >
               Login
             </Button>
@@ -109,7 +124,7 @@ export function LoginForm() {
 
         <div className="mt-16 mb-4 gap-1 flex justify-center">
           Don&apos;t have account?
-          <Link href="/auth/register">{` Register`}</Link>
+          <Link href="/register">{` Register`}</Link>
         </div>
       </section>
     </main>

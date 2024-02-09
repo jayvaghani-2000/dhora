@@ -22,6 +22,69 @@
       "when": 1707205942376,
       "tag": "0002_ancient_lifeguard",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1707215558753,
+      "tag": "0003_concerned_squadron_supreme",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1707373060351,
+      "tag": "0004_graceful_golden_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1707373108200,
+      "tag": "0005_famous_mimic",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1707375914040,
+      "tag": "0006_safe_black_tom",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1707457464219,
+      "tag": "0007_little_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1707457536364,
+      "tag": "0008_conscious_sasquatch",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1707462096955,
+      "tag": "0009_curved_star_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1707480586600,
+      "tag": "0010_damp_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1707486499749,
+      "tag": "0011_lively_forgotten_one",
+      "breakpoints": true
     }
   ]
 }

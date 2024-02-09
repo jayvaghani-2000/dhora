@@ -1,6 +1,4 @@
-export type profileType = {
-  userName: string;
-};
+import { profileType } from "@/app/api/utils/types";
 
 export type AuthType = {
   loading: boolean;

@@ -1,7 +1,7 @@
 {
   "files.autoSave": "afterDelay",
   "workbench.iconTheme": "a-file-icon-vscode",
-  "files.autoSaveDelay": 10000,
+  "files.autoSaveDelay": 1000,
   "diffEditor.ignoreTrimWhitespace": false,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit",
