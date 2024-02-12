@@ -86,8 +86,7 @@ export function ConfirmAccount() {
         <DialogHeader>
           <DialogTitle>Confirm your account</DialogTitle>
           <DialogDescription>
-            We just mailed you an code to your registered email, please verify
-            it.
+            Please enter the verification code recieved on your registered mail
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -117,13 +116,16 @@ export function ConfirmAccount() {
           </form>
         </Form>
 
-        <div className="flex justify-center items-center">
+        <div className="flex justify-end items-center">
           Didn&apos;t received any email?
           <Button
+            className="px-1"
             variant="link"
             disabled={loading}
             onClick={handleResendEmail}
-          >{` Resend`}</Button>
+          >
+            Resend
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
