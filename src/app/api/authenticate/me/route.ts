@@ -1,29 +1,23 @@
 import { errorHandler } from "@/common/api/error";
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { getProfile } from ".";
-import { meUserSchema } from "@/db/schema";
 
 async function handler(req: Request) {
-  const session = await getServerSession();
-
-  let email = "";
-
-  if (session) {
-    const { user } = session;
-    email = user!.email ?? "";
-  }
   try {
     if (req.method === "GET") {
-      const payload = meUserSchema.parse({ email });
-
-      const user = await getProfile(payload.email);
-
+      const username = cookies().get("username");
+      const user = await getProfile(username?.value ?? "");
       if (user) {
         return NextResponse.json(
           {
             success: true,
-            data: { ...user, id: BigInt(user!.id).toString() },
+            data: {
+              username: user.username,
+              email: user.email,
+              first_name: user.first_name,
+              last_name: user.last_name,
+            },
           },
           { status: 200 }
         );

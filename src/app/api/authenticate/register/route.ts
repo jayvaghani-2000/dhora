@@ -24,10 +24,9 @@ async function handler(req: Request) {
               type: body.business_type,
             })
           : null;
-      const payload = insertUserSchema.parse(body);
       const verification_code = generateOtp();
 
-      const hashedPassword = await bcrypt.hash(payload.password, 10);
+      const hashedPassword = await bcrypt.hash(userPayload.password, 10);
       const hashedVerificationCode = await bcrypt.hash(verification_code, 10);
 
       const stripeAccount = await stripe.customers.create({
@@ -51,14 +50,14 @@ async function handler(req: Request) {
         .returning();
 
       await sendEmail("Email Verification", {
-        email: payload.email,
+        email: userPayload.email,
         verification_code: verification_code,
       });
 
       return NextResponse.json(
         {
           success: true,
-          data: { ...user[0], id: BigInt(user[0].id).toString() },
+          data: { id: BigInt(user[0].id).toString() },
         },
         { status: 201 }
       );

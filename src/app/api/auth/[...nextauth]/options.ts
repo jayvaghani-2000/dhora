@@ -26,8 +26,8 @@ export const options: NextAuthOptions = {
               password: credentials?.password,
             }
           );
-          if (res.data.data) {
-            return res.data.data;
+          if (res.data) {
+            return res.data;
           }
         } catch (err) {
           if (err instanceof AxiosError) {

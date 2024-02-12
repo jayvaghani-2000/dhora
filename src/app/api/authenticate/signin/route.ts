@@ -25,7 +25,10 @@ async function handler(req: Request) {
         return NextResponse.json(
           {
             success: true,
-            data: { ...user[0], id: BigInt(user[0].id).toString() },
+            data: {
+              id: BigInt(user[0].id).toString(),
+              email: user[0].email,
+            },
           },
           {
             status: 200,
