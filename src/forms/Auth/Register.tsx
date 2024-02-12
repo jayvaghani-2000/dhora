@@ -317,7 +317,7 @@ export function RegisterForm() {
                           )}
                         >
                           <Image
-                            src={assets.svg.BUSSINESS}
+                            src={assets.svg.BUSINESS}
                             alt="avatar"
                             width={50}
                             height={35}
