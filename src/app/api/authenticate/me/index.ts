@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 
 export const getProfile = async (username: string) => {
   return await db.query.users.findFirst({
-    where: eq(users.email, username),
+    where: eq(users.username, username),
     columns: {
       email: true,
       first_name: true,

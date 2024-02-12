@@ -3,23 +3,16 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { generateOtp } from "../../utils/generateOtp";
 import { sendEmail } from "../../utils/sendEmail";
+import { cookies } from "next/headers";
 
 async function handler(req: Request) {
-  const session = await getServerSession();
-
-  let email = "";
-
-  if (session) {
-    const { user } = session;
-    email = user!.email ?? "";
-  }
-
   try {
+    const body = await req.json();
     if (req.method === "POST") {
+      const username = cookies().get("username");
       const verification_code = generateOtp();
 
       const hashedVerificationCode = await bcrypt.hash(verification_code, 10);
@@ -27,10 +20,10 @@ async function handler(req: Request) {
       await db
         .update(users)
         .set({ verification_code: hashedVerificationCode })
-        .where(eq(users.email, email));
+        .where(eq(users.username, username?.value ?? ""));
 
       await sendEmail("Email Verification", {
-        email: email,
+        email: body.email,
         verification_code: verification_code,
       });
 

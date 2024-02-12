@@ -38,6 +38,7 @@ const formSchema = z.object({
 
 export function ConfirmAccount() {
   const { profile } = useAuthStore();
+
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -70,7 +71,9 @@ export function ConfirmAccount() {
   async function handleResendEmail() {
     setLoading(true);
     try {
-      await axios.post("/api/authenticate/resend-email", {});
+      await axios.post("/api/authenticate/resend-email", {
+        email: profile?.email,
+      });
     } catch (err) {
       if (err instanceof AxiosError) {
         setError(err.response?.data.error);
