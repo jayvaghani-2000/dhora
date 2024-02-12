@@ -54,7 +54,7 @@ const formSchema = z
     }),
     user_type: z.enum(["regular_user", "business_user"]),
     business_type: z.enum(businessTypeEnum.enumValues).optional(),
-    business_name: z.string().optional().optional(),
+    business_name: z.string().optional(),
     confirm_password: z.string().min(6, {
       message: "Password must match.",
     }),
