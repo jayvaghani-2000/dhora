@@ -34,7 +34,9 @@ export const users = pgTable("users", {
   verification_code: text("verification_code"),
   verified: boolean("verified").default(false),
   stripe_id: text("stripe_id").notNull(),
-  business_id: bigint("business_id", { mode: "number" }),
+  business_id: bigint("business_id", { mode: "number" }).references(
+    () => businesses.id
+  ),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

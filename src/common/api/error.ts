@@ -39,6 +39,12 @@ export const errorHandler = (err: unknown) => {
       );
     }
   } else if (err instanceof Error) {
+    if (err.message === "User not found") {
+      return NextResponse.json(
+        { error: "User not found", success: false },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(
       { error: err.message, success: false },
       { status: 500 }

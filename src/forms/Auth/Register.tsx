@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import axios, { AxiosError } from "axios";
+import classnames from "classnames";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,7 +54,7 @@ const formSchema = z
     }),
     user_type: z.enum(["regular_user", "business_user"]),
     business_type: z.enum(businessTypeEnum.enumValues).optional(),
-    business_name: z.string().optional().optional(),
+    business_name: z.string().optional(),
     confirm_password: z.string().min(6, {
       message: "Password must match.",
     }),
@@ -74,7 +75,8 @@ const formSchema = z
       message: "Business category and name are required for business users.",
       path: ["user_type"],
     }
-  );
+  )
+  .refine(data => !!data["t&c"]);
 
 export function RegisterForm() {
   const router = useRouter();
@@ -149,7 +151,7 @@ export function RegisterForm() {
           )}
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid md:grid-cols-2  gap-4"
+            className="flex flex-col md:grid   md:grid-cols-2  gap-4"
           >
             <FormField
               control={form.control}
@@ -260,14 +262,22 @@ export function RegisterForm() {
               control={form.control}
               name="user_type"
               render={({ field: { onChange, value } }) => (
-                <FormItem className="space-y-3 col-span-2  mt-4">
+                <FormItem className="space-y-3 md:col-span-2  mt-4">
                   <FormControl>
-                    <RadioGroup className="flex flex-row gap-3">
+                    <RadioGroup className="flex flex-col md:flex-row gap-3">
                       <FormItem
                         className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
                         onClick={() => onChange("regular_user")}
                       >
-                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                        <div
+                          className={classnames(
+                            "bg-black w-full rounded-md p-2 flex gap-4",
+                            {
+                              ["border-2 border-white"]:
+                                value === "regular_user",
+                            }
+                          )}
+                        >
                           <Image
                             src={assets.svg.AVATAR}
                             alt="avatar"
@@ -280,7 +290,7 @@ export function RegisterForm() {
                               value={"regular_user"}
                               checked={value === "regular_user"}
                               onClick={() => onChange("regular_user")}
-                              className="absolute right-0 accent-white "
+                              className="absolute right-0 accent-white"
                             />
 
                             <FormLabel className="font-normal">
@@ -297,9 +307,17 @@ export function RegisterForm() {
                         onClick={() => onChange("business_user")}
                         className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
                       >
-                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                        <div
+                          className={classnames(
+                            "bg-black w-full rounded-md p-2 flex gap-4",
+                            {
+                              ["border-2 border-white"]:
+                                value === "business_user",
+                            }
+                          )}
+                        >
                           <Image
-                            src={assets.svg.AVATAR}
+                            src={assets.svg.BUSINESS}
                             alt="avatar"
                             width={50}
                             height={35}
@@ -310,7 +328,7 @@ export function RegisterForm() {
                               value={"business_user"}
                               checked={value === "business_user"}
                               onClick={() => onChange("business_user")}
-                              className="absolute right-0 accent-white"
+                              className="absolute right-0 accent-white	"
                             />
                             <FormLabel className="font-normal">
                               Business User
@@ -391,11 +409,13 @@ export function RegisterForm() {
                 <FormItem className="w-full flex flex-row items-start col-span-2 space-x-3 space-y-0 rounded-md  py-4 ">
                   <FormControl>
                     <Checkbox
+                      className="mt-1 sm:mt-0 accent-white"
+                      defaultChecked={false}
                       checked={form.getValues()["t&c"]}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <div className="space-y-1 leading-none w-full text-sm my-2 font-semibold">
+                  <div className="space-y-1 leading-1 sm:leading-none  w-full text-sm my-2 font-semibold">
                     <FormLabel>
                       By signing up, you agree to our Terms & Privacy Policy
                     </FormLabel>
@@ -407,7 +427,7 @@ export function RegisterForm() {
             <Button
               className="w-full md:col-span-2 bg-white text-black hover:bg-white"
               type="submit"
-              disabled={loading}
+              disabled={loading || !form.formState.isValid}
             >
               Get Started
             </Button>
