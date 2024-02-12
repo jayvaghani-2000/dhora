@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { HTMLProps, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { setCookie } from "cookies-next";
 
 const formSchema = z.object({
   username: z.string({
@@ -52,6 +53,7 @@ export function LoginForm() {
       if (result?.error) {
         setError(result.error);
       } else {
+        setCookie("username", values.username);
         dispatch(setAuthData({ authenticated: true }));
         router.push("/");
       }

@@ -23,7 +23,7 @@ export const businessTypeEnum = pgEnum("businessType", [
 ]);
 
 export const users = pgTable("users", {
-  id: bigint("id", { mode: "number" })
+  id: bigint("id", { mode: "bigint" })
     .primaryKey()
     .default(sql`public.id_generator()`),
   first_name: text("first_name").notNull(),
@@ -34,7 +34,7 @@ export const users = pgTable("users", {
   verification_code: text("verification_code"),
   verified: boolean("verified").default(false),
   stripe_id: text("stripe_id").notNull(),
-  business_id: bigint("business_id", { mode: "number" }).references(
+  business_id: bigint("business_id", { mode: "bigint" }).references(
     () => businesses.id
   ),
   created_at: timestamp("created_at").defaultNow().notNull(),
@@ -49,7 +49,7 @@ export const usersRelations = relations(users, ({ one }) => ({
 }));
 
 export const businesses = pgTable("business", {
-  id: bigint("id", { mode: "number" })
+  id: bigint("id", { mode: "bigint" })
     .primaryKey()
     .default(sql`public.id_generator()`),
   type: businessTypeEnum("type").notNull(),
