@@ -11,14 +11,19 @@ import { NextResponse } from "next/server";
 import { stripe } from "../../../../lib/stripe";
 import { generateOtp } from "../../utils/generateOtp";
 import { sendEmail } from "../../utils/sendEmail";
+
 async function handler(req: Request) {
   try {
     const body = await req.json();
     if (req.method === "POST") {
       const userPayload = insertUserSchema.parse(body);
-      const businessPayload = body.business
-        ? insertBusinessSchema.parse(body.business)
-        : null;
+      const businessPayload =
+        body.business_name && body.business_type
+          ? insertBusinessSchema.parse({
+              name: body.business_name,
+              type: body.business_type,
+            })
+          : null;
       const payload = insertUserSchema.parse(body);
       const verification_code = generateOtp();
 

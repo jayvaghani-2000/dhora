@@ -75,7 +75,8 @@ const formSchema = z
       message: "Business category and name are required for business users.",
       path: ["user_type"],
     }
-  );
+  )
+  .refine(data => !!data["t&c"]);
 
 export function RegisterForm() {
   const router = useRouter();
@@ -272,7 +273,7 @@ export function RegisterForm() {
                           className={classnames(
                             "bg-black w-full rounded-md p-2 flex gap-4",
                             {
-                              ["border-2 border-gray-400"]:
+                              ["border-2 border-white"]:
                                 value === "regular_user",
                             }
                           )}
@@ -289,7 +290,7 @@ export function RegisterForm() {
                               value={"regular_user"}
                               checked={value === "regular_user"}
                               onClick={() => onChange("regular_user")}
-                              className="absolute right-0 accent-gray-400"
+                              className="absolute right-0 accent-white"
                             />
 
                             <FormLabel className="font-normal">
@@ -310,7 +311,7 @@ export function RegisterForm() {
                           className={classnames(
                             "bg-black w-full rounded-md p-2 flex gap-4",
                             {
-                              ["border-2 border-gray-400"]:
+                              ["border-2 border-white"]:
                                 value === "business_user",
                             }
                           )}
@@ -327,7 +328,7 @@ export function RegisterForm() {
                               value={"business_user"}
                               checked={value === "business_user"}
                               onClick={() => onChange("business_user")}
-                              className="absolute right-0 accent-gray-400	"
+                              className="absolute right-0 accent-white	"
                             />
                             <FormLabel className="font-normal">
                               Business User
@@ -408,11 +409,13 @@ export function RegisterForm() {
                 <FormItem className="w-full flex flex-row items-start col-span-2 space-x-3 space-y-0 rounded-md  py-4 ">
                   <FormControl>
                     <Checkbox
+                      className="mt-1 sm:mt-0 accent-white"
+                      defaultChecked={false}
                       checked={form.getValues()["t&c"]}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <div className="space-y-1 leading-none w-full text-sm my-2 font-semibold">
+                  <div className="space-y-1 leading-1 sm:leading-none  w-full text-sm my-2 font-semibold">
                     <FormLabel>
                       By signing up, you agree to our Terms & Privacy Policy
                     </FormLabel>
@@ -424,7 +427,7 @@ export function RegisterForm() {
             <Button
               className="w-full md:col-span-2 bg-white text-black hover:bg-white"
               type="submit"
-              disabled={loading}
+              disabled={loading || !form.formState.isValid}
             >
               Get Started
             </Button>
