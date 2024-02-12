@@ -1,6 +1,6 @@
 "use client";
 
-import { RegisterForm } from "@/components/Forms/Auth/Register";
+import { RegisterForm } from "@/forms/Auth/Register";
 
 const RegisterPage = () => {
   return <RegisterForm />;

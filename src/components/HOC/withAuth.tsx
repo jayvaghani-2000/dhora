@@ -4,7 +4,7 @@ import { setAuthData, useAuthStore } from "@/app/store/authentication";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
-import { ConfirmAccount } from "../ConfirmAccount";
+import { ConfirmAccount } from "../../sections/ConfirmAccount";
 
 const privateTillAuthRoute = ["/login", "/register", "/"];
 
