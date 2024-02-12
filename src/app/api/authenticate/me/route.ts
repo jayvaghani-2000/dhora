@@ -17,6 +17,7 @@ async function handler(req: Request) {
               email: user.email,
               first_name: user.first_name,
               last_name: user.last_name,
+              verified: user.verified,
             },
           },
           { status: 200 }
