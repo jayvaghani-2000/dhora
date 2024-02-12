@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import axios, { AxiosError } from "axios";
+import classnames from "classnames";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -149,7 +150,7 @@ export function RegisterForm() {
           )}
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid md:grid-cols-2  gap-4"
+            className="flex flex-col md:grid   md:grid-cols-2  gap-4"
           >
             <FormField
               control={form.control}
@@ -260,14 +261,22 @@ export function RegisterForm() {
               control={form.control}
               name="user_type"
               render={({ field: { onChange, value } }) => (
-                <FormItem className="space-y-3 col-span-2  mt-4">
+                <FormItem className="space-y-3 md:col-span-2  mt-4">
                   <FormControl>
-                    <RadioGroup className="flex flex-row gap-3">
+                    <RadioGroup className="flex flex-col md:flex-row gap-3">
                       <FormItem
                         className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
                         onClick={() => onChange("regular_user")}
                       >
-                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                        <div
+                          className={classnames(
+                            "bg-black w-full rounded-md p-2 flex gap-4",
+                            {
+                              ["border-2 border-gray-400"]:
+                                value === "regular_user",
+                            }
+                          )}
+                        >
                           <Image
                             src={assets.svg.AVATAR}
                             alt="avatar"
@@ -280,7 +289,7 @@ export function RegisterForm() {
                               value={"regular_user"}
                               checked={value === "regular_user"}
                               onClick={() => onChange("regular_user")}
-                              className="absolute right-0 accent-white "
+                              className="absolute right-0 accent-gray-400"
                             />
 
                             <FormLabel className="font-normal">
@@ -297,7 +306,15 @@ export function RegisterForm() {
                         onClick={() => onChange("business_user")}
                         className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
                       >
-                        <div className="bg-black w-full rounded-md p-2 flex gap-4">
+                        <div
+                          className={classnames(
+                            "bg-black w-full rounded-md p-2 flex gap-4",
+                            {
+                              ["border-2 border-gray-400"]:
+                                value === "business_user",
+                            }
+                          )}
+                        >
                           <Image
                             src={assets.svg.AVATAR}
                             alt="avatar"
@@ -310,7 +327,7 @@ export function RegisterForm() {
                               value={"business_user"}
                               checked={value === "business_user"}
                               onClick={() => onChange("business_user")}
-                              className="absolute right-0 accent-white"
+                              className="absolute right-0 accent-gray-400	"
                             />
                             <FormLabel className="font-normal">
                               Business User
