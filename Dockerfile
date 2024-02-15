@@ -14,6 +14,7 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 COPY . .
+COPY --from=install /app/node_modules ./node_modules
 
 RUN npm run build
 
