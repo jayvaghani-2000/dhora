@@ -8,7 +8,7 @@ Before you begin, ensure you have the following installed on your machine:
 
 - **pnpm:** Package manager for JavaScript/TypeScript projects. Install it globally using the following command:
   ```bash
-  npm install -g yarn
+  npm install -g bun
   ```
 
 ## Setup
@@ -24,7 +24,7 @@ Follow these steps to set up the project:
 
 2. **Install dependencies:**
    ```bash
-   yarn install
+   bun install
    ```
 
 ## Pre-commit Hook
@@ -34,7 +34,7 @@ To ensure code quality, a pre-commit hook is configured. This hook runs linting 
 1. **Install Husky:**
 
    ```bash
-   yarn prepare
+   bun run prepare
    ```
 
 2. **Verify and Format Code:**
@@ -45,7 +45,7 @@ To ensure code quality, a pre-commit hook is configured. This hook runs linting 
 To run the application in development mode, use the following command:
 
 ```bash
-yarn dev
+bun dev
 ```
 
 The app will be available at http://localhost:3000.
@@ -55,29 +55,29 @@ The app will be available at http://localhost:3000.
 To generate migrations
 
 ```bash
-yarn migrate
+bun migrate
 ```
 
 To start Drizzle Studio
 
 ```bash
-yarn studio
+bun studio
 ```
 
 ## To build Docker Image
 
 ```bash
-yarn docker-build
+bun docker-build
 ```
 
 To build app
 
 ```bash
-yarn build
+bun build
 ```
 
 To run build app
 
 ```bash
-yarn start
+bun start
 ```

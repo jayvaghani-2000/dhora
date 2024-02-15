@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -10,19 +10,6 @@ const config: Config = {
   ],
   prefix: "",
   theme: {
-    backgroundImage: {
-      "mix-gradient": `radial-gradient(
-                at 27% 59%,
-                rgb(79, 70, 229) 0,
-                transparent 40%
-            ),
-            radial-gradient(at 41% 74%, rgb(35, 93, 186) 0, transparent 73%),
-            radial-gradient(at 42% 40%, rgb(17, 24, 39) 0, transparent 41%),
-            radial-gradient(at 68% 51%, rgb(21, 94, 117) 0, transparent 54%),
-            radial-gradient(at 5% 61%, rgb(91, 33, 182) 0, transparent 47%),
-            radial-gradient(at 96% 76%, rgb(30, 58, 138) 0, transparent 74%)`,
-    },
-
     container: {
       center: true,
       padding: "2rem",
@@ -30,20 +17,12 @@ const config: Config = {
         "2xl": "1400px",
       },
     },
-
     extend: {
-      screens: {
-        sm: "600px",
-        md: "900px",
-        lg: "1200px",
-        xl: "1536px",
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
-        "body-bg": "rgb(30, 58, 138)",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -96,6 +75,6 @@ const config: Config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-};
+} satisfies Config;
 
 export default config;
