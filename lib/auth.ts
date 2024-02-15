@@ -3,7 +3,6 @@ import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { config } from "@/config";
 import { db } from "@/lib/db";
 import { sessions, userSchema, users } from "@/db/schema";
-import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);

@@ -1,7 +1,7 @@
-FROM oven/bun:1 as base
+FROM node:lts-alpine AS base
 ARG NODE_ENV
 
-FROM base AS builder
+FROM oven/bun:1
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -11,9 +11,9 @@ RUN bun i --frozen-lockfile
 
 COPY . .
 
-RUN yarn run build
+RUN bun run build
 
-FROM oven/bun:1
+FROM base AS runner
 WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -34,4 +34,4 @@ ARG NODE_ENV
 ENV NODE_ENV ${NODE_ENV}
 ENV PORT 3000
 
-CMD bun start --env ${NODE_ENV}
+CMD npm run start --env ${NODE_ENV}
