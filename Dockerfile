@@ -39,4 +39,4 @@ ARG NODE_ENV
 ENV NODE_ENV ${NODE_ENV}
 ENV PORT 3000
 
-CMD npm run start --env ${NODE_ENV}
+CMD npm run start -- --env=${NODE_ENV}
