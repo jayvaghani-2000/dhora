@@ -40,8 +40,8 @@ deploy:
   only:
     - main
   script:
-    - echo $KUBE_CONFIG | base64 -d > ./config
-    - kubectl set image deploy/app app=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA --kubeconfig ./config -n dhora-stage
+    - echo $KUBE_CONFIG | base64 -d > ./config.txt
+    - kubectl set image deploy/app app=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA --kubeconfig ./config.txt -n dhora-stage
     - kubectl rollout status deploy/app --kubeconfig ./config -n dhora-stage
 
 production:build:
