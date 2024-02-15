@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS base
+FROM oven/bun:1 as base
 ARG NODE_ENV
 
 FROM base AS builder
@@ -13,7 +13,7 @@ COPY . .
 
 RUN yarn run build
 
-FROM base AS runner
+FROM oven/bun:1
 WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED 1
