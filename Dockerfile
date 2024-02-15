@@ -1,7 +1,7 @@
 FROM node:lts-alpine AS base
 ARG NODE_ENV
 
-FROM oven/bun:1
+FROM oven/bun:1 as builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
