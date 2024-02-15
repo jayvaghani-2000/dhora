@@ -1,12 +1,13 @@
 FROM node:lts-alpine AS base
+ARG NODE_ENV
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json bun.lockb ./
 
-RUN yarn --frozen-lockfile
+RUN bun i --frozen-lockfile
 
 COPY . .
 
@@ -29,6 +30,8 @@ USER nextjs
 
 EXPOSE 3000
 
+ARG NODE_ENV
+ENV NODE_ENV ${NODE_ENV}
 ENV PORT 3000
 
-CMD ["npm", "start"]
+CMD bun start --env ${NODE_ENV}
