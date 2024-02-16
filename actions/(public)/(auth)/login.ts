@@ -8,7 +8,10 @@ import { Argon2id } from "oslo/password";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import {
+  DEFAULT_BUSINESS_LOGIN_REDIRECT,
+  DEFAULT_LOGIN_REDIRECT,
+} from "@/routes";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
   const validatedFields = loginSchema.safeParse(values);
@@ -42,5 +45,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     sessionCookie.value,
     sessionCookie.attributes
   );
-  return redirect(DEFAULT_LOGIN_REDIRECT);
+  return redirect(
+    user.business_id ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_LOGIN_REDIRECT
+  );
 };

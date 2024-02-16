@@ -15,7 +15,10 @@ import { sendEmail } from "./_utils/sendEmail";
 import { redirect } from "next/navigation";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import {
+  DEFAULT_BUSINESS_LOGIN_REDIRECT,
+  DEFAULT_LOGIN_REDIRECT,
+} from "@/routes";
 
 export const register = async (values: z.infer<typeof registerSchema>) => {
   const validatedFields = registerSchema.safeParse(values);
@@ -74,5 +77,7 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
     sessionCookie.attributes
   );
 
-  return redirect(DEFAULT_LOGIN_REDIRECT);
+  return redirect(
+    business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_LOGIN_REDIRECT
+  );
 };

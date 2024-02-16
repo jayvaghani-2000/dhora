@@ -9,6 +9,8 @@ import { ConfirmAccount } from "@/components/confirm-account";
 import { me, profileType } from "@/actions/(public)/(auth)/me";
 import { authRoutes, publicRoutes } from "@/routes";
 
+const publicRouteList = [...publicRoutes, ...authRoutes];
+
 type propType = {
   children: React.ReactNode;
 };
@@ -19,37 +21,36 @@ const WithAuth = ({ children }: propType) => {
   const { authCheck, profile, authenticated } = useAuthStore();
   const dispatch = useAppDispatch();
 
-  const isPublicRoute = [...publicRoutes, ...authRoutes].includes(path);
-
-  const handleVerifySession = async () => {
-    const user = await me();
-
-    if (user.success) {
-      dispatch(
-        setAuthData({
-          profile: user.data,
-          authenticated: true,
-          authCheck: true,
-        })
-      );
-    } else {
-      dispatch(
-        setAuthData({
-          authCheck: true,
-          authenticated: false,
-          profile: {} as profileType,
-        })
-      );
-
-      if (!isPublicRoute) {
-        router.replace(authRoutes[0]);
-      }
-    }
-  };
+  const isPublicRoute = publicRouteList.includes(path);
 
   useEffect(() => {
+    const handleVerifySession = async () => {
+      const user = await me();
+
+      if (user.success) {
+        dispatch(
+          setAuthData({
+            profile: user.data,
+            authenticated: true,
+            authCheck: true,
+          })
+        );
+      } else {
+        dispatch(
+          setAuthData({
+            authCheck: true,
+            authenticated: false,
+            profile: {} as profileType,
+          })
+        );
+
+        if (!publicRouteList.includes(path)) {
+          router.replace(authRoutes[0]);
+        }
+      }
+    };
     handleVerifySession();
-  }, [authenticated]);
+  }, [authenticated, router, dispatch, path]);
 
   const body =
     authenticated && !profile?.emailVerified ? <ConfirmAccount /> : children;
