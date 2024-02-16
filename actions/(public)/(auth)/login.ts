@@ -36,6 +36,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
 
   const session = await lucia.createSession(user.id, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
+
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,

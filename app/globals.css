@@ -33,6 +33,12 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+    --primary-gray: 206 27% 10%;
+    --secondary-gray: 202 11% 15%;
+    --primary-black: 210 15% 5%;
+    --body-background: 206 24% 13%;
+    --primary-light-gray: 220 8% 23%;
+    --primary-blue: 200 100% 50%;
   }
 
   .dark {
@@ -84,4 +90,32 @@
       radial-gradient(at 96% 76%, rgb(30, 58, 138) 0, transparent 74%);
     @apply text-foreground;
   }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: unset;
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  box-shadow: 0 0 0px 1000px #000 inset;
+  transition: background-color 5000s ease-in-out 0s;
+  background-color: #000;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
