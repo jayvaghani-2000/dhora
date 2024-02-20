@@ -6,7 +6,8 @@ import React, { useCallback, useEffect } from "react";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import { ConfirmAccount } from "@/components/confirm-account";
-import { me, profileType } from "@/actions/(public)/(auth)/me";
+import { me } from "@/actions/(public)/(auth)/me";
+import { profileType } from "@/actions/_utils/types";
 import { authRoutes, publicRoutes } from "@/routes";
 
 const publicRouteList = [...publicRoutes, ...authRoutes];

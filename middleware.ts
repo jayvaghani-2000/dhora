@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DEFAULT_LOGIN_REDIRECT, authRoutes, publicRoutes } from "./routes";
+import { TOKEN } from "./cookie";
 
 export async function middleware(req: NextRequest) {
-  const token = req.cookies.get("auth_session");
+  const token = req.cookies.get(TOKEN);
 
   if (token) {
     if (authRoutes.includes(req.nextUrl.pathname)) {

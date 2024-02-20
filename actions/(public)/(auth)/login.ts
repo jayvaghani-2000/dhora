@@ -17,7 +17,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
   const validatedFields = loginSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+    return { error: "Invalid fields!", success: false };
   }
 
   const user = await db.query.users.findFirst({
@@ -25,7 +25,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
   });
 
   if (!user) {
-    return { error: "Invalid username or password" };
+    return { error: "Invalid username or password", success: false };
   }
 
   const validPassword = await new Argon2id().verify(
@@ -34,7 +34,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
   );
 
   if (!validPassword) {
-    return { error: "Invalid username or password" };
+    return { error: "Invalid username or password", success: false };
   }
 
   const session = await lucia.createSession(user.id, {});

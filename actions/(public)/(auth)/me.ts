@@ -5,10 +5,11 @@ import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
-import { stringifyBigint } from "./_utils/stringifyBigint";
+import { stringifyBigint } from "../../_utils/stringifyBigint";
+import { TOKEN } from "@/cookie";
 
 export const me = async () => {
-  const token = cookies().get("auth_session");
+  const token = cookies().get(TOKEN);
 
   if (token) {
     const { session, user } = await lucia.validateSession(token.value);
@@ -22,16 +23,14 @@ export const me = async () => {
         return { success: false, error: "Something went wrong!" };
       }
     } else {
-      return { success: false, error: "Unauthorized" };
+      return { success: false, error: "Unauthenticated" };
     }
   } else {
-    return { success: false, error: "Unauthorized" };
+    return { success: false, error: "Unauthenticated" };
   }
 };
 
-export type profileType = Awaited<ReturnType<typeof getUser>>;
-
-const getUser = async (email: string) => {
+export const getUser = async (email: string) => {
   return db.query.users.findFirst({
     where: eq(users.email, email),
   });

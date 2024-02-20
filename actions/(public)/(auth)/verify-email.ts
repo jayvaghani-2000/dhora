@@ -7,7 +7,8 @@ import { Argon2id } from "oslo/password";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { stringifyBigint } from "./_utils/stringifyBigint";
+import { stringifyBigint } from "../../_utils/stringifyBigint";
+import { TOKEN } from "@/cookie";
 
 export const verifyEmail = async (
   values: z.infer<typeof mailVerificationUserSchema>
@@ -18,7 +19,7 @@ export const verifyEmail = async (
     return { success: false, error: "Invalid fields!" };
   }
 
-  const token = cookies().get("auth_session");
+  const token = cookies().get(TOKEN);
 
   if (token) {
     const { session, user } = await lucia.validateSession(token.value);
@@ -49,5 +50,5 @@ export const verifyEmail = async (
     }
   }
 
-  return { success: false, error: "Unauthorized" };
+  return { success: false, error: "Unauthenticated" };
 };

@@ -1,7 +1,6 @@
 "use client";
 
 import { loginSchema } from "@/db/schema";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +19,6 @@ import Link from "next/link";
 import { login } from "@/actions/(public)/(auth)/login";
 
 export function LoginForm() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -33,8 +31,11 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setLoading(true);
-    await login(values);
+    const data = await login(values);
     setLoading(false);
+    if (!data?.success && data?.error) {
+      setError(data.error);
+    }
   }
 
   return (

@@ -28,7 +28,11 @@ const Primary = () => {
         </Link>
       </div>
       <div className="flex flex-col gap-4">
-        <Button variant={"link"} className="text-white" onClick={handleSignOut}>
+        <Button
+          variant={"link"}
+          className="text-white p-0"
+          onClick={handleSignOut}
+        >
           Logout
         </Button>
       </div>

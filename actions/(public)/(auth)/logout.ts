@@ -1,11 +1,11 @@
 "use server";
 
+import { TOKEN } from "@/cookie";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export const logout = async () => {
-  const token = cookies().get("auth_session");
+  const token = cookies().get(TOKEN);
   if (token) {
     await lucia.invalidateSession(token.value);
     const sessionCookie = lucia.createBlankSessionCookie();
@@ -16,6 +16,6 @@ export const logout = async () => {
     );
     return { success: true, data: "Logout successfully" };
   } else {
-    return { success: false, error: "Unauthorized" };
+    return { success: false, error: "Unauthenticated" };
   }
 };

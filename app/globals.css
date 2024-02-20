@@ -35,10 +35,10 @@
     --radius: 0.5rem;
     --primary-gray: 206 27% 10%;
     --secondary-gray: 202 11% 15%;
-    --primary-black: 210 15% 5%;
+    --primary-black: 210 15% 5%; /* #0B0D0F */
     --body-background: 206 24% 13%;
     --primary-light-gray: 220 8% 23%;
-    --primary-blue: 200 100% 50%;
+    --primary-blue: 200 100% 50%; /* #00A8FF */
   }
 
   .dark {

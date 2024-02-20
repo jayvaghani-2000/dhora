@@ -8,9 +8,10 @@ import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { generateOtp } from "./_utils/generateOtp";
 import { sendEmail } from "./_utils/sendEmail";
+import { TOKEN } from "@/cookie";
 
 export const resendVerificationCode = async () => {
-  const token = cookies().get("auth_session");
+  const token = cookies().get(TOKEN);
 
   if (token) {
     const { session, user } = await lucia.validateSession(token.value);
@@ -43,5 +44,5 @@ export const resendVerificationCode = async () => {
       }
     }
   }
-  return { success: false, error: "Unauthorized" };
+  return { success: false, error: "Unauthenticated" };
 };

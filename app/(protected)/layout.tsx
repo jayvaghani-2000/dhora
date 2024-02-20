@@ -26,7 +26,11 @@ export default function RootLayout({
   return (
     <div className="flex">
       <Navbar open={open} />
-      <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[275px]">
+      <div
+        className={
+          "flex-1 relative bg-body-background min-h-svh text-white md:ml-[275px]"
+        }
+      >
         <button
           className={clsx({
             "block absolute inset-0 top-[48px] backdrop-blur-sm	z-[75]": open,
@@ -42,10 +46,7 @@ export default function RootLayout({
             <Image src={assets.svg.BELL} alt="bell" width={18} height={18} />
           </button>
           <div>
-            <Input
-              placeholder="Search"
-              className="bg-transparent border-2 border-r-0 border-t-0 border-l-0 rounded-none"
-            />
+            <Input placeholder="Search" className="h-9" />
           </div>
           <div></div>
         </div>
