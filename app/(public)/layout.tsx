@@ -14,7 +14,7 @@ export default function PublicLayout({
         <div className={`w-full flex justify-between p-2 ${cn}`}>
           <a
             href="/"
-            className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
+            className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white p-2"
           >
             <div
               className="mr-4"
