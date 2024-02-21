@@ -19,7 +19,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -27,7 +26,7 @@ import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import { resendVerificationCode } from "@/actions/(public)/(auth)/resend-verification-code";
 import { verifyEmail } from "@/actions/(public)/(auth)/verify-email";
-import { profileType } from "@/actions/_utils/types";
+import { profileType } from "@/actions/_utils/types.type";
 
 const formSchema = z.object({
   verification_code: z

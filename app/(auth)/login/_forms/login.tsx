@@ -1,9 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/db/schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
   Form,
@@ -21,6 +21,7 @@ import { login } from "@/actions/(public)/(auth)/login";
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

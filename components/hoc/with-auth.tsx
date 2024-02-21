@@ -7,7 +7,7 @@ import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import { ConfirmAccount } from "@/components/confirm-account";
 import { me } from "@/actions/(public)/(auth)/me";
-import { profileType } from "@/actions/_utils/types";
+import { profileType } from "@/actions/_utils/types.type";
 import { authRoutes, publicRoutes } from "@/routes";
 
 const publicRouteList = [...publicRoutes, ...authRoutes];

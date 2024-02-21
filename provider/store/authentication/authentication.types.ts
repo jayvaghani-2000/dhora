@@ -1,4 +1,4 @@
-import { profileType } from "@/actions/_utils/types";
+import { profileType } from "@/actions/_utils/types.type";
 
 export type AuthType = {
   loading: boolean;

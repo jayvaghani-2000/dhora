@@ -78,7 +78,7 @@ export const contracts = pgTable("contracts", {
   id: bigint("id", { mode: "bigint" })
     .primaryKey()
     .default(sql`public.id_generator()`),
-  template_id: integer("template_id").notNull(),
+  template_id: integer("template_id").notNull().unique(),
   name: text("name").default("New Contract"),
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)

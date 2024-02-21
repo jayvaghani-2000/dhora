@@ -6,7 +6,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 import { RootState } from "../index";
 import { AuthType } from "./authentication.types";
-import { profileType } from "@/actions/_utils/types";
+import { profileType } from "@/actions/_utils/types.type";
 
 export const initialState = {
   loading: false,

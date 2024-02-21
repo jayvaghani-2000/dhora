@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { DatabaseError } from "pg";
 import { ZodError } from "zod";
 
@@ -45,6 +46,8 @@ export const errorHandler = (err: unknown) => {
     } else {
       return { error: errorObj.message, success: false };
     }
+  } else if (err instanceof AxiosError) {
+    return { error: err.message, success: false };
   } else if (err instanceof Error) {
     if (err.message === "User not found") {
       return { error: "User not found", success: false };

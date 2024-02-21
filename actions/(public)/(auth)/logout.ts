@@ -14,7 +14,7 @@ export const logout = async () => {
       sessionCookie.value,
       sessionCookie.attributes
     );
-    return { success: true, data: "Logout successfully" };
+    return { success: true, data: "Logout successfully." };
   } else {
     return { success: false, error: "Unauthenticated" };
   }

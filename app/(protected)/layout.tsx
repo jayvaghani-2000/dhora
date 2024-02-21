@@ -1,11 +1,12 @@
 "use client";
 import Navbar from "@/components/shared/navbar";
 import clsx from "clsx";
-import Image from "next/image";
+import { GoBell } from "react-icons/go";
+import { RiMenu5Fill } from "react-icons/ri";
+import { MdOutlineSearch } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { assets } from "@/components/assets";
 
 export default function RootLayout({
   children,
@@ -26,11 +27,7 @@ export default function RootLayout({
   return (
     <div className="flex">
       <Navbar open={open} />
-      <div
-        className={
-          "flex-1 relative bg-body-background min-h-svh text-white md:ml-[275px]"
-        }
-      >
+      <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[275px]">
         <button
           className={clsx({
             "block absolute inset-0 top-[48px] backdrop-blur-sm	z-[75]": open,
@@ -43,7 +40,7 @@ export default function RootLayout({
         "
         >
           <button className="relative  after:content-[''] after:absolute after:h-2 after:w-2 after:rounded-full after:bg-[#FF0000] after:top-0">
-            <Image src={assets.svg.BELL} alt="bell" width={18} height={18} />
+            <GoBell color="#b8b8b8" size={24} />
           </button>
           <div>
             <Input placeholder="Search" className="h-9" />
@@ -52,20 +49,15 @@ export default function RootLayout({
         </div>
         <div className="md:hidden bg-primary-light-gray p-2.5 flex sticky top-0 justify-between items-center z-[100] h-12">
           <button onClick={handleToggleNav}>
-            <Image src={assets.svg.MENU} alt="menu" height={18} width={18} />
+            <RiMenu5Fill size={24} color="#b8b8b8" />
           </button>
           <button className="absolute left-16 after:content-[''] after:absolute after:h-2 after:w-2 after:rounded-full after:bg-[#FF0000] after:top-0">
-            <Image src={assets.svg.BELL} alt="bell" height={18} width={18} />
+            <GoBell color="#b8b8b8" size={24} />
           </button>
 
           <h1 className="text-white font-bold text-2xl">DHORA</h1>
           <div className="w-9">
-            <Image
-              src={assets.svg.SEARCH}
-              alt="search"
-              width={18}
-              height={18}
-            />
+            <MdOutlineSearch size={24} color="#b8b8b8" />
           </div>
         </div>
         {children}
