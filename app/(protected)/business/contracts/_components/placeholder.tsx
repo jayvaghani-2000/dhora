@@ -10,7 +10,7 @@ const Placeholder = () => {
     >
       <LiaPlusSolid size={60} className="text-black" />
       <div className="text-black font-bold text-xs md:text-base">
-        Upload Document
+        New Contract Template
       </div>
     </Link>
   );
