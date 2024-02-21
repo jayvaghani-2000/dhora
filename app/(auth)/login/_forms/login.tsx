@@ -52,7 +52,7 @@ export function LoginForm() {
             className="mr-4"
             style={{ borderRadius: "5px", overflow: "hidden" }}
           >
-            <Image src={assets.png.LOGO} alt="logo" width={72} height={72} />
+            <Image src={assets.png.LOGO} alt="logo" width={48} height={48} />
           </div>
           <h1>Dhora</h1>
         </a>

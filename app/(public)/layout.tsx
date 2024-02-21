@@ -20,7 +20,7 @@ export default function PublicLayout({
               className="mr-4"
               style={{ borderRadius: "5px", overflow: "hidden" }}
             >
-              <Image src={assets.png.LOGO} alt="logo" width={64} height={64} />
+              <Image src={assets.png.LOGO} alt="logo" width={48} height={48} />
             </div>
             Dhora
           </a>
