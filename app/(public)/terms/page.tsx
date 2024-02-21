@@ -17,10 +17,10 @@ export default function TermsPages() {
       <h2>2. Use License</h2>
 
       <p>
-        Permission is granted to temporarily download one copy of the materials
+        {`Permission is granted to temporarily download one copy of the materials
         on Dhora's Website for personal, non-commercial transitory viewing only.
         This is the grant of a license, not a transfer of title, and under this
-        license you may not:
+        license you may not:`}
       </p>
 
       <ul>
@@ -30,14 +30,14 @@ export default function TermsPages() {
           display;
         </li>
         <li>
-          attempt to reverse engineer any software contained on Dhora's Website;
+          {`attempt to reverse engineer any software contained on Dhora's Website;`}
         </li>
         <li>
           remove any copyright or other proprietary notations from the
           materials; or
         </li>
         <li>
-          transferring the materials to another person or "mirror" the materials
+          transferring the materials to another person or &quot;mirror&quot; the materials
           on any other server.
         </li>
       </ul>
@@ -57,7 +57,7 @@ export default function TermsPages() {
       <h2>3. Disclaimer</h2>
 
       <p>
-        All the materials on Dhora's Website are provided "as is". Dhora makes
+        All the materials on Dhora&apos;s Website are provided &quot;as is&quot;. Dhora makes
         no warranties, may it be expressed or implied, therefore negates all
         other warranties. Furthermore, Dhora does not make any representations
         concerning the accuracy or reliability of the use of the materials on
@@ -69,7 +69,7 @@ export default function TermsPages() {
 
       <p>
         Dhora or its suppliers will not be hold accountable for any damages that
-        will arise with the use or inability to use the materials on Dhora's
+        will arise with the use or inability to use the materials on Dhora&apos;s
         Website, even if Dhora or an authorize representative of this Website
         has been notified, orally or written, of the possibility of such damage.
         Some jurisdiction does not allow limitations on implied warranties or
@@ -80,7 +80,7 @@ export default function TermsPages() {
       <h2>5. Revisions and Errata</h2>
 
       <p>
-        The materials appearing on Dhora's Website may include technical,
+        The materials appearing on Dhora&apos;s Website may include technical,
         typographical, or photographic errors. Dhora will not promise that any
         of the materials in this Website are accurate, complete, or current.
         Dhora may change the materials contained on its Website at any time
@@ -94,7 +94,7 @@ export default function TermsPages() {
         Dhora has not reviewed all of the sites linked to its Website and is not
         responsible for the contents of any such linked site. The presence of
         any link does not imply endorsement by Dhora of the site. The use of any
-        linked website is at the user's own risk.
+        linked website is at the user&apos;s own risk.
       </p>
 
       <h2>7. Site Terms of Use Modifications</h2>
@@ -112,7 +112,7 @@ export default function TermsPages() {
       <h2>9. Governing Law</h2>
 
       <p>
-        Any claim related to Dhora's Website shall be governed by the laws of us
+        Any claim related to Dhora&apos;s Website shall be governed by the laws of us
         without regards to its conflict of law provisions.
       </p>
     </div>
