@@ -4,10 +4,10 @@ import { usePathname } from "next/navigation";
 
 const MENU_ITEMS = [
   { title: "Contracts", path: "/business/contracts" },
-  { title: "Invoices", path: "/business/invoices" },
-  { title: "Availability", path: "/business/availability" },
-  { title: "Booking Types", path: "/business/booking-types" },
-  { title: "Bookings", path: "/business/bookings" },
+  // { title: "Invoices", path: "/business/invoices" },
+  // { title: "Availability", path: "/business/availability" },
+  // { title: "Booking Types", path: "/business/booking-types" },
+  // { title: "Bookings", path: "/business/bookings" },
 ];
 
 const Secondary = () => {
