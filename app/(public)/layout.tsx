@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +16,12 @@ export default function PublicLayout({
             href="/"
             className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
           >
+            <div
+              className="mr-4"
+              style={{ borderRadius: "5px", overflow: "hidden" }}
+            >
+              <Image src={assets.png.LOGO} alt="logo" width={64} height={64} />
+            </div>
             Dhora
           </a>
           <div className="flex md:order-2 gap-4 p-2">

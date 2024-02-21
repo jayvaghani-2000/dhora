@@ -29,6 +29,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(public)/(auth)/register";
+import { assets } from "@/components/assets";
+import Image from "next/image";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
@@ -56,6 +58,20 @@ export function RegisterForm() {
 
   return (
     <>
+      <div className="flex flex-col text-center justify-center items-center mb-8">
+        <a
+          href="/"
+          className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
+        >
+          <div
+            className="mr-4"
+            style={{ borderRadius: "5px", overflow: "hidden" }}
+          >
+            <Image src={assets.png.LOGO} alt="logo" width={72} height={72} />
+          </div>
+          <h1>Dhora</h1>
+        </a>
+      </div>
       <p className="text-2xl md:text-4xl font-bold text-center mt-4 mb-12">
         Join us today!
       </p>
