@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { me } from "@/actions/(public)/(auth)/me";
 import StoreProvider from "@/provider";
 import WithAuth from "@/components/hoc/with-auth";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default async function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.className} min-h-screen`}>
         <StoreProvider>
-          <WithAuth>{children}</WithAuth>
+          <WithAuth>
+            <div className="flex flex-col min-h-screen">{children}</div>
+          </WithAuth>
         </StoreProvider>
       </body>
     </html>
