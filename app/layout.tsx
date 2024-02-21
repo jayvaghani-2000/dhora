@@ -20,7 +20,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} min-h-screen`}>
+      <body className={`${inter.className} bg-fixed min-h-screen`}>
         <StoreProvider>
           <WithAuth>
             <div className="flex flex-col min-h-screen">{children}</div>
