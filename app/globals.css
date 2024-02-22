@@ -39,8 +39,8 @@
     --body-background: 206 24% 13%;
     --primary-light-gray: 220 8% 23%;
     --primary-blue: 200 100% 50%; /* #00A8FF */
+    --divider: 240 5.3% 26.1%; /* #3f3f46 */
   }
-
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -118,4 +118,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+docuseal-builder {
+  height: unset !important;
 }

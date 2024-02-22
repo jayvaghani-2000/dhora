@@ -32,6 +32,6 @@ export type submitContractResponseType =
 export type getSubmittedContractResponseType =
   | {
       success: true;
-      data: SubmittedTemplateType;
+      data: SubmittedTemplateType["data"];
     }
   | errorType;

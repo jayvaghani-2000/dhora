@@ -8,9 +8,9 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
-const handler = async (user?: User) => {
+const handler = async (user: User) => {
   try {
-    const data = await getBusinessContract(user!.business_id!);
+    const data = await getBusinessContract(user.business_id!);
 
     return { success: true, data: data.map(i => stringifyBigint(i)) };
   } catch (err) {

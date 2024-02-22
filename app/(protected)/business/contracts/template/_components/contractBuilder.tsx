@@ -8,6 +8,7 @@ import { contractTemplateType } from "@/actions/_utils/types.type";
 import { updateContract } from "@/actions/(protected)/(contracts)/updateContract";
 import { Button } from "@/components/ui/button";
 import SendTemplate from "./sendTemplate";
+import { IoIosSend } from "react-icons/io";
 
 export enum PARAMS {
   CONTRACT_ID = "c_id",
@@ -55,8 +56,16 @@ const ContractBuilder = (props: propType) => {
   };
 
   return (
-    <div className="flex flex-col gap-5 justify-center">
-      <div className="bg-white">
+    <>
+      <div className="bg-zinc-700 flex flex-col md:gap-2 py-2 md:py-5 ">
+        <Button
+          variant="destructive"
+          onClick={handleToggleSendContract}
+          className="h-12 font-bold flex justify-center gap-2 rounded-full w-fit mr-4 ml-auto text-base self-end"
+        >
+          <IoIosSend color="#fff" size={22} />
+          <span className="hidden md:inline">SEND</span>{" "}
+        </Button>
         <DocusealBuilder
           token={token}
           onLoad={handleLoadNewContract}
@@ -65,13 +74,14 @@ const ContractBuilder = (props: propType) => {
           withSignYourselfButton={false}
           autosave={false}
           withSendButton={false}
+          customCss={`label {color: white} .contenteditable-container > .group {color: white} #title_container {color: white} button[draggable="true"] { color: white } .btn-outline {
+            color: white
+          }`}
         />
       </div>
-      <Button variant="destructive" onClick={handleToggleSendContract}>
-        Send
-      </Button>
+
       <SendTemplate open={sendContract} onClose={handleToggleSendContract} />
-    </div>
+    </>
   );
 };
 

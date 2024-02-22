@@ -2,6 +2,7 @@ import Image from "next/image";
 import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function PublicLayout({
   children,
@@ -12,7 +13,7 @@ export default function PublicLayout({
     <>
       <header className="sticky top-0 left-0 right-0 z-10">
         <div className={`w-full flex justify-between p-2 ${cn}`}>
-          <a
+          <Link
             href="/"
             className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white p-2"
           >
@@ -23,11 +24,11 @@ export default function PublicLayout({
               <Image src={assets.png.LOGO} alt="logo" width={48} height={48} />
             </div>
             Dhora
-          </a>
+          </Link>
           <div className="flex md:order-2 gap-4 p-2">
-            <a href="/login">
+            <Link href="/login">
               <Button className="w-[100px]">Login</Button>
-            </a>
+            </Link>
           </div>
         </div>
       </header>

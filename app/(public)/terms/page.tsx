@@ -37,8 +37,8 @@ export default function TermsPages() {
           materials; or
         </li>
         <li>
-          transferring the materials to another person or &quot;mirror&quot; the materials
-          on any other server.
+          transferring the materials to another person or &quot;mirror&quot; the
+          materials on any other server.
         </li>
       </ul>
 
@@ -57,24 +57,24 @@ export default function TermsPages() {
       <h2>3. Disclaimer</h2>
 
       <p>
-        All the materials on Dhora&apos;s Website are provided &quot;as is&quot;. Dhora makes
-        no warranties, may it be expressed or implied, therefore negates all
-        other warranties. Furthermore, Dhora does not make any representations
-        concerning the accuracy or reliability of the use of the materials on
-        its Website or otherwise relating to such materials or any sites linked
-        to this Website.
+        All the materials on Dhora&apos;s Website are provided &quot;as
+        is&quot;. Dhora makes no warranties, may it be expressed or implied,
+        therefore negates all other warranties. Furthermore, Dhora does not make
+        any representations concerning the accuracy or reliability of the use of
+        the materials on its Website or otherwise relating to such materials or
+        any sites linked to this Website.
       </p>
 
       <h2>4. Limitations</h2>
 
       <p>
         Dhora or its suppliers will not be hold accountable for any damages that
-        will arise with the use or inability to use the materials on Dhora&apos;s
-        Website, even if Dhora or an authorize representative of this Website
-        has been notified, orally or written, of the possibility of such damage.
-        Some jurisdiction does not allow limitations on implied warranties or
-        limitations of liability for incidental damages, these limitations may
-        not apply to you.
+        will arise with the use or inability to use the materials on
+        Dhora&apos;s Website, even if Dhora or an authorize representative of
+        this Website has been notified, orally or written, of the possibility of
+        such damage. Some jurisdiction does not allow limitations on implied
+        warranties or limitations of liability for incidental damages, these
+        limitations may not apply to you.
       </p>
 
       <h2>5. Revisions and Errata</h2>
@@ -112,8 +112,8 @@ export default function TermsPages() {
       <h2>9. Governing Law</h2>
 
       <p>
-        Any claim related to Dhora&apos;s Website shall be governed by the laws of us
-        without regards to its conflict of law provisions.
+        Any claim related to Dhora&apos;s Website shall be governed by the laws
+        of us without regards to its conflict of law provisions.
       </p>
     </div>
   );

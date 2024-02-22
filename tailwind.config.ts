@@ -30,6 +30,7 @@ const config = {
         "body-background": "hsl(var(--body-background))",
         "primary-light-gray": "hsl(var(--primary-light-gray))",
         "primary-blue": "hsl(var(--primary-blue))",
+        divider: "hsl(var(--divider))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

@@ -81,10 +81,7 @@ export function ConfirmAccount() {
         closable={false}
       >
         <DialogHeader>
-          <DialogTitle>Confirm your account</DialogTitle>
-          <DialogDescription>
-            Please enter the verification code received on your registered mail
-          </DialogDescription>
+          <DialogTitle className="text-center mb-4">Verify OTP</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           {!!error && (
@@ -92,7 +89,7 @@ export function ConfirmAccount() {
               {error}
             </p>
           )}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="text-center">
             <FormField
               control={form.control}
               name="verification_code"
@@ -109,24 +106,26 @@ export function ConfirmAccount() {
                 </FormItem>
               )}
             />
+            <div className="flex justify-end items-center mt-0">
+              <Button
+                className="px-1 py-0"
+                variant="link"
+                disabled={loading}
+                onClick={handleResendEmail}
+              >
+                Resend OTP
+              </Button>
+            </div>
 
-            <Button type="submit" disabled={loading}>
-              Verify
+            <Button
+              type="submit"
+              disabled={loading}
+              className="mt-4 mx-auto bg-primary-blue hover:bg-primary-blue text-white"
+            >
+              Submit
             </Button>
           </form>
         </Form>
-
-        <div className="flex justify-end items-center">
-          Didn&apos;t received any email?
-          <Button
-            className="px-1 py-0"
-            variant="link"
-            disabled={loading}
-            onClick={handleResendEmail}
-          >
-            Resend
-          </Button>
-        </div>
       </DialogContent>
     </Dialog>
   );

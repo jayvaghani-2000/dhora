@@ -17,7 +17,7 @@ import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import {
   DEFAULT_BUSINESS_LOGIN_REDIRECT,
-  DEFAULT_LOGIN_REDIRECT,
+  DEFAULT_USER_LOGIN_REDIRECT,
 } from "@/routes";
 
 export const register = async (values: z.infer<typeof registerSchema>) => {
@@ -78,6 +78,6 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
   );
 
   return redirect(
-    business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_LOGIN_REDIRECT
+    business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_USER_LOGIN_REDIRECT
   );
 };

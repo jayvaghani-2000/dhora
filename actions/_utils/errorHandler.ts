@@ -47,7 +47,7 @@ export const errorHandler = (err: unknown) => {
       return { error: errorObj.message, success: false };
     }
   } else if (err instanceof AxiosError) {
-    return { error: err.message, success: false };
+    return { error: err.response?.data?.error ?? "", success: false };
   } else if (err instanceof Error) {
     if (err.message === "User not found") {
       return { error: "User not found", success: false };

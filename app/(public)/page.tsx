@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function Home() {
   return (
@@ -12,7 +13,7 @@ export default async function Home() {
           modernize event planning. Click the button below to join us and get
           started.
         </p>
-        <a className="w-full" href="/register">
+        <Link className="w-full" href="/register">
           <Button
             className="mx-auto w-full max-w-md flex items-center space-x-2"
             hx-post="/partials/wait-list"
@@ -21,7 +22,7 @@ export default async function Home() {
           >
             Register
           </Button>
-        </a>
+        </Link>
       </div>
     </div>
   );

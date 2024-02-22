@@ -22,10 +22,10 @@ const handler = async (user: User, templateId: string) => {
             name: "New Contract",
             folder_name: user.email,
             template_id: templateId,
-            external_id: user.business_id.toString(),
           },
           config.env.DOCU_SEAL
         );
+
         return {
           success: true,
           data: { token, contract: stringifyBigint(contract) },
@@ -38,7 +38,6 @@ const handler = async (user: User, templateId: string) => {
         user_email: "jay.vaghani@propelius.tech",
         name: "New Contract",
         folder_name: user.email,
-        external_id: user.business_id!.toString(),
       },
       config.env.DOCU_SEAL
     );

@@ -10,7 +10,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
   DEFAULT_BUSINESS_LOGIN_REDIRECT,
-  DEFAULT_LOGIN_REDIRECT,
+  DEFAULT_USER_LOGIN_REDIRECT,
 } from "@/routes";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
@@ -46,6 +46,8 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     sessionCookie.attributes
   );
   return redirect(
-    user.business_id ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_LOGIN_REDIRECT
+    user.business_id
+      ? DEFAULT_BUSINESS_LOGIN_REDIRECT
+      : DEFAULT_USER_LOGIN_REDIRECT
   );
 };

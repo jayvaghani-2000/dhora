@@ -50,8 +50,8 @@ export default function PrivacyPage() {
           <p>
             <strong>Company</strong> referred to as either &quot;the
             Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in
-            this Agreement refers to Zerosoft LLC, 1214 Brookside Rd,
-            Piscataway NJ 08854.
+            this Agreement refers to Zerosoft LLC, 1214 Brookside Rd, Piscataway
+            NJ 08854.
           </p>
         </li>
         <li>
@@ -336,7 +336,8 @@ export default function PrivacyPage() {
         </li>
         <li>
           <p>
-            <strong>To contact You:</strong> {`To contact You by email, telephone
+            <strong>To contact You:</strong>{" "}
+            {`To contact You by email, telephone
             calls, SMS, or other equivalent forms of electronic communication,
             such as a mobile application's push notifications regarding updates
             or informative communications related to the functionalities,

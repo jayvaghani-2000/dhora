@@ -22,8 +22,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { submitContract } from "@/actions/(protected)/(contracts)/submitContract";
 import { submitContractResponseType } from "@/actions/_utils/types.type";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PARAMS } from "./contractBuilder";
+import { revalidate } from "@/actions/(public)/revalidate";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email." }),
@@ -36,6 +37,7 @@ type propType = {
 
 const SendTemplate = (prop: propType) => {
   const { onClose, open } = prop;
+  const navigate = useRouter();
   const params = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -63,6 +65,8 @@ const SendTemplate = (prop: propType) => {
       setError(res.error);
     } else {
       handleCloseSendTemplate();
+      await revalidate("/business/contracts");
+      navigate.replace("/business/contracts");
     }
     setLoading(false);
   }

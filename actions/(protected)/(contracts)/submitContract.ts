@@ -33,6 +33,8 @@ const handler = async (
     await axios.request(options);
     return { success: true, data: "Contract sent successfully." };
   } catch (err) {
+    console.log(err);
+
     return errorHandler(err);
   }
 };

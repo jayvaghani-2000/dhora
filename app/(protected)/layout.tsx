@@ -26,7 +26,7 @@ export default function RootLayout({
 
   return (
     <div className="flex">
-      <Navbar open={open} />
+      <Navbar open={open} handleClose={handleToggleNav} />
       <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[275px]">
         <button
           className={clsx({
@@ -60,7 +60,7 @@ export default function RootLayout({
             <MdOutlineSearch size={24} color="#b8b8b8" />
           </div>
         </div>
-        {children}
+        <div className="p-4 md:p-6">{children}</div>
       </div>
     </div>
   );

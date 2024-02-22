@@ -14,7 +14,7 @@ export default async function ContractsPage() {
     await getSubmittedContracts();
 
   return (
-    <div className="p-5 md:p-6 flex flex-col gap-10">
+    <div className="flex flex-col gap-10">
       <div className="grid gap-5 grid-cols-[repeat(auto-fill,minmax(160px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] overflow-auto auto-rows-auto	">
         <Placeholder />
         {data.success

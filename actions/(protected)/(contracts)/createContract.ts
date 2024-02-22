@@ -22,8 +22,6 @@ const handler = async (
       })
       .returning();
 
-    revalidatePath("/business/contracts")
-
     return { success: true, data: contract[0] };
   } catch (err) {
     return errorHandler(err);

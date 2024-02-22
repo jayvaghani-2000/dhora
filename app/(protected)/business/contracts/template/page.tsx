@@ -13,14 +13,7 @@ export default async function NewContractsPage(props: propType) {
     props.searchParams.c_id
   );
 
-  return (
-    <div className="p-5 md:p-6">
-      {data.success ? (
-        <ContractBuilder
-          token={data.data.token}
-          contract={data.data.contract}
-        />
-      ) : null}
-    </div>
-  );
+  return data.success ? (
+    <ContractBuilder token={data.data.token} contract={data.data.contract} />
+  ) : null;
 }
