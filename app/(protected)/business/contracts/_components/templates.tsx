@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Placeholder from "./placeholder";
 import { getContractType } from "@/actions/_utils/types.type";
 import Link from "next/link";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
+import { FaChevronDown } from "react-icons/fa6";
+import { FaChevronUp } from "react-icons/fa6";
 
 type propsType = {
   template: getContractType;
@@ -26,10 +28,11 @@ const Templates = (props: propsType) => {
           }
           setExpand(prev => !prev);
         }}
-        className="ml-auto block"
+        className="ml-auto flex items-center gap-1"
         variant="link"
       >
-        {expand ? "View less" : "View all"}
+        {expand ? "Hide" : "View"}
+        {expand ? <FaChevronUp /> : <FaChevronDown />}
       </Button>
       <div
         className={clsx({
