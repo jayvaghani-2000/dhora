@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <div className="flex">
       <Navbar open={open} handleClose={handleToggleNav} />
-      <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[272px]">
+      <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[272px] md:w-[calc(100dvw-272px)]">
         <button
           className={clsx({
             "block absolute inset-0 top-[48px] backdrop-blur-sm	z-[75]": open,

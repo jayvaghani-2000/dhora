@@ -60,20 +60,18 @@ const ContractBuilder = (props: propType) => {
     <>
       <div className="bg-zinc-700 flex flex-col md:gap-2 py-2 md:py-5 ">
         <Button
-          variant="destructive"
+          variant="secondary"
           onClick={handleToggleSendContract}
-          className="h-12 font-bold flex justify-center gap-2 rounded-full w-fit mr-4 ml-auto text-base self-end"
+          className=" font-bold flex justify-center gap-2 w-fit mr-4 ml-auto text-base self-end"
         >
-          <IoIosSend color="#fff" size={22} />
+          <IoIosSend size={22} />
           <span className="hidden md:inline">SEND</span>{" "}
         </Button>
         <DocusealBuilder
           token={token}
           onLoad={handleLoadNewContract}
           onSave={handleUpdateContract}
-          fieldTypes={["text", "signature", "date"]}
           withSignYourselfButton={false}
-          autosave={false}
           withSendButton={false}
           customCss={`label {color: white} .contenteditable-container > .group {color: white} #title_container {color: white} button[draggable="true"] { color: white } .btn-outline {
             color: white
