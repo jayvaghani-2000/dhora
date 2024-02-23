@@ -17,8 +17,8 @@ const handler = async (user: User) => {
       const options = {
         method: "GET",
         url: next
-          ? `https://api.docuseal.co/submitters?external_id=${user.business_id!.toString()}&after=${next}&limit=100`
-          : `https://api.docuseal.co/submitters?external_id=${user.business_id!.toString()}&limit=100`,
+          ? `https://api.docuseal.co/submissions?template_folder=${user.email!.toString()}&after=${next}&limit=100`
+          : `https://api.docuseal.co/submissions?template_folder=${user.email!.toString()}&limit=100`,
         headers: { "X-Auth-Token": config.env.DOCU_SEAL },
       };
 
@@ -29,7 +29,7 @@ const handler = async (user: User) => {
       dataThisTime = res.data.data;
     } while (dataThisTime.length > 0);
 
-    return { success: true as true, data: data };
+    return { success: true as true, data: data.filter(i => !i.archived_at) };
   } catch (err) {
     return errorHandler(err);
   }

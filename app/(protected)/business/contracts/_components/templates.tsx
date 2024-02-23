@@ -15,10 +15,6 @@ const Templates = (props: propsType) => {
   const ref = useRef<HTMLDivElement>(null!);
   const { template } = props;
 
-  useEffect(() => {
-    console.log(ref.current.scrollHeight);
-  }, []);
-
   return (
     <div>
       <Button

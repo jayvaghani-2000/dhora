@@ -27,6 +27,7 @@ type propType = { templates: getSubmittedContractResponseType["data"] };
 
 const SubmittedContract = (props: propType) => {
   const { templates } = props;
+
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -38,10 +39,10 @@ const SubmittedContract = (props: propType) => {
 
   const parsedTemplate = templates!.map(i => ({
     name: i.template.name,
-    submitter_email: i.email,
-    status: i.status,
-    sent_on: formatDate(i.sent_at),
-    id: i.submission_id,
+    submitter_email: i.submitters[0].email,
+    status: i.submitters[0].status,
+    sent_on: formatDate(i.submitters[0].sent_at),
+    id: i.id,
   }));
 
   const filteredTemplate = searchTableData(parsedTemplate, search);
