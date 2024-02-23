@@ -5,11 +5,11 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
+import { errorType } from "@/actions/_utils/types.type";
 
-const handler = async (
-  user: User,
-  data: { templateId: string; email: string }
-) => {
+type paramsType = { templateId: string; email: string };
+
+const handler = async (user: User, data: paramsType) => {
   let options = {
     method: "POST",
     url: "https://api.docuseal.co/submissions",
@@ -31,7 +31,7 @@ const handler = async (
 
   try {
     await axios.request(options);
-    return { success: true, data: "Contract sent successfully." };
+    return { success: true as true, data: "Contract sent successfully." };
   } catch (err) {
     console.log(err);
 
@@ -39,4 +39,7 @@ const handler = async (
   }
 };
 
-export const submitContract = validateBusinessToken(handler);
+export const submitContract: (
+  params: paramsType
+) => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

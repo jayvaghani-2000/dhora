@@ -6,6 +6,7 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
 import { SubmittedTemplateType } from "./_utils/submittedContract.type";
+import { errorType } from "@/actions/_utils/types.type";
 
 const handler = async (user: User) => {
   try {
@@ -28,10 +29,17 @@ const handler = async (user: User) => {
       dataThisTime = res.data.data;
     } while (dataThisTime.length > 0);
 
-    return { success: true, data: data };
+    return { success: true as true, data: data };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getSubmittedContracts = validateBusinessToken(handler);
+export const getSubmittedContracts: () => Promise<
+  | {
+      success: true;
+      data: SubmittedTemplateType["data"];
+      error?: never;
+    }
+  | errorType
+> = validateBusinessToken(handler);

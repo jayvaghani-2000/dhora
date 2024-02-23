@@ -28,11 +28,14 @@ const WithAuth = ({ children }: propType) => {
     const handleVerifySession = async () => {
       const user = await me();
 
+      const profile = user.data as profileType;
+
       if (user.success) {
         dispatch(
           setAuthData({
-            profile: user.data,
+            profile: profile,
             authenticated: true,
+            isBusinessUser: !!profile?.business_id,
             authCheck: true,
           })
         );
@@ -42,6 +45,7 @@ const WithAuth = ({ children }: propType) => {
             authCheck: true,
             authenticated: false,
             profile: {} as profileType,
+            isBusinessUser: false,
           })
         );
 

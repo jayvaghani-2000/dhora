@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { DatabaseError } from "pg";
 import { ZodError } from "zod";
+import { errorType } from "./types.type";
 
 const handleErrorMsg = (error: unknown) => {
   if (error instanceof ZodError) {
@@ -26,7 +27,7 @@ const handleErrorMsg = (error: unknown) => {
   }
 };
 
-export const errorHandler = (err: unknown) => {
+export const errorHandler: (err: unknown) => errorType = (err: unknown) => {
   if (err instanceof ZodError) {
     const errorObj = handleErrorMsg(err);
     return { error: errorObj.message, success: false };

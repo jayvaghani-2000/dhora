@@ -7,8 +7,16 @@ import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { stringifyBigint } from "../../_utils/stringifyBigint";
 import { TOKEN } from "@/cookie";
+import { errorType } from "@/actions/_utils/types.type";
 
-export const me = async () => {
+export const me: () => Promise<
+  | {
+      success: true;
+      data: NonNullable<Awaited<ReturnType<typeof getUser>>>;
+      error?: never;
+    }
+  | errorType
+> = async () => {
   const token = cookies().get(TOKEN);
 
   if (token) {

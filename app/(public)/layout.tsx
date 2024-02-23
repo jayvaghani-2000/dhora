@@ -3,12 +3,17 @@ import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { me } from "@/actions/(public)/(auth)/me";
+import { getInitial } from "@/lib/common";
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await me();
+
   return (
     <>
       <header className="sticky top-0 left-0 right-0 z-10">
@@ -26,9 +31,18 @@ export default function PublicLayout({
             Dhora
           </Link>
           <div className="flex md:order-2 gap-4 p-2">
-            <Link href="/login">
-              <Button className="w-[100px]">Login</Button>
-            </Link>
+            {user.success ? (
+              <div className="flex items-center gap-2">
+                <Avatar>
+                  <AvatarFallback>{getInitial(user.data.name)}</AvatarFallback>
+                </Avatar>
+                {user.data.name}
+              </div>
+            ) : (
+              <Link href="/login">
+                <Button className="w-[100px]">Login</Button>
+              </Link>
+            )}
           </div>
         </div>
       </header>
@@ -47,20 +61,20 @@ export default function PublicLayout({
         <div className="mr-10">
           <ul className="mt-3 flex flex-wrap items-center text-sm font-medium sm:mt-0">
             <li>
-              <a href="/privacy" className="mr-4 hover:underline md:mr-6">
+              <Link href="/privacy" className="mr-4 hover:underline md:mr-6">
                 Privacy
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/terms" className="mr-4 hover:underline md:mr-6">
+              <Link href="/terms" className="mr-4 hover:underline md:mr-6">
                 Terms
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/forum" className="hover:underline">
+              <Link href="/forum" className="hover:underline">
                 {" "}
                 Forum
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

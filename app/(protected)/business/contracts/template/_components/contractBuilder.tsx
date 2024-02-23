@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { DocusealBuilder } from "@docuseal/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createContract } from "@/actions/(protected)/(contracts)/createContract";
-import { contractTemplateType } from "@/actions/_utils/types.type";
+import { initiateContractResponseType } from "@/actions/_utils/types.type";
 import { updateContract } from "@/actions/(protected)/(contracts)/updateContract";
 import { Button } from "@/components/ui/button";
 import SendTemplate from "./sendTemplate";
@@ -15,14 +15,15 @@ export enum PARAMS {
 }
 
 type propType = {
-  token: string;
-  contract: contractTemplateType;
+  data: initiateContractResponseType["data"];
 };
 
 const ContractBuilder = (props: propType) => {
   const [sendContract, setSendContract] = useState(false);
   const params = useSearchParams();
-  const { token, contract } = props;
+  const { data } = props;
+  const { token, contract } = data!;
+
   const navigate = useRouter();
 
   const handleLoadNewContract = async (data: any) => {
@@ -44,7 +45,7 @@ const ContractBuilder = (props: propType) => {
 
   const handleUpdateContract = async (data: any) => {
     if (contract && data.name !== contract.name) {
-      await updateContract({
+      const res = await updateContract({
         template_id: data.id,
         name: data.name,
       });

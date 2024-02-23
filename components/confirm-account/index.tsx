@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/provider/store";
-import { setAuthData, useAuthStore } from "@/provider/store/authentication";
+import { setAuthData } from "@/provider/store/authentication";
 import { resendVerificationCode } from "@/actions/(public)/(auth)/resend-verification-code";
 import { verifyEmail } from "@/actions/(public)/(auth)/verify-email";
 import { profileType } from "@/actions/_utils/types.type";
@@ -40,8 +40,6 @@ const formSchema = z.object({
 });
 
 export function ConfirmAccount() {
-  const { profile } = useAuthStore();
-
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -59,9 +57,11 @@ export function ConfirmAccount() {
     });
 
     if (result?.success) {
+      const profile = { ...result.data } as profileType;
       dispatch(
         setAuthData({
-          profile: { ...result.data } as profileType,
+          profile: profile,
+          isBusinessUser: !!profile?.business_id,
         })
       );
     }

@@ -58,7 +58,7 @@ const SendTemplate = (prop: propType) => {
 
     setLoading(true);
     const res: submitContractResponseType = await submitContract({
-      templateId: contractId,
+      templateId: contractId!,
       email: values.email,
     });
     if (!res.success) {

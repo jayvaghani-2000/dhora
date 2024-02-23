@@ -1,4 +1,4 @@
-export function stringifyBigint(object: unknown) {
+export function stringifyBigint<T>(object: T): T {
   return JSON.parse(
     JSON.stringify(
       object,

@@ -10,18 +10,15 @@ import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (user: User) => {
   try {
-    const data = await getBusinessContract(user.business_id!);
+    const data = await db.query.contracts.findMany({
+      where: eq(contracts.business_id, user.business_id!),
+    });
 
-    return { success: true, data: data.map(i => stringifyBigint(i)) };
+    return { success: true as true, data: data.map(i => stringifyBigint(i)) };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getContracts = validateBusinessToken(handler);
-
-export const getBusinessContract = async (businessId: bigint) => {
-  return db.query.contracts.findMany({
-    where: eq(contracts.business_id, businessId),
-  });
-};
+export const getContracts: () => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

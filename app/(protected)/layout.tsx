@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <div className="flex">
       <Navbar open={open} handleClose={handleToggleNav} />
-      <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[275px]">
+      <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[272px]">
         <button
           className={clsx({
             "block absolute inset-0 top-[48px] backdrop-blur-sm	z-[75]": open,
@@ -51,7 +51,7 @@ export default function RootLayout({
           <button onClick={handleToggleNav}>
             <RiMenu5Fill size={24} color="#b8b8b8" />
           </button>
-          <button className="absolute left-16 after:content-[''] after:absolute after:h-2 after:w-2 after:rounded-full after:bg-[#FF0000] after:top-0">
+          <button className="absolute left-12 after:content-[''] after:absolute after:h-2 after:w-2 after:rounded-full after:bg-[#FF0000] after:top-0">
             <GoBell color="#b8b8b8" size={24} />
           </button>
 

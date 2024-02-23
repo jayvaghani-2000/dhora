@@ -1,37 +1,23 @@
-import { SubmittedTemplateType } from "../(protected)/(contracts)/_utils/submittedContract.type";
-import { getBusinessContract } from "../(protected)/(contracts)/getContracts";
-import { getContractTemplate } from "../(protected)/(contracts)/initiateContract";
+import { getContracts } from "../(protected)/(contracts)/getContracts";
+import { getSubmittedContracts } from "../(protected)/(contracts)/getSubmittedContract";
+import { initiateContract } from "../(protected)/(contracts)/initiateContract";
+import { submitContract } from "../(protected)/(contracts)/submitContract";
 import { getUser } from "../(public)/(auth)/me";
 
-type errorType = { success: false; error: string; data?: never };
+export type errorType = { success: false; error: string; data?: never };
 
 export type profileType = Awaited<ReturnType<typeof getUser>>;
 
-export type businessContractType = Awaited<
-  ReturnType<typeof getBusinessContract>
+export type getContractType = Awaited<ReturnType<typeof getContracts>>;
+
+export type initiateContractResponseType = Awaited<
+  ReturnType<typeof initiateContract>
 >;
 
-export type contractTemplateType = Awaited<
-  ReturnType<typeof getContractTemplate>
+export type submitContractResponseType = Awaited<
+  ReturnType<typeof submitContract>
 >;
 
-export type initiateContractResponseType =
-  | {
-      success: true;
-      data: { error?: never; token: string; contract?: contractTemplateType };
-    }
-  | errorType;
-
-export type submitContractResponseType =
-  | {
-      success: true;
-      data: string;
-    }
-  | errorType;
-
-export type getSubmittedContractResponseType =
-  | {
-      success: true;
-      data: SubmittedTemplateType["data"];
-    }
-  | errorType;
+export type getSubmittedContractResponseType = Awaited<
+  ReturnType<typeof getSubmittedContracts>
+>;

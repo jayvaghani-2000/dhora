@@ -6,4 +6,5 @@ export type AuthType = {
   profile: profileType;
   redirectTo: string;
   authCheck: boolean;
+  isBusinessUser: boolean;
 };

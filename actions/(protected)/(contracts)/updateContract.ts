@@ -26,10 +26,13 @@ const handler = async (
       )
       .returning();
 
-    return { success: true, data: contract[0] };
+    return { success: true as true, data: contract[0] };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const updateContract = validateBusinessToken(handler);
+export const updateContract: (
+  values: z.infer<typeof createContractSchema>
+) => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

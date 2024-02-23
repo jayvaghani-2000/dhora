@@ -16,6 +16,7 @@ export const initialState = {
   } as profileType,
   authCheck: false,
   redirectTo: DEFAULT_LOGIN_REDIRECT,
+  isBusinessUser: false,
 } as AuthType;
 
 export const authenticationSlice = createSlice({

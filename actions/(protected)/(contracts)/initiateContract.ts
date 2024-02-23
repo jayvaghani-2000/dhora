@@ -10,10 +10,15 @@ import { contracts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
-const handler = async (user: User, templateId: string) => {
+const handler = async (user: User, templateId?: string) => {
   try {
     if (templateId) {
-      const contract = await getContractTemplate(templateId, user);
+      const contract = await db.query.contracts.findFirst({
+        where: and(
+          eq(contracts.template_id, Number(templateId)),
+          eq(contracts.business_id, user.business_id!)
+        ),
+      });
 
       if (contract?.business_id === user.business_id) {
         const token = jwt.sign(
@@ -27,7 +32,7 @@ const handler = async (user: User, templateId: string) => {
         );
 
         return {
-          success: true,
+          success: true as true,
           data: { token, contract: stringifyBigint(contract) },
         };
       }
@@ -42,19 +47,13 @@ const handler = async (user: User, templateId: string) => {
       config.env.DOCU_SEAL
     );
 
-    return { success: true, data: { token } };
+    return { success: true as true, data: { token } };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getContractTemplate = async (templateId: string, user: User) => {
-  return db.query.contracts.findFirst({
-    where: and(
-      eq(contracts.template_id, Number(templateId)),
-      eq(contracts.business_id, user.business_id!)
-    ),
-  });
-};
-
-export const initiateContract = validateBusinessToken(handler);
+export const initiateContract: (
+  templateId?: string
+) => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

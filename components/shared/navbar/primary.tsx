@@ -21,10 +21,14 @@ const Primary = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between bg-primary-gray w-[60px] md:w-[75px] py-[10px]  md:py-[20px] px-[10px]">
+    <div className="flex flex-col justify-between bg-primary-gray w-[60px] md:w-[72px] py-[10px]  md:py-[20px] px-[10px]">
       <div className="flex flex-col gap-4">
-        <Link href={DEFAULT_LOGIN_REDIRECT}>
-          <Image src={assets.png.LOGO} alt="logo" width={55} height={55} />
+        <Link
+          href={DEFAULT_LOGIN_REDIRECT}
+          className="relative w-full"
+          style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
+        >
+          <Image src={assets.png.LOGO} alt="logo" fill />
         </Link>
       </div>
       <div className="flex flex-col gap-4 mb-2">
