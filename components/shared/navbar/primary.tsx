@@ -10,6 +10,7 @@ import { setAuthData } from "@/provider/store/authentication";
 import { Separator } from "@/components/ui/separator";
 import { PiBuildings } from "react-icons/pi";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { PiPlus } from "react-icons/pi";
 
 const Primary = () => {
   const dispatch = useAppDispatch();
@@ -43,21 +44,20 @@ const Primary = () => {
           <PiBuildings />
         </Link>
         <Separator className="bg-zinc-400 my-1" />
-        <ScrollArea className="w-full">
-          <Link
-            href={DEFAULT_LOGIN_REDIRECT}
-            className="border border-white p-[2px]"
-            style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
-          >
-            <PiBuildings />
-          </Link>
-        </ScrollArea>
+        <ScrollArea className="w-full"></ScrollArea>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-1">
+        <Link
+          href={DEFAULT_LOGIN_REDIRECT}
+          className="p-[2px]"
+          style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
+        >
+          <PiPlus />
+        </Link>
         <Separator className="bg-zinc-400 my-1" />
         <Button
           variant={"link"}
-          className="text-white p-0 h-[52px]"
+          className="text-white p-2 h-[52px]"
           onClick={handleSignOut}
         >
           Logout
