@@ -32,20 +32,17 @@ export default function RootLayout({
           className={clsx({
             "block absolute inset-0 top-[48px] backdrop-blur-sm	z-[75]": open,
             hidden: !open,
+            "md:hidden": true,
           })}
           onClick={handleToggleNav}
         ></button>
         <div
           className="hidden md:flex h-12 bg-primary-light-gray sticky top-0 z-[100] px-10 items-center justify-between
-        "
+         border-b-2 border-secondary-black "
         >
           <button className="relative  after:content-[''] after:absolute after:h-2 after:w-2 after:rounded-full after:bg-[#FF0000] after:top-0">
             <GoBell color="#b8b8b8" size={24} />
           </button>
-          <div>
-            <Input placeholder="Search" className="h-9" />
-          </div>
-          <div></div>
         </div>
         <div className="md:hidden bg-primary-light-gray p-2.5 flex sticky top-0 justify-between items-center z-[100] h-12">
           <button onClick={handleToggleNav}>

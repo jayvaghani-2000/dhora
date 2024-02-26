@@ -1,6 +1,4 @@
 import { getContracts } from "@/actions/(protected)/(contracts)/getContracts";
-import Placeholder from "./_components/placeholder";
-import Link from "next/link";
 import { getSubmittedContracts } from "@/actions/(protected)/(contracts)/getSubmittedContract";
 import SubmittedContract from "./template/_components/submittedContract";
 import Templates from "./_components/templates";

@@ -25,7 +25,6 @@ const handler = async (
         )
       )
       .returning();
-
     return { success: true as true, data: contract[0] };
   } catch (err) {
     return errorHandler(err);

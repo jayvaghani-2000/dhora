@@ -1,11 +1,16 @@
+import Link from "next/link";
 import Image from "next/image";
+import { LuMoveUpRight } from "react-icons/lu";
 import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { me } from "@/actions/(public)/(auth)/me";
 import { getInitial } from "@/lib/common";
+import {
+  DEFAULT_BUSINESS_LOGIN_REDIRECT,
+  DEFAULT_USER_LOGIN_REDIRECT,
+} from "@/routes";
 
 export default async function PublicLayout({
   children,
@@ -33,10 +38,20 @@ export default async function PublicLayout({
           <div className="flex md:order-2 gap-4 p-2">
             {user.success ? (
               <div className="flex items-center gap-2">
+                <Link
+                  className="flex items-center gap-1"
+                  href={
+                    user.data.business_id
+                      ? DEFAULT_BUSINESS_LOGIN_REDIRECT
+                      : DEFAULT_USER_LOGIN_REDIRECT
+                  }
+                >
+                  Dashboard <LuMoveUpRight />
+                </Link>
                 <Avatar>
                   <AvatarFallback>{getInitial(user.data.name)}</AvatarFallback>
                 </Avatar>
-                {user.data.name}
+                <span className="hidden md:inline">{user.data.name}</span>
               </div>
             ) : (
               <Link href="/login">

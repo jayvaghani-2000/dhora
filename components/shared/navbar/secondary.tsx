@@ -23,24 +23,24 @@ const Secondary = (props: { handleClose: () => void }) => {
   const MENU_ITEMS = isBusinessUser ? BUSINESS_MENU_ITEMS : USER_MENU_ITEMS;
 
   return (
-    <div className="bg-secondary-gray w-[200px] flex flex-col text-white">
+    <div className="bg-secondary-gray w-[200px] flex flex-col gap-1 text-white">
       {authenticated ? (
         <>
-          <div className="pl-5 pr-2 py-2 font-bold flex justify-between items-center text-base">
+          <div className="pl-5 pr-2 py-2 font-bold flex justify-between items-center text-base md:h-12 border-b-2 border-secondary-black mb-2">
             {isBusinessUser ? <span>Business</span> : <span>User</span>}
             <button className="inline-block md:hidden" onClick={handleClose}>
               <RxCross1 />
             </button>
           </div>
-          <div className=" border-b-2 border-divider mb-3" />
+
           {MENU_ITEMS.map(i => (
             <Link
               href={i.path}
               key={i.path}
               className={clsx({
-                "px-5 py-2 relative whitespace-nowrap uppercase font-semibold text-xs":
+                "px-5 py-2.5 relative whitespace-nowrap uppercase font-semibold text-xs text-secondary-light-gray hover:bg-active hover:text-white transition-all duration-500":
                   true,
-                "bg-gray-950 before:content-[''] before:absolute before:w-[5px] before:bg-white before:left-0 before:top-0 before:bottom-0":
+                "bg-active before:content-[''] before:absolute before:w-[5px] before:bg-white before:left-0 before:top-0 before:bottom-0":
                   location.startsWith(i.path),
               })}
             >

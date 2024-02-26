@@ -25,10 +25,15 @@ const Primary = () => {
       <div className="flex flex-col gap-4">
         <Link
           href={DEFAULT_LOGIN_REDIRECT}
-          className="relative w-full"
+          className="border border-white p-1 bg-secondary-black"
           style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
         >
-          <Image src={assets.png.LOGO} alt="logo" fill />
+          <div
+            className="relative w-full"
+            style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
+          >
+            <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" fill />
+          </div>
         </Link>
       </div>
       <div className="flex flex-col gap-4 mb-2">

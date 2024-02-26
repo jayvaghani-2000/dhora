@@ -23,7 +23,7 @@ const handler = async (user: User, templateId?: string) => {
       if (contract?.business_id === user.business_id) {
         const token = jwt.sign(
           {
-            user_email: "jay.vaghani@propelius.tech",
+            user_email: config.env.DOCU_SEAL_EMAIL,
             name: "New Contract",
             folder_name: user.email,
             template_id: templateId,
@@ -40,7 +40,7 @@ const handler = async (user: User, templateId?: string) => {
 
     const token = jwt.sign(
       {
-        user_email: "jay.vaghani@propelius.tech",
+        user_email: config.env.DOCU_SEAL_EMAIL,
         name: "New Contract",
         folder_name: user.email,
       },

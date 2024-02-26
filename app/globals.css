@@ -33,14 +33,18 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
-    --primary-gray: 206 27% 10%;
-    --secondary-gray: 202 11% 15%;
+    --primary-gray: 225 6% 13%; /* #1E1F22 */
+    --secondary-gray: 220 7% 18%; /* #2B2D31 */
     --primary-black: 210 15% 5%; /* #0B0D0F */
-    --body-background: 206 24% 13%;
-    --primary-light-gray: 220 8% 23%;
+    --secondary-black: 0 0% 15%; /* #262626 */
+    --body-background: 206 24% 13%; /* #192229 */
+    --primary-light-gray: 223 7% 21%; /* #313338 */
+    --active: 249 12% 11%; /* #1A1920 */
     --primary-blue: 200 100% 50%; /* #00A8FF */
-    --divider: 240 5.3% 26.1%; /* #3f3f46 */
+    --divider: 0 0% 28%; /* #474747 */
+    --secondary-light-gray: 240 5% 65%; /* #A1A1AA */
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;

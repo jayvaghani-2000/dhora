@@ -10,6 +10,7 @@ const env = createEnv({
     SENDGRID_API_KEY: z.string(),
     STRIPE_SECRET_KEY: z.string(),
     DOCU_SEAL: z.string(),
+    DOCU_SEAL_EMAIL: z.string(),
   },
   runtimeEnv: process.env,
 });

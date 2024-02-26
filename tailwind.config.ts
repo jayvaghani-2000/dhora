@@ -27,8 +27,11 @@ const config = {
         "primary-gray": "hsl(var(--primary-gray))",
         "secondary-gray": "hsl(var(--secondary-gray))",
         "primary-black": "hsl(var(--primary-black))",
+        "secondary-black": "hsl(var(--secondary-black))",
         "body-background": "hsl(var(--body-background))",
         "primary-light-gray": "hsl(var(--primary-light-gray))",
+        "secondary-light-gray": "hsl(var(--secondary-light-gray))",
+        active: "hsl(var(--active))",
         "primary-blue": "hsl(var(--primary-blue))",
         divider: "hsl(var(--divider))",
         primary: {
