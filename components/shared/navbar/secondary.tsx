@@ -23,7 +23,7 @@ const Secondary = (props: { handleClose: () => void }) => {
   const MENU_ITEMS = isBusinessUser ? BUSINESS_MENU_ITEMS : USER_MENU_ITEMS;
 
   return (
-    <div className="bg-secondary-gray w-[200px] flex flex-col gap-1 text-white">
+    <div className="bg-secondary-gray w-[248px] flex flex-col gap-1 text-white">
       {authenticated ? (
         <>
           <div className="pl-5 pr-2 py-2 font-bold flex justify-between items-center text-base md:h-12 border-b-2 border-secondary-black mb-2">

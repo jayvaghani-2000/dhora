@@ -25,7 +25,7 @@ const Primary = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between bg-primary-gray w-[60px] md:w-[72px] py-[10px] md:py-[10px] px-[10px]">
+    <div className="flex flex-col justify-between bg-primary-gray w-[72px] py-[10px] px-[10px]">
       <div className="flex flex-col gap-1">
         <Link
           href={DEFAULT_LOGIN_REDIRECT}
@@ -38,21 +38,22 @@ const Primary = () => {
         <Separator className="bg-zinc-400 my-1" />
         <Link
           href={DEFAULT_LOGIN_REDIRECT}
-          className="border border-white p-[2px]"
+          className="border border-white p-[2px] flex flex-col justify-center items-center"
           style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
         >
-          <PiBuildings />
+          <PiBuildings size={40} />
         </Link>
         <Separator className="bg-zinc-400 my-1" />
         <ScrollArea className="w-full"></ScrollArea>
       </div>
       <div className="flex flex-col gap-1">
+        <Separator className="bg-zinc-400 my-1" />
         <Link
           href={DEFAULT_LOGIN_REDIRECT}
-          className="p-[2px]"
+          className="p-[2px] flex flex-col justify-center items-center"
           style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
         >
-          <PiPlus />
+          <PiPlus size={40} />
         </Link>
         <Separator className="bg-zinc-400 my-1" />
         <Button
