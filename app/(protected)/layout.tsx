@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <div className="flex">
       <Navbar open={open} handleClose={handleToggleNav} />
-      <div className="flex-1 relative bg-body-background min-h-svh text-white md:ml-[272px] md:w-[calc(100dvw-272px)]">
+      <div className="flex-1 relative bg-background min-h-svh md:ml-[272px] md:w-[calc(100dvw-272px)]">
         <button
           className={clsx({
             "block absolute inset-0 top-[48px] backdrop-blur-sm	z-[75]": open,
@@ -36,10 +36,7 @@ export default function RootLayout({
           })}
           onClick={handleToggleNav}
         ></button>
-        <div
-          className="hidden md:flex h-12 bg-primary-light-gray sticky top-0 z-[100] px-10 items-center justify-between
-         border-b-2 border-secondary-black "
-        >
+        <div className="hidden md:flex h-12 bg-primary-light-gray sticky top-0 z-[100] px-10 items-center justify-between border-b-2 border-secondary-black">
           <button className="relative  after:content-[''] after:absolute after:h-2 after:w-2 after:rounded-full after:bg-[#FF0000] after:top-0">
             <GoBell color="#b8b8b8" size={24} />
           </button>
