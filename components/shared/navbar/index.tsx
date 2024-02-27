@@ -14,10 +14,10 @@ const Navbar = ({
   return (
     <div
       className={clsx({
-        "flex overflow-hidden transition-all md:transition-none fixed h-[calc(100dvh-48px)] md:h-[100dvh] z-[100]  top-[48px] md:top-0 bottom-0":
+        "flex overflow-hidden transition-all md:transition-none fixed h-[calc(100dvh-48px)] md:h-[100dvh] z-[100] top-[48px] md:top-0 bottom-0":
           true,
-        "w-[260px] md:w-[272px]": open,
-        "w-0 md:w-[272px]": !open,
+        "w-[320px] md:w-[320px]": open,
+        "w-0 md:w-[320px]": !open,
       })}
     >
       <Primary />
