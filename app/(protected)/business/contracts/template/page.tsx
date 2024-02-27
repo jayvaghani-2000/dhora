@@ -1,4 +1,4 @@
-import { initiateContract } from "@/actions/(protected)/(contracts)/initiateContract";
+import { initiateContract } from "@/actions/(protected)/contracts/initiateContract";
 import ContractBuilder from "./_components/contractBuilder";
 
 type propType = {

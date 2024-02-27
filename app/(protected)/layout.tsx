@@ -35,7 +35,7 @@ export default function ProtectedLayout({
   const activePage = getActivePage();
 
   return (
-    <div className="flex">
+    <>
       <Navbar open={open} handleClose={handleToggleNav} />
       <div className="flex-1 relative bg-background min-h-svh md:ml-[320px] md:w-[calc(100dvw-320px)]">
         <button
@@ -80,6 +80,6 @@ export default function ProtectedLayout({
         </div>
         <div className="p-4 md:p-6">{children}</div>
       </div>
-    </div>
+    </>
   );
 }

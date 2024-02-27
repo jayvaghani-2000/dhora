@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { deleteSubmittedContracts } from "@/actions/(protected)/(contracts)/deleteSubmittedContract";
+import { deleteSubmittedContracts } from "@/actions/(protected)/contracts/deleteSubmittedContract";
 import { Input } from "@/components/ui/input";
 import { formatDate, searchTableData } from "@/lib/common";
 import { Badge } from "@/components/ui/badge";
