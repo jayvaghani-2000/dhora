@@ -1,19 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { BUSINESS_MENU_ITEMS, USER_MENU_ITEMS } from "@/lib/navItem";
 import { useAuthStore } from "@/provider/store/authentication";
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RxCross1 } from "react-icons/rx";
-
-const BUSINESS_MENU_ITEMS = [
-  { title: "Contracts", path: "/business/contracts" },
-  // { title: "Invoices", path: "/business/invoices" },
-  // { title: "Availability", path: "/business/availability" },
-  // { title: "Booking Types", path: "/business/booking-types" },
-  // { title: "Bookings", path: "/business/bookings" },
-];
-
-const USER_MENU_ITEMS = [{ title: "Marketplace", path: "/app/marketplace" }];
 
 const Secondary = (props: { handleClose: () => void }) => {
   const { handleClose } = props;
@@ -38,13 +29,13 @@ const Secondary = (props: { handleClose: () => void }) => {
               href={i.path}
               key={i.path}
               className={clsx({
-                "px-5 py-2.5 relative whitespace-nowrap uppercase font-semibold text-xs text-secondary-light-gray hover:bg-active hover:text-white transition-all duration-500":
+                "px-5 py-2.5 relative whitespace-nowrap uppercase font-semibold text-xs text-secondary-light-gray hover:bg-active hover:text-white transition-all duration-500 flex gap-1 items-center":
                   true,
                 "bg-active before:content-[''] before:absolute before:w-[5px] before:bg-white before:left-0 before:top-0 before:bottom-0":
                   location.startsWith(i.path),
               })}
             >
-              {i.title}
+              {i.icon} {i.title}
             </Link>
           ))}
         </>

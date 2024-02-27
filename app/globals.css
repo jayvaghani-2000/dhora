@@ -43,6 +43,7 @@
     --primary-blue: 200 100% 50%; /* #00A8FF */
     --divider: 0 0% 28%; /* #474747 */
     --secondary-light-gray: 240 5% 65%; /* #A1A1AA */
+    --primary-background: 224 64% 33%; /* #1e3b8a */
   }
 
   .dark {
@@ -81,7 +82,7 @@
     @apply border-border;
   }
   body {
-    background-color: rgb(30, 58, 138);
+    background-color: rgb(30, 59, 138);
     background-image: radial-gradient(
         at 27% 59%,
         rgb(79, 70, 229) 0,
