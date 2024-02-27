@@ -6,14 +6,16 @@ import { Button } from "@/components/ui/button";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { logout } from "@/actions/(public)/(auth)/logout";
 import { useAppDispatch } from "@/provider/store";
-import { setAuthData } from "@/provider/store/authentication";
+import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import { Separator } from "@/components/ui/separator";
-import { PiBuildings } from "react-icons/pi";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PiPlus } from "react-icons/pi";
+import { HiOutlineBuildingOffice } from "react-icons/hi2";
+import PrimaryNavbarItem from "./components/primaryNavbarItem";
 
 const Primary = () => {
   const dispatch = useAppDispatch();
+  const { isBusinessUser } = useAuthStore();
 
   const handleSignOut = async () => {
     await logout();
@@ -25,40 +27,35 @@ const Primary = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between bg-primary-gray w-[72px] py-[10px] px-[10px]">
-      <div className="flex flex-col gap-1">
-        <Link
-          href={DEFAULT_LOGIN_REDIRECT}
-          style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
-        >
-          <div className="relative w-full">
-            <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" />
-          </div>
-        </Link>
-        <Separator className="bg-zinc-400 my-1" />
-        <Link
-          href={DEFAULT_LOGIN_REDIRECT}
-          className="border border-white p-[2px] flex flex-col justify-center items-center"
-          style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
-        >
-          <PiBuildings size={40} />
-        </Link>
-        <Separator className="bg-zinc-400 my-1" />
-        <ScrollArea className="w-full"></ScrollArea>
+    <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
+      <PrimaryNavbarItem path="/@me" key="/@me" tooltip="@me">
+        <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" />
+      </PrimaryNavbarItem>
+      <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
+      <div className="flex flex-col gap-2">
+        {isBusinessUser && (
+          <PrimaryNavbarItem
+            path="/business/contracts"
+            key="/business"
+            tooltip="Business"
+          >
+            <HiOutlineBuildingOffice />
+          </PrimaryNavbarItem>
+        )}
       </div>
-      <div className="flex flex-col gap-1">
-        <Separator className="bg-zinc-400 my-1" />
-        <Link
-          href={DEFAULT_LOGIN_REDIRECT}
-          className="p-[2px] flex flex-col justify-center items-center"
-          style={{ borderRadius: "5px", overflow: "hidden", aspectRatio: 1 }}
-        >
-          <PiPlus size={40} />
+      <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
+      <ScrollArea className="flex-1 w-full"></ScrollArea>
+      <div className="flex items-center flex-col gap-y-2">
+        <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
+        <Link href={DEFAULT_LOGIN_REDIRECT}>
+          <Button variant="ghost" className="h-[48px] w-[48px]">
+            <PiPlus />
+          </Button>
         </Link>
-        <Separator className="bg-zinc-400 my-1" />
+        <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
         <Button
-          variant={"link"}
-          className="text-white p-2 h-[52px]"
+          variant="ghost"
+          className="text-white p-2 h-[48px] w-[48px]"
           onClick={handleSignOut}
         >
           Logout

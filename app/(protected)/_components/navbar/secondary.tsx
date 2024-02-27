@@ -1,5 +1,4 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { BUSINESS_MENU_ITEMS, USER_MENU_ITEMS } from "@/lib/navItem";
 import { useAuthStore } from "@/provider/store/authentication";
 import clsx from "clsx";
 import Link from "next/link";
@@ -10,8 +9,6 @@ const Secondary = (props: { handleClose: () => void }) => {
   const { handleClose } = props;
   const location = usePathname();
   const { isBusinessUser, authenticated } = useAuthStore();
-
-  const MENU_ITEMS = isBusinessUser ? BUSINESS_MENU_ITEMS : USER_MENU_ITEMS;
 
   return (
     <div className="bg-secondary-gray w-[248px] flex flex-col gap-1 text-white">
@@ -24,7 +21,7 @@ const Secondary = (props: { handleClose: () => void }) => {
             </button>
           </div>
 
-          {MENU_ITEMS.map(i => (
+          {/* {MENU_ITEMS.map(i => (
             <Link
               href={i.path}
               key={i.path}
@@ -37,7 +34,7 @@ const Secondary = (props: { handleClose: () => void }) => {
             >
               {i.icon} {i.title}
             </Link>
-          ))}
+          ))} */}
         </>
       ) : (
         <div className="px-2  flex flex-col py-2 space-y-2">

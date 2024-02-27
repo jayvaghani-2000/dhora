@@ -1,27 +1,22 @@
 "use client";
-import clsx from "clsx";
 
 import Primary from "./primary";
 import Secondary from "./secondary";
 
-const Navbar = ({
-  open,
-  handleClose,
-}: {
-  open: boolean;
-  handleClose: () => void;
-}) => {
+const Navbar = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div
-      className={clsx({
-        "flex overflow-hidden transition-all md:transition-none fixed h-[calc(100dvh-48px)] md:h-[100dvh] z-[100] top-[48px] md:top-0 bottom-0":
-          true,
-        "w-[320px] md:w-[320px]": open,
-        "w-0 md:w-[320px]": !open,
-      })}
-    >
-      <Primary />
-      <Secondary handleClose={handleClose} />
+    <div className="h-full">
+      <div className="hidden md:flex h-full w-[72px] z-30 flex-col fixed inset-y-0">
+        <Primary />
+      </div>
+      <main className="md:pl-[72px] h-full">
+        <div className="h-full">
+          <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
+            <Secondary />
+          </div>
+          <main className="h-full md:pl-60">{children}</main>
+        </div>
+      </main>
     </div>
   );
 };

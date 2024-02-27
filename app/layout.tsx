@@ -23,7 +23,7 @@ export default async function RootLayout({
       >
         <StoreProvider>
           <WithAuth>
-            <div className="flex flex-col min-h-screen">{children}</div>
+            <>{children}</>
           </WithAuth>
         </StoreProvider>
       </body>
