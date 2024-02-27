@@ -1,11 +1,14 @@
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
+  doublePrecision,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
   timestamp,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -29,7 +32,7 @@ export const users = pgTable("users", {
 
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  email_verified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
   password: text("password").notNull(),
   verification_code: text("verification_code"),
@@ -65,6 +68,9 @@ export const businesses = pgTable("business", {
     .default(sql`public.id_generator()`),
   type: businessTypeEnum("type").notNull(),
   name: text("name").notNull(),
+  address: text("address"),
+  contact: varchar("contact", { length: 20 }),
+  logo: text("logo"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -72,6 +78,7 @@ export const businesses = pgTable("business", {
 export const businessRelations = relations(businesses, ({ many }) => ({
   users: many(users),
   contacts: many(contracts),
+  invoices: many(invoices),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -90,6 +97,33 @@ export const contracts = pgTable("contracts", {
 export const contractsRelations = relations(contracts, ({ one }) => ({
   business: one(businesses, {
     fields: [contracts.business_id],
+    references: [businesses.id],
+  }),
+}));
+
+export const invoices = pgTable("invoices", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  business_name: text("business_name").notNull(),
+  business_contact: varchar("business_contact", { length: 20 }).notNull(),
+  business_address: text("business_address"),
+  business_logo: text("business_logo"),
+  customer_name: text("customer_name").notNull(),
+  customer_email: text("customer_email").notNull(),
+  items: jsonb("items"),
+  tax: integer("tax").notNull(),
+  total: doublePrecision("total").notNull(),
+  business_id: bigint("business_id", { mode: "bigint" })
+    .references(() => businesses.id)
+    .notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const invoicesRelations = relations(invoices, ({ one }) => ({
+  business: one(businesses, {
+    fields: [invoices.business_id],
     references: [businesses.id],
   }),
 }));

@@ -1,4 +1,7 @@
-import { LiaFileContractSolid } from "react-icons/lia";
+import {
+  LiaFileContractSolid,
+  LiaFileInvoiceDollarSolid,
+} from "react-icons/lia";
 import { MdCorporateFare } from "react-icons/md";
 
 export const BUSINESS_MENU_ITEMS = [
@@ -7,7 +10,11 @@ export const BUSINESS_MENU_ITEMS = [
     path: "/business/contracts",
     icon: <LiaFileContractSolid size={18} />,
   },
-  // { title: "Invoices", path: "/business/invoices" },
+  {
+    title: "Invoices",
+    path: "/business/invoices",
+    icon: <LiaFileInvoiceDollarSolid size={18} />,
+  },
   // { title: "Availability", path: "/business/availability" },
   // { title: "Booking Types", path: "/business/booking-types" },
   // { title: "Bookings", path: "/business/bookings" },

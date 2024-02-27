@@ -15,6 +15,13 @@
       "when": 1708416807783,
       "tag": "0001_sturdy_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1709018936710,
+      "tag": "0002_massive_hercules",
+      "breakpoints": true
     }
   ]
 }

@@ -12,7 +12,7 @@ export const initialState = {
   loading: false,
   authenticated: false,
   profile: {
-    emailVerified: new Date(),
+    email_verified: new Date(),
   } as profileType,
   authCheck: false,
   redirectTo: DEFAULT_LOGIN_REDIRECT,

@@ -41,5 +41,6 @@ export const me: () => Promise<
 export const getUser = async (email: string) => {
   return db.query.users.findFirst({
     where: eq(users.email, email),
+    with: { business: true },
   });
 };

@@ -6,7 +6,6 @@ import { contracts, createContractSchema } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { revalidatePath } from "next/cache";
 
 const handler = async (
   user: User,

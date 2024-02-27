@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { BUSINESS_MENU_ITEMS, USER_MENU_ITEMS } from "@/lib/navItem";
+import { BUSINESS_MENU_ITEMS, USER_MENU_ITEMS } from "@/lib/nav-item";
 import { useAuthStore } from "@/provider/store/authentication";
 import clsx from "clsx";
 import Link from "next/link";

@@ -7,7 +7,7 @@ import { MdOutlineSearch } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/provider/store/authentication";
-import { BUSINESS_MENU_ITEMS, USER_MENU_ITEMS } from "@/lib/navItem";
+import { BUSINESS_MENU_ITEMS, USER_MENU_ITEMS } from "@/lib/nav-item";
 
 export default function RootLayout({
   children,

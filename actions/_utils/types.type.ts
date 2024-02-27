@@ -21,3 +21,5 @@ export type submitContractResponseType = Awaited<
 export type getSubmittedContractResponseType = Awaited<
   ReturnType<typeof getSubmittedContracts>
 >;
+
+

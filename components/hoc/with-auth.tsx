@@ -58,7 +58,7 @@ const WithAuth = ({ children }: propType) => {
   }, [authenticated, router, dispatch, path]);
 
   const body =
-    authenticated && !profile?.emailVerified ? <ConfirmAccount /> : children;
+    authenticated && !profile?.email_verified ? <ConfirmAccount /> : children;
 
   return !authCheck && authRoutes.includes(path) ? (
     <div className="h-screen flex justify-center items-center">
