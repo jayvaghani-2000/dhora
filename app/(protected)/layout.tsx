@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/shared/navbar";
+import Navbar from "@/app/(protected)/_components/navbar";
 import clsx from "clsx";
 import { GoBell } from "react-icons/go";
 import { RiMenu5Fill } from "react-icons/ri";
@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/provider/store/authentication";
 import { BUSINESS_MENU_ITEMS, USER_MENU_ITEMS } from "@/lib/navItem";
 
-export default function RootLayout({
+export default function ProtectedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
