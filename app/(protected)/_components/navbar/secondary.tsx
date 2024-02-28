@@ -9,7 +9,7 @@ import { BsShop } from "react-icons/bs";
 import { LiaFileContractSolid } from "react-icons/lia";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 
-const StaticOptions = [
+export const StaticOptions = [
   {
     key: "me",
     options: [
@@ -47,7 +47,6 @@ const StaticOptions = [
 
 const Secondary = () => {
   const path = usePathname();
-
   const key = StaticOptions.findIndex(o => path.startsWith(`/${o.key}`));
   const route = StaticOptions[key];
   const options = route.options;
