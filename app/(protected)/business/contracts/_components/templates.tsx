@@ -45,8 +45,10 @@ const Templates = (props: propsType) => {
           <h4 className="text-sm font-semibold">Contract templates</h4>
           <CollapsibleTrigger asChild>
             <div>
-              <span className="mr-1">Show n more...</span>
-              <Button variant="ghost" size="sm" className="w-9 p-0">
+              <Button variant="ghost" size="sm" className="p-4">
+                <span className="mr-2 text-sm text-muted text-zinc-400">
+                  Show all...
+                </span>
                 <ChevronsUpDown className="h-4 w-4" />
                 <span className="sr-only">Toggle</span>
               </Button>
