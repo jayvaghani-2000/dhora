@@ -36,13 +36,13 @@ const StaticOptions = [
 const Secondary = () => {
   const path = usePathname();
 
-  const options = StaticOptions.find(o =>
-    path.startsWith(`/${o.key}`)
-  )?.options;
+  const key = StaticOptions.findIndex(o => path.startsWith(`/${o.key}`));
+  const route = StaticOptions[key];
+  const options = route.options;
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-      <SecondaryNavbarHeader title="business" />
+      <SecondaryNavbarHeader title={route.key} />
       <ScrollArea className="flex-1 px-3">
         <div className="mt-2">
           <SecondaryNavbarSearch data={[]} />
