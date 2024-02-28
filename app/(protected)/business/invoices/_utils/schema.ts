@@ -10,10 +10,17 @@ export const invoiceSchema = z.object({
   business_contact: z
     .string()
     .refine(data => data.length > 0, { message: "Contact is required" }),
+  customer_contact: z
+    .string()
+    .refine(data => data.length > 0, { message: "Contact is required" }),
   customer_name: z
     .string()
     .refine(data => data.length > 0, { message: "Customer name is required" }),
+  customer_address: z
+    .string()
+    .refine(data => data.length > 0, { message: "Address is required" }),
   customer_email: z.string().email({ message: "Enter valid email" }),
+  business_email: z.string().email({ message: "Enter valid email" }),
   items: z.array(
     z.object({
       name: z
