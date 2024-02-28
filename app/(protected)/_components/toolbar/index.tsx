@@ -19,7 +19,7 @@ export default function Toolbar({ open, handleToggleNav }: Props) {
         })}
         onClick={handleToggleNav}
       />
-      <div className="hidden md:flex h-12 bg-primary-light-gray sticky top-0 z-[100] px-2 items-center border-b-2 border-secondary-black gap-2">
+      <div className="hidden md:flex h-12 bg-primary-light-gray sticky top-0 z-20 px-2 items-center border-b-2 border-secondary-black gap-2">
         <button className="relative after:content-[''] after:absolute after:h-2 after:w-2 after:rounded-full after:bg-[#FF0000] after:top-0">
           <GoBell color="#b8b8b8" size={24} />
         </button>

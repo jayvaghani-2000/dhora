@@ -14,6 +14,7 @@ import { HiOutlineBuildingOffice } from "react-icons/hi2";
 import PrimaryNavbarItem, {
   PrimaryNavbarProps,
 } from "./components/primaryNavbarItem";
+import { usePathname } from "next/navigation";
 
 const StaticRoutes: PrimaryNavbarProps[] = [
   {
@@ -27,6 +28,7 @@ const StaticRoutes: PrimaryNavbarProps[] = [
 const Primary = () => {
   const dispatch = useAppDispatch();
   const { isBusinessUser } = useAuthStore();
+  const path = usePathname();
 
   const handleSignOut = async () => {
     await logout();
@@ -37,6 +39,8 @@ const Primary = () => {
     );
   };
 
+  // TODO: Figure out which item is selected and store in state. Should update on every selection.
+
   return (
     <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
       <PrimaryNavbarItem path="/@me" key="/@me" tooltip="@me" active={false}>
@@ -45,17 +49,19 @@ const Primary = () => {
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
       <div className="flex flex-col gap-2">
         {isBusinessUser && (
-          <PrimaryNavbarItem
-            path="/business/contracts"
-            key="/business"
-            tooltip="Business"
-            active={false}
-          >
-            <HiOutlineBuildingOffice />
-          </PrimaryNavbarItem>
+          <>
+            <PrimaryNavbarItem
+              path="/business/contracts"
+              key="/business"
+              tooltip="Business"
+              active={true}
+            >
+              <HiOutlineBuildingOffice />
+            </PrimaryNavbarItem>
+            <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
+          </>
         )}
       </div>
-      <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
       <ScrollArea className="flex-1 w-full"></ScrollArea>
       <div className="flex items-center flex-col gap-y-2">
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />

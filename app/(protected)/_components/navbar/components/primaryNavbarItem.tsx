@@ -21,8 +21,7 @@ export default function PrimaryNavbarItem(props: PrimaryNavbarProps) {
           <Button
             variant="ghost"
             className={clsx({
-              // TODO: Set active state to add a halo around the selected icon
-              "": active,
+              "border border-white": active,
               "": !active,
               "w-[48px] h-[48px]": true,
             })}
