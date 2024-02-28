@@ -5,12 +5,22 @@ import { usePathname } from "next/navigation";
 import SecondaryNavbarHeader from "./components/secondaryNavbarHeader";
 import SecondaryNavbarSearch from "./components/secondaryNavbarSearch";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { BsShop } from "react-icons/bs";
 import { LiaFileContractSolid } from "react-icons/lia";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 
 const StaticOptions = [
+  {
+    key: "me",
+    options: [
+      {
+        key: "marketplace",
+        title: "Marketplace",
+        icon: <BsShop />,
+        path: "/marketplace",
+      },
+    ],
+  },
   {
     key: "@me",
     options: [
@@ -60,7 +70,8 @@ const Secondary = () => {
                 id={o.key}
                 title={o.title}
                 icon={o.icon}
-                path={path}
+                path={o.path}
+                currentPath={path}
               />
             );
           })}
