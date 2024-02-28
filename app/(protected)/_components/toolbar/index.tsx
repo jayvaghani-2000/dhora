@@ -1,12 +1,7 @@
 import { GoBell } from "react-icons/go";
 import { MobileToggle } from "../navbar/mobileToggle";
 
-export interface Props {
-  open: boolean;
-  handleToggleNav: () => void;
-}
-
-export default function Toolbar({ open, handleToggleNav }: Props) {
+export default function Toolbar() {
   return (
     <>
       <div className="text-md bg-primary-light-gray font-semibold px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2">

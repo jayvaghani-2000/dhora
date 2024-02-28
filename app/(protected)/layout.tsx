@@ -10,16 +10,6 @@ export default function ProtectedLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [setOpen]);
-
-  const handleToggleNav = () => {
-    setOpen(open => !open);
-  };
-
   return (
     <div className="h-full">
       <div className="hidden md:flex h-full w-[72px] z-30 flex-col fixed inset-y-0">
@@ -32,7 +22,7 @@ export default function ProtectedLayout({
           </div>
           <main className="h-full md:pl-[248px]">
             <div className="flex-1 relative bg-background min-h-svh">
-              <Toolbar open={open} handleToggleNav={handleToggleNav} />
+              <Toolbar />
               <div className="p-4 md:p-6">{children}</div>
             </div>
           </main>
