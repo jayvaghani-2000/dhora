@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { login } from "@/actions/(public)/(auth)/login";
+import { login } from "@/actions/(auth)/login";
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);

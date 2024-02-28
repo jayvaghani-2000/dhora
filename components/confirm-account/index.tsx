@@ -24,8 +24,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData } from "@/provider/store/authentication";
-import { resendVerificationCode } from "@/actions/(public)/(auth)/resend-verification-code";
-import { verifyEmail } from "@/actions/(public)/(auth)/verify-email";
+import { resendVerificationCode } from "@/actions/(auth)/resend-verification-code";
+import { verifyEmail } from "@/actions/(auth)/verify-email";
 import { profileType } from "@/actions/_utils/types.type";
 
 const formSchema = z.object({

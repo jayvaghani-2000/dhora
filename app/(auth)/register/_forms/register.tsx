@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
-import { register } from "@/actions/(public)/(auth)/register";
+import { register } from "@/actions/(auth)/register";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);

@@ -5,7 +5,7 @@ import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { me } from "@/actions/(public)/(auth)/me";
+import { me } from "@/actions/(auth)/me";
 import { getInitial } from "@/lib/common";
 import {
   DEFAULT_BUSINESS_LOGIN_REDIRECT,

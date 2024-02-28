@@ -4,7 +4,7 @@ import Link from "next/link";
 import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { logout } from "@/actions/(public)/(auth)/logout";
+import { logout } from "@/actions/(auth)/logout";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import { Separator } from "@/components/ui/separator";

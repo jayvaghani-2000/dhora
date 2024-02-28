@@ -7,7 +7,7 @@ import { Argon2id } from "oslo/password";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { stringifyBigint } from "../../_utils/stringifyBigint";
+import { stringifyBigint } from "../_utils/stringifyBigint";
 import { TOKEN } from "@/cookie";
 
 export const verifyEmail = async (
