@@ -11,8 +11,6 @@ interface SecondaryNavbarItemProps {
 export default function SecondaryNavbarItem(props: SecondaryNavbarItemProps) {
   const { id, title, icon, path } = props;
 
-  console.log(id);
-
   return (
     <div className="mb-1">
       <Link href={path}>
