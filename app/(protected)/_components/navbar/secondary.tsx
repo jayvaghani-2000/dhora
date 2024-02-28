@@ -56,7 +56,7 @@ const Secondary = () => {
                 id={o.key}
                 title={o.title}
                 icon={o.icon}
-                path={o.path}
+                path={path}
               />
             );
           })}
