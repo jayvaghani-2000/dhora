@@ -53,6 +53,7 @@ const Secondary = () => {
             return (
               <SecondaryNavbarItem
                 key={o.key}
+                id={o.key}
                 title={o.title}
                 icon={o.icon}
                 path={o.path}
