@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Navbar from "./_components/navbar";
-import Toolbar from "./_components/toolbar";
+import Primary from "./_components/navbar/primary";
 
 export default function ProtectedLayout({
   children,
@@ -20,13 +19,11 @@ export default function ProtectedLayout({
   };
 
   return (
-    <>
-      <Navbar>
-        <div className="flex-1 relative bg-background min-h-svh">
-          <Toolbar open={open} handleToggleNav={handleToggleNav} />
-          <div className="p-4 md:p-6">{children}</div>
-        </div>
-      </Navbar>
-    </>
+    <div className="h-full">
+      <div className="hidden md:flex h-full w-[72px] z-30 flex-col fixed inset-y-0">
+        <Primary />
+      </div>
+      <main className="md:pl-[72px] h-full">{children}</main>
+    </div>
   );
 }

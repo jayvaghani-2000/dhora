@@ -1,3 +1,5 @@
+"use client";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePathname } from "next/navigation";
 import SecondaryNavbarHeader from "./components/secondaryNavbarHeader";
@@ -39,6 +41,8 @@ const Secondary = () => {
   const key = StaticOptions.findIndex(o => path.startsWith(`/${o.key}`));
   const route = StaticOptions[key];
   const options = route.options;
+
+  if (!options) return null;
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
