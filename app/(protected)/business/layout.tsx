@@ -1,4 +1,4 @@
-import { validateBusinessToken } from "@/actions/(protected)/validateBusiness";
+import { validateBusinessToken } from "@/actions/(auth)/validateBusiness";
 
 export default async function BusinessLayout({
   children,

@@ -16,9 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { login } from "@/actions/(public)/(auth)/login";
-import { assets } from "@/components/assets";
-import Image from "next/image";
+import { login } from "@/actions/(auth)/login";
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -43,20 +41,6 @@ export function LoginForm() {
 
   return (
     <>
-      <div className="flex flex-col text-center justify-center items-center mb-8">
-        <a
-          href="/"
-          className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
-        >
-          <div
-            className="mr-4"
-            style={{ borderRadius: "5px", overflow: "hidden" }}
-          >
-            <Image src={assets.png.LOGO} alt="logo" width={48} height={48} />
-          </div>
-          <h1>Dhora</h1>
-        </a>
-      </div>
       <p className="text-2xl md:text-4xl font-bold text-center mt-4 mb-12">
         Welcome back!
       </p>

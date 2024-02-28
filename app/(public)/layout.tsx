@@ -5,7 +5,7 @@ import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { me } from "@/actions/(public)/(auth)/me";
+import { me } from "@/actions/(auth)/me";
 import { getInitial } from "@/lib/common";
 import {
   DEFAULT_BUSINESS_LOGIN_REDIRECT,
@@ -20,7 +20,7 @@ export default async function PublicLayout({
   const user = await me();
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <header className="sticky top-0 left-0 right-0 z-10 bg-primary-background md:bg-transparent">
         <div className={`w-full flex justify-between p-2 ${cn}`}>
           <Link
@@ -94,6 +94,6 @@ export default async function PublicLayout({
           </ul>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

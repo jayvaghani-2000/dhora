@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/provider/store/authentication";
 import { invoiceSchema } from "../_utils/schema";
 import { LiaPlusSolid } from "react-icons/lia";
-import { generateInvoice } from "@/actions/(protected)/(invoices)/generateInvoice";
+import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
 
 const InvoiceForm = () => {
   const { profile, authenticated } = useAuthStore();

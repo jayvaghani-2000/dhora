@@ -1,8 +1,8 @@
-import { getContracts } from "../(protected)/(contracts)/getContracts";
-import { getSubmittedContracts } from "../(protected)/(contracts)/getSubmittedContract";
-import { initiateContract } from "../(protected)/(contracts)/initiateContract";
-import { submitContract } from "../(protected)/(contracts)/submitContract";
-import { getUser } from "../(public)/(auth)/me";
+import { getContracts } from "../(protected)/contracts/getContracts";
+import { getSubmittedContracts } from "../(protected)/contracts/getSubmittedContract";
+import { initiateContract } from "../(protected)/contracts/initiateContract";
+import { submitContract } from "../(protected)/contracts/submitContract";
+import { getUser } from "../(auth)/me";
 
 export type errorType = { success: false; error: string; data?: never };
 

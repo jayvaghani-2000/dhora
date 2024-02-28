@@ -1,4 +1,4 @@
-import { validateUserToken } from "@/actions/(protected)/validateUser";
+import { validateUserToken } from "@/actions/(auth)/validateUser";
 
 export default async function UserLayout({
   children,
