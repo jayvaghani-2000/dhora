@@ -22,7 +22,7 @@ export default function ProtectedLayout({
   return (
     <>
       <Navbar>
-        <div className="flex-1 relative bg-background min-h-svh md:ml-[320px] md:w-[calc(100dvw-320px)]">
+        <div className="flex-1 relative bg-background min-h-svh">
           <Toolbar open={open} handleToggleNav={handleToggleNav} />
           <div className="p-4 md:p-6">{children}</div>
         </div>

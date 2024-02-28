@@ -2,24 +2,31 @@ import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { ActionTooltip } from "@/components/shared/action-tooltip";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
-interface Props {
+export interface PrimaryNavbarProps {
   path: string;
   tooltip: string;
-  key?: string;
   children: ReactNode;
+  active: boolean;
 }
 
-export default function PrimaryNavbarItem(props: Props) {
-  const pathname = usePathname();
-  const { path, children, tooltip } = props;
+export default function PrimaryNavbarItem(props: PrimaryNavbarProps) {
+  const { path, children, tooltip, active } = props;
 
   return (
     <div>
       <ActionTooltip side="right" align="center" label={tooltip}>
         <Link href={path}>
-          <Button variant="ghost" className="w-[48px] h-[48px]">
+          <Button
+            variant="ghost"
+            className={clsx({
+              // TODO: Set active state to add a halo around the selected icon
+              "": active,
+              "": !active,
+              "w-[48px] h-[48px]": true,
+            })}
+          >
             <span>{children}</span>
           </Button>
         </Link>

@@ -11,7 +11,18 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PiPlus } from "react-icons/pi";
 import { HiOutlineBuildingOffice } from "react-icons/hi2";
-import PrimaryNavbarItem from "./components/primaryNavbarItem";
+import PrimaryNavbarItem, {
+  PrimaryNavbarProps,
+} from "./components/primaryNavbarItem";
+
+const StaticRoutes: PrimaryNavbarProps[] = [
+  {
+    path: "/@me",
+    tooltip: "@me",
+    children: <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" />,
+    active: false,
+  },
+];
 
 const Primary = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +39,7 @@ const Primary = () => {
 
   return (
     <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
-      <PrimaryNavbarItem path="/@me" key="/@me" tooltip="@me">
+      <PrimaryNavbarItem path="/@me" key="/@me" tooltip="@me" active={false}>
         <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" />
       </PrimaryNavbarItem>
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
@@ -38,6 +49,7 @@ const Primary = () => {
             path="/business/contracts"
             key="/business"
             tooltip="Business"
+            active={false}
           >
             <HiOutlineBuildingOffice />
           </PrimaryNavbarItem>

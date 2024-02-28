@@ -1,3 +1,4 @@
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/provider/store/authentication";
 import clsx from "clsx";
@@ -5,23 +6,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RxCross1 } from "react-icons/rx";
 
-const Secondary = (props: { handleClose: () => void }) => {
-  const { handleClose } = props;
+const Secondary = () => {
   const location = usePathname();
-  const { isBusinessUser, authenticated } = useAuthStore();
+  const { isBusinessUser } = useAuthStore();
 
   return (
-    <div className="bg-secondary-gray w-[248px] flex flex-col gap-1 text-white">
-      {authenticated ? (
-        <>
-          <div className="pl-5 pr-2 py-2 font-bold flex justify-between items-center text-base md:h-12 border-b-2 border-secondary-black mb-2">
-            {isBusinessUser ? <span>Business</span> : <span>User</span>}
-            <button className="inline-block md:hidden" onClick={handleClose}>
-              <RxCross1 />
-            </button>
-          </div>
+    <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
+      <div className="pl-5 pr-2 py-2 font-bold flex justify-between items-center text-base md:h-12 border-b-2 border-secondary-black mb-2">
+        {isBusinessUser ? <span>Business</span> : <span>User</span>}
+        <button className="inline-block md:hidden">
+          <RxCross1 />
+        </button>
+      </div>
+      <ScrollArea className="flex-1 px-3"></ScrollArea>
 
-          {/* {MENU_ITEMS.map(i => (
+      {/* {MENU_ITEMS.map(i => (
             <Link
               href={i.path}
               key={i.path}
@@ -35,13 +34,6 @@ const Secondary = (props: { handleClose: () => void }) => {
               {i.icon} {i.title}
             </Link>
           ))} */}
-        </>
-      ) : (
-        <div className="px-2  flex flex-col py-2 space-y-2">
-          <Skeleton className="h-6 w-full bg-primary-gray" />
-          <Skeleton className="h-6 w-full bg-primary-gray" />
-        </div>
-      )}
     </div>
   );
 };

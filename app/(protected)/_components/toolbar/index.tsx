@@ -8,7 +8,7 @@ export interface Props {
   handleToggleNav: () => void;
 }
 
-export default function Toolbar({ handleToggleNav }: Props) {
+export default function Toolbar({ open, handleToggleNav }: Props) {
   return (
     <>
       <button

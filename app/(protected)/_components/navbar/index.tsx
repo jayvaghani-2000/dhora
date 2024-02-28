@@ -11,10 +11,10 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
       </div>
       <main className="md:pl-[72px] h-full">
         <div className="h-full">
-          <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
+          <div className="hidden md:flex h-full w-[248px] z-20 flex-col fixed inset-y-0">
             <Secondary />
           </div>
-          <main className="h-full md:pl-60">{children}</main>
+          <main className="h-full md:pl-[248px]">{children}</main>
         </div>
       </main>
     </div>
