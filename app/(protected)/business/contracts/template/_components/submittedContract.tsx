@@ -15,6 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ColumnDef } from "@tanstack/react-table";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { deleteSubmittedContracts } from "@/actions/(protected)/contracts/deleteSubmittedContract";
@@ -22,6 +23,10 @@ import { Input } from "@/components/ui/input";
 import { formatDate, searchTableData } from "@/lib/common";
 import { Badge } from "@/components/ui/badge";
 import clsx from "clsx";
+import { CustomTable } from "@/components/shared/custom-table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type propType = { templates: getSubmittedContractResponseType["data"] };
 
@@ -31,7 +36,7 @@ const SubmittedContract = (props: propType) => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
-  const handleDeleteTemplate = async (id: number) => {
+  const handleDeleteTemplate = async (id: string) => {
     setLoading(true);
     await deleteSubmittedContracts(id);
     setLoading(false);
@@ -42,88 +47,134 @@ const SubmittedContract = (props: propType) => {
     submitter_email: i.submitters[0].email,
     status: i.submitters[0].status,
     sent_on: formatDate(i.submitters[0].sent_at),
-    id: i.id,
+    id: String(i.id),
   }));
 
-  const filteredTemplate = searchTableData(parsedTemplate, search);
+  const columns: ColumnDef<(typeof parsedTemplate)[0]>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={value => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <button
+            className="flex items-center gap-1"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    },
+    {
+      accessorKey: "submitter_email",
+      header: ({ column }) => {
+        return (
+          <button
+            className="flex items-center gap-1"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Email
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("submitter_email")}</div>,
+    },
+    {
+      accessorKey: "sent_on",
+      header: ({ column }) => {
+        return (
+          <button
+            className="flex items-center gap-1"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Sent on
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("sent_on")}</div>,
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => {
+        return (
+          <button
+            className="flex items-center gap-1"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <div
+            className={clsx({
+              "relative capitalize flex gap-1 items-center before:content-['']  before:h-2 before:w-2 before:rounded-full":
+                true,
+              "text-green-600 hover:text-green-600 before:bg-green-600":
+                row.getValue("status") === "completed",
+              "text-pink-700 hover:text-pink-700 before:bg-pink-700":
+                row.getValue("status") === "sent",
+              "text-yellow-600 hover:text-yellow-600 before:bg-yellow-600":
+                row.getValue("status") === "opened",
+            })}
+          >
+            {row.getValue("status")}
+          </div>
+        );
+      },
+    },
+
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const rowObj = row.original;
+
+        return (
+          <Button
+            variant="outline"
+            className="p-2"
+            disabled={loading}
+            onClick={() => {
+              handleDeleteTemplate(rowObj.id);
+            }}
+          >
+            <RiDeleteBin6Line size={24} color="#b6b6b6" />
+          </Button>
+        );
+      },
+    },
+  ];
 
   return parsedTemplate.length > 0 ? (
-    <div className="w-[calc(100dvw-40px)] md:w-auto">
-      <Input
-        className="ml-auto max-w-full w-full md:w-[300px]"
-        placeholder="Search..."
-        onChange={e => {
-          setSearch(e.target.value.trim());
-        }}
-      />
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Sent on</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredTemplate.map(temp => (
-            <TableRow key={temp.id}>
-              <TableCell className="font-medium">{temp.name}</TableCell>
-              <TableCell>{temp.submitter_email}</TableCell>
-              <TableCell>{temp.sent_on}</TableCell>
-              <TableCell>
-                <Badge
-                  className={clsx({
-                    "capitalize text-white": true,
-                    "bg-green-600 hover:bg-green-600":
-                      temp.status === "completed",
-                    "bg-pink-700 hover:bg-pink-700 ": temp.status === "sent",
-                    "bg-yellow-600 hover:bg-yellow-600":
-                      temp.status === "opened",
-                  })}
-                >
-                  {temp.status}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right hidden md:flex gap-5 justify-end ">
-                <button
-                  disabled={loading}
-                  onClick={() => {
-                    handleDeleteTemplate(temp.id);
-                  }}
-                >
-                  <RiDeleteBin6Line size={24} color="#b6b6b6" />
-                </button>
-              </TableCell>
-              <TableCell className="text-right md:hidden ">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button>
-                      <BsThreeDotsVertical size={18} color="#b6b6b6" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="w-24 p-2 flex flex-col gap-2"
-                    align="end"
-                  >
-                    <button
-                      className="flex gap-2 items-center font-bold text-xs "
-                      disabled={loading}
-                      onClick={() => {
-                        handleDeleteTemplate(temp.id);
-                      }}
-                    >
-                      <RiDeleteBin6Line size={18} color="#b6b6b6" /> Delete
-                    </button>
-                  </PopoverContent>
-                </Popover>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <CustomTable data={[...parsedTemplate]} columns={columns} />
   ) : null;
 };
 
