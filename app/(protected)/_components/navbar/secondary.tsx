@@ -1,3 +1,5 @@
+"use client";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePathname } from "next/navigation";
 import SecondaryNavbarHeader from "./components/secondaryNavbarHeader";
@@ -11,7 +13,18 @@ import {
 } from "react-icons/lia";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 
-const StaticOptions = [
+export const StaticOptions = [
+  {
+    key: "me",
+    options: [
+      {
+        key: "marketplace",
+        title: "Marketplace",
+        icon: <BsShop />,
+        path: "/marketplace",
+      },
+    ],
+  },
   {
     key: "@me",
     options: [
@@ -55,10 +68,11 @@ const StaticOptions = [
 
 const Secondary = () => {
   const path = usePathname();
-
   const key = StaticOptions.findIndex(o => path.startsWith(`/${o.key}`));
   const route = StaticOptions[key];
-  const options = route?.options;
+  const options = route.options;
+
+  if (!options) return null;
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
@@ -76,6 +90,7 @@ const Secondary = () => {
               title={o.title}
               icon={o.icon}
               path={o.path}
+              currentPath={path}
             />
           );
         })}

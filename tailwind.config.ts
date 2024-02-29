@@ -19,8 +19,6 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        "primary-gray": "hsl(var(--primary-gray))",
-        "secondary-gray": "hsl(var(--secondary-gray))",
         "primary-black": "hsl(var(--primary-black))",
         "secondary-black": "hsl(var(--secondary-black))",
         "primary-light-gray": "hsl(var(--primary-light-gray))",

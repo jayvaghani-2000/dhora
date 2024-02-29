@@ -11,19 +11,8 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PiPlus } from "react-icons/pi";
 import { HiOutlineBuildingOffice } from "react-icons/hi2";
-import PrimaryNavbarItem, {
-  PrimaryNavbarProps,
-} from "./components/primaryNavbarItem";
+import PrimaryNavbarItem from "./components/primaryNavbarItem";
 import { usePathname } from "next/navigation";
-
-const StaticRoutes: PrimaryNavbarProps[] = [
-  {
-    path: "/@me",
-    tooltip: "@me",
-    children: <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" />,
-    active: false,
-  },
-];
 
 const Primary = () => {
   const dispatch = useAppDispatch();
@@ -39,11 +28,14 @@ const Primary = () => {
     );
   };
 
-  // TODO: Figure out which item is selected and store in state. Should update on every selection.
-
   return (
     <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
-      <PrimaryNavbarItem path="/@me" key="/@me" tooltip="@me" active={false}>
+      <PrimaryNavbarItem
+        path="/@me"
+        key="/@me"
+        tooltip="@me"
+        active={path.startsWith("/@me")}
+      >
         <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" />
       </PrimaryNavbarItem>
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
@@ -54,7 +46,7 @@ const Primary = () => {
               path="/business/contracts"
               key="/business"
               tooltip="Business"
-              active={true}
+              active={path.startsWith("/business")}
             >
               <HiOutlineBuildingOffice />
             </PrimaryNavbarItem>
@@ -62,7 +54,9 @@ const Primary = () => {
           </>
         )}
       </div>
-      <ScrollArea className="flex-1 w-full"></ScrollArea>
+      <ScrollArea className="flex-1">
+        <div className="flex flex-col gap-1 overflow-hidden"></div>
+      </ScrollArea>
       <div className="flex items-center flex-col gap-y-2">
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
         <Link href={DEFAULT_LOGIN_REDIRECT}>
