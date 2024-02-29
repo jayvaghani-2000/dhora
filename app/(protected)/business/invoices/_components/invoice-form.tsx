@@ -62,9 +62,13 @@ const InvoiceForm = () => {
   async function onSubmit(values: z.infer<typeof invoiceSchema>) {
     const imageForm = new FormData();
     imageForm.append("image", file!);
-    await uploadBusinessLogo(imageForm);
+    const res = await uploadBusinessLogo(imageForm);
 
-    await generateInvoice(values);
+    console.log("OUTT", res);
+    if (res.success) {
+      const data = await generateInvoice({ values: values, logo: res.data });
+      console.log("INNN", data);
+    }
   }
 
   return (

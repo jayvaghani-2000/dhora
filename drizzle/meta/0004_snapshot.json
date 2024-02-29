@@ -1,6 +1,6 @@
 {
-  "id": "97c3d935-1c36-4316-be0e-d85fa36c8621",
-  "prevId": "e9984607-aac3-4654-943d-2fa06891ec19",
+  "id": "9e1458f2-b418-45ae-b55b-5828f9ad958f",
+  "prevId": "f1846e01-a9d1-4302-8838-aece71c7ffd2",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -41,7 +41,7 @@
         },
         "logo": {
           "name": "logo",
-          "type": "text",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -160,9 +160,15 @@
           "primaryKey": false,
           "notNull": false
         },
+        "business_email": {
+          "name": "business_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "business_logo": {
           "name": "business_logo",
-          "type": "text",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -178,6 +184,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "customer_contact": {
+          "name": "customer_contact",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customer_address": {
+          "name": "customer_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "items": {
           "name": "items",
           "type": "jsonb",
@@ -188,7 +206,8 @@
           "name": "tax",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": 2
         },
         "total": {
           "name": "total",

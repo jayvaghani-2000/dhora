@@ -22,6 +22,20 @@
       "when": 1709018936710,
       "tag": "0002_massive_hercules",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1709192897422,
+      "tag": "0003_white_moonstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1709194247799,
+      "tag": "0004_boring_sandman",
+      "breakpoints": true
     }
   ]
 }

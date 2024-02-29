@@ -4,6 +4,36 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { minioClient } from "../../_utils/minio";
+import { v4 as uuidv4 } from "uuid";
+import { assetsMetadata } from "@/actions/_utils/assetsMetadata";
+import { imageObjectType } from "@/actions/_utils/types.type";
+
+function putObjectWithPresignedUrl(
+  bucketName: string,
+  fileObject: string,
+  buffer: Buffer
+) {
+  return new Promise((resolve, reject) => {
+    minioClient.putObject(bucketName, fileObject, buffer, (err, etag) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      minioClient.presignedGetObject(
+        bucketName,
+        fileObject,
+        (err, presignedUrl) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve({ presignedUrl });
+        }
+      );
+    });
+  });
+}
 
 const handler = async (user: User, file: FormData) => {
   try {
@@ -11,51 +41,23 @@ const handler = async (user: User, file: FormData) => {
     const arrayBuffer = await image.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    minioClient.putObject(
+    const metadata = await assetsMetadata(buffer);
+
+    const fileObject = `${user.business_id?.toString()}/${uuidv4()}.${metadata.type}`;
+
+    const uploadedImage = (await putObjectWithPresignedUrl(
       "business",
-      `${user.business_id?.toString()}/${image.name}`,
-      buffer,
-      function (err, etag) {
-        minioClient.presignedGetObject(
-          "business",
-          `${user.business_id?.toString()}/${image.name}`,
-          24 * 60 * 60,
-          function (err, presignedUrl) {
-            if (err) return console.log(err);
-            console.log(presignedUrl);
-          }
-        );
+      fileObject,
+      buffer
+    )) as { presignedUrl: string };
 
-        return console.log(err, etag);
-      }
-    );
+    const imageObj = {
+      ...metadata,
+      url: uploadedImage.presignedUrl,
+      objectName: fileObject,
+    };
 
-    // var stream = minioClient.listObjects("business", "", true);
-
-    // stream.on("data", function (obj) {
-    //   console.log(obj);
-    // });
-
-    // minioClient.presignedGetObject(
-    //   "business",
-    //   "hello-file",
-    //   20,
-    //   function (err, presignedUrl) {
-    //     if (err) return console.log(err);
-    //     console.log(presignedUrl);
-    //   }
-    // );
-
-    // minioClient.bucketExists("stage", function (err, exists) {
-    //   if (err) {
-    //     return console.log(err, "++++++++", exists);
-    //   }
-    //   if (exists) {
-    //     return console.log("Bucket exists.");
-    //   }
-    // });
-
-    return { success: true as true, data: {} };
+    return { success: true as true, data: imageObj as imageObjectType };
   } catch (err) {
     return errorHandler(err);
   }

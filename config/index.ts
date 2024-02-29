@@ -14,6 +14,7 @@ const env = createEnv({
     S3_HOST: z.string(),
     S3_ACCESS_KEY: z.string(),
     S3_SECRET_KEY: z.string(),
+    MAX_SAFE_INTEGER: z.string(),
   },
   runtimeEnv: process.env,
 });

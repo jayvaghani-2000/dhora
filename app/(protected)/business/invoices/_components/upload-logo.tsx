@@ -1,6 +1,5 @@
 "use client";
 
-import { uploadBusinessLogo } from "@/actions/(protected)/invoices/uploadBusinessLogo";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
@@ -28,11 +27,6 @@ const UploadLogo = (prop: propType) => {
       if (allowFileType.includes(files[0].type)) {
         setFile(files[0]);
       }
-      const form = new FormData();
-
-      form.append("image", e.target.files[0]);
-
-      await uploadBusinessLogo(form);
       ref.current.value = "";
     }
   };

@@ -70,7 +70,7 @@ export const businesses = pgTable("business", {
   name: text("name").notNull(),
   address: text("address"),
   contact: varchar("contact", { length: 20 }),
-  logo: text("logo"),
+  logo: jsonb("logo"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -108,15 +108,19 @@ export const invoices = pgTable("invoices", {
   business_name: text("business_name").notNull(),
   business_contact: varchar("business_contact", { length: 20 }).notNull(),
   business_address: text("business_address"),
-  business_logo: text("business_logo"),
+  business_email: text("business_email"),
+  business_logo: jsonb("business_logo"),
   customer_name: text("customer_name").notNull(),
   customer_email: text("customer_email").notNull(),
+  customer_contact: varchar("customer_contact", { length: 20 }).notNull(),
+  customer_address: text("customer_address"),
   items: jsonb("items"),
   tax: integer("tax").notNull(),
   total: doublePrecision("total").notNull(),
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)
     .notNull(),
+  platform_fee: integer("tax").default(2).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
