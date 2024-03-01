@@ -12,6 +12,13 @@ export function formatDate(date: Date) {
   return format(new Date(date), "MMM dd,yyyy");
 }
 
+export function formatAmount(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
+}
+
 export function searchTableData<T extends {}>(
   rows: T[],
   filterString: string

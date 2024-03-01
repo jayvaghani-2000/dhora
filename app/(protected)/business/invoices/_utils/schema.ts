@@ -29,16 +29,7 @@ export const invoiceSchema = z.object({
       rate: z
         .string()
         .refine(data => data.length > 0, { message: "Rate is required" }),
-      quantity: z.string().refine(
-        data => {
-          const qty = Number(data);
-          if (Number.isInteger(qty) && qty > 0) {
-            return true;
-          }
-          return false;
-        },
-        { message: "Quantity is invalid" }
-      ),
+      quantity: z.number().int({ message: "Quantity is invalid" }),
       description: z.string().optional(),
       id: z.string(),
     })

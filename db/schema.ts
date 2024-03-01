@@ -120,7 +120,7 @@ export const invoices = pgTable("invoices", {
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)
     .notNull(),
-  platform_fee: integer("tax").default(2).notNull(),
+  platform_fee: integer("platform_fee").default(2).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

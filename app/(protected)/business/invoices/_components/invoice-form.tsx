@@ -37,9 +37,7 @@ const InvoiceForm = () => {
       customer_email: "",
       customer_contact: "",
       customer_address: "",
-      items: [
-        { id: uuid(), name: "", rate: "", description: "", quantity: "" },
-      ],
+      items: [{ id: uuid(), name: "", rate: "", description: "", quantity: 0 }],
       tax: "",
     },
   });
@@ -64,12 +62,12 @@ const InvoiceForm = () => {
     imageForm.append("image", file!);
     const res = await uploadBusinessLogo(imageForm);
 
-    console.log("OUTT", res);
     if (res.success) {
       const data = await generateInvoice({ values: values, logo: res.data });
-      console.log("INNN", data);
     }
   }
+
+  console.log(form.getValues());
 
   return (
     <div className="text-zinc-600 dark:text-zinc-200 flex flex-col md:grid grid-cols-[200px_1fr] gap-5 justify-center max-w-[1000px] m-auto">
@@ -246,7 +244,7 @@ const InvoiceForm = () => {
                       name: "",
                       rate: "",
                       description: "",
-                      quantity: "",
+                      quantity: 0,
                     };
                     form.setValue("items", [...items, newItem], {
                       shouldTouch: true,
@@ -301,9 +299,14 @@ const InvoiceForm = () => {
                         <FormItem>
                           <FormControl>
                             <Input
+                              type="number"
                               className="h-9"
                               placeholder="Item Quantity"
                               {...field}
+                              onChange={e => {
+                                const value = parseFloat(e.target.value);
+                                field.onChange(value);
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -333,7 +336,7 @@ const InvoiceForm = () => {
                         onClick={() => remove(index)}
                         className="text-[#7f1d1d] text-sm font-semibold flex gap-1 justify-end items-center col-span-2 md:col-span-3"
                       >
-                        <RiDeleteBin6Line /> <span>Delete</span>
+                        <RiDeleteBin6Line /> <span>Remove</span>
                       </button>
                     ) : null}
                   </div>
