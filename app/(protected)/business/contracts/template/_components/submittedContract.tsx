@@ -2,39 +2,92 @@
 
 import React, { useState } from "react";
 import { getSubmittedContractResponseType } from "@/actions/_utils/types.type";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Table } from "@tanstack/react-table";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { deleteSubmittedContracts } from "@/actions/(protected)/contracts/deleteSubmittedContract";
-import { Input } from "@/components/ui/input";
-import { formatDate, searchTableData } from "@/lib/common";
-import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/common";
 import clsx from "clsx";
 import { CustomTable } from "@/components/shared/custom-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CustomSelect from "@/components/shared/custom-select";
+import { DateRangePicker } from "@/components/shared/range-picker";
+import { isWithinInterval } from "date-fns";
 
 type propType = { templates: getSubmittedContractResponseType["data"] };
+
+type recordType = {
+  name: string;
+  submitter_email: string;
+  status: string;
+  sent_on: string;
+  id: string;
+};
+
+type extraFilterPropType = {
+  table: Table<recordType>;
+};
+
+const ExtraFilters = (props: extraFilterPropType) => {
+  const { table } = props;
+
+  return (
+    <div className="flex gap-2 flex-wrap">
+      <CustomSelect
+        onChange={value => {
+          table.getColumn("status")?.setFilterValue(value);
+        }}
+        value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
+        options={[
+          {
+            label: "Completed",
+            value: "completed",
+            className: "text-green-600",
+          },
+          {
+            label: "Sent",
+            value: "sent",
+            className: "text-pink-700",
+          },
+          {
+            label: "Opened",
+            value: "opened",
+            className: "text-yellow-600",
+          },
+        ]}
+      />
+
+      <DateRangePicker
+        onChange={range => {
+          if (range?.from && range.to) {
+            table.getColumn("sent_on")?.setFilterValue(JSON.stringify(range));
+          } else {
+            table
+              .getColumn("sent_on")
+              ?.setFilterValue(JSON.stringify(undefined));
+          }
+        }}
+        value={
+          table.getColumn("sent_on")?.getFilterValue()
+            ? JSON.parse(
+                (table.getColumn("sent_on")?.getFilterValue() as string) ?? ""
+              )
+            : {
+                from: undefined,
+                to: undefined,
+              }
+        }
+        placeholder="Pick a sent on date"
+      />
+    </div>
+  );
+};
 
 const SubmittedContract = (props: propType) => {
   const { templates } = props;
 
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState("");
 
   const handleDeleteTemplate = async (id: string) => {
     setLoading(true);
@@ -42,7 +95,7 @@ const SubmittedContract = (props: propType) => {
     setLoading(false);
   };
 
-  const parsedTemplate = templates!.map(i => ({
+  const parsedTemplate: recordType[] = templates!.map(i => ({
     name: i.template.name,
     submitter_email: i.submitters[0].email,
     status: i.submitters[0].status,
@@ -50,7 +103,7 @@ const SubmittedContract = (props: propType) => {
     id: String(i.id),
   }));
 
-  const columns: ColumnDef<(typeof parsedTemplate)[0]>[] = [
+  const columns: ColumnDef<recordType>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -117,6 +170,16 @@ const SubmittedContract = (props: propType) => {
         );
       },
       cell: ({ row }) => <div>{row.getValue("sent_on")}</div>,
+      filterFn: (row, column, filter) => {
+        const filterObj = JSON.parse(filter);
+        if (filterObj === "undefined") return true;
+        const inRange = isWithinInterval(new Date(row.original.sent_on), {
+          start: filterObj?.from,
+          end: filterObj?.to,
+        });
+
+        return inRange;
+      },
     },
     {
       accessorKey: "status",
@@ -150,7 +213,6 @@ const SubmittedContract = (props: propType) => {
         );
       },
     },
-
     {
       id: "actions",
       enableHiding: false,
@@ -174,7 +236,11 @@ const SubmittedContract = (props: propType) => {
   ];
 
   return parsedTemplate.length > 0 ? (
-    <CustomTable data={[...parsedTemplate]} columns={columns} />
+    <CustomTable
+      data={[...parsedTemplate]}
+      columns={columns}
+      extraFilters={ExtraFilters}
+    />
   ) : null;
 };
 

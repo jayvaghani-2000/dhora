@@ -5,6 +5,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
+  Table as TanStackTable,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -21,7 +22,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -31,17 +31,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PiTextColumns } from "react-icons/pi";
+import { LuFilter } from "react-icons/lu";
+import { Command, CommandInput } from "../ui/command";
 
 type propType<T> = {
   data: T[];
   columns: ColumnDef<T>[];
+  extraFilters: ({ table }: { table: TanStackTable<T> }) => React.JSX.Element;
 };
 
 export function CustomTable<T extends { id: string }>(
   props: propType<T>
 ): React.ReactNode {
-  const { data, columns } = props;
+  const { data, columns, extraFilters: ExtraFilters } = props;
 
+  const [showExtraFilter, setShowExtraFilter] = React.useState(false);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -71,38 +75,54 @@ export function CustomTable<T extends { id: string }>(
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter..."
-          onChange={event => {
-            table.setGlobalFilter(event.target.value);
+      <div className="flex items-center py-4 flex-wrap gap-2">
+        <Command
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            table.setGlobalFilter(e.target.value);
           }}
-          className="max-w-xs"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto p-2">
-              <PiTextColumns size={20} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter(column => column.getCanHide())
-              .map(column => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={value => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          className="rounded-lg border shadow-md h-10 max-w-60"
+        >
+          <CommandInput placeholder="Search by anything..." />
+        </Command>
+        {showExtraFilter ? <ExtraFilters table={table} /> : null}
+        <div className="ml-auto flex gap-2 items-center">
+          <Button
+            variant="outline"
+            className="p-2 gap-1"
+            onClick={() => {
+              setShowExtraFilter(prev => !prev);
+            }}
+          >
+            <LuFilter />
+            <span className="hidden md:inline">Filter</span>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="ml-auto">
+              <Button variant="outline" className="p-2">
+                <PiTextColumns size={20} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter(column => column.getCanHide())
+                .map(column => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={value =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
