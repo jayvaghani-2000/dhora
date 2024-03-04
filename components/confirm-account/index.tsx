@@ -19,15 +19,14 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/provider/store";
-import { setAuthData, useAuthStore } from "@/provider/store/authentication";
-import { resendVerificationCode } from "@/actions/(public)/(auth)/resend-verification-code";
-import { verifyEmail } from "@/actions/(public)/(auth)/verify-email";
-import { profileType } from "@/actions/(public)/(auth)/me";
+import { setAuthData } from "@/provider/store/authentication";
+import { resendVerificationCode } from "@/actions/(auth)/resend-verification-code";
+import { verifyEmail } from "@/actions/(auth)/verify-email";
+import { profileType } from "@/actions/_utils/types.type";
 
 const formSchema = z.object({
   verification_code: z
@@ -41,8 +40,6 @@ const formSchema = z.object({
 });
 
 export function ConfirmAccount() {
-  const { profile } = useAuthStore();
-
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -60,9 +57,11 @@ export function ConfirmAccount() {
     });
 
     if (result?.success) {
+      const profile = { ...result.data } as profileType;
       dispatch(
         setAuthData({
-          profile: { ...result.data } as profileType,
+          profile: profile,
+          isBusinessUser: !!profile?.business_id,
         })
       );
     }
@@ -82,10 +81,7 @@ export function ConfirmAccount() {
         closable={false}
       >
         <DialogHeader>
-          <DialogTitle>Confirm your account</DialogTitle>
-          <DialogDescription>
-            Please enter the verification code received on your registered mail
-          </DialogDescription>
+          <DialogTitle className="text-center mb-4">Verify OTP</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           {!!error && (
@@ -93,7 +89,7 @@ export function ConfirmAccount() {
               {error}
             </p>
           )}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="text-center">
             <FormField
               control={form.control}
               name="verification_code"
@@ -110,24 +106,26 @@ export function ConfirmAccount() {
                 </FormItem>
               )}
             />
+            <div className="flex justify-end items-center mt-0">
+              <Button
+                className="px-1 py-0"
+                variant="link"
+                disabled={loading}
+                onClick={handleResendEmail}
+              >
+                Resend OTP
+              </Button>
+            </div>
 
-            <Button type="submit" disabled={loading}>
-              Verify
+            <Button
+              type="submit"
+              disabled={loading}
+              className="mt-4 mx-auto bg-primary-blue hover:bg-primary-blue text-white"
+            >
+              Submit
             </Button>
           </form>
         </Form>
-
-        <div className="flex justify-end items-center">
-          Didn&apos;t received any email?
-          <Button
-            className="px-1 py-0"
-            variant="link"
-            disabled={loading}
-            onClick={handleResendEmail}
-          >
-            Resend
-          </Button>
-        </div>
       </DialogContent>
     </Dialog>
   );

@@ -1,9 +1,9 @@
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
+  integer,
   pgEnum,
   pgTable,
-  primaryKey,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
@@ -71,6 +71,27 @@ export const businesses = pgTable("business", {
 
 export const businessRelations = relations(businesses, ({ many }) => ({
   users: many(users),
+  contacts: many(contracts),
+}));
+
+export const contracts = pgTable("contracts", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  template_id: integer("template_id").notNull().unique(),
+  name: text("name").default("New Contract"),
+  business_id: bigint("business_id", { mode: "bigint" })
+    .references(() => businesses.id)
+    .notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const contractsRelations = relations(contracts, ({ one }) => ({
+  business: one(businesses, {
+    fields: [contracts.business_id],
+    references: [businesses.id],
+  }),
 }));
 
 export const registerSchema = createInsertSchema(users)
@@ -123,4 +144,9 @@ export const mailVerificationUserSchema = createSelectSchema(users).pick({
 
 export const meUserSchema = createSelectSchema(users).pick({
   email: true,
+});
+
+export const createContractSchema = createSelectSchema(contracts).pick({
+  template_id: true,
+  name: true,
 });

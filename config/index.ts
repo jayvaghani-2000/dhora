@@ -9,6 +9,11 @@ const env = createEnv({
     HOST_URL: z.string(),
     SENDGRID_API_KEY: z.string(),
     STRIPE_SECRET_KEY: z.string(),
+    DOCU_SEAL: z.string(),
+    DOCU_SEAL_EMAIL: z.string(),
+    S3_HOST: z.string(),
+    S3_ACCESS_KEY: z.string(),
+    S3_SECRET_KEY: z.string(),
   },
   runtimeEnv: process.env,
 });

@@ -6,7 +6,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 import { RootState } from "../index";
 import { AuthType } from "./authentication.types";
-import { profileType } from "@/actions/(public)/(auth)/me";
+import { profileType } from "@/actions/_utils/types.type";
 
 export const initialState = {
   loading: false,
@@ -16,6 +16,7 @@ export const initialState = {
   } as profileType,
   authCheck: false,
   redirectTo: DEFAULT_LOGIN_REDIRECT,
+  isBusinessUser: false,
 } as AuthType;
 
 export const authenticationSlice = createSlice({

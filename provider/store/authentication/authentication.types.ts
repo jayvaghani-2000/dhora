@@ -1,4 +1,4 @@
-import { profileType } from "@/actions/(public)/(auth)/me";
+import { profileType } from "@/actions/_utils/types.type";
 
 export type AuthType = {
   loading: boolean;
@@ -6,4 +6,5 @@ export type AuthType = {
   profile: profileType;
   redirectTo: string;
   authCheck: boolean;
+  isBusinessUser: boolean;
 };

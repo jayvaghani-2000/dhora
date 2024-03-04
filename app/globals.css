@@ -33,12 +33,17 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
-    --primary-gray: 206 27% 10%;
-    --secondary-gray: 202 11% 15%;
-    --primary-black: 210 15% 5%;
-    --body-background: 206 24% 13%;
-    --primary-light-gray: 220 8% 23%;
-    --primary-blue: 200 100% 50%;
+    --primary-gray: 225 6% 13%; /* #1E1F22 */
+    --secondary-gray: 220 7% 18%; /* #2B2D31 */
+    --primary-black: 210 15% 5%; /* #0B0D0F */
+    --secondary-black: 0 0% 15%; /* #262626 */
+    --body-background: 206 24% 13%; /* #192229 */
+    --primary-light-gray: 223 7% 21%; /* #313338 */
+    --active: 249 12% 11%; /* #1A1920 */
+    --primary-blue: 200 100% 50%; /* #00A8FF */
+    --divider: 0 0% 28%; /* #474747 */
+    --secondary-light-gray: 240 5% 65%; /* #A1A1AA */
+    --primary-background: 224 64% 33%; /* #1e3b8a */
   }
 
   .dark {
@@ -77,7 +82,7 @@
     @apply border-border;
   }
   body {
-    background-color: rgb(30, 58, 138);
+    background-color: rgb(30, 59, 138);
     background-image: radial-gradient(
         at 27% 59%,
         rgb(79, 70, 229) 0,
@@ -118,4 +123,8 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+docuseal-builder {
+  height: unset !important;
 }

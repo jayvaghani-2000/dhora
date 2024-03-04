@@ -2,12 +2,7 @@ import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
+  content: ["./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
     container: {
@@ -24,12 +19,14 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        "primary-gray": "hsl(var(--primary-gray))",
-        "secondary-gray": "hsl(var(--secondary-gray))",
         "primary-black": "hsl(var(--primary-black))",
-        "body-background": "hsl(var(--body-background))",
+        "secondary-black": "hsl(var(--secondary-black))",
         "primary-light-gray": "hsl(var(--primary-light-gray))",
+        "secondary-light-gray": "hsl(var(--secondary-light-gray))",
+        "primary-background": "hsl(var(--primary-background))",
+        active: "hsl(var(--active))",
         "primary-blue": "hsl(var(--primary-blue))",
+        divider: "hsl(var(--divider))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -80,7 +77,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } as Config;
 
 export default config;

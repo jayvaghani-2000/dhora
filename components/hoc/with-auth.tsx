@@ -6,7 +6,8 @@ import React, { useCallback, useEffect } from "react";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import { ConfirmAccount } from "@/components/confirm-account";
-import { me, profileType } from "@/actions/(public)/(auth)/me";
+import { me } from "@/actions/(auth)/me";
+import { profileType } from "@/actions/_utils/types.type";
 import { authRoutes, publicRoutes } from "@/routes";
 
 const publicRouteList = [...publicRoutes, ...authRoutes];
@@ -27,11 +28,14 @@ const WithAuth = ({ children }: propType) => {
     const handleVerifySession = async () => {
       const user = await me();
 
+      const profile = user.data as profileType;
+
       if (user.success) {
         dispatch(
           setAuthData({
-            profile: user.data,
+            profile: profile,
             authenticated: true,
+            isBusinessUser: !!profile?.business_id,
             authCheck: true,
           })
         );
@@ -41,6 +45,7 @@ const WithAuth = ({ children }: propType) => {
             authCheck: true,
             authenticated: false,
             profile: {} as profileType,
+            isBusinessUser: false,
           })
         );
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { me } from "@/actions/(public)/(auth)/me";
 import StoreProvider from "@/provider";
 import WithAuth from "@/components/hoc/with-auth";
 
@@ -19,9 +18,13 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} min-h-screen`}>
+      <body
+        className={`${inter.className} bg-fixed min-h-screen overscroll-none`}
+      >
         <StoreProvider>
-          <WithAuth>{children}</WithAuth>
+          <WithAuth>
+            <>{children}</>
+          </WithAuth>
         </StoreProvider>
       </body>
     </html>
