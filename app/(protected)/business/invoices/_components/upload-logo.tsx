@@ -1,6 +1,8 @@
 "use client";
 
+import { imageObjectType } from "@/actions/_utils/types.type";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/provider/store/authentication";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
@@ -13,6 +15,7 @@ type propType = {
 };
 
 const UploadLogo = (prop: propType) => {
+  const { profile, authenticated } = useAuthStore();
   const { file, setFile } = prop;
   const ref = useRef<HTMLInputElement>(null!);
   const [imageStr, setImageStr] = useState({
@@ -30,6 +33,19 @@ const UploadLogo = (prop: propType) => {
       ref.current.value = "";
     }
   };
+
+  useEffect(() => {
+    if (authenticated) {
+      const logo = profile?.business?.logo as imageObjectType;
+
+      if (logo) {
+        setImageStr({
+          base64: logo.url,
+          name: logo.objectName,
+        });
+      }
+    }
+  }, [authenticated, profile]);
 
   useEffect(() => {
     if (file) {

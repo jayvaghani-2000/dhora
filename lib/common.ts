@@ -34,3 +34,10 @@ export function searchTableData<T extends {}>(
 
   return filteredArray;
 }
+
+export function stringCasting(value: number) {
+  if (isNaN(value)) {
+    return "";
+  }
+  return String(value);
+}

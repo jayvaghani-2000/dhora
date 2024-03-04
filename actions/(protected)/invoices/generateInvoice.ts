@@ -9,6 +9,7 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { eq } from "drizzle-orm";
 import { invoiceSchema } from "@/app/(protected)/business/invoices/_utils/schema";
 import { imageObjectType } from "@/actions/_utils/types.type";
+import { revalidatePath } from "next/cache";
 
 const handler = async (
   user: User,
@@ -18,13 +19,14 @@ const handler = async (
   }
 ) => {
   const { logo, values } = params;
-  const { tax, ...rest } = values;
+  const { ...rest } = values;
+
   try {
     const businessObj = await db.query.businesses.findFirst({
       where: eq(businesses.id, user.business_id!),
     });
 
-    if (!businessObj?.address) {
+    if (true) {
       await db
         .update(businesses)
         .set({
@@ -37,18 +39,19 @@ const handler = async (
         .returning();
     }
 
-    const contract = await db
+    const invoice = await db
       .insert(invoices)
       .values({
         ...rest,
-        tax: 5,
+        status: "draft",
         business_id: user.business_id!,
         business_logo: logo,
-        total: 120.12,
       })
       .returning();
 
-    return { success: true, data: contract[0] };
+    revalidatePath("/business/invoices");
+
+    return { success: true, data: invoice[0] };
   } catch (err) {
     console.log(err);
     return errorHandler(err);

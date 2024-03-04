@@ -7,4 +7,5 @@ export const imageSchema = z.object({
   type: z.string(),
   objectName: z.string(),
   url: z.string(),
+  etag: z.string(),
 });

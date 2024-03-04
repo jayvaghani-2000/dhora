@@ -27,8 +27,7 @@ function putObjectWithPresignedUrl(
             reject(err);
             return;
           }
-
-          resolve({ presignedUrl });
+          resolve({ presignedUrl, etag });
         }
       );
     });
@@ -49,11 +48,12 @@ const handler = async (user: User, file: FormData) => {
       "business",
       fileObject,
       buffer
-    )) as { presignedUrl: string };
+    )) as { presignedUrl: string; etag: string };
 
     const imageObj = {
       ...metadata,
       url: uploadedImage.presignedUrl,
+      etag: uploadedImage.etag,
       objectName: fileObject,
     };
 

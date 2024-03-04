@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type invoiceSchemaType = z.infer<typeof invoiceSchema>;
+
 export const invoiceSchema = z.object({
   business_name: z
     .string()
@@ -26,17 +28,18 @@ export const invoiceSchema = z.object({
       name: z
         .string()
         .refine(data => data.length > 0, { message: "Name is required" }),
-      rate: z
-        .string()
-        .refine(data => data.length > 0, { message: "Rate is required" }),
-      quantity: z.number().int({ message: "Quantity is invalid" }),
+      price: z.number().min(0, { message: "Price should be positive" }),
+      quantity: z
+        .number()
+        .int({ message: "Quantity is invalid" })
+        .min(1, { message: "Minimum qty should be 1." }),
       description: z.string().optional(),
       id: z.string(),
     })
   ),
-  tax: z.string().refine(
+  tax: z.number().refine(
     data => {
-      const tax = Number(data);
+      const tax = data;
       if (Number.isInteger(tax) && tax > 0 && tax < 100) {
         return true;
       }
@@ -44,4 +47,9 @@ export const invoiceSchema = z.object({
     },
     { message: "Tax is invalid" }
   ),
+  due_date: z.date({
+    required_error: "Due date is required",
+  }),
+  subtotal: z.number(),
+  total: z.number(),
 });

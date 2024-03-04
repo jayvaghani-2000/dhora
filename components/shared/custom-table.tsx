@@ -82,7 +82,10 @@ export function CustomTable<T extends { id: string }>(
           }}
           className="rounded-lg border shadow-md h-10 max-w-60"
         >
-          <CommandInput className="h-10" placeholder="Search by anything..." />
+          <CommandInput
+            className="h-10 "
+            placeholder="Search by anything..."
+          />
         </Command>
         {showExtraFilter ? <ExtraFilters table={table} /> : null}
         <div className="ml-auto flex gap-2 items-center">

@@ -24,6 +24,13 @@ export const businessTypeEnum = pgEnum("businessType", [
   "Other",
 ]);
 
+export const invoiceStatusTypeEnum = pgEnum("invoiceStatusType", [
+  "paid",
+  "pending",
+  "draft",
+  "overdue",
+]);
+
 export const users = pgTable("users", {
   id: text("id")
     .notNull()
@@ -117,10 +124,14 @@ export const invoices = pgTable("invoices", {
   items: jsonb("items"),
   tax: integer("tax").notNull(),
   total: doublePrecision("total").notNull(),
+  subtotal: doublePrecision("subtotal").notNull(),
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)
     .notNull(),
   platform_fee: integer("platform_fee").default(2).notNull(),
+  due_date: timestamp("due_date").notNull(),
+  status: invoiceStatusTypeEnum("status").notNull(),
+  stripe_ref: text("stripe_ref"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
