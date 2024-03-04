@@ -3,61 +3,18 @@
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { minioClient } from "../../_utils/minio";
-import { v4 as uuidv4 } from "uuid";
-import { assetsMetadata } from "@/actions/_utils/assetsMetadata";
+import { createPublicImg } from "../../../lib/minio";
 import { imageObjectType } from "@/actions/_utils/types.type";
-
-function putObjectWithPresignedUrl(
-  bucketName: string,
-  fileObject: string,
-  buffer: Buffer
-) {
-  return new Promise((resolve, reject) => {
-    minioClient.putObject(bucketName, fileObject, buffer, (err, etag) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      minioClient.presignedGetObject(
-        bucketName,
-        fileObject,
-        (err, presignedUrl) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve({ presignedUrl, etag });
-        }
-      );
-    });
-  });
-}
+import { string } from "zod";
 
 const handler = async (user: User, file: FormData) => {
   try {
     const image = file.get("image") as File;
-    const arrayBuffer = await image.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    const metadata = await assetsMetadata(buffer);
-
-    const fileObject = `${user.business_id?.toString()}/${uuidv4()}.${metadata.type}`;
-
-    const uploadedImage = (await putObjectWithPresignedUrl(
-      "business",
-      fileObject,
-      buffer
-    )) as { presignedUrl: string; etag: string };
-
-    const imageObj = {
-      ...metadata,
-      url: uploadedImage.presignedUrl,
-      etag: uploadedImage.etag,
-      objectName: fileObject,
-    };
-
-    return { success: true as true, data: imageObj as imageObjectType };
+    const uploadedImageUrl = await createPublicImg(
+      user.business_id as bigint,
+      image
+    );
+    return { success: true as true, data: { url: uploadedImageUrl } };
   } catch (err) {
     return errorHandler(err);
   }
