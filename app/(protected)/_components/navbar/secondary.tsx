@@ -60,7 +60,7 @@ export const StaticOptions = [
         key: "marketplace",
         title: "Marketplace",
         icon: <HiOutlineBuildingOffice2 />,
-        path: "/app/marketplace",
+        path: "/marketplace",
       },
     ],
   },
