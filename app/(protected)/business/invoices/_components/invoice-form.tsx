@@ -19,7 +19,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/provider/store/authentication";
 import { invoiceSchema, invoiceSchemaType } from "../_utils/schema";
 import { LiaPlusSolid } from "react-icons/lia";
 import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
@@ -38,6 +37,14 @@ import {
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { profileType } from "@/actions/_utils/types.type";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { onBoarding } from "@/actions/(protected)/connect-account/onboarding";
 
 const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
   const subtotal = items.reduce((prev, curr) => {
@@ -57,14 +64,22 @@ const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
   };
 };
 
-const InvoiceForm = () => {
+type propType = {
+  user: profileType;
+};
+
+const InvoiceForm = (props: propType) => {
+  const { user } = props;
   const { toast } = useToast();
-  const { profile, authenticated } = useAuthStore();
   const [file, setFile] = useState<File | null>(null);
   const [updatedItem, setUpdatedItem] = useState(0);
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
+      business_name: user?.business?.name ?? "",
+      business_address: user?.business?.address ?? "",
+      business_email: user?.email ?? "",
+      business_contact: user?.business?.contact ?? "",
       customer_name: "",
       customer_email: "",
       customer_contact: "",
@@ -103,15 +118,6 @@ const InvoiceForm = () => {
     setValue("subtotal", subtotal);
   }, [updatedItem, items, tax, setValue, form]);
 
-  useEffect(() => {
-    if (authenticated) {
-      form.setValue("business_name", profile?.business?.name ?? "");
-      form.setValue("business_address", profile?.business?.address ?? "");
-      form.setValue("business_email", profile?.email ?? "");
-      form.setValue("business_contact", profile?.business?.contact ?? "");
-    }
-  }, [authenticated, form, profile]);
-
   async function onSubmit(values: z.infer<typeof invoiceSchema>) {
     if (values.items.length === 0) {
       toast({
@@ -120,7 +126,7 @@ const InvoiceForm = () => {
       return;
     }
 
-    if (profile?.business?.logo) {
+    if (user?.business?.logo) {
       const data = await generateInvoice({
         values: values,
       });
@@ -156,7 +162,7 @@ const InvoiceForm = () => {
     }
   }
 
-  return (
+  return !user?.business?.stripe_account_verified ? (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -587,6 +593,30 @@ const InvoiceForm = () => {
         </div>
       </form>
     </Form>
+  ) : (
+    <Dialog open={true}>
+      <DialogContent
+        className="max-w-[calc(100dvw-40px)] w-[425px]"
+        closable={false}
+      >
+        <DialogHeader>
+          <DialogTitle className="text-center mb-4">
+            Need to Setup Your Stripe Connect Account
+          </DialogTitle>
+        </DialogHeader>
+        <Button
+          variant={"destructive"}
+          onClick={async () => {
+            const res = await onBoarding();
+            if (res.success) {
+              navigate.push(res.data);
+            }
+          }}
+        >
+          Setup on stripe!
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -78,6 +78,10 @@ export const businesses = pgTable("business", {
   address: text("address"),
   contact: varchar("contact", { length: 20 }),
   logo: text("logo"),
+  stripe_id: text("stripe_id"),
+  stripe_account_verified: timestamp("stripe_account_verified", {
+    mode: "date",
+  }),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

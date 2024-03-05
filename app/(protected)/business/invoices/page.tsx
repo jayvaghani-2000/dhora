@@ -1,5 +1,4 @@
 import { getInvoices } from "@/actions/(protected)/invoices/getInvoices";
-import { CustomTable } from "@/components/shared/custom-table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { LiaPlusSolid } from "react-icons/lia";
@@ -18,7 +17,7 @@ export default async function InvoicesPage() {
         </Link>
       </div>
 
-      {result.success ? <Invoices invoices={result.data}/> : null}
+      {result.success ? <Invoices invoices={result.data} /> : null}
     </div>
   );
 }
