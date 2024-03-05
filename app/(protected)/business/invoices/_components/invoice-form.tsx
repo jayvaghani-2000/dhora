@@ -25,7 +25,7 @@ import { LiaPlusSolid } from "react-icons/lia";
 import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
 import { uploadBusinessLogo } from "@/actions/(protected)/invoices/uploadBusinessLogo";
 import { IconInput } from "@/components/shared/icon-input";
-import { stringCasting } from "@/lib/common";
+import { formatAmount, stringCasting } from "@/lib/common";
 import { PLATFORM_FEE } from "@/lib/constant";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
   const subtotal = items.reduce((prev, curr) => {
@@ -46,14 +47,21 @@ const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
 
   let total = subtotal;
 
-  total += (total / 100) * tax;
-  total += (total / 100) * PLATFORM_FEE;
-  return { subtotal, total };
+  let taxes = (subtotal / 100) * tax;
+  let platformFee = (total / 100) * PLATFORM_FEE;
+  return {
+    subtotal,
+    total: total + taxes + platformFee,
+    tax: taxes,
+    platformFee,
+  };
 };
 
 const InvoiceForm = () => {
+  const { toast } = useToast();
   const { profile, authenticated } = useAuthStore();
-  const [file, setFile] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
+  const [updatedItem, setUpdatedItem] = useState(0);
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
@@ -93,7 +101,7 @@ const InvoiceForm = () => {
     const { subtotal, total } = generateSubtotal(items, tax ?? 0);
     setValue("total", total);
     setValue("subtotal", subtotal);
-  }, [items, tax, setValue, form]);
+  }, [updatedItem, items, tax, setValue, form]);
 
   useEffect(() => {
     if (authenticated) {
@@ -105,30 +113,64 @@ const InvoiceForm = () => {
   }, [authenticated, form, profile]);
 
   async function onSubmit(values: z.infer<typeof invoiceSchema>) {
-    const data = await generateInvoice({
-      values: values,
-      logo: file,
-    });
-    if (data.success) {
-      navigate.replace("/business/invoices");
+    if (values.items.length === 0) {
+      toast({
+        title: "Please add atleast one item.",
+      });
+      return;
+    }
+
+    if (profile?.business?.logo) {
+      const data = await generateInvoice({
+        values: values,
+      });
+      if (data.success) {
+        navigate.replace("/business/invoices");
+      }
+    } else {
+      if (!file) {
+        toast({
+          title: "Please choose business logo.",
+        });
+        return;
+      }
+      const imageForm = new FormData();
+      imageForm.append("image", file!);
+      const res = await uploadBusinessLogo(imageForm);
+
+      if (res.success) {
+        const data = await generateInvoice({
+          values: values,
+          businessDetail: {
+            logo: res.data.url,
+            business_address: values.business_address,
+            business_contact: values.business_contact,
+            business_email: values.business_email,
+            business_name: values.business_name,
+          },
+        });
+        if (data.success) {
+          navigate.replace("/business/invoices");
+        }
+      }
     }
   }
 
   return (
-    <div className="text-zinc-600 dark:text-zinc-200 flex flex-col md:grid grid-cols-[200px_1fr] gap-5 justify-center max-w-[1000px] m-auto">
-      <UploadLogo file={file} setFile={setFile} />
-      <div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-5"
-            autoComplete="off"
-          >
-            <div>
-              <div className="text-md font-semibold col-span-2 mb-2">
-                <span>Business Details</span>
-              </div>
-              <div className="border border-input px-4 py-3 rounded-md grid grid-cols-2 gap-x-4 gap-y-3">
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="text-zinc-600 dark:text-zinc-200 flex flex-col xl:grid grid-cols-12 gap-5 justify-center relative"
+        autoComplete="off"
+      >
+        <div className="flex flex-col gap-5 col-span-8 overflow-auto">
+          <div>
+            <div className="text-md font-semibold col-span-2 mb-2">
+              <span>Business Details</span>
+            </div>
+            <div className="border border-input px-4 py-3 rounded-md  flex flex-col gap-5 xl:grid grid-cols-[200px_1fr]">
+              <UploadLogo file={file} setFile={setFile} />
+              <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                 <FormField
                   control={form.control}
                   name="business_name"
@@ -198,299 +240,353 @@ const InvoiceForm = () => {
                 />
               </div>
             </div>
+          </div>
 
-            <div>
-              <div className="text-md font-semibold col-span-2 mb-2">
-                <span>Customer Details</span>
-              </div>
-              <div className="border border-input px-4 py-3 rounded-md grid grid-cols-2 gap-x-4 gap-y-3">
-                <FormField
-                  control={form.control}
-                  name="customer_name"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2">
-                      <FormControl>
-                        <Input
-                          className="h-9"
-                          placeholder="Customer Name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="customer_email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          className="h-9"
-                          placeholder="Customer Email"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="customer_contact"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          className="h-9"
-                          placeholder="Customer Contact"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="customer_address"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2">
-                      <FormControl>
-                        <Textarea
-                          placeholder="Customer Address"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+          <div>
+            <div className="text-md font-semibold col-span-2 mb-2">
+              <span>Customer Details</span>
             </div>
-
-            <div>
-              <div className="flex mb-2 justify-between items-center">
-                <div className="text-md font-semibold col-span-2 mb-2">
-                  <span>Item Details</span>
-                </div>
-                <Button
-                  type="button"
-                  className="flex px-2 py-1 h-9"
-                  onClick={() => {
-                    append({
-                      id: uuid(),
-                      name: "",
-                      description: "",
-                      price: undefined as unknown as number,
-                      quantity: undefined as unknown as number,
-                    });
-                  }}
-                >
-                  <LiaPlusSolid size={18} className="text-black" />
-                </Button>
-              </div>
-              <div className="flex flex-col gap-3">
-                {fields.map((i, index) => (
-                  <div
-                    key={i.id}
-                    className="border border-input px-4 py-3 rounded-md grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-2"
-                  >
-                    <FormField
-                      control={form.control}
-                      name={`items.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem className="col-span-2 md:col-span-1">
-                          <FormControl>
-                            <Input
-                              className="h-9"
-                              placeholder="Item Name"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`items.${index}.price`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <IconInput
-                              type="number"
-                              placeholder="Item Price"
-                              {...field}
-                              prefix={
-                                <div className="h-4 w-4">
-                                  <CgDollar className="h-full w-full" />
-                                </div>
-                              }
-                              onChange={e => {
-                                const value = parseFloat(e.target.value);
-                                field.onChange(value);
-                              }}
-                              value={stringCasting(
-                                form.getValues(
-                                  `items.${index}.price`
-                                ) as unknown as number
-                              )}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`items.${index}.quantity`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              className="h-9"
-                              placeholder="Item Quantity"
-                              {...field}
-                              onChange={e => {
-                                const value = parseFloat(e.target.value);
-                                field.onChange(value);
-                              }}
-                              value={stringCasting(
-                                form.getValues(
-                                  `items.${index}.quantity`
-                                ) as unknown as number
-                              )}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name={`items.${index}.description`}
-                      render={({ field }) => (
-                        <FormItem className="col-span-2 md:col-span-3">
-                          <FormControl>
-                            <Textarea
-                              placeholder="Item Description"
-                              className="resize-none"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {fields.length > 0 ? (
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="text-[#7f1d1d] text-sm font-semibold flex gap-1 justify-end items-center col-span-2 md:col-span-3"
-                      >
-                        <RiDeleteBin6Line /> <span>Remove</span>
-                      </button>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-5">
+            <div className="border border-input px-4 py-3 rounded-md grid grid-cols-2 gap-x-4 gap-y-3">
               <FormField
                 control={form.control}
-                name="tax"
+                name="customer_name"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-2">
                     <FormControl>
-                      <IconInput
-                        placeholder="Taxes"
+                      <Input
+                        className="h-9"
+                        placeholder="Customer Name"
                         {...field}
-                        suffix={
-                          <div className="h-4 w-4">
-                            <AiOutlinePercentage className="h-full w-full" />
-                          </div>
-                        }
-                        onChange={e => {
-                          const value = parseFloat(e.target.value);
-                          field.onChange(value);
-                        }}
-                        value={stringCasting(
-                          form.getValues(`tax`) as unknown as number
-                        )}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="due_date"
+                name="customer_email"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full h-9 justify-start text-left font-normal",
-                              !due_date && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {due_date ? (
-                              format(due_date, "PPP")
-                            ) : (
-                              <span>Pick a due date</span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={due_date}
-                            onSelect={date => {
-                              field.onChange(date);
-                            }}
-                            disabled={date => date < new Date()}
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <Input
+                        className="h-9"
+                        placeholder="Customer Email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="customer_contact"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        className="h-9"
+                        placeholder="Customer Contact"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="customer_address"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormControl>
+                      <Textarea
+                        placeholder="Customer Address"
+                        className="resize-none"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="flex justify-end gap-5">
-              <Button className="w-fit md:col-span-2" type="submit">
-                SAVE
-              </Button>
-              <Button
-                variant="outline"
-                type="button"
-                className="w-fit md:col-span-2"
-                onClick={() => {
-                  navigate.replace("/business/invoices");
-                }}
-              >
-                CANCEL
-              </Button>
+          </div>
+
+          <div>
+            <div className="flex mb-2 justify-between items-center">
+              <div className="text-md font-semibold col-span-2 mb-2">
+                <span>Item Details</span>
+              </div>
             </div>
-          </form>
-        </Form>
-      </div>
-    </div>
+            <div className="flex flex-col gap-3">
+              {fields.map((i, index) => (
+                <div
+                  key={i.id}
+                  className="grid grid-cols-2 border border-input px-4 py-3 rounded-md gap-x-5 gap-y-2"
+                >
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-2 ">
+                        <FormControl>
+                          <Input
+                            className="h-9"
+                            placeholder="Item Name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.description`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormControl>
+                          <Textarea
+                            placeholder="Item Description"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.price`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <IconInput
+                            type="number"
+                            placeholder="Item Price"
+                            {...field}
+                            prefix={
+                              <div className="h-4 w-4">
+                                <CgDollar className="h-full w-full" />
+                              </div>
+                            }
+                            onChange={e => {
+                              const value = parseFloat(e.target.value);
+                              setUpdatedItem(prev => prev + 1);
+                              if (isNaN(value)) {
+                                field.onChange(0);
+                              } else {
+                                field.onChange(value);
+                              }
+                            }}
+                            value={stringCasting(
+                              form.getValues(
+                                `items.${index}.price`
+                              ) as unknown as number
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.quantity`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            className="h-9"
+                            placeholder="Item Quantity"
+                            {...field}
+                            onChange={e => {
+                              const value = parseFloat(e.target.value);
+                              setUpdatedItem(prev => prev + 1);
+                              if (isNaN(value)) {
+                                field.onChange(0);
+                              } else {
+                                field.onChange(value);
+                              }
+                            }}
+                            value={stringCasting(
+                              form.getValues(
+                                `items.${index}.quantity`
+                              ) as unknown as number
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {fields.length > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="text-[#7f1d1d] text-sm font-semibold flex gap-1 justify-end items-center col-span-2"
+                    >
+                      <RiDeleteBin6Line /> <span>Remove</span>
+                    </button>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="ml-auto mt-1 flex px-2 py-1 h-9 text-sm gap-1"
+              onClick={() => {
+                append({
+                  id: uuid(),
+                  name: "",
+                  description: "",
+                  price: undefined as unknown as number,
+                  quantity: undefined as unknown as number,
+                });
+              }}
+            >
+              <LiaPlusSolid size={16} className="text-white" />{" "}
+              <span>Add Item</span>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-5">
+            <FormField
+              control={form.control}
+              name="tax"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <IconInput
+                      placeholder="Taxes"
+                      {...field}
+                      suffix={
+                        <div className="h-4 w-4">
+                          <AiOutlinePercentage className="h-full w-full" />
+                        </div>
+                      }
+                      onChange={e => {
+                        const value = parseFloat(e.target.value);
+                        setUpdatedItem(prev => prev + 1);
+                        if (isNaN(value)) {
+                          field.onChange(0);
+                        } else {
+                          field.onChange(value);
+                        }
+                      }}
+                      value={stringCasting(
+                        form.getValues(`tax`) as unknown as number
+                      )}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="due_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full h-9 justify-start text-left font-normal",
+                            !due_date && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {due_date ? (
+                            format(due_date, "PPP")
+                          ) : (
+                            <span>Pick a due date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={due_date}
+                          onSelect={date => {
+                            field.onChange(date);
+                          }}
+                          disabled={date => date < new Date()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="col-span-4 sticky top-5 h-fit ">
+          <div className="border border-input rounded-md">
+            <div className="flex items-center justify-between text-lg font-semibold border-b  px-5 py-2  border-input">
+              <span>Sub-Total</span>
+              <span>
+                {formatAmount(generateSubtotal(items, tax ?? 0).subtotal)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-lg font-light  border-b  px-5 py-2  border-input">
+              <span>Taxes</span>
+              <span>{formatAmount(generateSubtotal(items, tax ?? 0).tax)}</span>
+            </div>
+            <div className="flex items-center justify-between text-lg font-light  border-b  px-5 py-2  border-input">
+              <span>{`Application Fees (${PLATFORM_FEE}%)`}</span>
+              <span>
+                {formatAmount(generateSubtotal(items, tax ?? 0).platformFee)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-lg font-extrabold px-5 py-2">
+              <span>Total</span>
+              <span>
+                {formatAmount(generateSubtotal(items, tax ?? 0).total)}
+              </span>
+            </div>
+          </div>
+          <div className="flex justify-end gap-5 mt-4">
+            <Button className="w-fit" type="submit">
+              SAVE
+            </Button>
+            <Button
+              variant="outline"
+              type="button"
+              className="w-fit"
+              onClick={() => {
+                navigate.replace("/business/invoices");
+              }}
+            >
+              CANCEL
+            </Button>
+            <Button
+              variant="outline"
+              type="button"
+              className="w-fit"
+              onClick={() => {
+                navigate.replace("/business/invoices");
+              }}
+            >
+              Send
+            </Button>
+          </div>
+        </div>
+      </form>
+    </Form>
   );
 };
 

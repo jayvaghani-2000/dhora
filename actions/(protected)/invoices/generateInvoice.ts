@@ -7,36 +7,51 @@ import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { eq } from "drizzle-orm";
-import { invoiceSchema } from "@/app/(protected)/business/invoices/_utils/schema";
+import {
+  businessDetailSchemaType,
+  invoiceSchema,
+} from "@/app/(protected)/business/invoices/_utils/schema";
 import { revalidatePath } from "next/cache";
 
 const handler = async (
   user: User,
   params: {
     values: z.infer<typeof createInvoiceSchema>;
-    logo: string;
+    businessDetail?: businessDetailSchemaType;
   }
 ) => {
-  const { logo, values } = params;
+  const { businessDetail, values } = params;
 
   try {
-    const businessObj = await db.query.businesses.findFirst({
-      where: eq(businesses.id, user.business_id!),
-    });
+    if (businessDetail) {
+      const { business_address, business_contact, logo } = businessDetail;
+      await db
+        .update(businesses)
+        .set({
+          address: business_address,
+          contact: business_contact,
+          logo: logo,
+          updated_at: new Date(),
+        })
+        .where(eq(businesses.id, user.business_id!))
+        .returning();
+    }
 
-    const invoice = await db.insert(invoices).values(values).returning();
+    const invoice = await db
+      .insert(invoices)
+      .values({ ...values, business_id: user.business_id!, status: "draft" })
+      .returning();
 
     revalidatePath("/business/invoices");
 
     return { success: true, data: invoice[0] };
   } catch (err) {
-    console.log(err);
     return errorHandler(err);
   }
 };
 
 export const generateInvoice: (params: {
   values: z.infer<typeof invoiceSchema>;
-  logo: string;
+  businessDetail?: businessDetailSchemaType;
 }) => Promise<Awaited<ReturnType<typeof handler>>> =
   validateBusinessToken(handler);

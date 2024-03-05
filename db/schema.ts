@@ -195,4 +195,47 @@ export const createContractSchema = createSelectSchema(contracts).pick({
   name: true,
 });
 
-export const createInvoiceSchema = createInsertSchema(invoices);
+export const createInvoiceSchema = createInsertSchema(invoices)
+  .omit({
+    id: true,
+    business_id: true,
+    status: true,
+  })
+  .merge(
+    z.object({
+      items: z.array(
+        z.object({
+          name: z
+            .string()
+            .refine(data => data.length > 0, { message: "Name is required" }),
+          price: z.number().positive({ message: "Price should be positive" }),
+          quantity: z
+            .number()
+            .int({ message: "Quantity is invalid" })
+            .min(1, { message: "Minimum qty should be 1." }),
+          description: z.string().optional(),
+          id: z.string(),
+        })
+      ),
+      customer_contact: z
+        .string()
+        .refine(data => data.length > 0, { message: "Contact is required" }),
+      customer_name: z.string().refine(data => data.length > 0, {
+        message: "Customer name is required",
+      }),
+      customer_address: z
+        .string()
+        .refine(data => data.length > 0, { message: "Address is required" }),
+      customer_email: z.string().email({ message: "Enter valid email" }),
+      tax: z.number().refine(
+        data => {
+          const tax = data;
+          if (Number.isInteger(tax) && tax >= 0 && tax <= 100) {
+            return true;
+          }
+          return false;
+        },
+        { message: "Tax is invalid" }
+      ),
+    })
+  );

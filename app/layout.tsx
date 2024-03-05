@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/provider";
@@ -26,6 +27,7 @@ export default async function RootLayout({
             <>{children}</>
           </WithAuth>
         </StoreProvider>
+        <Toaster />
       </body>
     </html>
   );

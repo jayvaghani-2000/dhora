@@ -12,6 +12,7 @@ const handler = async (user: User, file: FormData) => {
       user.business_id as bigint,
       image
     );
+
     return { success: true as true, data: { url: uploadedImageUrl } };
   } catch (err) {
     return errorHandler(err);

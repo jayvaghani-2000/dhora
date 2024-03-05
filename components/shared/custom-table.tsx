@@ -31,7 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PiTextColumns } from "react-icons/pi";
-import { LuFilter } from "react-icons/lu";
+import { LuFilter, LuFilterX } from "react-icons/lu";
 import { Command, CommandInput } from "../ui/command";
 
 type propType<T> = {
@@ -82,10 +82,7 @@ export function CustomTable<T extends { id: string }>(
           }}
           className="rounded-lg border shadow-md h-10 max-w-60"
         >
-          <CommandInput
-            className="h-10 "
-            placeholder="Search by anything..."
-          />
+          <CommandInput className="h-10 " placeholder="Search by anything..." />
         </Command>
         {showExtraFilter ? <ExtraFilters table={table} /> : null}
         <div className="ml-auto flex gap-2 items-center">
@@ -93,10 +90,11 @@ export function CustomTable<T extends { id: string }>(
             variant="outline"
             className="p-2 gap-1"
             onClick={() => {
+              table.resetColumnFilters();
               setShowExtraFilter(prev => !prev);
             }}
           >
-            <LuFilter />
+            {showExtraFilter ? <LuFilterX /> : <LuFilter />}
             <span className="hidden md:inline">Filter</span>
           </Button>
           <DropdownMenu>
