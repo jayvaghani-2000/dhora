@@ -24,4 +24,8 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-ALTER TABLE "contracts" ADD CONSTRAINT "contracts_template_id_unique" UNIQUE("template_id");
+DO $$ BEGIN
+	ALTER TABLE "contracts" ADD CONSTRAINT "contracts_template_id_unique" UNIQUE("template_id");
+EXCEPTION
+ WHEN duplicate_table THEN null;
+END $$;

@@ -9,10 +9,35 @@ const mc = new Minio.Client({
   secretKey: config.env.S3_SECRET_KEY,
 });
 
-export const createPublicImg = async (business_id: bigint, img: File) => {
+export function generatePublicAccess(business_id: bigint) {
+  return {
+    Effect: "Allow",
+    Principal: {
+      AWS: ["*"],
+    },
+    Action: ["s3:GetObject"],
+    Resource: [`arn:aws:s3:::${config.env.NODE_ENV}/${business_id}/public/**`],
+  };
+}
+
+export async function setPublicPolicy(business_id: bigint) {
+  const policyString = await mc.getBucketPolicy(
+    config.env.NODE_ENV.toLowerCase()
+  );
+  const policy = JSON.parse(policyString);
+  policy.Statement.push(generatePublicAccess(business_id));
+  await mc.setBucketPolicy(config.env.NODE_ENV, JSON.stringify(policy));
+}
+
+export async function createPublicBusinessImgUrl(
+  business_id: bigint,
+  img: File
+) {
   const buffer = Buffer.from(await img.arrayBuffer());
   const metadata = await assetsMetadata(buffer);
-  const filepath = `${business_id}/${(await getBigIntId)[0].id}.${metadata.type}`;
-  await mc.putObject("public", filepath, buffer);
-  return `https://cdn.dhora.app/public/${filepath}`;
-};
+  const id = (await getBigIntId)[0].id_generator;
+  const filepath = `${business_id}/public/${id}.${metadata.type?.toLowerCase()}`;
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
+  await setPublicPolicy(business_id);
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
+}

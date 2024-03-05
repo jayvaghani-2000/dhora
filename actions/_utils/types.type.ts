@@ -3,8 +3,6 @@ import { getSubmittedContracts } from "../(protected)/contracts/getSubmittedCont
 import { initiateContract } from "../(protected)/contracts/initiateContract";
 import { submitContract } from "../(protected)/contracts/submitContract";
 import { getUser } from "../(auth)/me";
-import { z } from "zod";
-import { imageSchema } from "./commonSchema";
 import { getInvoices } from "../(protected)/invoices/getInvoices";
 
 export type errorType = { success: false; error: string; data?: never };
@@ -25,5 +23,3 @@ export type getSubmittedContractResponseType = Awaited<
   ReturnType<typeof getSubmittedContracts>
 >;
 export type getInvoicesResponseType = Awaited<ReturnType<typeof getInvoices>>;
-
-export type imageObjectType = z.infer<typeof imageSchema>;

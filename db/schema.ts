@@ -77,7 +77,7 @@ export const businesses = pgTable("business", {
   name: text("name").notNull(),
   address: text("address"),
   contact: varchar("contact", { length: 20 }),
-  logo: jsonb("logo"),
+  logo: text("logo"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -112,11 +112,6 @@ export const invoices = pgTable("invoices", {
   id: bigint("id", { mode: "bigint" })
     .primaryKey()
     .default(sql`public.id_generator()`),
-  business_name: text("business_name").notNull(),
-  business_contact: varchar("business_contact", { length: 20 }).notNull(),
-  business_address: text("business_address"),
-  business_email: text("business_email"),
-  business_logo: jsonb("business_logo"),
   customer_name: text("customer_name").notNull(),
   customer_email: text("customer_email").notNull(),
   customer_contact: varchar("customer_contact", { length: 20 }).notNull(),
@@ -199,3 +194,5 @@ export const createContractSchema = createSelectSchema(contracts).pick({
   template_id: true,
   name: true,
 });
+
+export const createInvoiceSchema = createInsertSchema(invoices);

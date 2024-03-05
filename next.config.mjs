@@ -8,7 +8,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "play.min.io",
+        hostname: "cdn.dhora.app",
       },
     ],
   },

@@ -53,14 +53,10 @@ const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
 
 const InvoiceForm = () => {
   const { profile, authenticated } = useAuthStore();
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<string>("");
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
-      business_name: "",
-      business_contact: "",
-      business_address: "",
-      business_email: "",
       customer_name: "",
       customer_email: "",
       customer_contact: "",
@@ -109,15 +105,12 @@ const InvoiceForm = () => {
   }, [authenticated, form, profile]);
 
   async function onSubmit(values: z.infer<typeof invoiceSchema>) {
-    const imageForm = new FormData();
-    imageForm.append("image", file!);
-    const res = await uploadBusinessLogo(imageForm);
-
-    if (res.success) {
-      const data = await generateInvoice({ values: values, logo: res.data });
-      if (data.success) {
-        navigate.replace("/business/invoices");
-      }
+    const data = await generateInvoice({
+      values: values,
+      logo: file,
+    });
+    if (data.success) {
+      navigate.replace("/business/invoices");
     }
   }
 
