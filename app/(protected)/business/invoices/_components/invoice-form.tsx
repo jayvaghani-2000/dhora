@@ -162,7 +162,7 @@ const InvoiceForm = (props: propType) => {
     }
   }
 
-  return !user?.business?.stripe_account_verified ? (
+  return user?.business?.stripe_account_verified ? (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -175,7 +175,7 @@ const InvoiceForm = (props: propType) => {
               <span>Business Details</span>
             </div>
             <div className="border border-input px-4 py-3 rounded-md  flex flex-col gap-5 xl:grid grid-cols-[200px_1fr]">
-              <UploadLogo file={file} setFile={setFile} />
+              <UploadLogo file={file} setFile={setFile} user={user} />
               <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                 <FormField
                   control={form.control}
@@ -449,8 +449,8 @@ const InvoiceForm = (props: propType) => {
             </div>
             <Button
               type="button"
-              variant="outline"
-              className="ml-auto mt-1 flex px-2 py-1 h-9 text-sm gap-1"
+              variant="secondary"
+              className="ml-auto mt-3 flex px-2 py-1 h-9 text-sm gap-1"
               onClick={() => {
                 append({
                   id: uuid(),
@@ -605,7 +605,7 @@ const InvoiceForm = (props: propType) => {
           </DialogTitle>
         </DialogHeader>
         <Button
-          variant={"destructive"}
+          variant="secondary"
           onClick={async () => {
             const res = await onBoarding();
             if (res.success) {

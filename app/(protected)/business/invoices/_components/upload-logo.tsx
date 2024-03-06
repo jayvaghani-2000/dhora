@@ -1,5 +1,6 @@
 "use client";
 
+import { profileType } from "@/actions/_utils/types.type";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/provider/store/authentication";
 import Image from "next/image";
@@ -11,13 +12,13 @@ const allowFileType = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 type Props = {
   file: File | null;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  user: profileType;
 };
 
-const UploadLogo = ({ file, setFile }: Props) => {
-  const { profile, authenticated } = useAuthStore();
+const UploadLogo = ({ file, setFile, user }: Props) => {
   const ref = useRef<HTMLInputElement>(null!);
   const [imageStr, setImageStr] = useState({
-    base64: "",
+    base64: user?.business?.logo ?? "",
     name: "",
   });
 
@@ -31,19 +32,6 @@ const UploadLogo = ({ file, setFile }: Props) => {
       ref.current.value = "";
     }
   };
-
-  useEffect(() => {
-    if (authenticated) {
-      const logo = profile?.business?.logo as string;
-
-      if (logo) {
-        setImageStr({
-          base64: logo,
-          name: "logo",
-        });
-      }
-    }
-  }, [authenticated, profile]);
 
   useEffect(() => {
     if (file) {

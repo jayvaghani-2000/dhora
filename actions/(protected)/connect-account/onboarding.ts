@@ -7,7 +7,6 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stripe } from "@/lib/stripe";
-import { redirect } from "next/navigation";
 
 const handler = async (user: User) => {
   try {
@@ -44,8 +43,6 @@ const handler = async (user: User) => {
     });
 
     return { success: true, data: accountLink.url };
-
-    return redirect(accountLink.url);
   } catch (err) {
     console.log(err);
     return errorHandler(err);
