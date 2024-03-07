@@ -19,13 +19,13 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
   return (
     <Button
       variant="outline"
-      className="p-2"
+      className="p-1 h-[28px]"
       disabled={loading}
       onClick={() => {
         handleDeleteTemplate();
       }}
     >
-      <RiDeleteBin6Line size={24} color="#b6b6b6" />
+      <RiDeleteBin6Line size={18} color="#b6b6b6" />
     </Button>
   );
 };

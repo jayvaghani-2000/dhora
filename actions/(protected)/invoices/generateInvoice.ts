@@ -44,7 +44,7 @@ const handler = async (
 
     revalidatePath("/business/invoices");
 
-    return { success: true, data: invoice[0] };
+    return { success: true as true, data: invoice[0] };
   } catch (err) {
     return errorHandler(err);
   }

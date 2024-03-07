@@ -12,12 +12,13 @@ import clsx from "clsx";
 import CustomSelect from "@/components/shared/custom-select";
 import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
+import Actions from "./actions";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
 };
 
-type recordType = {
+export type recordType = {
   email: string;
   created_on: string;
   due_date: string;
@@ -320,6 +321,13 @@ const Invoices = (props: propType) => {
             {row.getValue("status")}
           </div>
         );
+      },
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        return <Actions row={row} />;
       },
     },
   ];

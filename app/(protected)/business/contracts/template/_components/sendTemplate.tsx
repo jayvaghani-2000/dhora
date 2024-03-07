@@ -26,6 +26,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { PARAMS } from "./contractBuilder";
 import { revalidate } from "@/actions/(public)/revalidate";
 
+
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email." }),
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import UploadLogo from "./upload-logo";
 import {
@@ -22,7 +22,6 @@ import { Button } from "@/components/ui/button";
 import { invoiceSchema, invoiceSchemaType } from "../_utils/schema";
 import { LiaPlusSolid } from "react-icons/lia";
 import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
-import { uploadBusinessLogo } from "@/actions/(protected)/invoices/uploadBusinessLogo";
 import { IconInput } from "@/components/shared/icon-input";
 import { formatAmount, stringCasting } from "@/lib/common";
 import { PLATFORM_FEE } from "@/lib/constant";
@@ -35,16 +34,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { onBoarding } from "@/actions/(protected)/connect-account/onboarding";
+import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
 
 const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
   const subtotal = items.reduce((prev, curr) => {
@@ -64,40 +57,53 @@ const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
   };
 };
 
-type propType = {
-  user: profileType;
-};
+type propType =
+  | {
+      user: profileType;
+      invoiceData?: never;
+      mode?: "CREATE";
+    }
+  | {
+      user: profileType;
+      invoiceData: invoiceSchemaType;
+      mode?: "EDIT";
+    };
 
 const InvoiceForm = (props: propType) => {
-  const { user } = props;
+  const { user, mode = "CREATE", invoiceData } = props;
+  const [loading, setLoading] = useState(false);
+  const params = useParams();
   const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [updatedItem, setUpdatedItem] = useState(0);
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: {
-      business_name: user?.business?.name ?? "",
-      business_address: user?.business?.address ?? "",
-      business_email: user?.email ?? "",
-      business_contact: user?.business?.contact ?? "",
-      customer_name: "",
-      customer_email: "",
-      customer_contact: "",
-      customer_address: "",
-      items: [
-        {
-          id: uuid(),
-          name: "",
-          price: undefined,
-          description: "",
-          quantity: undefined,
-        },
-      ],
-      tax: undefined,
-      due_date: undefined,
-      subtotal: 0,
-      total: 0,
-    },
+    defaultValues:
+      mode === "EDIT"
+        ? { ...invoiceData, due_date: new Date(invoiceData!.due_date) }
+        : {
+            business_name: user?.business?.name ?? "",
+            business_address: user?.business?.address ?? "",
+            business_email: user?.email ?? "",
+            business_contact: user?.business?.contact ?? "",
+            customer_name: "",
+            customer_email: "",
+            customer_contact: "",
+            customer_address: "",
+            items: [
+              {
+                name: "",
+                price: undefined as unknown as number,
+                quantity: undefined as unknown as number,
+                description: "",
+                id: uuid(),
+              },
+            ],
+            tax: undefined,
+            due_date: undefined,
+            subtotal: 0,
+            total: 0,
+          },
   });
   const navigate = useRouter();
 
@@ -119,50 +125,51 @@ const InvoiceForm = (props: propType) => {
   }, [updatedItem, items, tax, setValue, form]);
 
   async function onSubmit(values: z.infer<typeof invoiceSchema>) {
+    const {
+      business_address,
+      business_contact,
+      business_email,
+      business_name,
+      ...rest
+    } = values;
     if (values.items.length === 0) {
       toast({
         title: "Please add atleast one item.",
       });
       return;
     }
-
-    if (user?.business?.logo) {
+    setLoading(true);
+    if (mode === "EDIT") {
+      const data = await updateInvoiceDetail({
+        ...rest,
+        id: params.invoice_id as string,
+      });
+      if (data.success) {
+        toast({
+          title: "Invoice updated successfully",
+        });
+      } else {
+        toast({
+          title: data.error,
+        });
+      }
+      setLoading(false);
+    } else {
       const data = await generateInvoice({
         values: values,
       });
       if (data.success) {
-        navigate.replace("/business/invoices");
-      }
-    } else {
-      if (!file) {
+        navigate.replace(`/business/invoices/${data.data.id}`);
+      } else {
         toast({
-          title: "Please choose business logo.",
+          title: data.error,
         });
-        return;
       }
-      const imageForm = new FormData();
-      imageForm.append("image", file!);
-      const res = await uploadBusinessLogo(imageForm);
-
-      if (res.success) {
-        const data = await generateInvoice({
-          values: values,
-          businessDetail: {
-            logo: res.data.url,
-            business_address: values.business_address,
-            business_contact: values.business_contact,
-            business_email: values.business_email,
-            business_name: values.business_name,
-          },
-        });
-        if (data.success) {
-          navigate.replace("/business/invoices");
-        }
-      }
+      setLoading(false);
     }
   }
 
-  return user?.business?.stripe_account_verified ? (
+  return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -184,7 +191,8 @@ const InvoiceForm = (props: propType) => {
                     <FormItem className="col-span-2">
                       <FormControl>
                         <Input
-                          className="h-9"
+                          className="h-9 disabled:opacity-100"
+                          disabled
                           placeholder="Business Name"
                           {...field}
                         />
@@ -201,8 +209,9 @@ const InvoiceForm = (props: propType) => {
                     <FormItem>
                       <FormControl>
                         <Input
-                          className="h-9"
+                          className="h-9 disabled:opacity-100"
                           placeholder="Business Email"
+                          disabled
                           {...field}
                         />
                       </FormControl>
@@ -218,8 +227,9 @@ const InvoiceForm = (props: propType) => {
                     <FormItem>
                       <FormControl>
                         <Input
-                          className="h-9"
+                          className="h-9 disabled:opacity-100"
                           placeholder="Business Contact"
+                          disabled
                           {...field}
                         />
                       </FormControl>
@@ -236,7 +246,8 @@ const InvoiceForm = (props: propType) => {
                       <FormControl>
                         <Textarea
                           placeholder="Business Address"
-                          className="resize-none"
+                          className="resize-none disabled:opacity-100"
+                          disabled
                           {...field}
                         />
                       </FormControl>
@@ -438,7 +449,10 @@ const InvoiceForm = (props: propType) => {
                   {fields.length > 0 ? (
                     <button
                       type="button"
-                      onClick={() => remove(index)}
+                      onClick={() => {
+                        remove(index);
+                        setUpdatedItem(prev => prev + 1);
+                      }}
                       className="text-[#7f1d1d] text-sm font-semibold flex gap-1 justify-end items-center col-span-2"
                     >
                       <RiDeleteBin6Line /> <span>Remove</span>
@@ -453,12 +467,13 @@ const InvoiceForm = (props: propType) => {
               className="ml-auto mt-3 flex px-2 py-1 h-9 text-sm gap-1"
               onClick={() => {
                 append({
-                  id: uuid(),
                   name: "",
+                  price: 0,
+                  quantity: 0,
                   description: "",
-                  price: undefined as unknown as number,
-                  quantity: undefined as unknown as number,
+                  id: uuid(),
                 });
+                setUpdatedItem(prev => prev + 1);
               }}
             >
               <LiaPlusSolid size={16} className="text-white" />{" "}
@@ -566,7 +581,7 @@ const InvoiceForm = (props: propType) => {
             </div>
           </div>
           <div className="flex justify-end gap-5 mt-4">
-            <Button className="w-fit" type="submit">
+            <Button className="w-fit" type="submit" disabled={loading}>
               SAVE
             </Button>
             <Button
@@ -576,6 +591,7 @@ const InvoiceForm = (props: propType) => {
               onClick={() => {
                 navigate.replace("/business/invoices");
               }}
+              disabled={loading}
             >
               CANCEL
             </Button>
@@ -586,6 +602,7 @@ const InvoiceForm = (props: propType) => {
               onClick={() => {
                 navigate.replace("/business/invoices");
               }}
+              disabled={loading || mode === "CREATE"}
             >
               Send
             </Button>
@@ -593,30 +610,6 @@ const InvoiceForm = (props: propType) => {
         </div>
       </form>
     </Form>
-  ) : (
-    <Dialog open={true}>
-      <DialogContent
-        className="max-w-[calc(100dvw-40px)] w-[425px]"
-        closable={false}
-      >
-        <DialogHeader>
-          <DialogTitle className="text-center mb-4">
-            Need to Setup Your Stripe Connect Account
-          </DialogTitle>
-        </DialogHeader>
-        <Button
-          variant="secondary"
-          onClick={async () => {
-            const res = await onBoarding();
-            if (res.success) {
-              navigate.push(res.data);
-            }
-          }}
-        >
-          Setup on stripe!
-        </Button>
-      </DialogContent>
-    </Dialog>
   );
 };
 

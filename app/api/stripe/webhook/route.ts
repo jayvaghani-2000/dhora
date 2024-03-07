@@ -50,16 +50,17 @@ async function handler(req: Request) {
           case "account.updated":
             const account = event.data.object;
             if (account.charges_enabled) {
-              console.log(
-                `Account enabled updated received for account id: ${account.id}`
-              );
               await db
                 .update(businesses)
                 .set({
                   stripe_account_verified: new Date(),
+                  updated_at: new Date(),
                 })
                 .where(eq(businesses.stripe_id, account.id));
             }
+            break;
+          case "checkout.session.completed":
+            const data = event.data.object;
             break;
           default:
             console.log(`Unhandled event type ${event.type}.`);

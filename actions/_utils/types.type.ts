@@ -4,6 +4,8 @@ import { initiateContract } from "../(protected)/contracts/initiateContract";
 import { submitContract } from "../(protected)/contracts/submitContract";
 import { getUser } from "../(auth)/me";
 import { getInvoices } from "../(protected)/invoices/getInvoices";
+import { createInvoiceSchema } from "@/db/schema";
+import { z } from "zod";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -23,3 +25,5 @@ export type getSubmittedContractResponseType = Awaited<
   ReturnType<typeof getSubmittedContracts>
 >;
 export type getInvoicesResponseType = Awaited<ReturnType<typeof getInvoices>>;
+
+export type createInvoiceSchemaType = z.infer<typeof createInvoiceSchema>;

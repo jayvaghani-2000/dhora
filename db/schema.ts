@@ -204,6 +204,8 @@ export const createInvoiceSchema = createInsertSchema(invoices)
     id: true,
     business_id: true,
     status: true,
+    created_at: true,
+    updated_at: true,
   })
   .merge(
     z.object({
@@ -243,3 +245,9 @@ export const createInvoiceSchema = createInsertSchema(invoices)
       ),
     })
   );
+
+export const editInvoiceSchema = createInvoiceSchema.merge(
+  z.object({
+    id: z.string(),
+  })
+);
