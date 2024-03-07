@@ -7,7 +7,7 @@ import { config } from "@/config";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 
-const handler = async (user: User, submissionId: number) => {
+const handler = async (user: User, submissionId: string) => {
   const options = {
     method: "DELETE",
     url: `https://api.docuseal.co/submissions/${submissionId}`,
@@ -23,4 +23,7 @@ const handler = async (user: User, submissionId: number) => {
   }
 };
 
-export const deleteSubmittedContracts = validateBusinessToken(handler);
+export const deleteSubmittedContracts: (
+  id: string
+) => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

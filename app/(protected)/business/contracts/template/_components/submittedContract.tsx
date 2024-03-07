@@ -1,23 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { getSubmittedContractResponseType } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { deleteSubmittedContracts } from "@/actions/(protected)/contracts/deleteSubmittedContract";
 import { formatDate } from "@/lib/common";
 import clsx from "clsx";
 import { CustomTable } from "@/components/shared/custom-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import CustomSelect from "@/components/shared/custom-select";
 import { DateRangePicker } from "@/components/shared/range-picker";
 import { isWithinInterval } from "date-fns";
+import Actions from "./actions";
 
 type propType = { templates: getSubmittedContractResponseType["data"] };
 
-type recordType = {
+export type recordType = {
   name: string;
   submitter_email: string;
   status: string;
@@ -86,14 +84,6 @@ const ExtraFilters = (props: extraFilterPropType) => {
 
 const SubmittedContract = (props: propType) => {
   const { templates } = props;
-
-  const [loading, setLoading] = useState(false);
-
-  const handleDeleteTemplate = async (id: string) => {
-    setLoading(true);
-    await deleteSubmittedContracts(id);
-    setLoading(false);
-  };
 
   const parsedTemplate: recordType[] = templates!.map(i => ({
     name: i.template.name,
@@ -217,20 +207,7 @@ const SubmittedContract = (props: propType) => {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const rowObj = row.original;
-
-        return (
-          <Button
-            variant="outline"
-            className="p-2"
-            disabled={loading}
-            onClick={() => {
-              handleDeleteTemplate(rowObj.id);
-            }}
-          >
-            <RiDeleteBin6Line size={24} color="#b6b6b6" />
-          </Button>
-        );
+        return <Actions row={row} />;
       },
     },
   ];
