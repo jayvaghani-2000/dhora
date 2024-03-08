@@ -23,7 +23,7 @@ export default function PrimaryNavbarItem(props: PrimaryNavbarProps) {
             className={clsx({
               "border border-white": active,
               "": !active,
-              "w-[48px] h-[48px]": true,
+              "w-[48px] h-[48px] p-0": true,
             })}
           >
             <span>{children}</span>

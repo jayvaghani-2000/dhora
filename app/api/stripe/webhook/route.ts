@@ -1,5 +1,5 @@
 import { config } from "@/config";
-import { businesses } from "@/db/schema";
+import { businesses, invoices } from "@/db/schema";
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { eq } from "drizzle-orm";
@@ -61,6 +61,18 @@ async function handler(req: Request) {
             break;
           case "checkout.session.completed":
             const data = event.data.object;
+
+            const metaData = data.metadata as { invoice_id: string };
+            if (data.payment_status === "paid") {
+              await db
+                .update(invoices)
+                .set({
+                  status: "paid",
+                  updated_at: new Date(),
+                })
+                .where(eq(invoices.id, BigInt(metaData.invoice_id)));
+            }
+
             break;
           default:
             console.log(`Unhandled event type ${event.type}.`);

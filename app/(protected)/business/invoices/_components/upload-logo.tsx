@@ -49,7 +49,10 @@ const UploadLogo = ({ file, setFile, user }: Props) => {
 
   return (
     <div className="relative h-fit">
-      <Button className="relative bg-white w-full h-[120px]  md:h-[140px] rounded-sm flex flex-col justify-center items-center">
+      <Button
+        className="relative bg-white h-[120px]   md:h-[140px] rounded-sm flex flex-col justify-center items-center"
+        style={{ aspectRatio: 1 }}
+      >
         {imageStr.base64 ? (
           <div className="h-full w-full ">
             <Image
@@ -67,14 +70,14 @@ const UploadLogo = ({ file, setFile, user }: Props) => {
             </div>
           </>
         )}
+        <input
+          ref={ref}
+          type="file"
+          accept={allowFileType.toString()}
+          onChange={files}
+          className="absolute z-10 inset-0 opacity-0 cursor-pointer"
+        />
       </Button>
-      <input
-        ref={ref}
-        type="file"
-        accept={allowFileType.toString()}
-        onChange={files}
-        className="absolute z-10 inset-0 opacity-0 cursor-pointer"
-      />
     </div>
   );
 };

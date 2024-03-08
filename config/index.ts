@@ -15,6 +15,7 @@ const env = createEnv({
     S3_ACCESS_KEY: z.string(),
     S3_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
+    GOOGLE_PLACES_API_KEY: z.string(),
   },
   runtimeEnv: process.env,
 });

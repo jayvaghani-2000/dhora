@@ -36,7 +36,12 @@ const Primary = () => {
         tooltip="@me"
         active={path.startsWith("/@me")}
       >
-        <Image src={assets.png.TRANSPARENT_LOGO} alt="logo" />
+        <Image
+          src={assets.png.TRANSPARENT_LOGO}
+          alt="logo"
+          height={24}
+          width={24}
+        />
       </PrimaryNavbarItem>
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
       <div className="flex flex-col gap-2">
@@ -48,7 +53,7 @@ const Primary = () => {
               tooltip="Business"
               active={path.startsWith("/business")}
             >
-              <HiOutlineBuildingOffice />
+              <HiOutlineBuildingOffice size={24} />
             </PrimaryNavbarItem>
             <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
           </>
@@ -60,8 +65,8 @@ const Primary = () => {
       <div className="flex items-center flex-col gap-y-2">
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
         <Link href={DEFAULT_LOGIN_REDIRECT}>
-          <Button variant="ghost" className="h-[48px] w-[48px]">
-            <PiPlus />
+          <Button variant="ghost" className="h-[48px] w-[48px] p-0">
+            <PiPlus size={24}/>
           </Button>
         </Link>
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />

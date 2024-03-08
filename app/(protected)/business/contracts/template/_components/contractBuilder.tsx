@@ -9,6 +9,7 @@ import { updateContract } from "@/actions/(protected)/contracts/updateContract";
 import { Button } from "@/components/ui/button";
 import SendTemplate from "./sendTemplate";
 import { IoIosSend } from "react-icons/io";
+import BackButton from "@/components/shared/back-button";
 
 export enum PARAMS {
   CONTRACT_ID = "c_id",
@@ -45,8 +46,7 @@ const ContractBuilder = (props: propType) => {
 
   const handleUpdateContract = async (data: any) => {
     if (contract && data.name !== contract.name) {
-      console.log("Templated changed");
-      const res = await updateContract({
+      await updateContract({
         template_id: data.id,
         name: data.name,
       });
@@ -60,12 +60,16 @@ const ContractBuilder = (props: propType) => {
   return (
     <>
       <div className="bg-zinc-700 flex flex-col md:gap-2 py-2 md:py-5 ">
-        <Button
-          onClick={handleToggleSendContract}
-          className=" font-bold flex justify-center gap-2 w-fit mr-4 ml-auto text-base self-end"
-        >
-          <span className="hidden md:inline">SEND</span> <IoIosSend size={22} />
-        </Button>
+        <div className="flex justify-between px-4">
+          <BackButton to="/business/contracts" />
+          <Button
+            onClick={handleToggleSendContract}
+            className=" font-bold flex justify-center gap-2 w-fit text-base self-end"
+          >
+            <span className="hidden md:inline">Send</span>{" "}
+            <IoIosSend size={22} />
+          </Button>
+        </div>
         <DocusealBuilder
           token={token}
           onLoad={handleLoadNewContract}
