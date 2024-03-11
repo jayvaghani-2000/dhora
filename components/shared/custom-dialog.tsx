@@ -17,6 +17,7 @@ type propType = {
   children?: React.ReactNode;
   open: boolean;
   onClose?: () => void;
+  onSubmit?: () => void;
 };
 
 const CustomDialog = (prop: propType) => {
@@ -27,6 +28,7 @@ const CustomDialog = (prop: propType) => {
     open,
     onClose = () => {},
     children,
+    onSubmit = () => {},
   } = prop;
   return (
     <Dialog
@@ -54,7 +56,11 @@ const CustomDialog = (prop: propType) => {
           <Button variant="outline" className="relative z-10">
             Cancel
           </Button>
-          <Button variant="default" className="relative z-10">
+          <Button
+            variant="default"
+            onClick={onSubmit}
+            className="relative z-10"
+          >
             Save
           </Button>
         </DialogFooter>

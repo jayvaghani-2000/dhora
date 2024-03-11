@@ -41,3 +41,11 @@ export async function createPublicBusinessImgUrl(
   await setPublicPolicy(business_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
+
+export async function removeImage(url: string) {
+  const domain = `https://cdn.dhora.app/${config.env.NODE_ENV}/`;
+
+  const imageObject = url.replace(domain, "");
+
+  await mc.removeObjects(config.env.NODE_ENV, [imageObject]);
+}

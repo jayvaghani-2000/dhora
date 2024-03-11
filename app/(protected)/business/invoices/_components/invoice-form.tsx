@@ -74,7 +74,7 @@ const InvoiceForm = (props: propType) => {
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const { toast } = useToast();
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState(user?.business?.logo ?? "");
   const [updatedItem, setUpdatedItem] = useState(0);
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
@@ -182,7 +182,7 @@ const InvoiceForm = (props: propType) => {
               <span>Business Details</span>
             </div>
             <div className="border border-input px-4 py-3 rounded-md  flex flex-col gap-5 xl:grid grid-cols-[200px_1fr]">
-              <UploadLogo file={file} setFile={setFile} user={user} />
+              <UploadLogo file={file} setFile={setFile} />
               <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                 <FormField
                   control={form.control}

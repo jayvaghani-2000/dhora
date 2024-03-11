@@ -2,7 +2,7 @@ import { createInvoiceSchema } from "@/db/schema";
 import { z } from "zod";
 
 export type invoiceSchemaType = z.infer<typeof invoiceSchema>;
-export type businessDetailSchemaType = z.infer<typeof detailWithLogo>;
+export type businessDetailSchemaType = z.infer<typeof businessDetailSchema>;
 
 export const businessDetailSchema = z.object({
   business_name: z
