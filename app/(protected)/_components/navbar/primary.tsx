@@ -39,8 +39,8 @@ const Primary = () => {
         <Image
           src={assets.png.TRANSPARENT_LOGO}
           alt="logo"
-          height={24}
-          width={24}
+          height={36}
+          width={36}
         />
       </PrimaryNavbarItem>
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
@@ -53,7 +53,7 @@ const Primary = () => {
               tooltip="Business"
               active={path.startsWith("/business")}
             >
-              <HiOutlineBuildingOffice size={24} />
+              <HiOutlineBuildingOffice size={32} />
             </PrimaryNavbarItem>
             <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
           </>
@@ -66,7 +66,7 @@ const Primary = () => {
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
         <Link href={DEFAULT_LOGIN_REDIRECT}>
           <Button variant="ghost" className="h-[48px] w-[48px] p-0">
-            <PiPlus size={24}/>
+            <PiPlus size={32} />
           </Button>
         </Link>
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />

@@ -5,6 +5,7 @@ import "./globals.css";
 import StoreProvider from "@/provider";
 import WithAuth from "@/components/hoc/with-auth";
 import Script from "next/script";
+import { config } from "@/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +31,9 @@ export default async function RootLayout({
         </StoreProvider>
         <Toaster />
       </body>
-      <Script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsO4xC-C0rhBFeJmhtO3j-x2MDM-GYprA&libraries=places"></Script>
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${config.env.GOOGLE_PLACES_API_KEY}&libraries=places`}
+      ></Script>
     </html>
   );
 }
