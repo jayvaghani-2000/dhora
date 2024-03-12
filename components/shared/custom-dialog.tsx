@@ -1,5 +1,5 @@
 "use client";
-import React, { HTMLProps } from "react";
+import React, { HTMLProps, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Spinner from "./spinner";
 
 type propType = {
   title?: string;
@@ -16,6 +17,7 @@ type propType = {
   className?: HTMLProps<HTMLElement>["className"];
   children?: React.ReactNode;
   open: boolean;
+  saveText?: string;
   onClose?: () => void;
   onSubmit?: () => void;
 };
@@ -28,8 +30,25 @@ const CustomDialog = (prop: propType) => {
     open,
     onClose = () => {},
     children,
-    onSubmit = () => {},
+    saveText = "Save",
+    onSubmit = async () => {},
   } = prop;
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleKeyPress = async (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        setLoading(true);
+        await onSubmit();
+        setLoading(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
   return (
     <Dialog
       open={open}
@@ -53,15 +72,25 @@ const CustomDialog = (prop: propType) => {
 
         {children ? <div className="px-3 md:px-6 py-2">{children}</div> : null}
         <DialogFooter className="flex-row relative bg-gradient px-3 md:px-6 py-3 flex justify-end items-center rounded-b-sm before:content-[''] before:absolute before:inset-0 before:bg-background before:opacity-50 gap-2">
-          <Button variant="outline" className="relative z-10">
+          <Button
+            variant="outline"
+            disabled={loading}
+            className="relative z-10"
+            onClick={onClose}
+          >
             Cancel
           </Button>
           <Button
             variant="default"
-            onClick={onSubmit}
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true);
+              await onSubmit();
+              setLoading(false);
+            }}
             className="relative z-10"
           >
-            Save
+            {saveText} {loading ? <Spinner type="inline" /> : null}
           </Button>
         </DialogFooter>
       </DialogContent>

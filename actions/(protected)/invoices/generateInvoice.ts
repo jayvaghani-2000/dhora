@@ -2,13 +2,11 @@
 
 import { z } from "zod";
 import { User } from "lucia";
-import { businesses, createInvoiceSchema, invoices } from "@/db/schema";
+import { createInvoiceSchema, invoices } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import {
-  invoiceSchema,
-} from "@/app/(protected)/business/invoices/_utils/schema";
+import { invoiceSchema } from "@/app/(protected)/business/invoices/_utils/schema";
 import { revalidatePath } from "next/cache";
 
 const handler = async (

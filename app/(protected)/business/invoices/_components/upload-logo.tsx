@@ -1,6 +1,7 @@
 "use client";
 
 import { uploadBusinessLogo } from "@/actions/(protected)/business/uploadBusinessLogo";
+import Spinner from "@/components/shared/spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthStore } from "@/provider/store/authentication";
@@ -44,6 +45,7 @@ const UploadLogo = ({ file, setFile }: Props) => {
 
   return (
     <div className="relative h-fit">
+      {loading ? <Spinner /> : null}
       <Button
         className="relative bg-white h-[120px]  md:h-[140px] rounded-sm flex flex-col justify-center items-center"
         style={{ aspectRatio: 1 }}

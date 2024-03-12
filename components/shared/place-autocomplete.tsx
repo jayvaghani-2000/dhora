@@ -8,17 +8,22 @@ type propType<T> = {
   value: string;
   onChange: (value: string) => void;
   form: any;
+  defaultValue?: string;
 };
 
 function PlacesAutocompleteInput<T>({
   value,
   onChange,
   form,
+  defaultValue,
 }: propType<T>): React.ReactNode {
+  const [isTouched, setIsTouched] = useState(false);
+
   return (
     <PlacesAutocomplete
       value={value}
       onChange={e => {
+        setIsTouched(true);
         onChange(e);
       }}
       onSelect={e => {
@@ -27,6 +32,7 @@ function PlacesAutocompleteInput<T>({
       }}
     >
       {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => {
+        const inputDefaultValue = isTouched ? "" : defaultValue;
         return (
           <div className="w-full">
             <FormField
@@ -40,9 +46,10 @@ function PlacesAutocompleteInput<T>({
                       {...getInputProps({
                         placeholder: "Business Address",
                       })}
+                      value={getInputProps().value || inputDefaultValue}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="absolute -bottom-5" />
                 </FormItem>
               )}
             />

@@ -44,9 +44,8 @@ const handler = async (user: User) => {
       type: "account_onboarding",
     });
 
-    return { success: true, data: accountLink.url };
+    return { success: true as true, data: accountLink.url };
   } catch (err) {
-    console.log(err);
     return errorHandler(err);
   }
 };
