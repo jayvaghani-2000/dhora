@@ -8,6 +8,7 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stripe } from "@/lib/stripe";
 import { createInvoiceSchemaType } from "@/actions/_utils/types.type";
+import { revalidatePath } from "next/cache";
 
 const handler = async (user: User, invoiceId: string) => {
   try {
@@ -59,20 +60,23 @@ const handler = async (user: User, invoiceId: string) => {
       metadata: {
         invoice_id: invoiceId,
       },
-      
     });
 
     await db
       .update(invoices)
-      .set({ stripe_ref: session.url, updated_at: new Date() })
+      .set({
+        stripe_ref: session.id,
+        updated_at: new Date(),
+        status: "pending",
+      })
       .where(
         and(
           eq(invoices.id, BigInt(invoiceId)),
           eq(invoices.business_id, user.business_id!)
         )
       );
-
-    return { success: true, data: session.url };
+    revalidatePath("/business/invoices");
+    return { success: true as true, data: session.url };
   } catch (err) {
     console.log(err);
     return errorHandler(err);

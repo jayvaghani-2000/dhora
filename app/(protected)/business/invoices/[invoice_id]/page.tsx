@@ -13,7 +13,7 @@ export default async function InvoicesPage(props: propType) {
   const result = await getInvoiceDetail(props.params.invoice_id);
   const user = await me();
 
-  return (
+  return result.success ? (
     <InvoiceForm
       user={user.data}
       mode="EDIT"
@@ -27,5 +27,5 @@ export default async function InvoicesPage(props: propType) {
         } as invoiceSchemaType
       }
     />
-  );
+  ) : null;
 }

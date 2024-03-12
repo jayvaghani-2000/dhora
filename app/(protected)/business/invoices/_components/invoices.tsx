@@ -13,6 +13,7 @@ import CustomSelect from "@/components/shared/custom-select";
 import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import Actions from "./actions";
+import { invoiceStatusTypeEnum } from "@/db/schema";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];

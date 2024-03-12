@@ -4,19 +4,23 @@ import { Input } from "../ui/input";
 import clsx from "clsx";
 import { FormField, FormItem, FormMessage, FormControl } from "../ui/form";
 
-type propType<T> = {
+type propType = {
   value: string;
   onChange: (value: string) => void;
   form: any;
   defaultValue?: string;
+  fieldName: string;
+  placeholder?: string;
 };
 
-function PlacesAutocompleteInput<T>({
+function PlacesAutocompleteInput({
   value,
   onChange,
   form,
   defaultValue,
-}: propType<T>): React.ReactNode {
+  fieldName,
+  placeholder = "Address",
+}: propType): React.ReactNode {
   const [isTouched, setIsTouched] = useState(false);
 
   return (
@@ -27,7 +31,7 @@ function PlacesAutocompleteInput<T>({
         onChange(e);
       }}
       onSelect={e => {
-        form.setValue("business_address", e);
+        form.setValue(fieldName, e);
         onChange(e);
       }}
     >
@@ -37,14 +41,14 @@ function PlacesAutocompleteInput<T>({
           <div className="w-full">
             <FormField
               control={form.control}
-              name="business_address"
+              name={fieldName}
               render={({ field }) => (
                 <FormItem className="col-span-2">
                   <FormControl>
                     <Input
                       className="h-9 disabled:opacity-100"
                       {...getInputProps({
-                        placeholder: "Business Address",
+                        placeholder: placeholder,
                       })}
                       value={getInputProps().value || inputDefaultValue}
                     />

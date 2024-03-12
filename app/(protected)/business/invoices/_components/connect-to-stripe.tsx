@@ -177,8 +177,10 @@ const ConnectToStripe = (props: propType) => {
                 onChange={e => {
                   setAddress(e);
                 }}
+                fieldName="business_address"
                 form={form}
                 defaultValue={user?.business?.address ?? ""}
+                placeholder="Business Address"
               />
             </div>
           </Form>

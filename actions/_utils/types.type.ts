@@ -26,6 +26,8 @@ export type getSubmittedContractResponseType = Awaited<
   ReturnType<typeof getSubmittedContracts>
 >;
 export type getInvoicesResponseType = Awaited<ReturnType<typeof getInvoices>>;
-export type getInvoicesDetailResponseType = Awaited<ReturnType<typeof getInvoiceDetail>>;
+export type getInvoicesDetailResponseType = Awaited<
+  ReturnType<typeof getInvoiceDetail>
+>;
 
 export type createInvoiceSchemaType = z.infer<typeof createInvoiceSchema>;

@@ -21,6 +21,13 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(protected)/business/invoices/_components/invoice-pdf/index.jsx", "app/(protected)/business/invoices/[invoice_id]/preview/page.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/(protected)/business/invoices/_components/invoice-pdf/index.jsx",
+    "app/(protected)/business/invoices/[invoice_id]/preview/page.jsx"
+  ],
   "exclude": ["node_modules"]
 }

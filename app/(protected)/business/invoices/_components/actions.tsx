@@ -4,27 +4,26 @@ import React, { useState } from "react";
 import { recordType } from "./invoices";
 import { RiShareForwardFill } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { checkout } from "@/actions/(protected)/stripe/checkout";
 import { IoEyeOutline } from "react-icons/io5";
+import { useToast } from "@/components/ui/use-toast";
+import CustomDialog from "@/components/shared/custom-dialog";
 
 const Actions = ({ row }: { row: Row<recordType> }) => {
   const rowObj = row.original;
-  const [loading, setLoading] = useState(false);
   const navigate = useRouter();
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
+
+  const isNotDraft = rowObj.status !== "draft";
 
   return (
     <div className="flex gap-1">
       <Button
         variant="outline"
         className="p-1 h-[28px]"
+        disabled={isNotDraft}
         onClick={() => {
           setOpen(true);
         }}
@@ -43,36 +42,33 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
       <Button
         variant="outline"
         className="p-1 h-[28px]"
+        disabled={isNotDraft}
         onClick={() => {
           navigate.push(`/business/invoices/${rowObj.id}`);
         }}
       >
         <MdEdit size={18} color="#b6b6b6" />
       </Button>
-      <Dialog
+
+      <CustomDialog
+        title="Send Invoice"
+        className="w-[720px]"
         open={open}
-        onOpenChange={value => {
-          if (!value) {
-            setOpen(false);
+        onClose={() => {
+          setOpen(false);
+        }}
+        saveText={"Send"}
+        onSubmit={async () => {
+          const res = await checkout(rowObj.id);
+          if (res.success) {
+            toast({
+              title: "Invoice sent to customer successfully!",
+            });
           }
         }}
       >
-        <DialogContent className="max-w-[calc(100dvw-40px)] w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Send invoice to {rowObj.email}</DialogTitle>
-          </DialogHeader>
-
-          <Button
-            type="submit"
-            onClick={async () => {
-              const res = await checkout(rowObj.id);
-              console.log(res);
-            }}
-          >
-            Send Invoice
-          </Button>
-        </DialogContent>
-      </Dialog>
+        Confirm! Want to send invoice to {rowObj.email}
+      </CustomDialog>
     </div>
   );
 };

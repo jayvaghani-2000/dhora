@@ -17,7 +17,11 @@ const handler = async (user: User, id: string) => {
       ),
     });
 
-    return { success: true as true, data: stringifyBigint(data) };
+    if (data?.status !== "draft") {
+      return { success: false, error: "Unable to update invoice" };
+    } else {
+      return { success: true as true, data: stringifyBigint(data) };
+    }
   } catch (err) {
     return errorHandler(err);
   }

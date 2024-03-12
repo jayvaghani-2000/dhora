@@ -38,6 +38,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
 import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
+import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 
 const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
   const subtotal = items.reduce((prev, curr) => {
@@ -105,6 +106,8 @@ const InvoiceForm = (props: propType) => {
             total: 0,
           },
   });
+  const [address, setAddress] = useState("");
+
   const navigate = useRouter();
 
   const { setValue, control } = form;
@@ -116,7 +119,6 @@ const InvoiceForm = (props: propType) => {
 
   const items = form.getValues("items");
   const tax = form.getValues("tax");
-  const due_date = form.getValues("due_date");
 
   useEffect(() => {
     const { subtotal, total } = generateSubtotal(items, tax ?? 0);
@@ -315,23 +317,18 @@ const InvoiceForm = (props: propType) => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="customer_address"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormControl>
-                      <Textarea
-                        placeholder="Customer Address"
-                        className="resize-none"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="col-span-2">
+                <PlacesAutocompleteInput
+                  value={address}
+                  onChange={e => {
+                    setAddress(e);
+                  }}
+                  form={form}
+                  fieldName="customer_address"
+                  placeholder="Customer Address"
+                  defaultValue={invoiceData?.customer_address ?? ""}
+                />
+              </div>
             </div>
           </div>
 
@@ -526,12 +523,12 @@ const InvoiceForm = (props: propType) => {
                           variant={"outline"}
                           className={cn(
                             "w-full h-9 justify-start text-left font-normal",
-                            !due_date && "text-muted-foreground"
+                            !field.value && "text-muted-foreground"
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {due_date ? (
-                            format(due_date, "PPP")
+                          {field.value ? (
+                            format(field.value, "PPP")
                           ) : (
                             <span>Pick a due date</span>
                           )}
@@ -540,7 +537,7 @@ const InvoiceForm = (props: propType) => {
                       <PopoverContent className="w-auto p-0">
                         <Calendar
                           mode="single"
-                          selected={due_date}
+                          selected={field.value}
                           onSelect={date => {
                             field.onChange(date);
                           }}
