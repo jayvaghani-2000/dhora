@@ -1,5 +1,8 @@
 "use client";
-import { getInvoicesResponseType } from "@/actions/_utils/types.type";
+import {
+  getInvoicesResponseType,
+  invoiceStatusTypes,
+} from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { formatAmount, formatDate } from "@/lib/common";
 import React from "react";
@@ -25,7 +28,7 @@ export type recordType = {
   due_date: string;
   amount: number;
   id: string;
-  status: string;
+  status: invoiceStatusTypes;
 };
 
 type extraFilterPropType = {
@@ -168,7 +171,7 @@ const Invoices = (props: propType) => {
     created_on: formatDate(i.created_at),
     amount: Number(i.total),
     due_date: formatDate(i.due_date),
-    status: i.status,
+    status: i.status as invoiceStatusTypes,
   }));
 
   const columns: ColumnDef<recordType>[] = [

@@ -15,7 +15,7 @@ const env = createEnv({
     S3_HOST: z.string(),
     S3_ACCESS_KEY: z.string(),
     S3_SECRET_KEY: z.string(),
-    GOOGLE_PLACES_API_KEY: z.string(),
+    NEXT_PUBLIC_GOOGLE_PLACES_API_KEY: z.string(),
   },
   runtimeEnv: process.env,
 });

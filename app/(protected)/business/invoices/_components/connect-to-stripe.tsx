@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { onBoarding } from "@/actions/(protected)/stripe/onboarding";
 import { BsCreditCard2Front } from "react-icons/bs";
@@ -31,7 +31,7 @@ type propType = {
 const ConnectToStripe = (props: propType) => {
   const navigate = useRouter();
   const [activeStep, setActiveStep] = useState(1);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const { user } = props;
   const { toast } = useToast();
   const [file, setFile] = useState(user?.business?.logo ?? "");
@@ -96,6 +96,7 @@ const ConnectToStripe = (props: propType) => {
         className="w-[720px]"
         open={open}
         onClose={() => {
+          navigate.replace("/business/invoices");
           setOpen(false);
         }}
         saveText={activeStep === 1 ? "Save" : "Setup Payment Method"}
@@ -191,15 +192,6 @@ const ConnectToStripe = (props: propType) => {
           </div>
         ) : null}
       </CustomDialog>
-      <div className="m-auto w-fit">
-        <Button
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          Connect to Stripe
-        </Button>
-      </div>
     </>
   );
 };

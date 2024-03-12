@@ -29,12 +29,15 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
+import { businessTypes } from "@/actions/_utils/types.type";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const businessTypeOptions = Object.values(businessTypeEnum)[1] as string[];
+  const businessTypeOptions = Object.values(
+    businessTypeEnum
+  )[1] as businessTypes[];
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),

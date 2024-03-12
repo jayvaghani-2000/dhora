@@ -8,16 +8,24 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
-const handler = async (user: User, id: string) => {
+type mode = "view" | "edit";
+
+const handler = async (
+  user: User,
+  { id, mode = "view" }: { id: string; mode?: mode }
+) => {
   try {
     const data = await db.query.invoices.findFirst({
       where: and(
         eq(invoices.id, BigInt(id)),
         eq(invoices.business_id, user.business_id!)
       ),
+      with: {
+        business: true,
+      },
     });
 
-    if (data?.status !== "draft") {
+    if (mode === "edit" && data?.status !== "draft") {
       return { success: false, error: "Unable to update invoice" };
     } else {
       return { success: true as true, data: stringifyBigint(data) };
@@ -27,7 +35,8 @@ const handler = async (user: User, id: string) => {
   }
 };
 
-export const getInvoiceDetail: (
-  id: string
-) => Promise<Awaited<ReturnType<typeof handler>>> =
+export const getInvoiceDetail: (params: {
+  id: string;
+  mode?: mode;
+}) => Promise<Awaited<ReturnType<typeof handler>>> =
   validateBusinessToken(handler);

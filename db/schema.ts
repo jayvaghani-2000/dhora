@@ -133,6 +133,7 @@ export const invoices = pgTable("invoices", {
   stripe_ref: text("stripe_ref"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
+  invoice: text("invoice"),
 });
 
 export const invoicesRelations = relations(invoices, ({ one }) => ({

@@ -4,7 +4,7 @@ import { initiateContract } from "../(protected)/contracts/initiateContract";
 import { submitContract } from "../(protected)/contracts/submitContract";
 import { getUser } from "../(auth)/me";
 import { getInvoices } from "../(protected)/invoices/getInvoices";
-import { createInvoiceSchema } from "@/db/schema";
+import { businessTypeEnum, createInvoiceSchema } from "@/db/schema";
 import { z } from "zod";
 import { getInvoiceDetail } from "../(protected)/invoices/getInvoiceDetail";
 
@@ -31,3 +31,15 @@ export type getInvoicesDetailResponseType = Awaited<
 >;
 
 export type createInvoiceSchemaType = z.infer<typeof createInvoiceSchema>;
+
+export type businessTypes =
+  | "Event Planner"
+  | "Venue"
+  | "Photo & Video"
+  | "Entertainment"
+  | "Caterer"
+  | "Apparel"
+  | "Health & Beauty"
+  | "Other";
+  
+export type invoiceStatusTypes = "paid" | "pending" | "draft" | "overdue";

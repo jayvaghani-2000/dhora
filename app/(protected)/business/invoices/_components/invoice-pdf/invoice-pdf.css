@@ -16,6 +16,7 @@
   word-break: break-all;
   font-weight: 400;
   font-size: 12px;
+  box-sizing: border-box;
 }
 
 .table-item {

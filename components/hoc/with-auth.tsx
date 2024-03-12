@@ -10,6 +10,8 @@ import { me } from "@/actions/(auth)/me";
 import { profileType } from "@/actions/_utils/types.type";
 import { authRoutes, publicRoutes } from "@/routes";
 import Spinner from "../shared/spinner";
+import Script from "next/script";
+import { setGlobalData } from "@/provider/store/global";
 
 const publicRouteList = [...publicRoutes, ...authRoutes];
 
@@ -61,16 +63,30 @@ const WithAuth = ({ children }: propType) => {
   const body =
     authenticated && !profile?.email_verified ? <ConfirmAccount /> : children;
 
-  return !authCheck && authRoutes.includes(path) ? (
-    <div className="h-screen flex justify-center items-center">
-      <div className="flex flex-col items-center justify-center">
-        <div>
-          <Spinner />
+  return (
+    <>
+      {!authCheck && authRoutes.includes(path) ? (
+        <div className="h-screen flex justify-center items-center">
+          <div className="flex flex-col items-center justify-center">
+            <div>
+              <Spinner />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  ) : (
-    <>{isPublicRoute ? children : body}</>
+      ) : (
+        <>{isPublicRoute ? children : body}</>
+      )}
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`}
+        onLoad={e => {
+          dispatch(
+            setGlobalData({
+              mapScriptLoaded: true,
+            })
+          );
+        }}
+      ></Script>
+    </>
   );
 };
 

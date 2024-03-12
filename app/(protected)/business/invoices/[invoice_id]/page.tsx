@@ -10,7 +10,7 @@ type propType = {
 };
 
 export default async function InvoicesPage(props: propType) {
-  const result = await getInvoiceDetail(props.params.invoice_id);
+  const result = await getInvoiceDetail({id: props.params.invoice_id, mode:"edit"});
   const user = await me();
 
   return result.success ? (
