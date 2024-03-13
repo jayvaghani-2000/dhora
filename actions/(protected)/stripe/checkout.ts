@@ -45,22 +45,22 @@ const handler = async (user: User, invoiceId: string) => {
       })
     );
 
-    const session = await stripe.paymentLinks.create({
-      payment_method_types: ["card"],
-      line_items: prices.map((price, index) => {
-        return {
-          price: price.id,
-          quantity: items[index].quantity,
-        };
-      }),
-      application_fee_amount: 2000,
-      transfer_data: {
-        destination: business?.stripe_id!,
+    const session = await stripe.paymentLinks.create(
+      {
+        payment_method_types: ["card"],
+        line_items: prices.map((price, index) => {
+          return {
+            price: price.id,
+            quantity: items[index].quantity,
+          };
+        }),
+        application_fee_amount: 2000,
+        metadata: {
+          invoice_id: invoiceId,
+        },
       },
-      metadata: {
-        invoice_id: invoiceId,
-      },
-    });
+      { stripeAccount: business?.stripe_id! }
+    );
 
     await db
       .update(invoices)
