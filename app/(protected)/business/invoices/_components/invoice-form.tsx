@@ -106,6 +106,9 @@ const InvoiceForm = (props: propType) => {
             total: 0,
           },
   });
+
+  console.log(form.formState.errors);
+
   const [address, setAddress] = useState("");
 
   const navigate = useRouter();
@@ -317,7 +320,7 @@ const InvoiceForm = (props: propType) => {
                 )}
               />
 
-              <div className="col-span-2">
+              <div className="col-span-2 relative">
                 <PlacesAutocompleteInput
                   value={address}
                   onChange={e => {
@@ -326,7 +329,7 @@ const InvoiceForm = (props: propType) => {
                   form={form}
                   fieldName="customer_address"
                   placeholder="Customer Address"
-                  defaultValue={invoiceData?.customer_address ?? ""}
+                  defaultValue={invoiceData?.customer_address}
                 />
               </div>
             </div>
@@ -551,6 +554,24 @@ const InvoiceForm = (props: propType) => {
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    placeholder="Notes"
+                    className="resize-none"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="col-span-4 sticky top-5 h-fit ">
           <div className="border border-input rounded-md">
@@ -565,7 +586,7 @@ const InvoiceForm = (props: propType) => {
               <span>{formatAmount(generateSubtotal(items, tax ?? 0).tax)}</span>
             </div>
             <div className="flex items-center justify-between text-lg font-light  border-b  px-5 py-2  border-input">
-              <span>{`Application Fees (${PLATFORM_FEE}%)`}</span>
+              <span>{`Application Fees`}</span>
               <span>
                 {formatAmount(generateSubtotal(items, tax ?? 0).platformFee)}
               </span>

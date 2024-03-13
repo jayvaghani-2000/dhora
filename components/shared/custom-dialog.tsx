@@ -72,14 +72,16 @@ const CustomDialog = (prop: propType) => {
 
         {children ? <div className="px-3 md:px-6 py-2">{children}</div> : null}
         <DialogFooter className="flex-row relative bg-gradient px-3 md:px-6 py-3 flex justify-end items-center rounded-b-sm before:content-[''] before:absolute before:inset-0 before:bg-background before:opacity-75 gap-2">
-          <Button
-            variant="outline"
-            disabled={loading}
-            className="relative z-10"
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
+          {closable ? (
+            <Button
+              variant="outline"
+              disabled={loading}
+              className="relative z-10"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          ) : null}
           <Button
             variant="default"
             disabled={loading}

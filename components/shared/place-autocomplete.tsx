@@ -62,7 +62,11 @@ function PlacesAutocompleteInput({
                           value={getInputProps().value || inputDefaultValue}
                         />
                       </FormControl>
-                      <FormMessage className="absolute -bottom-5" />
+                      <FormMessage
+                        className={clsx({
+                          hidden: loading || suggestions.length > 0,
+                        })}
+                      />
                     </FormItem>
                   )}
                 />

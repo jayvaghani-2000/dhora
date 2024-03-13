@@ -134,6 +134,7 @@ export const invoices = pgTable("invoices", {
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   invoice: text("invoice"),
+  notes: text("notes"),
 });
 
 export const invoicesRelations = relations(invoices, ({ one }) => ({
