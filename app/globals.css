@@ -93,6 +93,7 @@
       radial-gradient(at 68% 51%, rgb(21, 94, 117) 0, transparent 54%),
       radial-gradient(at 5% 61%, rgb(91, 33, 182) 0, transparent 47%),
       radial-gradient(at 96% 76%, rgb(30, 58, 138) 0, transparent 74%);
+    
     @apply text-foreground;
   }
 }

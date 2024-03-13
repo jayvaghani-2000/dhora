@@ -1,4 +1,6 @@
+import { invoiceSchemaType } from "@/app/(protected)/business/invoices/_utils/schema";
 import { format } from "date-fns";
+import { PLATFORM_FEE } from "./constant";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -41,3 +43,25 @@ export function stringCasting(value: number) {
   }
   return String(value);
 }
+
+
+export const generateBreakdownPrice = (
+  items: invoiceSchemaType["items"],
+  tax: number
+) => {
+  const subtotal = items.reduce((prev, curr) => {
+    prev += (curr.price ?? 0) * (curr.quantity ?? 0);
+    return prev;
+  }, 0);
+
+  let total = subtotal;
+
+  let taxes = (subtotal / 100) * tax;
+  let platformFee = (total / 100) * PLATFORM_FEE;
+  return {
+    subtotal,
+    total: total + taxes + platformFee,
+    tax: taxes,
+    platformFee,
+  };
+};

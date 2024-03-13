@@ -23,8 +23,11 @@ import { invoiceSchema, invoiceSchemaType } from "../_utils/schema";
 import { LiaPlusSolid } from "react-icons/lia";
 import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
 import { IconInput } from "@/components/shared/icon-input";
-import { formatAmount, stringCasting } from "@/lib/common";
-import { PLATFORM_FEE } from "@/lib/constant";
+import {
+  formatAmount,
+  generateBreakdownPrice,
+  stringCasting,
+} from "@/lib/common";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -39,24 +42,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
 import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
-
-const generateSubtotal = (items: invoiceSchemaType["items"], tax: number) => {
-  const subtotal = items.reduce((prev, curr) => {
-    prev += (curr.price ?? 0) * (curr.quantity ?? 0);
-    return prev;
-  }, 0);
-
-  let total = subtotal;
-
-  let taxes = (subtotal / 100) * tax;
-  let platformFee = (total / 100) * PLATFORM_FEE;
-  return {
-    subtotal,
-    total: total + taxes + platformFee,
-    tax: taxes,
-    platformFee,
-  };
-};
 
 type propType =
   | {
@@ -124,7 +109,7 @@ const InvoiceForm = (props: propType) => {
   const tax = form.getValues("tax");
 
   useEffect(() => {
-    const { subtotal, total } = generateSubtotal(items, tax ?? 0);
+    const { subtotal, total } = generateBreakdownPrice(items, tax ?? 0);
     setValue("total", total);
     setValue("subtotal", subtotal);
   }, [updatedItem, items, tax, setValue, form]);
@@ -578,23 +563,27 @@ const InvoiceForm = (props: propType) => {
             <div className="flex items-center justify-between text-lg font-semibold border-b  px-5 py-2  border-input">
               <span>Sub-Total</span>
               <span>
-                {formatAmount(generateSubtotal(items, tax ?? 0).subtotal)}
+                {formatAmount(generateBreakdownPrice(items, tax ?? 0).subtotal)}
               </span>
             </div>
             <div className="flex items-center justify-between text-lg font-light  border-b  px-5 py-2  border-input">
               <span>Taxes</span>
-              <span>{formatAmount(generateSubtotal(items, tax ?? 0).tax)}</span>
+              <span>
+                {formatAmount(generateBreakdownPrice(items, tax ?? 0).tax)}
+              </span>
             </div>
             <div className="flex items-center justify-between text-lg font-light  border-b  px-5 py-2  border-input">
               <span>{`Application Fees`}</span>
               <span>
-                {formatAmount(generateSubtotal(items, tax ?? 0).platformFee)}
+                {formatAmount(
+                  generateBreakdownPrice(items, tax ?? 0).platformFee
+                )}
               </span>
             </div>
             <div className="flex items-center justify-between text-lg font-extrabold px-5 py-2">
               <span>Total</span>
               <span>
-                {formatAmount(generateSubtotal(items, tax ?? 0).total)}
+                {formatAmount(generateBreakdownPrice(items, tax ?? 0).total)}
               </span>
             </div>
           </div>

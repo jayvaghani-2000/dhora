@@ -1,6 +1,6 @@
 "use server";
 
-import { businesses, invoices, users } from "@/db/schema";
+import { businesses, invoices } from "@/db/schema";
 import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
@@ -8,7 +8,6 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stripe } from "@/lib/stripe";
 import { createInvoiceSchemaType } from "@/actions/_utils/types.type";
-import { revalidatePath } from "next/cache";
 import { generateInvoicePdf } from "../invoices/generateInvoicePdf";
 
 const handler = async (user: User, invoiceId: string) => {
@@ -77,13 +76,13 @@ const handler = async (user: User, invoiceId: string) => {
         )
       );
 
-    await generateInvoicePdf({
+    return await generateInvoicePdf({
       invoiceId: invoiceId,
       paymentLink: session.url,
     });
 
-    revalidatePath("/business/invoices");
-    return { success: true as true, data: session.url };
+    // revalidatePath("/business/invoices");
+    // return { success: true as true, data: session.url };
   } catch (err) {
     console.log(err);
     return errorHandler(err);

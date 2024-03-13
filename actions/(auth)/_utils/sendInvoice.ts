@@ -37,8 +37,8 @@ export async function sendInvoiceEmail(
         }
         img {
             border: 0;
-            height: auto;
-            line-height: 100%;
+            height: 72px;
+            width: 72px;
             outline: none;
             text-decoration: none;
             -ms-interpolation-mode: bicubic;
@@ -179,7 +179,7 @@ export async function sendInvoiceEmail(
                                                 <a
                                                 href="${config.env.HOST_URL}"
                                                 target="_blank"
-                                                ><img height: 54px width: 54px src="${config.env.HOST_URL}/favicon.svg"
+                                                ><img src="https://cdn.dhora.app/public/assets/logoTransparent.png"
                                                 /></a>
                                             </td>
                                             </tr>
