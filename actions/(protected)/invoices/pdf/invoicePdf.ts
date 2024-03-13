@@ -1,4 +1,3 @@
-import { invoiceStatusColor } from "@/actions/_utils/enums";
 import { createInvoiceSchemaType } from "@/actions/_utils/types.type";
 import { invoices } from "@/db/schema";
 import { formatAmount, generateBreakdownPrice } from "@/lib/common";
@@ -21,7 +20,6 @@ export const invoicePdf = async (invoiceId: string, businessId: bigint) => {
   const items = invoice.items as createInvoiceSchemaType["items"];
   const businessDetail = invoice.business!;
   const priceBreakdown = generateBreakdownPrice(items, invoice?.tax ?? 0);
-  const statusColor = invoiceStatusColor[invoice.status];
 
   const itemTable = `<table style="width:100%; border-collapse: collapse;">
           <thead >
@@ -243,8 +241,7 @@ export const invoicePdf = async (invoiceId: string, businessId: bigint) => {
         </div>
         <div class="customerDetailWrapper">
           <div class="invoiceDetail">
-            <span style="color:${statusColor}; text-transform: capitalize;" >${invoice!.status}</span>
-            <span class="invoiceId" >INV - #${invoice?.stripe_ref?.substring(invoice?.stripe_ref.length - 5)}</span>
+            <span class="invoiceId" >INV - #${invoiceId.substring(invoiceId.length - 5)}</span>
             <span class="subtitle" >Invoice Number</span>
           </div>
           <div class="customerDetail">

@@ -5,7 +5,6 @@ import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
-import { errorHandler } from "@/actions/_utils/errorHandler";
 import puppeteer from "puppeteer";
 import { createPublicInvoicePdfUrl } from "@/lib/minio";
 import { sendInvoiceEmail } from "@/actions/(auth)/_utils/sendInvoice";
@@ -62,9 +61,12 @@ const handler = async (user: User, params: paramsType) => {
       .where(and(eq(invoices.id, BigInt(invoiceId))));
 
     revalidatePath("/business/invoices");
-    return { success: true as true };
+    return {
+      success: true as true,
+      data: "Invoice sent to customer successfully!",
+    };
   } catch (err) {
-    return errorHandler(err);
+    throw err;
   }
 };
 

@@ -42,6 +42,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
 import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
+import { checkout } from "@/actions/(protected)/stripe/checkout";
 
 type propType =
   | {
@@ -606,8 +607,18 @@ const InvoiceForm = (props: propType) => {
               variant="outline"
               type="button"
               className="w-fit"
-              onClick={() => {
-                navigate.replace("/business/invoices");
+              onClick={async () => {
+                const res = await checkout(params.invoice_id as string);
+                if (res.success) {
+                  toast({
+                    title: res.data,
+                  });
+                  navigate.replace("/business/invoices");
+                } else {
+                  toast({
+                    title: res.error,
+                  });
+                }
               }}
               disabled={loading || mode === "CREATE"}
             >

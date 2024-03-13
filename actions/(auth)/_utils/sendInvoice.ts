@@ -5,10 +5,8 @@ export async function sendInvoiceEmail(
   title: string,
   invoice: { paymentLink: string; to: string; pdf: string }
 ) {
-  const message =
-    title === "Email Verification"
-      ? "confirm your email"
-      : "change your password";
+  console.log("AAAAAAAA", invoice.paymentLink);
+
   const html = `<!DOCTYPE html>
     <html
     xmlns="http://www.w3.org/1999/xhtml"
@@ -372,10 +370,9 @@ export async function sendInvoiceEmail(
                                             color: #8e8e92;
                                         ">
                                         <span style="color: #000000"
-                                            >You're almost done.</span
+                                            >You just got an Invoice.</span
                                         >
-                                        Please use this verification code to
-                                        ${message}. We don't spam ✌️
+                                        Please click on the button below to pay. We don't spam.
                                         </div>
                                     </td>
                                     </tr>

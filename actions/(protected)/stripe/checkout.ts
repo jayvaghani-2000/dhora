@@ -80,9 +80,6 @@ const handler = async (user: User, invoiceId: string) => {
       invoiceId: invoiceId,
       paymentLink: session.url,
     });
-
-    // revalidatePath("/business/invoices");
-    // return { success: true as true, data: session.url };
   } catch (err) {
     console.log(err);
     return errorHandler(err);

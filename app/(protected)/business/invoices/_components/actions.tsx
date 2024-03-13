@@ -62,7 +62,11 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
           const res = await checkout(rowObj.id);
           if (res.success) {
             toast({
-              title: "Invoice sent to customer successfully!",
+              title: res.data,
+            });
+          } else {
+            toast({
+              title: res.error,
             });
           }
         }}
