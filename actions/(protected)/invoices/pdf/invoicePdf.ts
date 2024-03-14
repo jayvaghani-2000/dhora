@@ -1,25 +1,15 @@
-import { createInvoiceSchemaType } from "@/actions/_utils/types.type";
-import { invoices } from "@/db/schema";
+import {
+  createInvoiceSchemaType,
+  getInvoiceInfoType,
+} from "@/actions/_utils/types.type";
 import { formatAmount, generateBreakdownPrice } from "@/lib/common";
-import { db } from "@/lib/db";
-import { and, eq } from "drizzle-orm";
 
-export const invoicePdf = async (invoiceId: string, businessId: bigint) => {
-  const data = await db.query.invoices.findFirst({
-    where: and(
-      eq(invoices.id, BigInt(invoiceId)),
-      eq(invoices.business_id, businessId)
-    ),
-    with: {
-      business: true,
-    },
-  });
-
-  const invoice = data!;
-
+export const invoicePdf = async (invoice: getInvoiceInfoType) => {
   const items = invoice.items as createInvoiceSchemaType["items"];
   const businessDetail = invoice.business!;
   const priceBreakdown = generateBreakdownPrice(items, invoice?.tax ?? 0);
+
+  const invoiceId = invoice.id.toString();
 
   const itemTable = `<table style="width:100%; border-collapse: collapse;">
           <thead >

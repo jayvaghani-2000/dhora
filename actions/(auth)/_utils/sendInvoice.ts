@@ -5,8 +5,6 @@ export async function sendInvoiceEmail(
   title: string,
   invoice: { paymentLink: string; to: string; pdf: string }
 ) {
-  console.log("AAAAAAAA", invoice.paymentLink);
-
   const html = `<!DOCTYPE html>
     <html
     xmlns="http://www.w3.org/1999/xhtml"

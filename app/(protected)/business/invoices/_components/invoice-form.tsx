@@ -43,6 +43,7 @@ import { profileType } from "@/actions/_utils/types.type";
 import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { checkout } from "@/actions/(protected)/stripe/checkout";
+import { revalidate } from "@/actions/(public)/revalidate";
 
 type propType =
   | {
@@ -93,8 +94,6 @@ const InvoiceForm = (props: propType) => {
           },
   });
 
-  console.log(form.formState.errors);
-
   const [address, setAddress] = useState("");
 
   const navigate = useRouter();
@@ -115,7 +114,10 @@ const InvoiceForm = (props: propType) => {
     setValue("subtotal", subtotal);
   }, [updatedItem, items, tax, setValue, form]);
 
-  async function onSubmit(values: z.infer<typeof invoiceSchema>) {
+  async function onSubmit(
+    values: z.infer<typeof invoiceSchema>,
+    handleCheckout?: (invoiceId: string) => Promise<void>
+  ) {
     const {
       business_address,
       business_contact,
@@ -123,6 +125,7 @@ const InvoiceForm = (props: propType) => {
       business_name,
       ...rest
     } = values;
+
     if (values.items.length === 0) {
       toast({
         title: "Please add atleast one item.",
@@ -139,6 +142,13 @@ const InvoiceForm = (props: propType) => {
         toast({
           title: "Invoice updated successfully",
         });
+
+        if (handleCheckout) {
+          await handleCheckout(data.data.id as unknown as string);
+        } else {
+          await revalidate(`/business/invoices`);
+          navigate.replace(`/business/invoices`);
+        }
       } else {
         toast({
           title: data.error,
@@ -150,7 +160,12 @@ const InvoiceForm = (props: propType) => {
         values: values,
       });
       if (data.success) {
-        navigate.replace(`/business/invoices/${data.data.id}`);
+        if (handleCheckout) {
+          await handleCheckout(data.data.id as unknown as string);
+        } else {
+          await revalidate(`/business/invoices`);
+          navigate.replace(`/business/invoices`);
+        }
       } else {
         toast({
           title: data.error,
@@ -160,10 +175,39 @@ const InvoiceForm = (props: propType) => {
     }
   }
 
+  async function handleCheckout(invoiceId: string) {
+    const res = await checkout(invoiceId);
+    if (res.success) {
+      toast({
+        title: res.data,
+      });
+      await revalidate(`/business/invoices`);
+      navigate.replace("/business/invoices");
+    } else {
+      toast({
+        title: res.error,
+      });
+    }
+  }
+
+  async function saveAndSendInvoice() {
+    await form.trigger();
+    if (form.formState.isValid) {
+      await onSubmit(form.getValues(), handleCheckout);
+    }
+  }
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={async e => {
+          e.preventDefault();
+          e.stopPropagation();
+          await form.trigger();
+          if (form.formState.isValid) {
+            await onSubmit(form.getValues());
+          }
+        }}
         className="text-zinc-600 dark:text-zinc-200 flex flex-col xl:grid grid-cols-12 gap-5 justify-center relative"
         autoComplete="off"
       >
@@ -608,21 +652,11 @@ const InvoiceForm = (props: propType) => {
               type="button"
               className="w-fit"
               onClick={async () => {
-                const res = await checkout(params.invoice_id as string);
-                if (res.success) {
-                  toast({
-                    title: res.data,
-                  });
-                  navigate.replace("/business/invoices");
-                } else {
-                  toast({
-                    title: res.error,
-                  });
-                }
+                await saveAndSendInvoice();
               }}
-              disabled={loading || mode === "CREATE"}
+              disabled={loading}
             >
-              Send
+              SEND
             </Button>
           </div>
         </div>

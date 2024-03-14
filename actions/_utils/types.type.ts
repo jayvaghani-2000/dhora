@@ -4,9 +4,11 @@ import { initiateContract } from "../(protected)/contracts/initiateContract";
 import { submitContract } from "../(protected)/contracts/submitContract";
 import { getUser } from "../(auth)/me";
 import { getInvoices } from "../(protected)/invoices/getInvoices";
-import { businessTypeEnum, createInvoiceSchema } from "@/db/schema";
+import { createInvoiceSchema } from "@/db/schema";
 import { z } from "zod";
 import { getInvoiceDetail } from "../(protected)/invoices/getInvoiceDetail";
+import { getInvoiceInfo } from "../(protected)/stripe/checkout";
+import { NotNull } from "drizzle-orm";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -31,6 +33,9 @@ export type getInvoicesDetailResponseType = Awaited<
 >;
 
 export type createInvoiceSchemaType = z.infer<typeof createInvoiceSchema>;
+export type getInvoiceInfoType = NonNullable<
+  Awaited<ReturnType<typeof getInvoiceInfo>>
+>;
 
 export type businessTypes =
   | "Event Planner"
@@ -41,5 +46,5 @@ export type businessTypes =
   | "Apparel"
   | "Health & Beauty"
   | "Other";
-  
+
 export type invoiceStatusTypes = "paid" | "pending" | "draft" | "overdue";

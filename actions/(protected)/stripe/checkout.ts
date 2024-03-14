@@ -10,15 +10,22 @@ import { stripe } from "@/lib/stripe";
 import { createInvoiceSchemaType } from "@/actions/_utils/types.type";
 import { generateInvoicePdf } from "../invoices/generateInvoicePdf";
 
+export const getInvoiceInfo = async (invoiceId: string, businessId: bigint) => {
+  return await db.query.invoices.findFirst({
+    where: and(
+      eq(invoices.id, BigInt(invoiceId)),
+      eq(invoices.business_id, businessId)
+    ),
+    with: {
+      business: true,
+    },
+  });
+};
+
 const handler = async (user: User, invoiceId: string) => {
   try {
     const [data, business] = await Promise.all([
-      await db.query.invoices.findFirst({
-        where: and(
-          eq(invoices.id, BigInt(invoiceId)),
-          eq(invoices.business_id, user.business_id!)
-        ),
-      }),
+      await getInvoiceInfo(invoiceId, user.business_id!),
       await db.query.businesses.findFirst({
         where: and(eq(businesses.id, user.business_id!)),
       }),
@@ -28,20 +35,26 @@ const handler = async (user: User, invoiceId: string) => {
 
     const products = await Promise.all(
       items.map(async item => {
-        return await stripe.products.create({
-          name: item.name,
-          description: item.description,
-        });
+        return await stripe.products.create(
+          {
+            name: item.name,
+            description: item.description,
+          },
+          { stripeAccount: business?.stripe_id! }
+        );
       })
     );
     const prices = await Promise.all(
       products.map(async (product, index) => {
-        return await stripe.prices.create({
-          currency: "usd",
-          unit_amount: items[index].price * 100,
-          product: product.id,
-          tax_behavior: "exclusive",
-        });
+        return await stripe.prices.create(
+          {
+            currency: "usd",
+            unit_amount: items[index].price * 100,
+            product: product.id,
+            tax_behavior: "exclusive",
+          },
+          { stripeAccount: business?.stripe_id! }
+        );
       })
     );
 
@@ -77,7 +90,7 @@ const handler = async (user: User, invoiceId: string) => {
       );
 
     return await generateInvoicePdf({
-      invoiceId: invoiceId,
+      invoice: data!,
       paymentLink: session.url,
     });
   } catch (err) {

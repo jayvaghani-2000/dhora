@@ -10,29 +10,21 @@ import { createPublicInvoicePdfUrl } from "@/lib/minio";
 import { sendInvoiceEmail } from "@/actions/(auth)/_utils/sendInvoice";
 import { revalidatePath } from "next/cache";
 import { invoicePdf } from "./pdf/invoicePdf";
+import { getInvoiceInfoType } from "@/actions/_utils/types.type";
 
 type paramsType = {
-  invoiceId: string;
+  invoice: getInvoiceInfoType;
   paymentLink: string;
 };
 
 const handler = async (user: User, params: paramsType) => {
-  const { invoiceId, paymentLink } = params;
-  const invoice = await db.query.invoices.findFirst({
-    where: and(
-      eq(invoices.id, BigInt(invoiceId)),
-      eq(invoices.business_id, user.business_id!)
-    ),
-    with: {
-      business: true,
-    },
-  })!;
+  const { invoice, paymentLink } = params;
 
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    const pdfHtml = await invoicePdf(invoiceId, user.business_id!);
+    const pdfHtml = await invoicePdf(invoice);
 
     await page.setContent(pdfHtml);
 
@@ -58,7 +50,7 @@ const handler = async (user: User, params: paramsType) => {
         invoice: uploadedPdfImage,
         updated_at: new Date(),
       })
-      .where(and(eq(invoices.id, BigInt(invoiceId))));
+      .where(and(eq(invoices.id, BigInt(invoice.id))));
 
     revalidatePath("/business/invoices");
     return {

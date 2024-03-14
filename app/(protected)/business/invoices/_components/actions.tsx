@@ -9,6 +9,7 @@ import { checkout } from "@/actions/(protected)/stripe/checkout";
 import { IoEyeOutline } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
 import CustomDialog from "@/components/shared/custom-dialog";
+import { ActionTooltip } from "@/components/shared/action-tooltip";
 
 const Actions = ({ row }: { row: Row<recordType> }) => {
   const rowObj = row.original;
@@ -20,35 +21,42 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
 
   return (
     <div className="flex gap-1">
-      <Button
-        variant="outline"
-        className="p-1 h-[28px]"
-        disabled={isNotDraft}
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        <RiShareForwardFill size={18} color="#b6b6b6" />
-      </Button>
-      <Button
-        variant="outline"
-        className="p-1 h-[28px]"
-        onClick={() => {
-          navigate.push(`/business/invoices/${rowObj.id}/preview`);
-        }}
-      >
-        <IoEyeOutline size={18} color="#b6b6b6" />
-      </Button>
-      <Button
-        variant="outline"
-        className="p-1 h-[28px]"
-        disabled={isNotDraft}
-        onClick={() => {
-          navigate.push(`/business/invoices/${rowObj.id}`);
-        }}
-      >
-        <MdEdit size={18} color="#b6b6b6" />
-      </Button>
+      <ActionTooltip side="top" align="center" label={"View"}>
+        <Button
+          variant="outline"
+          className="p-1 h-[28px]"
+          onClick={() => {
+            navigate.push(`/business/invoices/${rowObj.id}/preview`);
+          }}
+        >
+          <IoEyeOutline size={18} color="#b6b6b6" />
+        </Button>
+      </ActionTooltip>
+      <ActionTooltip side="top" align="center" label={"Edit"}>
+        <Button
+          variant="outline"
+          className="p-1 h-[28px]"
+          disabled={isNotDraft}
+          onClick={() => {
+            navigate.push(`/business/invoices/${rowObj.id}`);
+          }}
+        >
+          <MdEdit size={18} color="#b6b6b6" />
+        </Button>
+      </ActionTooltip>
+
+      <ActionTooltip side="top" align="center" label={"Send"}>
+        <Button
+          variant="outline"
+          className="p-1 h-[28px]"
+          disabled={isNotDraft}
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          <RiShareForwardFill size={18} color="#b6b6b6" />
+        </Button>
+      </ActionTooltip>
 
       <CustomDialog
         title="Send Invoice"

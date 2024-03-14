@@ -23,8 +23,6 @@ const handler = async (
       .values({ ...values, business_id: user.business_id!, status: "draft" })
       .returning();
 
-    revalidatePath("/business/invoices");
-
     return { success: true as true, data: invoice[0] };
   } catch (err) {
     return errorHandler(err);
