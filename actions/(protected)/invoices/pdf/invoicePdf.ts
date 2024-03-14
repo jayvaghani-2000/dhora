@@ -82,6 +82,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
         width: 200px;
         display: flex;
         flex-direction: column;
+        width: fit-content;
       }
       .logo {
         height: 72px;
@@ -161,6 +162,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
         display: flex;
         flex-direction: column;
         margin-bottom: 16px;
+        width: fit-content;
       }
 
       .notes {
@@ -230,6 +232,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
           <span class="values">(${businessDetail.contact})</span>
         </div>
         <div class="customerDetailWrapper">
+        <div style="width: fit-content; margin-left:auto;">
           <div class="invoiceDetail">
             <span class="invoiceId" >INV - #${invoiceId.substring(invoiceId.length - 5)}</span>
             <span class="subtitle" >Invoice Number</span>
@@ -240,6 +243,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
             <span class="values" >${invoice?.customer_address}</span>
             <span class="values" >(${invoice?.customer_contact})</span>
           </div>
+          <div>
         </div>
       </div>
         ${itemTable}

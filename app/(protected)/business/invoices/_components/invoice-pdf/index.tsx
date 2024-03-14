@@ -1,93 +1,157 @@
 "use client";
 
-import React, { useState } from "react";
-import "./invoice-pdf.css";
+import React, { HTMLProps } from "react";
 import {
   createInvoiceSchemaType,
   getInvoicesDetailResponseType,
 } from "@/actions/_utils/types.type";
 import Image from "next/image";
-import { formatAmount } from "@/lib/common";
+import {
+  formatAmount,
+  generateBreakdownPrice,
+  invoiceStatusColor,
+} from "@/lib/common";
+import clsx from "clsx";
 
 const InvoicePdf = ({
   invoice,
 }: {
   invoice: getInvoicesDetailResponseType["data"];
 }) => {
-  const [loading, setLoading] = useState(false);
+  const items = invoice!.items as createInvoiceSchemaType["items"];
+  const priceBreakdown = generateBreakdownPrice(items, invoice?.tax ?? 0);
+  const invoiceId = invoice?.id as unknown as string;
 
-  const items = invoice?.items as createInvoiceSchemaType["items"];
+  const headerItem =
+    "py-1 px-1 lg:px-1 lg:py-2 flex items-center w-fit break-all text-xs lg:text-base font-normal whitespace-nowrap	" as HTMLProps<HTMLElement>["className"];
+
+  const tableItem =
+    "py-1 px-1 lg:px-1 py-2 flex items-center w-fit break-all text-xs lg:text-base" as HTMLProps<HTMLElement>["className"];
+
   return (
-    <div
-      id="element-to-print"
-      style={{
-        border: "1px solid #707070",
-        padding: "24px",
-        borderRadius: "5px",
-        backgroundColor: "#192229",
-        color: "white",
-        margin: "24px",
-      }}
-    >
-      <div style={{ marginBottom: "24px" }}>
-        <Image
-          src={invoice?.business.logo ?? ""}
-          alt={invoice?.business.name ?? ""}
-          height={72}
-          width={72}
-          className="rounded-sm border border-[#707070]"
-        />
+    <div className="border border-gray1 p-2 lg:p-6 rounded-md bg">
+      <div className="mb-3 lg:mb-6 flex gap-4">
+        <div className="flex-1 flex flex-col  gap-4 ">
+          <div className="relative h-[60px] w-[60px] lg:h-[72px] lg:w-[72px] rounded-sm border border-gray1">
+            <Image
+              src={invoice?.business.logo ?? ""}
+              alt={invoice?.business.name ?? ""}
+              fill
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm lg:text-base font-semibold  break-all">
+              {invoice?.business.name}
+            </span>
+            <span className="mb-1 text-xs lg:text-sm text-[#cecece] font-normal  break-all">
+              {invoice?.business.address}
+            </span>
+            <span className="text-xs lg:text-sm text-[#cecece] font-normal  break-all">
+              ({invoice?.business.contact})
+            </span>
+          </div>
+        </div>
+        <div className="flex-1  flex flex-col  gap-4">
+          <div className="w-fit ml-auto">
+            <div className="flex flex-col min-h-[60px] lg:min-h-[72px] w-fit">
+              <span
+                className={`text-xs lg:text-base ${invoiceStatusColor(invoice?.status ?? "")}`}
+              >
+                {invoice?.status}
+              </span>
+              <span className="text-xs lg:text-base">
+                INV - #{invoiceId.substring(invoiceId.length - 5)}
+              </span>
+              <span className="text-xs text-[#cecece]">Invoice Number</span>
+            </div>
+
+            <div className="flex flex-col w-fit mt-4">
+              <span className="text-sm lg:text-base font-semibold  break-all">
+                Bill To
+              </span>
+              <span className="mb-1 text-xs lg:text-sm text-[#cecece] font-normal  break-all">
+                {invoice?.customer_name}
+              </span>
+              <span className="mb-1 text-xs lg:text-sm text-[#cecece] font-normal  break-all">
+                {invoice?.customer_address}
+              </span>
+
+              <span className="text-xs lg:text-sm text-[#cecece] font-normal  break-all">
+                ({invoice?.customer_contact})
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          border: "1px solid #707070",
-          borderRadius: "5px",
-        }}
-      >
+      <table className="w-full border-collapse">
         <thead>
-          <tr
-            style={{
-              backgroundColor: "#313238",
-              color: "#cecece",
-              borderRadius: "5px 5px 0px 0px",
-              fontWeight: 400,
-              margin: 0,
-              display: "flex",
-            }}
-          >
-            <th className="table-header-item index">#</th>
-            <th className="table-header-item item-name">Item</th>
-            <th className="table-header-item item">Quantity</th>
-            <th className="table-header-item item">Unit Price</th>
-            <th className="table-header-item item">Total</th>
+          <tr className="bg-active text-[#a29fab] font-normal rounded-t-md flex border border-gray1">
+            <th className={`${headerItem} flex-[0.3] justify-center`}>#</th>
+            <th className={`${headerItem} flex-[2] justify-start`}>Item</th>
+            <th className={`${headerItem} flex-1 justify-center`}>Quantity</th>
+            <th className={`${headerItem} flex-1 justify-center`}>
+              Unit Price
+            </th>
+            <th className={`${headerItem} flex-1 justify-center`}>Total</th>
           </tr>
         </thead>
         <tbody>
           {items.map((i, index) => (
             <tr
               key={i.id}
-              style={{
-                color: "#fff",
-                fontWeight: 400,
-                margin: 0,
-                display: "flex",
-                borderTop: "1px solid #707070",
-              }}
+              className={clsx({
+                "text-white font-normal flex  border border-gray1 border-t-0 ":
+                  true,
+                "rounded-b-md": items.length === index + 1,
+              })}
             >
-              <td className="table-item index">{index + 1}</td>
-              <td className="table-item item-name">{i.name}</td>
-              <td className="table-item item">{i.quantity}</td>
-              <td className="table-item item">{formatAmount(i.price)}</td>
-              <td className="table-item item">
+              <td className={`${tableItem} flex-[0.3] justify-center`}>
+                {index + 1}
+              </td>
+              <td className={`${tableItem} flex-[2] justify-start`}>
+                {i.name}
+              </td>
+              <td className={`${tableItem} flex-1 justify-center`}>
+                {i.quantity}
+              </td>
+              <td className={`${tableItem} flex-1 justify-center`}>
+                {formatAmount(i.price)}
+              </td>
+              <td className={`${tableItem} flex-1 justify-center`}>
                 {formatAmount(i.price * i.quantity)}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div className="flex mt-3 lg:mt-6 gap-2">
+        <div className="flex-[0.4] flex flex-col gap-1">
+          <span className="text-sm lg:text-base font-semibold ">Notes</span>
+          <span className="text-xs lg:text-sm font-normal ">
+            {invoice?.notes}
+          </span>
+        </div>
+        <div className="ml-auto flex-[0.6] max-w-[400px] text-[#b8b8b8] border rounded-lg border-gray1">
+          <div className="text-xs lg:text-base flex items-center justify-between px-1 py-1 lg:px-2 lg:py-2 border-b border-gray1 font-semibold">
+            <span>Sub-Total</span>
+            <span>{formatAmount(priceBreakdown.subtotal)}</span>
+          </div>
+          <div className="text-xs lg:text-base flex items-center justify-between px-1 py-0.5  lg:px-2 lg:py-1.5 border-b border-gray1">
+            <span>Taxes</span>
+            <span>{formatAmount(priceBreakdown.tax)}</span>
+          </div>
+          <div className="text-xs lg:text-base flex items-center justify-between px-1 py-0.5 lg:px-2 lg:py-1.5 border-b border-gray1">
+            <span>Application Fees</span>
+            <span>{formatAmount(priceBreakdown.platformFee)}</span>
+          </div>
+          <div className="text-xs lg:text-base flex items-center justify-between px-1 py-1 lg:px-2 lg:py-2 text-white font-bold">
+            <span>Total</span>
+            <span>{formatAmount(priceBreakdown.total)}</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

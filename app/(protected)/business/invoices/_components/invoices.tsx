@@ -4,7 +4,7 @@ import {
   invoiceStatusTypes,
 } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
-import { formatAmount, formatDate } from "@/lib/common";
+import { formatAmount, formatDate, invoiceStatusClass } from "@/lib/common";
 import React from "react";
 import { CustomTable } from "@/components/shared/custom-table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -308,20 +308,7 @@ const Invoices = (props: propType) => {
       },
       cell: ({ row }) => {
         return (
-          <div
-            className={clsx({
-              "relative capitalize flex gap-1 items-center before:content-['']  before:h-2 before:w-2 before:rounded-full":
-                true,
-              "text-green-600 hover:text-green-600 before:bg-green-600":
-                row.getValue("status") === "paid",
-              "text-pink-700 hover:text-pink-700 before:bg-pink-700":
-                row.getValue("status") === "overdue",
-              "text-yellow-600 hover:text-yellow-600 before:bg-yellow-600":
-                row.getValue("status") === "pending",
-              "text-gray-400 hover:text-gray-400 before:bg-gray-400":
-                row.getValue("status") === "draft",
-            })}
-          >
+          <div className={invoiceStatusClass(row.getValue("status"))}>
             {row.getValue("status")}
           </div>
         );

@@ -7,7 +7,7 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stripe } from "@/lib/stripe";
-import { createInvoiceSchemaType } from "@/actions/_utils/types.type";
+import { createInvoiceSchemaType, errorType } from "@/actions/_utils/types.type";
 import { generateInvoicePdf } from "../invoices/generateInvoicePdf";
 
 export const getInvoiceInfo = async (invoiceId: string, businessId: bigint) => {
@@ -32,6 +32,13 @@ const handler = async (user: User, invoiceId: string) => {
     ]);
 
     const items = data?.items as createInvoiceSchemaType["items"];
+
+    if (data?.status !== "draft") {
+      return {
+        success: false,
+        error: "Invoice already generated!",
+      } as errorType;
+    }
 
     const products = await Promise.all(
       items.map(async item => {

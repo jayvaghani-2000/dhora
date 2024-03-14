@@ -67,7 +67,7 @@ const Templates = (props: propsType) => {
                 <Link
                   href={`/business/contracts/template?c_id=${i.template_id}`}
                   key={i.id}
-                  className="px-2 bg-primary-black w-full h-[120px] md:h-[140px] rounded-sm flex flex-col justify-center items-center border border-[#707070]"
+                  className="px-2 bg-primary-black w-full h-[120px] md:h-[140px] rounded-sm flex flex-col justify-center items-center border border-gray1"
                 >
                   <div className="text-white font-bold text-xs md:text-base text-center line-clamp-3	">
                     {i.name}
@@ -88,7 +88,7 @@ const Templates = (props: propsType) => {
                   <Link
                     href={`/business/contracts/template?c_id=${i.template_id}`}
                     key={i.id}
-                    className="px-2 bg-primary-black w-full h-[120px]  md:h-[140px] rounded-sm flex flex-col justify-center items-center border border-[#707070]"
+                    className="px-2 bg-primary-black w-full h-[120px]  md:h-[140px] rounded-sm flex flex-col justify-center items-center border border-gray1"
                   >
                     <div className="text-white font-bold text-xs md:text-base text-center line-clamp-3	">
                       {i.name}

@@ -27,6 +27,7 @@ const config = {
         active: "hsl(var(--active))",
         "primary-blue": "hsl(var(--primary-blue))",
         divider: "hsl(var(--divider))",
+        gray1: "hsl(var(--gray1))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
