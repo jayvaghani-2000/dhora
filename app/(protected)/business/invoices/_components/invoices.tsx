@@ -11,14 +11,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown } from "lucide-react";
 import { isWithinInterval } from "date-fns";
 import { DateRangePicker } from "@/components/shared/range-picker";
-import clsx from "clsx";
 import CustomSelect from "@/components/shared/custom-select";
 import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import Actions from "./actions";
-import { invoiceStatusTypeEnum } from "@/db/schema";
-import { Button } from "@/components/ui/button";
-import { overdueInvoice } from "@/actions/(protected)/invoices/overdueInvoice";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
@@ -326,21 +322,11 @@ const Invoices = (props: propType) => {
   ];
 
   return parsedInvoices.length > 0 ? (
-    <>
-      <Button
-        onClick={() => {
-          overdueInvoice();
-        }}
-        className="flex gap-1 items-center"
-      >
-        Create Invoice
-      </Button>
-      <CustomTable
-        data={[...parsedInvoices]}
-        columns={columns}
-        extraFilters={ExtraFilters}
-      />
-    </>
+    <CustomTable
+      data={[...parsedInvoices]}
+      columns={columns}
+      extraFilters={ExtraFilters}
+    />
   ) : null;
 };
 
