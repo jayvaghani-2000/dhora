@@ -18,8 +18,8 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
   const itemTable = `<table style="width:100%; border-collapse: collapse;">
           <thead >
             <tr style="
-              background-color: #313238;
-              color: #a29fab;
+              background-color: #d1d5db;
+              color: #1f2937;
               border-radius: 5px 5px 0px 0px;
               font-weight: 400;
               border: 1px solid #707070;
@@ -38,7 +38,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
               (
                 i,
                 index
-              ) => `<tr style="color: #fff; font-weight: 400; margin: 0; display: flex; border: 1px solid #707070; border-top: none; ${items.length === index + 1 ? "border-radius: 0px 0px 5px 5px;" : ""}">
+              ) => `<tr style="color: #111827; font-weight: 400; margin: 0; display: flex; border: 1px solid #707070; border-top: none; ${items.length === index + 1 ? "border-radius: 0px 0px 5px 5px;" : ""}">
               <td class="tableItem itemIndex">${index + 1}</td>
               <td class="tableItem itemName">${i.name}</td>
               <td class="tableItem itemRests">${i.quantity}</td>
@@ -136,26 +136,26 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
 
       .title {
         font-weight: 600;
-        color: #fff;
+        color: #1f2937;
         font-size: 16px;
         word-break: break-all;
       }
 
       .values {
         font-weight: 400;
-        color: #cecece;
+        color: #4b5563;
         font-size: 14px;
         word-break: break-all;
       }
 
       .invoiceId {
-        color: #fff;
+        color: #1f2937;
         font-weight: 500;
         font-size: 16px;
       }
       
       .subtitle {
-        color: #cecece;
+        color: #4b5563;
         font-weight: 400;
         font-size: 12px;
         line-height: 1;
@@ -192,7 +192,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
       }
 
       .subtotal {
-        color:#b8b8b8;
+        color:#1f2937;
         font-weight: 600;
         padding: 6px 8px;
         font-size: 14px;
@@ -200,7 +200,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
       }
       
       .taxes, .platformFees {
-        color:#b8b8b8;
+        color:#1f2937;
         padding: 4px 8px;
         font-size: 14px;
         border-bottom: 1px solid #707070;
@@ -208,7 +208,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
       
       .total {
         font-weight: 700;
-        color: #fff;
+        color: #111827;
         font-size: 14px;
         padding: 6px 8px;
 
@@ -222,7 +222,6 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
         border: 1px solid #707070;
         padding: 16px;
         border-radius: 5px;
-        background-color: #192229;
       ">
         <div class="detailsWrapper">
         <div class="businessDetail">

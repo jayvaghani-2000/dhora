@@ -7,7 +7,6 @@ import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { errorType } from "@/actions/_utils/types.type";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
@@ -34,12 +33,23 @@ const handler = async (
       .where(
         and(
           eq(invoices.id, BigInt(id)),
-          eq(invoices.business_id, user.business_id!)
+          eq(invoices.business_id, user.business_id!),
+          eq(invoices.status, "draft")
         )
       )
       .returning();
 
-    return { success: true as true, data: stringifyBigint(invoice[0]) };
+    if (invoice && invoice[0]) {
+      return {
+        success: true as true,
+        data: stringifyBigint(invoice[0]),
+      };
+    } else {
+      return {
+        success: false,
+        error: "Unable to update invoice!",
+      } as errorType;
+    }
   } catch (err) {
     console.log("err", err);
     return errorHandler(err);
