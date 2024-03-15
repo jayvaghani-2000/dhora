@@ -2,6 +2,7 @@ import { invoiceSchemaType } from "@/app/(protected)/business/invoices/_utils/sc
 import { format } from "date-fns";
 import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
+import { invoiceStatusTypes } from "@/actions/_utils/types.type";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -47,7 +48,8 @@ export function stringCasting(value: number) {
 
 export const generateBreakdownPrice = (
   items: invoiceSchemaType["items"],
-  tax: number
+  tax: number,
+  fee = PLATFORM_FEE
 ) => {
   const subtotal = items.reduce((prev, curr) => {
     prev += (curr.price ?? 0) * (curr.quantity ?? 0);
@@ -56,8 +58,8 @@ export const generateBreakdownPrice = (
 
   let total = subtotal;
 
-  let taxes = (subtotal / 100) * tax;
-  let platformFee = (total / 100) * PLATFORM_FEE;
+  let taxes = (total / 100) * tax;
+  let platformFee = (total / 100) * fee;
   return {
     subtotal,
     total: total + taxes + platformFee,
@@ -66,7 +68,23 @@ export const generateBreakdownPrice = (
   };
 };
 
-export const invoiceStatusClass = (status: string) =>
+export const itemRateWithFeeAndTaxes = (
+  item: invoiceSchemaType["items"][0],
+  tax: number,
+  fee: number
+) => {
+  let total = item.price;
+
+  let taxes = (total / 100) * tax;
+  let platformFee = (total / 100) * fee;
+  return {
+    total: total + taxes + platformFee,
+    tax: taxes,
+    platformFee,
+  };
+};
+
+export const invoiceStatusClass = (status: invoiceStatusTypes) =>
   clsx({
     "relative capitalize flex gap-1 items-center before:content-['']  before:h-2 before:w-2 before:rounded-full":
       true,
@@ -79,7 +97,7 @@ export const invoiceStatusClass = (status: string) =>
     "text-gray-400 hover:text-gray-400 before:bg-gray-400": status === "draft",
   });
 
-export const invoiceStatusColor = (status: string) =>
+export const invoiceStatusColor = (status: invoiceStatusTypes) =>
   clsx({
     "relative capitalize flex gap-1 items-center": true,
     "text-green-600 hover:text-green-600": status === "paid",

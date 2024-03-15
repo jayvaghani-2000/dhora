@@ -7,7 +7,11 @@ import { formatAmount, generateBreakdownPrice } from "@/lib/common";
 export const invoicePdf = async (invoice: getInvoiceInfoType) => {
   const items = invoice.items as createInvoiceSchemaType["items"];
   const businessDetail = invoice.business!;
-  const priceBreakdown = generateBreakdownPrice(items, invoice?.tax ?? 0);
+  const priceBreakdown = generateBreakdownPrice(
+    items,
+    invoice?.tax ?? 0,
+    invoice?.platform_fee
+  );
 
   const invoiceId = invoice.id.toString();
 
@@ -243,7 +247,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
             <span class="values" >${invoice?.customer_address}</span>
             <span class="values" >(${invoice?.customer_contact})</span>
           </div>
-          <div>
+        </div>
         </div>
       </div>
         ${itemTable}

@@ -64,6 +64,9 @@ async function handler(req: Request) {
 
             const metaData = data.metadata as { invoice_id: string };
             if (data.payment_status === "paid") {
+              await stripe.paymentLinks.update(data.payment_link as string, {
+                active: false,
+              });
               await db
                 .update(invoices)
                 .set({

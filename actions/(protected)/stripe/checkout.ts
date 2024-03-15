@@ -7,8 +7,12 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stripe } from "@/lib/stripe";
-import { createInvoiceSchemaType, errorType } from "@/actions/_utils/types.type";
+import {
+  createInvoiceSchemaType,
+  errorType,
+} from "@/actions/_utils/types.type";
 import { generateInvoicePdf } from "../invoices/generateInvoicePdf";
+import { generateBreakdownPrice, itemRateWithFeeAndTaxes } from "@/lib/common";
 
 export const getInvoiceInfo = async (invoiceId: string, businessId: bigint) => {
   return await db.query.invoices.findFirst({
@@ -33,6 +37,12 @@ const handler = async (user: User, invoiceId: string) => {
 
     const items = data?.items as createInvoiceSchemaType["items"];
 
+    const priceBreakdown = generateBreakdownPrice(
+      items,
+      data?.tax ?? 0,
+      data?.platform_fee
+    );
+
     if (data?.status !== "draft") {
       return {
         success: false,
@@ -53,12 +63,17 @@ const handler = async (user: User, invoiceId: string) => {
     );
     const prices = await Promise.all(
       products.map(async (product, index) => {
+        const itemPrice = itemRateWithFeeAndTaxes(
+          items[index],
+          data.tax,
+          data.platform_fee
+        );
         return await stripe.prices.create(
           {
             currency: "usd",
-            unit_amount: items[index].price * 100,
+            unit_amount: itemPrice.total * 100,
             product: product.id,
-            tax_behavior: "exclusive",
+            tax_behavior: "inclusive",
           },
           { stripeAccount: business?.stripe_id! }
         );
@@ -74,7 +89,7 @@ const handler = async (user: User, invoiceId: string) => {
             quantity: items[index].quantity,
           };
         }),
-        application_fee_amount: 2000,
+        application_fee_amount: priceBreakdown.platformFee * 100,
         metadata: {
           invoice_id: invoiceId,
         },

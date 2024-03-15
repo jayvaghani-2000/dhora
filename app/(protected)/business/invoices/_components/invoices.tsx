@@ -17,6 +17,8 @@ import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import Actions from "./actions";
 import { invoiceStatusTypeEnum } from "@/db/schema";
+import { Button } from "@/components/ui/button";
+import { overdueInvoice } from "@/actions/(protected)/invoices/overdueInvoice";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
@@ -324,11 +326,21 @@ const Invoices = (props: propType) => {
   ];
 
   return parsedInvoices.length > 0 ? (
-    <CustomTable
-      data={[...parsedInvoices]}
-      columns={columns}
-      extraFilters={ExtraFilters}
-    />
+    <>
+      <Button
+        onClick={() => {
+          overdueInvoice();
+        }}
+        className="flex gap-1 items-center"
+      >
+        Create Invoice
+      </Button>
+      <CustomTable
+        data={[...parsedInvoices]}
+        columns={columns}
+        extraFilters={ExtraFilters}
+      />
+    </>
   ) : null;
 };
 

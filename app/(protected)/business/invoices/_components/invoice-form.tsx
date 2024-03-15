@@ -108,8 +108,10 @@ const InvoiceForm = (props: propType) => {
   const items = form.getValues("items");
   const tax = form.getValues("tax");
 
+  const breakdown = generateBreakdownPrice(items, tax ?? 0);
+
   useEffect(() => {
-    const { subtotal, total } = generateBreakdownPrice(items, tax ?? 0);
+    const { subtotal, total } = breakdown;
     setValue("total", total);
     setValue("subtotal", subtotal);
   }, [updatedItem, items, tax, setValue, form]);
@@ -607,29 +609,19 @@ const InvoiceForm = (props: propType) => {
           <div className="border border-input rounded-md">
             <div className="flex items-center justify-between text-lg font-semibold border-b  px-5 py-2  border-input">
               <span>Sub-Total</span>
-              <span>
-                {formatAmount(generateBreakdownPrice(items, tax ?? 0).subtotal)}
-              </span>
+              <span>{formatAmount(breakdown.subtotal)}</span>
             </div>
             <div className="flex items-center justify-between text-lg font-light  border-b  px-5 py-2  border-input">
               <span>Taxes</span>
-              <span>
-                {formatAmount(generateBreakdownPrice(items, tax ?? 0).tax)}
-              </span>
+              <span>{formatAmount(breakdown.tax)}</span>
             </div>
             <div className="flex items-center justify-between text-lg font-light  border-b  px-5 py-2  border-input">
               <span>{`Application Fees`}</span>
-              <span>
-                {formatAmount(
-                  generateBreakdownPrice(items, tax ?? 0).platformFee
-                )}
-              </span>
+              <span>{formatAmount(breakdown.platformFee)}</span>
             </div>
             <div className="flex items-center justify-between text-lg font-extrabold px-5 py-2">
               <span>Total</span>
-              <span>
-                {formatAmount(generateBreakdownPrice(items, tax ?? 0).total)}
-              </span>
+              <span>{formatAmount(breakdown.total)}</span>
             </div>
           </div>
           <div className="flex justify-end gap-5 mt-4">

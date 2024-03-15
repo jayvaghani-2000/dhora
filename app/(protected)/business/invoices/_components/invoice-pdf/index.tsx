@@ -22,7 +22,11 @@ const InvoicePdf = ({
   invoice: getInvoicesDetailResponseType["data"];
 }) => {
   const items = invoice!.items as createInvoiceSchemaType["items"];
-  const priceBreakdown = generateBreakdownPrice(items, invoice?.tax ?? 0);
+  const priceBreakdown = generateBreakdownPrice(
+    items,
+    invoice?.tax ?? 0,
+    invoice?.platform_fee
+  );
   const invoiceId = invoice?.id as unknown as string;
 
   const isDraft = invoice?.status === "draft";
