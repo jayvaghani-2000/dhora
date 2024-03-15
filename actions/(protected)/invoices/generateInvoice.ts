@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { invoiceSchema } from "@/app/(protected)/business/invoices/_utils/schema";
-import { revalidatePath } from "next/cache";
+import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (
   user: User,
@@ -23,7 +23,7 @@ const handler = async (
       .values({ ...values, business_id: user.business_id!, status: "draft" })
       .returning();
 
-    return { success: true as true, data: invoice[0] };
+    return { success: true as true, data: stringifyBigint(invoice[0]) };
   } catch (err) {
     return errorHandler(err);
   }

@@ -17,7 +17,7 @@ import { IoPrintOutline } from "react-icons/io5";
 import { FiDownload } from "react-icons/fi";
 import { useReactToPrint } from "react-to-print";
 
-const InvoicePdf = ({
+const InvoicePreview = ({
   invoice,
 }: {
   invoice: getInvoicesDetailResponseType["data"];
@@ -351,4 +351,4 @@ const InvoicePdf = ({
   );
 };
 
-export default InvoicePdf;
+export default InvoicePreview;

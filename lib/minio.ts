@@ -52,11 +52,12 @@ export async function removeImage(url: string) {
 
 export async function createPublicInvoicePdfUrl(
   business_id: bigint,
-  file: Buffer
+  file: File
 ) {
+  const buffer = Buffer.from(await file.arrayBuffer());
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${business_id}/public/invoices/${id}.pdf`;
-  await mc.putObject(config.env.NODE_ENV, filepath, file);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(business_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }

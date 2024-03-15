@@ -18,6 +18,7 @@ type propType = {
   children?: React.ReactNode;
   open: boolean;
   saveText?: string;
+  disableAction?: boolean;
   onClose?: () => void;
   onSubmit?: () => void;
 };
@@ -31,6 +32,7 @@ const CustomDialog = (prop: propType) => {
     onClose = () => {},
     children,
     saveText = "Save",
+    disableAction = false,
     onSubmit = async () => {},
   } = prop;
   const [loading, setLoading] = useState(false);
@@ -75,7 +77,7 @@ const CustomDialog = (prop: propType) => {
           {closable ? (
             <Button
               variant="outline"
-              disabled={loading}
+              disabled={loading || disableAction}
               className="relative z-10"
               onClick={onClose}
             >
@@ -84,7 +86,7 @@ const CustomDialog = (prop: propType) => {
           ) : null}
           <Button
             variant="default"
-            disabled={loading}
+            disabled={loading || disableAction}
             onClick={async () => {
               setLoading(true);
               await onSubmit();

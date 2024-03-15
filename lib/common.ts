@@ -46,6 +46,11 @@ export function stringCasting(value: number) {
   return String(value);
 }
 
+export const amountToFixed = (amount: number) => {
+  const fixed = amount.toFixed(2);
+  return Number(fixed);
+};
+
 export const generateBreakdownPrice = (
   items: invoiceSchemaType["items"],
   tax: number,
@@ -61,10 +66,10 @@ export const generateBreakdownPrice = (
   let taxes = (total / 100) * tax;
   let platformFee = (total / 100) * fee;
   return {
-    subtotal,
-    total: total + taxes + platformFee,
-    tax: taxes,
-    platformFee,
+    subtotal: amountToFixed(subtotal),
+    total: amountToFixed(total + taxes + platformFee),
+    tax: amountToFixed(taxes),
+    platformFee: amountToFixed(platformFee),
   };
 };
 
@@ -78,9 +83,9 @@ export const itemRateWithFeeAndTaxes = (
   let taxes = (total / 100) * tax;
   let platformFee = (total / 100) * fee;
   return {
-    total: total + taxes + platformFee,
-    tax: taxes,
-    platformFee,
+    total: amountToFixed(total + taxes + platformFee),
+    tax: amountToFixed(taxes),
+    platformFee: amountToFixed(platformFee),
   };
 };
 
@@ -92,9 +97,9 @@ export const invoiceStatusClass = (status: invoiceStatusTypes) =>
       status === "paid",
     "text-pink-700 hover:text-pink-700 before:bg-pink-700":
       status === "overdue",
+    "text-gray-400 before:bg-gray-600 hover:text-gray-400 ": status === "draft",
     "text-yellow-600 hover:text-yellow-600 before:bg-yellow-600":
       status === "pending",
-    "text-gray-400 hover:text-gray-400 before:bg-gray-400": status === "draft",
   });
 
 export const invoiceStatusColor = (status: invoiceStatusTypes) =>

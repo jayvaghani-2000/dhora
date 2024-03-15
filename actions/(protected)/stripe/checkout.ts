@@ -12,7 +12,11 @@ import {
   errorType,
 } from "@/actions/_utils/types.type";
 import { generateInvoicePdf } from "../invoices/generateInvoicePdf";
-import { generateBreakdownPrice, itemRateWithFeeAndTaxes } from "@/lib/common";
+import {
+  amountToFixed,
+  generateBreakdownPrice,
+  itemRateWithFeeAndTaxes,
+} from "@/lib/common";
 
 export const getInvoiceInfo = async (invoiceId: string, businessId: bigint) => {
   return await db.query.invoices.findFirst({
@@ -26,7 +30,10 @@ export const getInvoiceInfo = async (invoiceId: string, businessId: bigint) => {
   });
 };
 
-const handler = async (user: User, invoiceId: string) => {
+type paramsType = { invoiceId: string; file: FormData };
+
+const handler = async (user: User, params: paramsType) => {
+  const { invoiceId, file } = params;
   try {
     const [data, business] = await Promise.all([
       await getInvoiceInfo(invoiceId, user.business_id!),
@@ -71,7 +78,7 @@ const handler = async (user: User, invoiceId: string) => {
         return await stripe.prices.create(
           {
             currency: "usd",
-            unit_amount: itemPrice.total * 100,
+            unit_amount: parseInt(String(amountToFixed(itemPrice.total) * 100)),
             product: product.id,
             tax_behavior: "inclusive",
           },
@@ -89,7 +96,9 @@ const handler = async (user: User, invoiceId: string) => {
             quantity: items[index].quantity,
           };
         }),
-        application_fee_amount: priceBreakdown.platformFee * 100,
+        application_fee_amount: parseInt(
+          String(amountToFixed(priceBreakdown.platformFee) * 100)
+        ),
         metadata: {
           invoice_id: invoiceId,
         },
@@ -114,14 +123,15 @@ const handler = async (user: User, invoiceId: string) => {
     return await generateInvoicePdf({
       invoice: data!,
       paymentLink: session.url,
+      file: file,
     });
   } catch (err) {
-    console.log(err);
+    console.log("AAAAAAAAAAAAA", err);
     return errorHandler(err);
   }
 };
 
 export const checkout: (
-  invoiceId: string
+  params: paramsType
 ) => Promise<Awaited<ReturnType<typeof handler>>> =
   validateBusinessToken(handler);

@@ -42,8 +42,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
 import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
-import { checkout } from "@/actions/(protected)/stripe/checkout";
 import { revalidate } from "@/actions/(public)/revalidate";
+import InvoicePdf from "./../_components/invoice-pdf/index";
 
 type propType =
   | {
@@ -64,6 +64,11 @@ const InvoiceForm = (props: propType) => {
   const { toast } = useToast();
   const [file, setFile] = useState(user?.business?.logo ?? "");
   const [updatedItem, setUpdatedItem] = useState(0);
+  const [savePdf, setSavePdf] = useState({
+    invoiceId: "",
+    trigger: false,
+  });
+
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
     defaultValues:
@@ -118,7 +123,7 @@ const InvoiceForm = (props: propType) => {
 
   async function onSubmit(
     values: z.infer<typeof invoiceSchema>,
-    handleCheckout?: (invoiceId: string) => Promise<void>
+    handleCheckout?: boolean
   ) {
     const {
       business_address,
@@ -146,7 +151,10 @@ const InvoiceForm = (props: propType) => {
         });
 
         if (handleCheckout) {
-          await handleCheckout(data.data.id as unknown as string);
+          setSavePdf({
+            invoiceId: data.data.id as unknown as string,
+            trigger: true,
+          });
         } else {
           await revalidate(`/business/invoices`);
           navigate.replace(`/business/invoices`);
@@ -163,7 +171,10 @@ const InvoiceForm = (props: propType) => {
       });
       if (data.success) {
         if (handleCheckout) {
-          await handleCheckout(data.data.id as unknown as string);
+          setSavePdf({
+            invoiceId: data.data.id as unknown as string,
+            trigger: true,
+          });
         } else {
           await revalidate(`/business/invoices`);
           navigate.replace(`/business/invoices`);
@@ -177,25 +188,10 @@ const InvoiceForm = (props: propType) => {
     }
   }
 
-  async function handleCheckout(invoiceId: string) {
-    const res = await checkout(invoiceId);
-    if (res.success) {
-      toast({
-        title: res.data,
-      });
-      await revalidate(`/business/invoices`);
-      navigate.replace("/business/invoices");
-    } else {
-      toast({
-        title: res.error,
-      });
-    }
-  }
-
   async function saveAndSendInvoice() {
     await form.trigger();
     if (form.formState.isValid) {
-      await onSubmit(form.getValues(), handleCheckout);
+      await onSubmit(form.getValues(), true);
     }
   }
 
@@ -653,6 +649,7 @@ const InvoiceForm = (props: propType) => {
           </div>
         </div>
       </form>
+      <InvoicePdf invoice={form.getValues()} savePdf={savePdf} />
     </Form>
   );
 };

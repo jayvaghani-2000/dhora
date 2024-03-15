@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Row } from "@tanstack/react-table";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { recordType } from "./invoices";
 import { RiShareForwardFill } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
@@ -10,12 +10,33 @@ import { IoEyeOutline } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { ActionTooltip } from "@/components/shared/action-tooltip";
+import { getInvoiceDetail } from "@/actions/(protected)/invoices/getInvoiceDetail";
+import { getInvoicesDetailResponseType } from "@/actions/_utils/types.type";
+import InvoicePdf from "./invoice-pdf";
 
 const Actions = ({ row }: { row: Row<recordType> }) => {
   const rowObj = row.original;
   const navigate = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [savePdf, setSavePdf] = useState({
+    invoiceId: rowObj.id,
+    trigger: false,
+  });
+  const [invoice, setInvoice] = useState({} as getInvoicesDetailResponseType);
+
+  const handleGetInvoiceDetail = async () => {
+    const result = await getInvoiceDetail({ id: rowObj.id, mode: "edit" });
+    if (result.success) {
+      setInvoice(result);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      handleGetInvoiceDetail();
+    }
+  }, [open]);
 
   const isNotDraft = rowObj.status !== "draft";
 
@@ -65,21 +86,16 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
         onClose={() => {
           setOpen(false);
         }}
+        disableAction={Object.keys(invoice).length === 0}
         saveText={"Send"}
         onSubmit={async () => {
-          const res = await checkout(rowObj.id);
-          if (res.success) {
-            toast({
-              title: res.data,
-            });
-          } else {
-            toast({
-              title: res.error,
-            });
-          }
+          setSavePdf(prev => ({ ...prev, trigger: true }));
         }}
       >
         Confirm! Want to send invoice to {rowObj.email}
+        {Object.keys(invoice).length > 0 ? (
+          <InvoicePdf invoice={invoice.data} savePdf={savePdf} />
+        ) : null}
       </CustomDialog>
     </div>
   );

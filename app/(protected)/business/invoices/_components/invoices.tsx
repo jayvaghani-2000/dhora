@@ -15,6 +15,7 @@ import CustomSelect from "@/components/shared/custom-select";
 import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import Actions from "./actions";
+import clsx from "clsx";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
@@ -305,8 +306,22 @@ const Invoices = (props: propType) => {
         );
       },
       cell: ({ row }) => {
+        const status = row.getValue("status");
         return (
-          <div className={invoiceStatusClass(row.getValue("status"))}>
+          <div
+            className={clsx({
+              "relative capitalize flex gap-1 items-center before:content-['']  before:h-2 before:w-2 before:rounded-full":
+                true,
+              "text-green-600 hover:text-green-600 before:bg-green-600":
+                status === "paid",
+              "text-pink-700 hover:text-pink-700 before:bg-pink-700":
+                status === "overdue",
+              "text-gray-400 before:bg-gray-400 hover:text-gray-400 ":
+                status === "draft",
+              "text-yellow-600 hover:text-yellow-600 before:bg-yellow-600":
+                status === "pending",
+            })}
+          >
             {row.getValue("status")}
           </div>
         );

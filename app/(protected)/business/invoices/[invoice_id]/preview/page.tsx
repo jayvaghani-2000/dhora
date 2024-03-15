@@ -1,6 +1,6 @@
 import { getInvoiceDetail } from "@/actions/(protected)/invoices/getInvoiceDetail";
 import React from "react";
-import InvoicePdf from "../../_components/invoice-pdf";
+import InvoicePreview from "../../_components/invoice-preview";
 
 type propType = {
   params: {
@@ -8,8 +8,8 @@ type propType = {
   };
 };
 
-export default async function InvoicePreview(props: propType) {
+export default async function InvoicePreviewPage(props: propType) {
   const result = await getInvoiceDetail({ id: props.params.invoice_id });
 
-  return <InvoicePdf invoice={result.data} />;
+  return <InvoicePreview invoice={result.data} />;
 }

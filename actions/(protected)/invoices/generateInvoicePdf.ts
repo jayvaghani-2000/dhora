@@ -5,44 +5,36 @@ import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
-import puppeteer from "puppeteer";
 import { createPublicInvoicePdfUrl } from "@/lib/minio";
 import { sendInvoiceEmail } from "@/actions/(auth)/_utils/sendInvoice";
 import { revalidatePath } from "next/cache";
-import { invoicePdf } from "./pdf/invoicePdf";
 import { getInvoiceInfoType } from "@/actions/_utils/types.type";
 
 type paramsType = {
   invoice: getInvoiceInfoType;
   paymentLink: string;
+  file: FormData;
 };
 
 const handler = async (user: User, params: paramsType) => {
-  const { invoice, paymentLink } = params;
+  const { invoice, paymentLink, file } = params;
+
+  const pdf = file.get("pdf") as File;
+
+  const buffer = Buffer.from(await pdf.arrayBuffer());
+  const base64String = buffer.toString("base64");
 
   try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    const pdfHtml = await invoicePdf(invoice);
-
-    await page.setContent(pdfHtml);
-
-    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
     const uploadedPdfImage = await createPublicInvoicePdfUrl(
       user.business_id!,
-      pdfBuffer
+      pdf
     );
-
-    const result = pdfBuffer.toString("base64");
 
     await sendInvoiceEmail("Invoice", {
       paymentLink: paymentLink,
       to: invoice?.customer_email ?? "",
-      pdf: result,
+      pdf: base64String,
     });
-
-    await browser.close();
 
     await db
       .update(invoices)
@@ -53,6 +45,7 @@ const handler = async (user: User, params: paramsType) => {
       .where(and(eq(invoices.id, BigInt(invoice.id))));
 
     revalidatePath("/business/invoices");
+
     return {
       success: true as true,
       data: "Invoice sent to customer successfully!",
