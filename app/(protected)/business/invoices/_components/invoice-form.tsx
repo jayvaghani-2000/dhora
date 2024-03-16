@@ -158,13 +158,14 @@ const InvoiceForm = (props: propType) => {
         } else {
           await revalidate(`/business/invoices`);
           navigate.replace(`/business/invoices`);
+          setLoading(false);
         }
       } else {
         toast({
           title: data.error,
         });
+        setLoading(false);
       }
-      setLoading(false);
     } else {
       const data = await generateInvoice({
         values: values,
@@ -178,13 +179,14 @@ const InvoiceForm = (props: propType) => {
         } else {
           await revalidate(`/business/invoices`);
           navigate.replace(`/business/invoices`);
+          setLoading(false);
         }
       } else {
         toast({
           title: data.error,
         });
+        setLoading(false);
       }
-      setLoading(false);
     }
   }
 
@@ -649,7 +651,12 @@ const InvoiceForm = (props: propType) => {
           </div>
         </div>
       </form>
-      <InvoicePdf invoice={form.getValues()} savePdf={savePdf} />
+      <InvoicePdf
+        invoice={form.getValues()}
+        savePdf={savePdf}
+        loading={loading}
+        setLoading={setLoading}
+      />
     </Form>
   );
 };

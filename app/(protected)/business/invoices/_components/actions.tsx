@@ -17,7 +17,7 @@ import InvoicePdf from "./invoice-pdf";
 const Actions = ({ row }: { row: Row<recordType> }) => {
   const rowObj = row.original;
   const navigate = useRouter();
-  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [savePdf, setSavePdf] = useState({
     invoiceId: rowObj.id,
@@ -86,16 +86,20 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
         onClose={() => {
           setOpen(false);
         }}
-        disableAction={Object.keys(invoice).length === 0}
+        disableAction={Object.keys(invoice).length === 0 || loading}
         saveText={"Send"}
         onSubmit={async () => {
+          setLoading(true);
           setSavePdf(prev => ({ ...prev, trigger: true }));
         }}
       >
         Confirm! Want to send invoice to {rowObj.email}
-        {Object.keys(invoice).length > 0 ? (
-          <InvoicePdf invoice={invoice.data} savePdf={savePdf} />
-        ) : null}
+        <InvoicePdf
+          invoice={invoice.data}
+          savePdf={savePdf}
+          loading={loading}
+          setLoading={setLoading}
+        />
       </CustomDialog>
     </div>
   );

@@ -1,11 +1,14 @@
+"use client"
 import { formatAmount, generateBreakdownPrice } from '@/lib/common'
 import { PLATFORM_FEE } from '@/lib/constant'
 import { useAuthStore } from '@/provider/store/authentication'
 import { useToast } from "@/components/ui/use-toast";
-import html2pdf from "html2pdf.js";
 import { useEffect, useState } from 'react';
 import { checkout } from '@/actions/(protected)/stripe/checkout';
 import { useRouter } from 'next/navigation';
+import html2pdf from "html2pdf.js"
+import { getBusinessLogo } from '@/actions/(protected)/business/getBusinessLogo';
+
 
 const title = {
   fontWeight: 600,
@@ -146,7 +149,7 @@ const total = {
 
 const InvoicePdf = (props) => {
   const navigate = useRouter()
-  const { invoice, savePdf } = props
+  const { invoice, savePdf, setLoading } = props
   const { invoiceId, trigger } = savePdf
   const { profile } = useAuthStore()
   const { business } = profile
@@ -155,26 +158,22 @@ const InvoicePdf = (props) => {
 
   const { name, address, contact, logo } = business
 
-  const items = invoice.items
+  const items = invoice?.items
 
   const priceBreakdown = generateBreakdownPrice(
-    items,
+    items ?? [],
     invoice?.tax ?? 0,
     invoice?.platform_fee ?? PLATFORM_FEE
   );
 
-  const getLogo = () => {
+  const getLogo = async () => {
     if (logo) {
-      fetch(logo).then(response => response.blob()).then((blob => {
-        const reader = new FileReader();
-        reader.onload = function () {
-          const dataURL = reader.result;
-          setLogoBase64(dataURL)
-        };
-        reader.readAsDataURL(blob);
-      })).catch(err => {
-        console.error("Error fetching Logo:", err);
-      })
+      const res = await getBusinessLogo(logo)
+      if (res.success) {
+        setLogoBase64(res.data)
+      } else {
+        console.error("Error fetching Logo:", res.error);
+      }
     }
   }
 
@@ -198,10 +197,11 @@ const InvoicePdf = (props) => {
         title: res.error,
       });
     }
+    setLoading(false)
   }
 
 
-  const save = () => {
+  const save = async () => {
     const element = document.getElementById('invoice-pdf');
     var opt = {
       margin: 0,
@@ -210,7 +210,6 @@ const InvoicePdf = (props) => {
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-
 
     html2pdf().from(element).set(opt).output('blob').then(function (pdfBlob) {
       const file = new File([pdfBlob], 'invoice.pdf', { type: 'application/pdf' });
@@ -227,6 +226,11 @@ const InvoicePdf = (props) => {
       save()
     }
   }, [invoiceId, trigger])
+
+
+  if (Object.keys(invoice ?? {}).length === 0) {
+    return <></>
+  }
 
   return (
     <div className="fixed bottom-[300vh] -z-10 w-[1200px] overflow-hidden opacity-0 ">
@@ -307,8 +311,8 @@ const InvoicePdf = (props) => {
 
         <div style={footerWrapper}>
           <div style={notes}>
-            <span style={{ ...title, marginBottom: "5px" }} >Notes</span>
-            <span style={values} >{invoice?.notes}</span>
+            {invoice?.notes.trim() ? <><span style={{ ...title, marginBottom: "5px" }} >Notes</span>
+              <span style={values} >{invoice?.notes}</span> </> : <div></div>}
           </div>
           <div style={priceSummary}>
             <div style={{ ...spaceBetween, ...subtotal }}>
@@ -332,7 +336,7 @@ const InvoicePdf = (props) => {
           </div>
         </div >
       </div >
-    </div>
+    </div >
   )
 }
 
