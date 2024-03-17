@@ -93,7 +93,7 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
           setSavePdf(prev => ({ ...prev, trigger: true }));
         }}
       >
-        Confirm! Want to send invoice to {rowObj.email}
+        Send invoice to {rowObj.email}?
         <InvoicePdf
           invoice={invoice.data}
           savePdf={savePdf}
