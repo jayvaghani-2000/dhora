@@ -627,6 +627,17 @@ const InvoiceForm = (props: propType) => {
               SAVE
             </Button>
             <Button
+              variant="secondary"
+              type="button"
+              className="w-fit"
+              onClick={async () => {
+                await saveAndSendInvoice();
+              }}
+              disabled={loading}
+            >
+              SEND
+            </Button>
+            <Button
               variant="outline"
               type="button"
               className="w-fit"
@@ -636,17 +647,6 @@ const InvoiceForm = (props: propType) => {
               disabled={loading}
             >
               CANCEL
-            </Button>
-            <Button
-              variant="outline"
-              type="button"
-              className="w-fit"
-              onClick={async () => {
-                await saveAndSendInvoice();
-              }}
-              disabled={loading}
-            >
-              SEND
             </Button>
           </div>
         </div>

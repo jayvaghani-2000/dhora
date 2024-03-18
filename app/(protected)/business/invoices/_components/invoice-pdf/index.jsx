@@ -14,13 +14,13 @@ const title = {
   fontWeight: 600,
   color: "#1f2937",
   fontSize: "16px",
-  wordBreak: "break-all",
+  wordBreak: "break-word",
 }
 const values = {
   fontWeight: 400,
   color: "#4b5563",
   fontSize: "14px",
-  wordBreak: "break-all"
+  wordBreak: "break-word",
 }
 
 const invoiceDetail = {
@@ -58,7 +58,7 @@ const tableHeader = {
   justifyContent: "center",
   alignItems: "center",
   width: "fit-content",
-  wordBreak: "break-all",
+  wordBreak: "break-word",
   fontWeight: 400,
   fontSize: "12px",
 }
@@ -71,7 +71,7 @@ const tableItem = {
   justifyContent: "center",
   alignItems: "center",
   width: "fit-content",
-  wordBreak: "break-all",
+  wordBreak: "break-word",
   fontWeight: 400,
   fontSize: "12px",
 }
@@ -155,6 +155,7 @@ const InvoicePdf = (props) => {
   const { business } = profile
   const { toast } = useToast();
   const [logoBase64, setLogoBase64] = useState("")
+  const [fetchedLogo, setFetchedLogo] = useState(false)
 
   const { name, address, contact, logo } = business
 
@@ -174,6 +175,7 @@ const InvoicePdf = (props) => {
       } else {
         console.error("Error fetching Logo:", res.error);
       }
+      setFetchedLogo(true)
     }
   }
 
@@ -207,7 +209,7 @@ const InvoicePdf = (props) => {
       margin: 0,
       filename: 'myfile.pdf',
       image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 2 },
+      html2canvas: { scale: 3 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
@@ -222,10 +224,10 @@ const InvoicePdf = (props) => {
 
 
   useEffect(() => {
-    if (trigger && invoiceId) {
+    if (trigger && invoiceId && fetchedLogo) {
       save()
     }
-  }, [invoiceId, trigger])
+  }, [invoiceId, trigger, fetchedLogo])
 
 
   if (Object.keys(invoice ?? {}).length === 0) {

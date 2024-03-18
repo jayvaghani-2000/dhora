@@ -5,6 +5,7 @@ export async function sendInvoiceEmail(
   title: string,
   invoice: { paymentLink: string; to: string; pdf: string }
 ) {
+ 
   const html = `<!DOCTYPE html>
     <html
     xmlns="http://www.w3.org/1999/xhtml"
@@ -513,19 +514,25 @@ export async function sendInvoiceEmail(
                                         padding: 8px 0 0 0;
                                         word-break: break-word;
                                         ">
-                                        <div
-                                        style="
-                                            font-family: -apple-system,
-                                            BlinkMacSystemFont, Helvetica, Arial,
-                                            sans-serif;
-                                            font-size: 22px;
-                                            font-weight: 600;
-                                            line-height: 1.2;
-                                            text-align: center;
-                                            color: #000000;
-                                        ">
-                                        ${invoice.paymentLink}
-                                        </div>
+                                        <a
+                                          href="${invoice.paymentLink}"
+                                          target="_blank"
+                                        ><button 
+                                            style="
+                                                font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial,
+                                                sans-serif;
+                                                font-weight: 600;
+                                                line-height: 1.2;
+                                                border: none;
+                                                padding: 10px;
+                                                border-radius: 20px;
+                                                text-align: center;
+                                                color: #fff;
+                                                background-color: #1e3b8a;
+                                            "
+                                        >Pay Now</button>
+                                        </a>
+
                                     </td>
                                     </tr>
                                 </table>

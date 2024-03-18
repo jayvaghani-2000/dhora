@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { IoPrintOutline } from "react-icons/io5";
 import { FiDownload } from "react-icons/fi";
 import { useReactToPrint } from "react-to-print";
+import BackButton from "@/components/shared/back-button";
 
 const InvoicePreview = ({
   invoice,
@@ -72,24 +73,27 @@ const InvoicePreview = ({
 
   return (
     <div className="absolute left-0 right-0">
-      <div className="flex px-4 md:px-6 justify-end gap-4 mb-2 lg:mb-4">
-        <Button
-          variant="outline"
-          className="py-1 px-2 gap-1"
-          onClick={handlePrintFile}
-          disabled={isDraft}
-        >
-          <IoPrintOutline className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />{" "}
-          <span className="text-sm lg:text-base">Print</span>
-        </Button>
-        <Button
-          className="py-1 px-2 gap-1"
-          onClick={handleSaveInvoice}
-          disabled={isDraft}
-        >
-          <FiDownload className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />{" "}
-          <span className="text-sm lg:text-base">Download</span>
-        </Button>
+      <div className="flex justify-between items-center  px-4 md:px-6  mb-2 lg:mb-4">
+        <BackButton to="/business/invoices" />
+        <div className="flex justify-end gap-4">
+          <Button
+            variant="outline"
+            className="py-1 px-2 gap-1"
+            onClick={handlePrintFile}
+            disabled={isDraft}
+          >
+            <IoPrintOutline className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />{" "}
+            <span className="text-sm lg:text-base">Print</span>
+          </Button>
+          <Button
+            className="py-1 px-2 gap-1"
+            onClick={handleSaveInvoice}
+            disabled={isDraft}
+          >
+            <FiDownload className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />{" "}
+            <span className="text-sm lg:text-base">Download</span>
+          </Button>
+        </div>
       </div>
       <div className="relative bg-background border border-gray1 p-2 lg:p-6 rounded-md bg my-4 mx-4 md:mx-6">
         <div

@@ -94,7 +94,8 @@ const CustomDialog = (prop: propType) => {
             }}
             className="relative z-10"
           >
-            {saveText} {loading ? <Spinner type="inline" /> : null}
+            {saveText}{" "}
+            {loading || disableAction ? <Spinner type="inline" /> : null}
           </Button>
         </DialogFooter>
       </DialogContent>
