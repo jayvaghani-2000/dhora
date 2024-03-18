@@ -1,13 +1,5 @@
 "use client";
 import React, { useState } from "react";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -16,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +16,7 @@ import { submitContractResponseType } from "@/actions/_utils/types.type";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PARAMS } from "./contractBuilder";
 import { revalidate } from "@/actions/(public)/revalidate";
+import CustomDialog from "@/components/shared/custom-dialog";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email." }),
@@ -72,48 +64,45 @@ const SendTemplate = (prop: propType) => {
   }
 
   return (
-    <Dialog
+    <CustomDialog
+      title="Send Contract"
+      className="w-[425px]"
       open={open}
-      onOpenChange={value => {
-        if (!value) {
-          handleCloseSendTemplate();
+      saveText="Send"
+      onClose={handleCloseSendTemplate}
+      onSubmit={async () => {
+        await form.trigger();
+
+        if (form.formState.isValid) {
+          await onSubmit(form.getValues());
         }
       }}
     >
-      <DialogContent className="max-w-[calc(100dvw-40px)] w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Send contract to recipient</DialogTitle>
-          <DialogDescription>
-            Please enter the recipient registered mail
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          {!!error && (
-            <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
-              {error}
-            </p>
-          )}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Email" autoComplete="off" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <div className="text-base font-normal mb-2">
+        Please enter the recipient registered mail
+      </div>
 
-            <Button type="submit" disabled={loading}>
-              Send contract
-            </Button>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <Form {...form}>
+        {!!error && (
+          <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
+            {error}
+          </p>
+        )}
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Email" autoComplete="off" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </Form>
+    </CustomDialog>
   );
 };
 

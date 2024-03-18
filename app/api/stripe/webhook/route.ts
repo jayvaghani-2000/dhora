@@ -64,9 +64,6 @@ async function handler(req: Request) {
 
             const metaData = data.metadata as { invoice_id: string };
             if (data.payment_status === "paid") {
-              await stripe.paymentLinks.update(data.payment_link as string, {
-                active: false,
-              });
               await db
                 .update(invoices)
                 .set({
@@ -74,6 +71,9 @@ async function handler(req: Request) {
                   updated_at: new Date(),
                 })
                 .where(eq(invoices.id, BigInt(metaData.invoice_id)));
+              await stripe.paymentLinks.update(data.payment_link as string, {
+                active: false,
+              });
             }
 
             break;
