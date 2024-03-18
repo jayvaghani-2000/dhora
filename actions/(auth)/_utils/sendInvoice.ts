@@ -5,7 +5,6 @@ export async function sendInvoiceEmail(
   title: string,
   invoice: { paymentLink: string; to: string; pdf: string }
 ) {
- 
   const html = `<!DOCTYPE html>
     <html
     xmlns="http://www.w3.org/1999/xhtml"
@@ -371,7 +370,7 @@ export async function sendInvoiceEmail(
                                         <span style="color: #000000"
                                             >You just got an Invoice.</span
                                         >
-                                        Please click on the button below to pay. We don't spam.
+                                        Please click on the button below to pay.
                                         </div>
                                     </td>
                                     </tr>
@@ -696,7 +695,7 @@ export async function sendInvoiceEmail(
     await mailClient.send({
       to: invoice.to,
       from: "info@dhora.app",
-      subject: `Dhora – Email Verification`,
+      subject: `Dhora – Invoice`,
       html,
       attachments: [
         {
