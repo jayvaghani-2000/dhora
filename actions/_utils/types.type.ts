@@ -3,6 +3,12 @@ import { getSubmittedContracts } from "../(protected)/contracts/getSubmittedCont
 import { initiateContract } from "../(protected)/contracts/initiateContract";
 import { submitContract } from "../(protected)/contracts/submitContract";
 import { getUser } from "../(auth)/me";
+import { getInvoices } from "../(protected)/invoices/getInvoices";
+import { createInvoiceSchema } from "@/db/schema";
+import { z } from "zod";
+import { getInvoiceDetail } from "../(protected)/invoices/getInvoiceDetail";
+import { getInvoiceInfo } from "../(protected)/stripe/checkout";
+import { NotNull } from "drizzle-orm";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -21,3 +27,24 @@ export type submitContractResponseType = Awaited<
 export type getSubmittedContractResponseType = Awaited<
   ReturnType<typeof getSubmittedContracts>
 >;
+export type getInvoicesResponseType = Awaited<ReturnType<typeof getInvoices>>;
+export type getInvoicesDetailResponseType = Awaited<
+  ReturnType<typeof getInvoiceDetail>
+>;
+
+export type createInvoiceSchemaType = z.infer<typeof createInvoiceSchema>;
+export type getInvoiceInfoType = NonNullable<
+  Awaited<ReturnType<typeof getInvoiceInfo>>
+>;
+
+export type businessTypes =
+  | "Event Planner"
+  | "Venue"
+  | "Photo & Video"
+  | "Entertainment"
+  | "Caterer"
+  | "Apparel"
+  | "Health & Beauty"
+  | "Other";
+
+export type invoiceStatusTypes = "paid" | "pending" | "draft" | "overdue";

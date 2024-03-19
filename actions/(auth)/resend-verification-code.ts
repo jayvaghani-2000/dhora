@@ -27,7 +27,8 @@ export const resendVerificationCode = async () => {
         .update(users)
         .set({
           verification_code: hashedVerificationCode,
-          emailVerified: null,
+          email_verified: null,
+          updated_at: new Date(),
         })
         .where(eq(users.email, user.email))
         .returning();

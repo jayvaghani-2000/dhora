@@ -25,7 +25,7 @@ const handler = async (user: User, templateId?: string) => {
           {
             user_email: config.env.DOCU_SEAL_EMAIL,
             name: "New Contract",
-            folder_name: user.email,
+            folder_name: String(user.business_id),
             template_id: templateId,
           },
           config.env.DOCU_SEAL
@@ -42,7 +42,7 @@ const handler = async (user: User, templateId?: string) => {
       {
         user_email: config.env.DOCU_SEAL_EMAIL,
         name: "New Contract",
-        folder_name: user.email,
+        folder_name: String(user.business_id),
       },
       config.env.DOCU_SEAL
     );

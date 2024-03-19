@@ -38,7 +38,11 @@ export const verifyEmail = async (
         if (validCode) {
           const userInfo = await db
             .update(users)
-            .set({ verification_code: null, emailVerified: new Date() })
+            .set({
+              verification_code: null,
+              email_verified: new Date(),
+              updated_at: new Date(),
+            })
             .where(eq(users.email, user.email))
             .returning();
 

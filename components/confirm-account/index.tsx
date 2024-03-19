@@ -1,19 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -27,6 +19,7 @@ import { setAuthData } from "@/provider/store/authentication";
 import { resendVerificationCode } from "@/actions/(auth)/resend-verification-code";
 import { verifyEmail } from "@/actions/(auth)/verify-email";
 import { profileType } from "@/actions/_utils/types.type";
+import CustomDialog from "../shared/custom-dialog";
 
 const formSchema = z.object({
   verification_code: z
@@ -64,6 +57,8 @@ export function ConfirmAccount() {
           isBusinessUser: !!profile?.business_id,
         })
       );
+    } else {
+      setError(result.error as string);
     }
     setLoading(false);
   }
@@ -75,58 +70,55 @@ export function ConfirmAccount() {
   }
 
   return (
-    <Dialog open={true}>
-      <DialogContent
-        className="max-w-[calc(100dvw-40px)] w-[425px]"
-        closable={false}
-      >
-        <DialogHeader>
-          <DialogTitle className="text-center mb-4">Verify OTP</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          {!!error && (
-            <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
-              {error}
-            </p>
-          )}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="text-center">
-            <FormField
-              control={form.control}
-              name="verification_code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter OTP"
-                      autoComplete="off"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-end items-center mt-0">
-              <Button
-                className="px-1 py-0"
-                variant="link"
-                disabled={loading}
-                onClick={handleResendEmail}
-              >
-                Resend OTP
-              </Button>
-            </div>
-
+    <CustomDialog
+      open={true}
+      closable={false}
+      title="Verify OTP"
+      saveText="Verify"
+      className="w-[480px]"
+      onSubmit={async () => {
+        await form.trigger();
+        if (form.formState.isValid) {
+          await onSubmit(form.getValues());
+        }
+      }}
+    >
+      <Form {...form}>
+        {!!error && (
+          <p className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 text-center mb-4">
+            {error}
+          </p>
+        )}
+        <div className="text-center">
+          <FormField
+            control={form.control}
+            name="verification_code"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Enter OTP"
+                    autoComplete="off"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex justify-end items-center mt-0">
             <Button
-              type="submit"
+              className="px-1 py-0"
+              variant="link"
+              type="button"
               disabled={loading}
-              className="mt-4 mx-auto bg-primary-blue hover:bg-primary-blue text-white"
+              onClick={handleResendEmail}
             >
-              Submit
+              Resend OTP
             </Button>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          </div>
+        </div>
+      </Form>
+    </CustomDialog>
   );
 }

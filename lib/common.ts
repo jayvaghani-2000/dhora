@@ -1,4 +1,8 @@
+import { invoiceSchemaType } from "@/app/(protected)/business/invoices/_utils/schema";
 import { format } from "date-fns";
+import { PLATFORM_FEE } from "./constant";
+import clsx from "clsx";
+import { invoiceStatusTypes } from "@/actions/_utils/types.type";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -10,6 +14,13 @@ export function getInitial(name: string) {
 
 export function formatDate(date: Date) {
   return format(new Date(date), "MMM dd,yyyy");
+}
+
+export function formatAmount(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
 }
 
 export function searchTableData<T extends {}>(
@@ -27,3 +38,75 @@ export function searchTableData<T extends {}>(
 
   return filteredArray;
 }
+
+export function stringCasting(value: number) {
+  if (isNaN(value)) {
+    return "";
+  }
+  return String(value);
+}
+
+export const amountToFixed = (amount: number) => {
+  const fixed = amount.toFixed(2);
+  return Number(fixed);
+};
+
+export const generateBreakdownPrice = (
+  items: invoiceSchemaType["items"],
+  tax: number,
+  fee = PLATFORM_FEE
+) => {
+  const subtotal = items.reduce((prev, curr) => {
+    prev += (curr.price ?? 0) * (curr.quantity ?? 0);
+    return prev;
+  }, 0);
+
+  let total = subtotal;
+
+  let taxes = (total / 100) * tax;
+  let platformFee = (total / 100) * fee;
+  return {
+    subtotal: amountToFixed(subtotal),
+    total: amountToFixed(total + taxes + platformFee),
+    tax: amountToFixed(taxes),
+    platformFee: amountToFixed(platformFee),
+  };
+};
+
+export const itemRateWithFeeAndTaxes = (
+  item: invoiceSchemaType["items"][0],
+  tax: number,
+  fee: number
+) => {
+  let total = item.price;
+
+  let taxes = (total / 100) * tax;
+  let platformFee = (total / 100) * fee;
+  return {
+    total: amountToFixed(total + taxes + platformFee),
+    tax: amountToFixed(taxes),
+    platformFee: amountToFixed(platformFee),
+  };
+};
+
+export const invoiceStatusClass = (status: invoiceStatusTypes) =>
+  clsx({
+    "relative capitalize flex gap-1 items-center before:content-['']  before:h-2 before:w-2 before:rounded-full":
+      true,
+    "text-green-600 hover:text-green-600 before:bg-green-600":
+      status === "paid",
+    "text-pink-700 hover:text-pink-700 before:bg-pink-700":
+      status === "overdue",
+    "text-gray-400 before:bg-gray-600 hover:text-gray-400 ": status === "draft",
+    "text-yellow-600 hover:text-yellow-600 before:bg-yellow-600":
+      status === "pending",
+  });
+
+export const invoiceStatusColor = (status: invoiceStatusTypes) =>
+  clsx({
+    "relative capitalize flex gap-1 items-center": true,
+    "text-green-600 hover:text-green-600": status === "paid",
+    "text-pink-700 hover:text-pink-700": status === "overdue",
+    "text-yellow-600 hover:text-yellow-600": status === "pending",
+    "text-gray-400 hover:text-gray-400": status === "draft",
+  });

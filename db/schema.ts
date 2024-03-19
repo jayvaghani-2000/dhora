@@ -1,11 +1,14 @@
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
+  doublePrecision,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
   timestamp,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -21,6 +24,13 @@ export const businessTypeEnum = pgEnum("businessType", [
   "Other",
 ]);
 
+export const invoiceStatusTypeEnum = pgEnum("invoiceStatusType", [
+  "paid",
+  "pending",
+  "draft",
+  "overdue",
+]);
+
 export const users = pgTable("users", {
   id: text("id")
     .notNull()
@@ -29,7 +39,7 @@ export const users = pgTable("users", {
 
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  email_verified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
   password: text("password").notNull(),
   verification_code: text("verification_code"),
@@ -65,6 +75,13 @@ export const businesses = pgTable("business", {
     .default(sql`public.id_generator()`),
   type: businessTypeEnum("type").notNull(),
   name: text("name").notNull(),
+  address: text("address"),
+  contact: varchar("contact", { length: 20 }),
+  logo: text("logo"),
+  stripe_id: text("stripe_id"),
+  stripe_account_verified: timestamp("stripe_account_verified", {
+    mode: "date",
+  }),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -72,6 +89,7 @@ export const businesses = pgTable("business", {
 export const businessRelations = relations(businesses, ({ many }) => ({
   users: many(users),
   contacts: many(contracts),
+  invoices: many(invoices),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -90,6 +108,38 @@ export const contracts = pgTable("contracts", {
 export const contractsRelations = relations(contracts, ({ one }) => ({
   business: one(businesses, {
     fields: [contracts.business_id],
+    references: [businesses.id],
+  }),
+}));
+
+export const invoices = pgTable("invoices", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  customer_name: text("customer_name").notNull(),
+  customer_email: text("customer_email").notNull(),
+  customer_contact: varchar("customer_contact", { length: 20 }).notNull(),
+  customer_address: text("customer_address"),
+  items: jsonb("items"),
+  tax: integer("tax").notNull(),
+  total: doublePrecision("total").notNull(),
+  subtotal: doublePrecision("subtotal").notNull(),
+  business_id: bigint("business_id", { mode: "bigint" })
+    .references(() => businesses.id)
+    .notNull(),
+  platform_fee: integer("platform_fee").default(2).notNull(),
+  due_date: timestamp("due_date").notNull(),
+  status: invoiceStatusTypeEnum("status").notNull(),
+  stripe_ref: text("stripe_ref"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  invoice: text("invoice"),
+  notes: text("notes"),
+});
+
+export const invoicesRelations = relations(invoices, ({ one }) => ({
+  business: one(businesses, {
+    fields: [invoices.business_id],
     references: [businesses.id],
   }),
 }));
@@ -150,3 +200,56 @@ export const createContractSchema = createSelectSchema(contracts).pick({
   template_id: true,
   name: true,
 });
+
+export const createInvoiceSchema = createInsertSchema(invoices)
+  .omit({
+    id: true,
+    business_id: true,
+    status: true,
+    created_at: true,
+    updated_at: true,
+  })
+  .merge(
+    z.object({
+      items: z.array(
+        z.object({
+          name: z
+            .string()
+            .refine(data => data.length > 0, { message: "Name is required" }),
+          price: z.number().positive({ message: "Price should be positive" }),
+          quantity: z
+            .number()
+            .int({ message: "Quantity is invalid" })
+            .min(1, { message: "Minimum qty should be 1." }),
+          description: z.string().optional(),
+          id: z.string(),
+        })
+      ),
+      customer_contact: z
+        .string()
+        .refine(data => data.length > 0, { message: "Contact is required" }),
+      customer_name: z.string().refine(data => data.length > 0, {
+        message: "Customer name is required",
+      }),
+      customer_address: z
+        .string()
+        .refine(data => data.length > 0, { message: "Address is required" }),
+      customer_email: z.string().email({ message: "Enter valid email" }),
+      tax: z.number().refine(
+        data => {
+          const tax = data;
+          if (Number.isInteger(tax) && tax >= 0 && tax <= 100) {
+            return true;
+          }
+          return false;
+        },
+        { message: "Tax is invalid" }
+      ),
+    })
+  );
+
+export const editInvoiceSchema = createInvoiceSchema.merge(
+  z.object({
+    id: z.string(),
+  })
+);

@@ -15,6 +15,76 @@
       "when": 1708416807783,
       "tag": "0001_sturdy_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1709018936710,
+      "tag": "0002_massive_hercules",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1709192897422,
+      "tag": "0003_white_moonstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1709194247799,
+      "tag": "0004_boring_sandman",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1709289811540,
+      "tag": "0005_gifted_morlocks",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1709530200074,
+      "tag": "0006_neat_kid_colt",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1709540390873,
+      "tag": "0007_tiresome_tattoo",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1709599793179,
+      "tag": "0008_aberrant_ultron",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1709641264816,
+      "tag": "0009_young_post",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1710243887113,
+      "tag": "0010_parched_big_bertha",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1710312343056,
+      "tag": "0011_abandoned_stephen_strange",
+      "breakpoints": true
     }
   ]
 }

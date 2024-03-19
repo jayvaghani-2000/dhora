@@ -27,7 +27,7 @@ export function validateBusinessToken(handler: any) {
       const { session, user } = await lucia.validateSession(token.value);
       if (session) {
         if (user.business_id) {
-          return handler(user, values);
+          return await handler(user, values);
         } else {
           return { success: false, error: "unauthorized" };
         }

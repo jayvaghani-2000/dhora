@@ -42,6 +42,7 @@
     --active: 249 12% 11%; /* #1A1920 */
     --primary-blue: 200 100% 50%; /* #00A8FF */
     --divider: 0 0% 28%; /* #474747 */
+    --gray1: 0 0% 44%; /* #707070 */
     --secondary-light-gray: 240 5% 65%; /* #A1A1AA */
     --primary-background: 224 64% 33%; /* #1e3b8a */
   }
@@ -93,6 +94,7 @@
       radial-gradient(at 68% 51%, rgb(21, 94, 117) 0, transparent 54%),
       radial-gradient(at 5% 61%, rgb(91, 33, 182) 0, transparent 47%),
       radial-gradient(at 96% 76%, rgb(30, 58, 138) 0, transparent 74%);
+
     @apply text-foreground;
   }
 }
@@ -127,4 +129,18 @@ input[type="number"] {
 
 docuseal-builder {
   height: unset !important;
+}
+
+.bg-gradient {
+  background-color: rgb(30, 59, 138);
+  background-image: radial-gradient(
+      at 27% 59%,
+      rgb(79, 70, 229) 0,
+      transparent 40%
+    ),
+    radial-gradient(at 41% 74%, rgb(35, 93, 186) 0, transparent 73%),
+    radial-gradient(at 42% 40%, rgb(17, 24, 39) 0, transparent 41%),
+    radial-gradient(at 68% 51%, rgb(21, 94, 117) 0, transparent 54%),
+    radial-gradient(at 5% 61%, rgb(91, 33, 182) 0, transparent 47%),
+    radial-gradient(at 96% 76%, rgb(30, 58, 138) 0, transparent 74%);
 }

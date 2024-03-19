@@ -17,8 +17,8 @@ const handler = async (user: User) => {
       const options = {
         method: "GET",
         url: next
-          ? `https://api.docuseal.co/submissions?template_folder=${user.email!.toString()}&after=${next}&limit=100`
-          : `https://api.docuseal.co/submissions?template_folder=${user.email!.toString()}&limit=100`,
+          ? `https://api.docuseal.co/submissions?template_folder=${user.business_id!.toString()}&after=${next}&limit=100`
+          : `https://api.docuseal.co/submissions?template_folder=${user.business_id!.toString()}&limit=100`,
         headers: { "X-Auth-Token": config.env.DOCU_SEAL },
       };
 

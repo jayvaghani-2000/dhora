@@ -5,8 +5,12 @@ import { usePathname } from "next/navigation";
 import SecondaryNavbarHeader from "./components/secondaryNavbarHeader";
 import SecondaryNavbarSearch from "./components/secondaryNavbarSearch";
 import { Separator } from "@/components/ui/separator";
+import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { BsShop } from "react-icons/bs";
-import { LiaFileContractSolid } from "react-icons/lia";
+import {
+  LiaFileContractSolid,
+  LiaFileInvoiceDollarSolid,
+} from "react-icons/lia";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 
 export const StaticOptions = [
@@ -41,6 +45,23 @@ export const StaticOptions = [
         icon: <LiaFileContractSolid />,
         path: "/business/contracts",
       },
+      {
+        key: "invoices",
+        title: "Invoices",
+        icon: <LiaFileInvoiceDollarSolid />,
+        path: "/business/invoices",
+      },
+    ],
+  },
+  {
+    key: "app",
+    options: [
+      {
+        key: "marketplace",
+        title: "Marketplace",
+        icon: <HiOutlineBuildingOffice2 />,
+        path: "/marketplace",
+      },
     ],
   },
 ];
@@ -61,19 +82,18 @@ const Secondary = () => {
           <SecondaryNavbarSearch data={[]} />
         </div>
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
-        {options &&
-          options.map(o => {
-            return (
-              <SecondaryNavbarItem
-                key={o.key}
-                id={o.key}
-                title={o.title}
-                icon={o.icon}
-                path={o.path}
-                currentPath={path}
-              />
-            );
-          })}
+        {options?.map(o => {
+          return (
+            <SecondaryNavbarItem
+              key={o.key}
+              id={o.key}
+              title={o.title}
+              icon={o.icon}
+              path={o.path}
+              currentPath={path}
+            />
+          );
+        })}
       </ScrollArea>
     </div>
   );

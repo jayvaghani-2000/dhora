@@ -11,6 +11,7 @@ const initialState: GlobalState = {
   success: false,
   successMessage: "",
   maintenance: false,
+  mapScriptLoaded: false,
 };
 export const globalSlice = createSlice({
   name: "global",

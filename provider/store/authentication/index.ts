@@ -12,7 +12,10 @@ export const initialState = {
   loading: false,
   authenticated: false,
   profile: {
-    emailVerified: new Date(),
+    email_verified: new Date(),
+    business: {
+      stripe_id: `${Date.now()}`,
+    },
   } as profileType,
   authCheck: false,
   redirectTo: DEFAULT_LOGIN_REDIRECT,
