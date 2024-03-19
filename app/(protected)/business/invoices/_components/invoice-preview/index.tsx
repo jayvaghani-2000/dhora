@@ -130,7 +130,7 @@ const InvoicePreview = ({
                     {invoice?.status}
                   </span>
                   <span className="text-xs lg:text-base">
-                    INV - #{invoiceId.substring(invoiceId.length - 5)}
+                    INV - #{invoiceId}
                   </span>
                   <span className="text-xs text-gray-600">Invoice Number</span>
                 </div>
@@ -255,9 +255,7 @@ const InvoicePreview = ({
                 >
                   {invoice?.status}
                 </span>
-                <span className="text-xs lg:text-base">
-                  INV - #{invoiceId.substring(invoiceId.length - 5)}
-                </span>
+                <span className="text-xs lg:text-base">INV - #{invoiceId}</span>
                 <span className="text-xs text-[#cecece]">Invoice Number</span>
               </div>
 

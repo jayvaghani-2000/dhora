@@ -65,7 +65,7 @@ const InvoiceForm = (props: propType) => {
   const [file, setFile] = useState(user?.business?.logo ?? "");
   const [updatedItem, setUpdatedItem] = useState(0);
   const [savePdf, setSavePdf] = useState({
-    invoiceId: "",
+    invoiceId: params.invoice_id as string,
     trigger: false,
   });
 

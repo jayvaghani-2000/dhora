@@ -237,7 +237,7 @@ export const invoicePdf = async (invoice: getInvoiceInfoType) => {
         <div class="customerDetailWrapper">
         <div style="width: fit-content; margin-left:auto;">
           <div class="invoiceDetail">
-            <span class="invoiceId" >INV - #${invoiceId.substring(invoiceId.length - 5)}</span>
+            <span class="invoiceId" >INV - #${invoiceId}</span>
             <span class="subtitle" >Invoice Number</span>
           </div>
           <div class="customerDetail">

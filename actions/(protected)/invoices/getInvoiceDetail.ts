@@ -7,13 +7,15 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
+import { redirect } from "next/navigation";
+import { DEFAULT_BUSINESS_LOGIN_REDIRECT } from "@/routes";
+import { errorType } from "@/actions/_utils/types.type";
 
 type mode = "view" | "edit";
 
-const handler = async (
-  user: User,
-  { id, mode = "view" }: { id: string; mode?: mode }
-) => {
+type paramsType = { id: string; mode?: mode };
+
+const handler = async (user: User, { id, mode = "view" }: paramsType) => {
   try {
     const data = await db.query.invoices.findFirst({
       where: and(
@@ -26,7 +28,7 @@ const handler = async (
     });
 
     if (mode === "edit" && data?.status !== "draft") {
-      return { success: false, error: "Unable to update invoice" };
+      return { success: false, error: "Unable to update invoice" } as errorType;
     } else {
       return { success: true as true, data: stringifyBigint(data) };
     }
@@ -35,8 +37,19 @@ const handler = async (
   }
 };
 
-export const getInvoiceDetail: (params: {
-  id: string;
-  mode?: mode;
-}) => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateBusinessToken(handler);
+const getInvoiceDetailHandler = async (
+  user: User,
+  { id, mode = "view" }: paramsType
+) => {
+  const res = await handler(user, { id, mode });
+
+  if (mode === "edit" && !res.success) {
+    redirect("/business/invoices");
+  }
+  return res;
+};
+
+export const getInvoiceDetail: (
+  params: paramsType
+) => Promise<Awaited<ReturnType<typeof getInvoiceDetailHandler>>> =
+  validateBusinessToken(getInvoiceDetailHandler);

@@ -261,10 +261,10 @@ const InvoicePdf = (props) => {
             <span style={values}>{address}</span>
             <span style={values}>({contact})</span>
           </div>
-          <div style={{ width: "200px" }}>
+          <div style={{ width: "240px" }}>
             <div style={{ width: "fit-content", marginLeft: "auto" }}>
               <div style={invoiceDetail}>
-                <span style={invoiceIdStyle} >INV - #{invoiceId.substring(invoiceId.length - 5)}</span>
+                <span style={invoiceIdStyle} >INV - #{invoiceId}</span>
                 <span style={subtitle} >Invoice Number</span>
               </div>
               <div style={customerDetail}>
@@ -313,7 +313,7 @@ const InvoicePdf = (props) => {
 
         <div style={footerWrapper}>
           <div style={notes}>
-            {invoice?.notes.trim() ? <><span style={{ ...title, marginBottom: "5px" }} >Notes</span>
+            {invoice?.notes?.trim() ? <><span style={{ ...title, marginBottom: "5px" }} >Notes</span>
               <span style={values} >{invoice?.notes}</span> </> : <div></div>}
           </div>
           <div style={priceSummary}>
