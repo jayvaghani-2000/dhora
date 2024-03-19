@@ -89,13 +89,7 @@ const handler = async (user: User, params: paramsType) => {
 
     const session = await stripe.paymentLinks.create(
       {
-        payment_method_types: [
-          "card",
-          "affirm",
-          "klarna",
-          "afterpay_clearpay",
-          "us_bank_account",
-        ],
+        payment_method_types: ["card", "affirm", "klarna", "us_bank_account"],
         line_items: prices.map((price, index) => {
           return {
             price: price.id,
