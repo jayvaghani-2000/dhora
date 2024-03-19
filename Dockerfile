@@ -4,7 +4,7 @@ ARG NODE_ENV
 FROM oven/bun:1 as install
 WORKDIR /app
 
-COPY package.json bun.lockb ./
+COPY package.json bun.lockb next.config.mjs ./
 
 RUN bun i --frozen-lockfile
 
