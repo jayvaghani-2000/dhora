@@ -17,8 +17,5 @@ export const businessDetailSchema = z.object({
   business_email: z.string().email({ message: "Enter valid email" }),
 });
 
-const detailWithLogo = businessDetailSchema.merge(
-  z.object({ logo: z.string() })
-);
 
 export const invoiceSchema = createInvoiceSchema.merge(businessDetailSchema);

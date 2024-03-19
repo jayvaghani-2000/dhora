@@ -37,7 +37,6 @@ export const users = pgTable("users", {
     .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
-
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   email_verified: timestamp("email_verified", { mode: "date" }),

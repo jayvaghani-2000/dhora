@@ -4,13 +4,30 @@ import React from "react";
 import Primary from "./_components/navbar/primary";
 import Secondary from "./_components/navbar/secondary";
 import Toolbar from "./_components/toolbar";
+import { usePathname } from "next/navigation";
+
+const routesWithoutNavbar = [
+  "/settings/details",
+  "/settings/business",
+  "/settings",
+];
 
 export default function ProtectedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  const path = usePathname();
+
+  return routesWithoutNavbar.includes(path) ? (
+    <div className="h-screen">
+      <main className="h-full flex">
+        <div className="flex-1 h-full relative bg-body-background">
+          {children}
+        </div>
+      </main>
+    </div>
+  ) : (
     <div className="h-full">
       <div className="hidden md:flex h-full w-[72px] z-30 flex-col fixed inset-y-0">
         <Primary />

@@ -13,6 +13,13 @@ import { PiPlus } from "react-icons/pi";
 import { HiOutlineBuildingOffice } from "react-icons/hi2";
 import PrimaryNavbarItem from "./components/primaryNavbarItem";
 import { usePathname } from "next/navigation";
+import { IoSettingsOutline } from "react-icons/io5";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import SettingsPopover from "./components/settingPopover";
 
 const Primary = () => {
   const dispatch = useAppDispatch();
@@ -70,13 +77,19 @@ const Primary = () => {
           </Button>
         </Link>
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
-        <Button
-          variant="ghost"
-          className="text-white p-2 h-[48px] w-[48px]"
-          onClick={handleSignOut}
-        >
-          Logout
-        </Button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              className="text-white p-2 h-[48px] w-[48px]"
+            >
+              <IoSettingsOutline size={32} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="max-w-[calc(100vw-20px)] w-72">
+            <SettingsPopover />
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
