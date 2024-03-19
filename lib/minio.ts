@@ -5,6 +5,7 @@ import { assetsMetadata } from "@/actions/_utils/assetsMetadata";
 
 const mc = new Minio.Client({
   endPoint: config.env.S3_HOST,
+  port: config.env.NODE_ENV == "development" ? undefined : 9000,
   accessKey: config.env.S3_ACCESS_KEY,
   secretKey: config.env.S3_SECRET_KEY,
 });
