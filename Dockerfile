@@ -28,6 +28,7 @@ RUN adduser --system --uid 1001 nextjs
 
 COPY --from=install /app/node_modules ./node_modules
 COPY --from=install /app/package.json ./package.json
+COPY --from=install /app/next.config.mjs ./next.config.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/.env ./.env
 
