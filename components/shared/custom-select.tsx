@@ -16,19 +16,24 @@ type propType = {
   }[];
   onChange: (value: string) => void;
   value?: string;
+  placeholder?: string;
+  onOpenChange?: (open: boolean) => void;
 };
 
 const CustomSelect = (props: propType) => {
-  const { onChange, options, value } = props;
+  const { onChange, options, value, placeholder, onOpenChange } = props;
   return (
     <Select
       onValueChange={value => {
         onChange(value);
       }}
       value={value ?? ""}
+      onOpenChange={open => {
+        onOpenChange && onOpenChange(open);
+      }}
     >
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a status" />
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder={placeholder ?? "Select a status"} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

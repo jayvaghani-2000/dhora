@@ -32,29 +32,31 @@ const ExtraFilters = (props: extraFilterPropType) => {
 
   return (
     <div className="flex gap-2 flex-wrap">
-      <CustomSelect
-        onChange={value => {
-          table.getColumn("status")?.setFilterValue(value);
-        }}
-        value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
-        options={[
-          {
-            label: "Completed",
-            value: "completed",
-            className: "text-green-600",
-          },
-          {
-            label: "Sent",
-            value: "sent",
-            className: "text-pink-700",
-          },
-          {
-            label: "Opened",
-            value: "opened",
-            className: "text-yellow-600",
-          },
-        ]}
-      />
+      <div className="w-[180px]">
+        <CustomSelect
+          onChange={value => {
+            table.getColumn("status")?.setFilterValue(value);
+          }}
+          value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
+          options={[
+            {
+              label: "Completed",
+              value: "completed",
+              className: "text-green-600",
+            },
+            {
+              label: "Sent",
+              value: "sent",
+              className: "text-pink-700",
+            },
+            {
+              label: "Opened",
+              value: "opened",
+              className: "text-yellow-600",
+            },
+          ]}
+        />
+      </div>
 
       <DateRangePicker
         onChange={range => {

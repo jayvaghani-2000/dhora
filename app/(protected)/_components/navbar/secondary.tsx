@@ -11,6 +11,7 @@ import {
   LiaFileContractSolid,
   LiaFileInvoiceDollarSolid,
 } from "react-icons/lia";
+import { FaRegClock } from "react-icons/fa";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 
 export const StaticOptions = [
@@ -50,6 +51,12 @@ export const StaticOptions = [
         title: "Invoices",
         icon: <LiaFileInvoiceDollarSolid />,
         path: "/business/invoices",
+      },
+      {
+        key: "availability",
+        title: "Availability",
+        icon: <FaRegClock />,
+        path: "/business/availability",
       },
     ],
   },
