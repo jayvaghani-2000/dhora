@@ -3,9 +3,12 @@ import dayjs, { ConfigType } from "@/lib/dayjs";
 import TimePicker from "./time-picker";
 import { Button } from "@/components/ui/button";
 import { GoPlus } from "react-icons/go";
-import { IoMdCopy } from "react-icons/io";
-import { initializeAvailability } from "../../_utils/initializeAvailability";
+import {
+  getDateSlotRange,
+  initializeAvailability,
+} from "../../_utils/initializeAvailability";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import CopySlots from "./copy-slots";
 
 type propType = {
   slots: ReturnType<typeof initializeAvailability>["timeSlots"][0];
@@ -20,17 +23,36 @@ type propType = {
     dayIndex: number,
     slotIndex: number
   ) => void;
+  addNewSlotToDay: (
+    dates: {
+      start: Date;
+      end: Date;
+    },
+    dayCode: number,
+    mode: "append" | "prepend"
+  ) => void;
+  handleRemoveSlot: (dayCode: number, slotId: string) => void;
+  copySlots: (sourceDayCode: number, targetSlots: number[]) => void;
 };
 
 const TimeRange = (props: propType) => {
-  const { slots, handleUpdateEndTimeSlot, handleUpdateStartTimeSlot, dayCode } =
-    props;
+  const {
+    slots,
+    handleUpdateEndTimeSlot,
+    handleUpdateStartTimeSlot,
+    addNewSlotToDay,
+    handleRemoveSlot,
+    dayCode,
+    copySlots,
+  } = props;
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {slots.map((i, index) => {
         const date = dayjs(slots[index].start_time);
         const endDate = dayjs(slots[index].end_time);
+
+        const lastEndDate = dayjs(slots[slots.length - 1].end_time);
 
         return (
           <div className="flex gap-3 items-center" key={i.id}>
@@ -53,15 +75,31 @@ const TimeRange = (props: propType) => {
             </div>
             {index === 0 ? (
               <>
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const nextSlot = getDateSlotRange(lastEndDate, date);
+                    if (nextSlot) {
+                      if (nextSlot.append) {
+                        addNewSlotToDay(nextSlot.append, dayCode, "append");
+                      } else {
+                        addNewSlotToDay(nextSlot.prepend, dayCode, "prepend");
+                      }
+                    }
+                  }}
+                >
                   <GoPlus size={18} />
                 </Button>
-                <Button variant="outline">
-                  <IoMdCopy size={18} />
-                </Button>
+
+                <CopySlots parentSlot={dayCode} copySlots={copySlots} />
               </>
             ) : (
-              <Button variant="destructive">
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  handleRemoveSlot(dayCode, i.id);
+                }}
+              >
                 <RiDeleteBin6Line size={18} />
               </Button>
             )}

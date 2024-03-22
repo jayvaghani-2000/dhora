@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   doublePrecision,
   integer,
   jsonb,
@@ -155,6 +156,8 @@ export const availability = pgTable("availability", {
   days: integer("days").array(),
   timezone: text("timezone"),
   availability: jsonb("availability").array().array(),
+  default: boolean("default"),
+  deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

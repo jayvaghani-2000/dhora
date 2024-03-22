@@ -1,5 +1,5 @@
 {
-  "id": "19df7b24-4891-483f-a28a-93fd678ccea4",
+  "id": "66c1eeea-95ef-4ca1-8307-7e9995f8a5fa",
   "prevId": "93120afb-aae5-4edd-915f-930d23ba14ee",
   "version": "5",
   "dialect": "pg",
@@ -27,11 +27,30 @@
           "primaryKey": false,
           "notNull": false
         },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "availability": {
           "name": "availability",
           "type": "jsonb[][]",
           "primaryKey": false,
           "notNull": false
+        },
+        "default": {
+          "name": "default",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",

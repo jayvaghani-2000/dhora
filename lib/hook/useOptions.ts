@@ -27,7 +27,7 @@ export const useOptions = (timeFormat: number | null) => {
         value: t.toDate().valueOf(),
         label: dayjs(t)
           .utc()
-          .format(timeFormat === 12 ? "h:mma" : "HH:mm"),
+          .format(timeFormat === 12 ? "h:mm a" : "HH:mm"),
       });
     }
     // allow 23:59
@@ -35,7 +35,7 @@ export const useOptions = (timeFormat: number | null) => {
       value: end.toDate().valueOf(),
       label: dayjs(end)
         .utc()
-        .format(timeFormat === 12 ? "h:mma" : "HH:mm"),
+        .format(timeFormat === 12 ? "h:mm a" : "HH:mm"),
     });
 
     return options;

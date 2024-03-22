@@ -2,35 +2,43 @@ import { createAvailabilitySchemaType } from "@/actions/_utils/types.type";
 import { weekDays } from "@/lib/constant";
 import { daysCode } from "@/lib/enum";
 import { v4 as uuid } from "uuid";
+import dayjs, { ConfigType } from "@/lib/dayjs";
+import { timeZone } from "@/lib/common";
 
-export const formattedStartTime = (startTime: Date) =>
-  startTime.getFullYear() +
-  "-" +
-  ("0" + (startTime.getMonth() + 1)).slice(-2) +
-  "-" +
-  ("0" + startTime.getDate()).slice(-2) +
-  "T" +
-  ("0" + startTime.getHours()).slice(-2) +
-  ":" +
-  ("0" + startTime.getMinutes()).slice(-2) +
-  ":" +
-  ("0" + startTime.getSeconds()).slice(-2) +
-  "." +
-  ("00" + startTime.getMilliseconds()).slice(-3) +
-  "Z";
+export const localTime = (value: string | Date | number) => {
+  return dayjs(new Date(value), {
+    locale: timeZone,
+  })
+    .utc()
+    .format();
+};
+
+export const localTimeValue = (value: ConfigType) => {
+  const date = dayjs(value);
+  const seconds = date.get("seconds");
+
+  if (seconds === 59) {
+    return date.utc().add(999, "milliseconds").toDate().valueOf();
+  } else {
+    return date.utc().toDate().valueOf();
+  }
+};
 
 export const generateStartTime = (hour: number, min: number) => {
-  const startTime = new Date();
-  startTime.setHours(hour, min, 0, 0);
+  let startTime = dayjs().utc().startOf("day");
 
-  return formattedStartTime(startTime);
+  startTime = startTime.add(hour, "hours");
+  startTime = startTime.add(min, "minutes");
+
+  return localTime(startTime.toDate().valueOf());
 };
 
 export const generateEndTime = (hour: number, min: number) => {
-  const endTime = new Date();
-  endTime.setHours(hour, min, 0, 0);
+  let endTime = dayjs().utc().startOf("day");
+  endTime = endTime.add(hour, "hours");
+  endTime = endTime.add(min, "minutes");
 
-  return formattedStartTime(endTime);
+  return localTime(endTime.toDate().valueOf());
 };
 
 export const initializeAvailability = () => {
@@ -56,4 +64,46 @@ export const initializeAvailability = () => {
       : []
   );
   return { days, timeSlots };
+};
+
+export const getDateSlotRange = (
+  endField?: ConfigType,
+  startField?: ConfigType
+) => {
+  const timezoneStartRange = dayjs(localTimeValue(startField)).utc();
+  const nextRangeStart = dayjs(localTimeValue(endField)).utc();
+  const nextRangeEnd =
+    nextRangeStart.hour() === 23
+      ? dayjs(nextRangeStart)
+          .add(59, "minutes")
+          .add(59, "seconds")
+          .add(999, "milliseconds")
+      : dayjs(nextRangeStart).add(1, "hour");
+
+  const endOfDay = nextRangeStart.endOf("day");
+
+  if (!nextRangeStart.isSame(endOfDay)) {
+    return {
+      append: {
+        start: nextRangeStart.toDate(),
+        end: nextRangeEnd.isAfter(endOfDay)
+          ? endOfDay.toDate()
+          : nextRangeEnd.toDate(),
+      },
+    };
+  }
+
+  const previousRangeStart = dayjs(startField).subtract(1, "hour");
+  const startOfDay = timezoneStartRange.startOf("day");
+
+  if (!timezoneStartRange.isSame(startOfDay)) {
+    return {
+      prepend: {
+        start: previousRangeStart.isBefore(startOfDay)
+          ? startOfDay.toDate()
+          : previousRangeStart.toDate(),
+        end: timezoneStartRange.toDate(),
+      },
+    };
+  }
 };
