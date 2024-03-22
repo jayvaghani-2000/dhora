@@ -4,7 +4,7 @@ import {
   invoiceStatusTypes,
 } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
-import { formatAmount, formatDate, invoiceStatusClass } from "@/lib/common";
+import { formatAmount, formatDate } from "@/lib/common";
 import React from "react";
 import { CustomTable } from "@/components/shared/custom-table";
 import { Checkbox } from "@/components/ui/checkbox";
