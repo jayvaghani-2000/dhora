@@ -107,3 +107,16 @@ export const getDateSlotRange = (
     };
   }
 };
+
+export const getTimeFromDate = (date: string) => {
+  return dayjs(date).utc().format("h:mm a");
+};
+export const getDateFromTime = (time: string) => {
+  let date = dayjs(time, "h:mm a");
+  const minutes = date.get("minutes");
+  if (minutes === 59) {
+    date = date.add(59, "seconds").add(999, "milliseconds");
+  }
+
+  return date.format("YYYY-MM-DDTHH:mm:ss[Z]");
+};

@@ -14,18 +14,16 @@ import { v4 as uuid } from "uuid";
 import { cloneDeep, uniq } from "lodash";
 
 type propType = {
-  data: ReturnType<typeof initializeAvailability>;
+  days: daysCode[];
+  setDays: React.Dispatch<React.SetStateAction<daysCode[]>>;
+  timeSlots: ReturnType<typeof initializeAvailability>["timeSlots"];
+  setTimeSlots: React.Dispatch<
+    React.SetStateAction<ReturnType<typeof initializeAvailability>["timeSlots"]>
+  >;
 };
 
 const TimeSlot = (props: propType) => {
-  const { data } = props;
-
-  const { days: activeDays, timeSlots: selectedSlots } = data;
-
-  const [days, setDays] = useState(activeDays);
-  const [timeSlots, setTimeSlots] = useState(selectedSlots);
-
-  console.log("timeSlots", timeSlots);
+  const { days, timeSlots, setDays, setTimeSlots } = props;
 
   const activateDayToggle = (checked: boolean, dayCode: number) => {
     if (checked) {

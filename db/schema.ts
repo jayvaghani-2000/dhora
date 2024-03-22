@@ -153,6 +153,7 @@ export const availability = pgTable("availability", {
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)
     .notNull(),
+  name: text("name"),
   days: integer("days").array(),
   timezone: text("timezone"),
   availability: jsonb("availability").array().array(),

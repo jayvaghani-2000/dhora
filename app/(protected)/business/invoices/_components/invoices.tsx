@@ -7,7 +7,6 @@ import { ColumnDef, Table } from "@tanstack/react-table";
 import { formatAmount, formatDate } from "@/lib/common";
 import React from "react";
 import { CustomTable } from "@/components/shared/custom-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown } from "lucide-react";
 import { isWithinInterval } from "date-fns";
 import { DateRangePicker } from "@/components/shared/range-picker";
