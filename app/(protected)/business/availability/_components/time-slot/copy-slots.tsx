@@ -37,7 +37,7 @@ const CopySlots = (prop: propType) => {
       }}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="h-fit p-2">
           <IoMdCopy size={18} />
         </Button>
       </PopoverTrigger>

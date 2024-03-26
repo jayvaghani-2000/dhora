@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS "availability" (
 	"id" bigint PRIMARY KEY DEFAULT public.id_generator() NOT NULL,
 	"business_id" bigint NOT NULL,
+	"name" text,
 	"days" integer[],
 	"timezone" text,
-	"availability" jsonb[][],
+	"availability" jsonb,
 	"default" boolean,
 	"deleted" boolean DEFAULT false,
 	"created_at" timestamp DEFAULT now() NOT NULL,

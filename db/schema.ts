@@ -156,7 +156,7 @@ export const availability = pgTable("availability", {
   name: text("name"),
   days: integer("days").array(),
   timezone: text("timezone"),
-  availability: jsonb("availability").array().array(),
+  availability: jsonb("availability"),
   default: boolean("default"),
   deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),

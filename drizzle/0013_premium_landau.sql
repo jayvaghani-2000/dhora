@@ -1,1 +1,0 @@
-ALTER TABLE "availability" ADD COLUMN "name" text;

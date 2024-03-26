@@ -55,8 +55,8 @@ const TimeRange = (props: propType) => {
         const lastEndDate = dayjs(slots[slots.length - 1].end_time);
 
         return (
-          <div className="flex gap-3 items-center" key={i.id}>
-            <div className="flex gap-2 items-center">
+          <div className="flex gap-1 lg:gap-3 items-center" key={i.id}>
+            <div className="flex gap-1 lg:gap-2 items-center">
               <TimePicker
                 value={date}
                 max={endDate}
@@ -77,6 +77,7 @@ const TimeRange = (props: propType) => {
               <>
                 <Button
                   variant="outline"
+                  className="h-fit p-2"
                   onClick={() => {
                     const nextSlot = getDateSlotRange(lastEndDate, date);
                     if (nextSlot) {
@@ -96,6 +97,7 @@ const TimeRange = (props: propType) => {
             ) : (
               <Button
                 variant="destructive"
+                className="h-fit p-2"
                 onClick={() => {
                   handleRemoveSlot(dayCode, i.id);
                 }}

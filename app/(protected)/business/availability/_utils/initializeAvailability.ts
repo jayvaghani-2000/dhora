@@ -1,9 +1,10 @@
-import { createAvailabilitySchemaType } from "@/actions/_utils/types.type";
+import { createAvailabilitySchemaType, getAvailabilityType } from "@/actions/_utils/types.type";
 import { weekDays } from "@/lib/constant";
 import { daysCode } from "@/lib/enum";
 import { v4 as uuid } from "uuid";
 import dayjs, { ConfigType } from "@/lib/dayjs";
 import { timeZone } from "@/lib/common";
+import { nameOfDay } from "@/lib/weekday";
 
 export const localTime = (value: string | Date | number) => {
   return dayjs(new Date(value), {
@@ -111,6 +112,7 @@ export const getDateSlotRange = (
 export const getTimeFromDate = (date: string) => {
   return dayjs(date).utc().format("h:mm a");
 };
+
 export const getDateFromTime = (time: string) => {
   let date = dayjs(time, "h:mm a");
   const minutes = date.get("minutes");
@@ -120,3 +122,67 @@ export const getDateFromTime = (time: string) => {
 
   return date.format("YYYY-MM-DDTHH:mm:ss[Z]");
 };
+
+export const getTimeSlotsFromDate = (
+  timeSlot: ReturnType<typeof initializeAvailability>["timeSlots"]
+) => {
+  return timeSlot.map(i =>
+    i.map(j => ({
+      start_time: getTimeFromDate(j.start_time),
+      end_time: getTimeFromDate(j.end_time),
+    }))
+  );
+};
+export const getTimeSlotsFromTime = (
+  timeSlot: createAvailabilitySchemaType["availability"]
+) => {
+  return timeSlot.map(i =>
+    i.map(j => ({
+      start_time: getDateFromTime(j.start_time),
+      end_time: getDateFromTime(j.end_time),
+      id: uuid(),
+    }))
+  );
+};
+
+export function availabilityAsString(
+  availability: NonNullable<getAvailabilityType["data"]>[0],
+  { locale, hour12 }: { locale?: string; hour12?: boolean }
+) {
+  const weekSpan = (
+    availability: NonNullable<getAvailabilityType["data"]>[0]
+  ) => {
+    const days = availability
+      .days!.sort()
+      .slice(1)
+      .reduce(
+        (days, day) => {
+          if (
+            days[days.length - 1].length === 1 &&
+            days[days.length - 1][0] === day - 1
+          ) {
+            // append if the range is not complete (but the next day needs adding)
+            days[days.length - 1].push(day);
+          } else if (
+            days[days.length - 1][days[days.length - 1].length - 1] ===
+            day - 1
+          ) {
+            // range complete, overwrite if the last day directly preceeds the current day
+            days[days.length - 1] = [days[days.length - 1][0], day];
+          } else {
+            // new range
+            days.push([day]);
+          }
+          return days;
+        },
+        [[availability.days![0]]] as number[][]
+      );
+    return days
+      .map(dayRange =>
+        dayRange.map(day => nameOfDay(locale, day, "short")).join(" - ")
+      )
+      .join(", ");
+  };
+
+  return `${weekSpan(availability)}`;
+}

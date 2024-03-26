@@ -19,7 +19,7 @@ const TimePicker = ({ value, max, min, onChange }: propType) => {
   }, [filter]);
 
   return (
-    <div className="w-[130px]">
+    <div className="w-[105px]">
       <CustomSelect
         onChange={value => {
           onChange(+value);
@@ -32,6 +32,7 @@ const TimePicker = ({ value, max, min, onChange }: propType) => {
             filter({ current: value });
           }
         }}
+        className="px-1"
         placeholder="Select time"
         value={options
           .find(option => option.value === localTimeValue(value))

@@ -9,6 +9,8 @@ import { z } from "zod";
 import { getInvoiceDetail } from "../(protected)/invoices/getInvoiceDetail";
 import { getInvoiceInfo } from "../(protected)/stripe/checkout";
 import { NotNull } from "drizzle-orm";
+import { getAvailabilityDetail } from "../(protected)/availability/getAvailabilityDetail";
+import { getAvailability } from "../(protected)/availability/getAvailability";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -38,6 +40,12 @@ export type createAvailabilitySchemaType = z.infer<
 >;
 export type getInvoiceInfoType = NonNullable<
   Awaited<ReturnType<typeof getInvoiceInfo>>
+>;
+export type getAvailabilityDetailType = NonNullable<
+  Awaited<ReturnType<typeof getAvailabilityDetail>>
+>;
+export type getAvailabilityType = NonNullable<
+  Awaited<ReturnType<typeof getAvailability>>
 >;
 
 export type businessTypes =

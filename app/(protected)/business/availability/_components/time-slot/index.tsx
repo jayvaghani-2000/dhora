@@ -63,8 +63,9 @@ const TimeSlot = (props: propType) => {
     slotIndex: number
   ) => {
     setTimeSlots(prev => {
-      const updatedSlot = { ...prev };
+      const updatedSlot = cloneDeep(prev);
       updatedSlot[dayCode][slotIndex].start_time = localTime(value);
+
       return updatedSlot;
     });
   };
@@ -75,7 +76,7 @@ const TimeSlot = (props: propType) => {
     slotIndex: number
   ) => {
     setTimeSlots(prev => {
-      const updatedSlot = { ...prev };
+      const updatedSlot = cloneDeep(prev);
       updatedSlot[dayCode][slotIndex].end_time = localTime(value);
       return updatedSlot;
     });
@@ -131,11 +132,11 @@ const TimeSlot = (props: propType) => {
   };
 
   return (
-    <div className="flex-1 p-4 border border-input rounded-lg flex gap-5 flex-col">
+    <div className="flex-1 p-2 lg:p-4 border border-input rounded-lg flex gap-5 flex-col">
       {weekDays.map((i: keyof typeof daysCode) => {
         const isActiveDay = days.includes(daysCode[i]);
         return (
-          <div key={i} className="flex">
+          <div key={i} className="flex flex-col lg:flex-row">
             <div className="w-[140px] h-10  flex items-center space-x-2">
               <Switch
                 id={`${i}switch`}

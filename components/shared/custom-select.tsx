@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 type propType = {
   options: {
@@ -18,10 +19,18 @@ type propType = {
   value?: string;
   placeholder?: string;
   onOpenChange?: (open: boolean) => void;
+  className?: string;
 };
 
 const CustomSelect = (props: propType) => {
-  const { onChange, options, value, placeholder, onOpenChange } = props;
+  const {
+    onChange,
+    options,
+    value,
+    placeholder,
+    onOpenChange,
+    className = "w-full",
+  } = props;
   return (
     <Select
       onValueChange={value => {
@@ -32,7 +41,7 @@ const CustomSelect = (props: propType) => {
         onOpenChange && onOpenChange(open);
       }}
     >
-      <SelectTrigger className="w-full">
+      <SelectTrigger className={cn("w-full ", className)}>
         <SelectValue placeholder={placeholder ?? "Select a status"} />
       </SelectTrigger>
       <SelectContent>

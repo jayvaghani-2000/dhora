@@ -1,16 +1,8 @@
 import React from "react";
-import {
-  useTimezoneSelect,
-  allTimezones,
-  ITimezoneOption,
-} from "react-timezone-select";
+import { ITimezoneOption } from "react-timezone-select";
 import CustomSelect from "./custom-select";
 import { handleTimezoneOptionLabel } from "@/lib/common";
-
-const labelStyle = "original";
-const timezones = {
-  ...allTimezones,
-};
+import { useTimezone } from "@/lib/hook/useTimezone";
 
 type propType = {
   value: string;
@@ -19,10 +11,7 @@ type propType = {
 
 const TimezoneSelect = (prop: propType) => {
   const { value, onChange } = prop;
-  const { options, parseTimezone } = useTimezoneSelect({
-    labelStyle,
-    timezones,
-  });
+  const { options, parseTimezone } = useTimezone();
 
   return (
     <CustomSelect

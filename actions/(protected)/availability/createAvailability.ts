@@ -6,6 +6,7 @@ import { availability, createAvailabilitySchema } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
+import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (
   user: User,
@@ -20,10 +21,13 @@ const handler = async (
       })
       .returning();
 
-    return { success: true, data: data };
+    return { success: true as true, data: stringifyBigint(data[0]) };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const createAvailability = validateBusinessToken(handler);
+export const createAvailability: (
+  values: z.infer<typeof createAvailabilitySchema>
+) => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

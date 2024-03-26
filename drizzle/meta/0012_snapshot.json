@@ -1,5 +1,5 @@
 {
-  "id": "66c1eeea-95ef-4ca1-8307-7e9995f8a5fa",
+  "id": "ba65439b-4946-49c7-9dff-834965f8e051",
   "prevId": "93120afb-aae5-4edd-915f-930d23ba14ee",
   "version": "5",
   "dialect": "pg",
@@ -21,6 +21,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "days": {
           "name": "days",
           "type": "integer[]",
@@ -35,7 +41,7 @@
         },
         "availability": {
           "name": "availability",
-          "type": "jsonb[][]",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
