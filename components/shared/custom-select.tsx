@@ -1,4 +1,4 @@
-import React, { HTMLProps } from "react";
+import { HTMLProps } from "react";
 import {
   Select,
   SelectContent,
@@ -20,6 +20,7 @@ type propType = {
   placeholder?: string;
   onOpenChange?: (open: boolean) => void;
   className?: string;
+  contentClassName?: string;
 };
 
 const CustomSelect = (props: propType) => {
@@ -30,6 +31,7 @@ const CustomSelect = (props: propType) => {
     placeholder,
     onOpenChange,
     className = "w-full",
+    contentClassName = "",
   } = props;
   return (
     <Select
@@ -44,7 +46,7 @@ const CustomSelect = (props: propType) => {
       <SelectTrigger className={cn("w-full ", className)}>
         <SelectValue placeholder={placeholder ?? "Select a status"} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className={cn("max-w-[90dvw]", contentClassName)}>
         <SelectGroup>
           {options.map(i => (
             <SelectItem key={i.value} value={i.value} className={i.className}>

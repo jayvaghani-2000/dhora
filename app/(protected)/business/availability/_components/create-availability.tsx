@@ -11,12 +11,11 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTimezone } from "@/lib/hook/useTimezone";
 import {
   getTimeSlotsFromDate,
   initializeAvailability,
 } from "../_utils/initializeAvailability";
-import { timeZone } from "@/lib/common";
+import { parseTimezone, timeZone } from "@/lib/common";
 import { createAvailability } from "@/actions/(protected)/availability/createAvailability";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { useRouter } from "next/navigation";
@@ -35,7 +34,6 @@ type propType = {
 const CreateAvailability = (props: propType) => {
   const { open, setOpen } = props;
   const navigate = useRouter();
-  const { options, parseTimezone } = useTimezone();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -54,7 +52,7 @@ const CreateAvailability = (props: propType) => {
   const handleSubmit = async (value: z.infer<typeof formSchema>) => {
     setLoading(true);
     const data = initializeAvailability();
-    const userTimeZone = parseTimezone(timeZone).value;
+    const userTimeZone = parseTimezone(timeZone);
 
     const res = await createAvailability({
       ...value,

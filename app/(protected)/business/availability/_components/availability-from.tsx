@@ -6,7 +6,6 @@ import {
   getTimeSlotsFromTime,
 } from "../_utils/initializeAvailability";
 import TimezoneSelect from "@/components/shared/timezone-select";
-import { ITimezoneOption } from "react-timezone-select";
 import AvailabilityHeader from "./availability-header";
 import {
   createAvailabilitySchemaType,
@@ -45,8 +44,8 @@ const AvailabilityForm = (props: propType) => {
     )
   );
 
-  const handleChangeTimezone = (value: ITimezoneOption) => {
-    setTimeZone(value.value);
+  const handleChangeTimezone = (value: string) => {
+    setTimeZone(value);
   };
 
   const handleUpdateAvailability = async () => {

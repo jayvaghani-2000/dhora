@@ -1,27 +1,30 @@
 import React from "react";
-import { ITimezoneOption } from "react-timezone-select";
 import CustomSelect from "./custom-select";
-import { handleTimezoneOptionLabel } from "@/lib/common";
-import { useTimezone } from "@/lib/hook/useTimezone";
+import { getTimeZones } from "@vvo/tzdb";
+import { parseTimezone } from "@/lib/common";
 
 type propType = {
   value: string;
-  onChange: (value: ITimezoneOption) => void;
+  onChange: (value: string) => void;
 };
 
 const TimezoneSelect = (prop: propType) => {
   const { value, onChange } = prop;
-  const { options, parseTimezone } = useTimezone();
+
+  const timeZonesWithUtc = getTimeZones({ includeUtc: true });
+
+  const options = timeZonesWithUtc.map(i => ({
+    label: `${i.name.replace(/_/g, " ")} (${i.rawFormat.split(" ")[0]}) ${i.mainCities[0]}${i.mainCities[1] ? `, ${i.mainCities[1]}` : ""}`,
+    value: i.name,
+  }));
 
   return (
     <CustomSelect
-      onChange={value => onChange(parseTimezone(value))}
+      onChange={value => onChange(value)}
       placeholder="Select timezone"
-      options={options.map(i => ({
-        label: handleTimezoneOptionLabel(i),
-        value: i.value.toString(),
-      }))}
-      value={parseTimezone(value).value}
+      options={options}
+      value={parseTimezone(value)}
+      contentClassName="min-w-[300px]"
     />
   );
 };

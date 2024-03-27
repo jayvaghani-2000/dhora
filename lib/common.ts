@@ -3,8 +3,7 @@ import { format } from "date-fns";
 import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
 import { invoiceStatusTypes } from "@/actions/_utils/types.type";
-import { ITimezoneOption } from "react-timezone-select";
-import dayjs from "./dayjs";
+import { getTimeZones } from "@vvo/tzdb";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -102,16 +101,8 @@ export const invoiceStatusColor = (status: invoiceStatusTypes) =>
 
 export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-const timezoneFormatOffset = (offset: string) =>
-  offset.replace(
-    /^([-+])(0)(\d):00$/,
-    (_, sign, _zero, hour) => `${sign}${hour}:00`
-  );
+export const parseTimezone = (timeZone: string) => {
+  const timeZonesWithUtc = getTimeZones({ includeUtc: true });
 
-export const handleTimezoneOptionLabel = (option: ITimezoneOption) => {
-  const cityName = option.label.split(") ")[1];
-
-  const timezoneValue = ` (${timezoneFormatOffset(dayjs.tz(undefined, option.value).format("Z"))}) ${cityName}`;
-
-  return `${option.value.replace(/_/g, " ")}${timezoneValue}`;
+  return timeZonesWithUtc.find(i => i.group.includes(timeZone))?.name;
 };
