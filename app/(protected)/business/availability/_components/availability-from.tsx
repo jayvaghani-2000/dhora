@@ -13,7 +13,7 @@ import {
   getAvailabilityDetailType,
 } from "@/actions/_utils/types.type";
 import { updateAvailability } from "@/actions/(protected)/availability/updateAvailability";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
 

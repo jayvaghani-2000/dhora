@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import { deleteAvailability } from "@/actions/(protected)/availability/deleteAvailability";
 import { getAvailabilityDetailType } from "@/actions/_utils/types.type";
 import { availabilityAsString } from "../_utils/initializeAvailability";
+import BackButton from "@/components/shared/back-button";
 
 type propType = {
   handleUpdateAvailability: () => void;
@@ -45,84 +46,88 @@ const AvailabilityHeader = (props: propType) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 lg:flex-row justify-between lg:items-center">
-      <div className="flex flex-col gap-1">
-        <div className="flex gap-1 items-center">
-          <div className="relative w-min ">
-            <span className="invisible whitespace-pre	px-1 ">{name}</span>
-            <input
-              value={name}
-              ref={inputRef}
-              onBlur={() => {
-                setHideEditIcon(false);
-              }}
-              onFocus={() => {
-                setHideEditIcon(true);
-              }}
-              className="absolute left-0 p-0 w-full font-semibold border-none outline-none bg-transparent max-w-fit"
-              onChange={e => setName(e.target.value)}
-            ></input>
+    <div className="flex gap-2 ">
+      <BackButton to="/business/availability" icon={true} />
+
+      <div className="flex flex-col flex-1 gap-1 lg:flex-row justify-between lg:items-center">
+        <div className="flex flex-col gap-1">
+          <div className="flex gap-1 items-center">
+            <div className="relative w-min ">
+              <span className="invisible whitespace-pre	px-1 ">{name}</span>
+              <input
+                value={name}
+                ref={inputRef}
+                onBlur={() => {
+                  setHideEditIcon(false);
+                }}
+                onFocus={() => {
+                  setHideEditIcon(true);
+                }}
+                className="absolute left-0 p-0 w-full font-semibold border-none outline-none bg-transparent max-w-fit"
+                onChange={e => setName(e.target.value)}
+              ></input>
+            </div>
+            {!hideEditIcon ? (
+              <Button
+                variant="link"
+                className="p-0 h-fit"
+                onClick={() => {
+                  inputRef.current.focus();
+                  setHideEditIcon(true);
+                }}
+              >
+                <MdEdit size={18} color="#b6b6b6" />
+              </Button>
+            ) : null}
           </div>
-          {!hideEditIcon ? (
-            <Button
-              variant="link"
-              className="p-0 h-fit"
-              onClick={() => {
-                inputRef.current.focus();
-                setHideEditIcon(true);
-              }}
+          <div className="flex flex-col  text-secondary-light-gray">
+            {availabilityAsString(availabilityDetail!, {
+              locale: "en",
+              hour12: true,
+            }).map(i => (
+              <span className="text-xs text-secondary-light-gray" key={i}>
+                {i}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center space-x-2">
+            <Label
+              htmlFor={`set_as_default`}
+              className="font-semibold cursor-pointer"
             >
-              <MdEdit size={18} color="#b6b6b6" />
-            </Button>
-          ) : null}
-        </div>
-        <div className="flex flex-col  text-secondary-light-gray">
-          {availabilityAsString(availabilityDetail!, {
-            locale: "en",
-            hour12: true,
-          }).map(i => (
-            <span className="text-xs text-secondary-light-gray" key={i}>
-              {i}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="flex gap-2 items-center">
-        <div className="flex items-center space-x-2">
-          <Label
-            htmlFor={`set_as_default`}
-            className="font-semibold cursor-pointer"
-          >
-            Set to Default
-          </Label>
-          <Switch
-            id={`set_as_default`}
-            disabled={alreadyDefault}
-            checked={isDefault}
-            onCheckedChange={checked => {
-              setIsDefault(checked);
+              Set to Default
+            </Label>
+            <Switch
+              id={`set_as_default`}
+              disabled={alreadyDefault}
+              checked={isDefault}
+              onCheckedChange={checked => {
+                setIsDefault(checked);
+              }}
+            />
+          </div>
+          <Separator orientation="vertical" className="w-0.5 h-8" />
+          <Button
+            variant="outline"
+            className="p-1 h-[28px]"
+            disabled={deleting}
+            onClick={() => {
+              handleDeleteAvailability();
             }}
-          />
+          >
+            <RiDeleteBin6Line size={18} color="#b6b6b6" />
+          </Button>
+          <Separator orientation="vertical" className="w-0.5 h-8" />
+          <Button
+            onClick={handleUpdateAvailability}
+            disabled={loading || deleting}
+            className="h-fit lg:h-auto"
+          >
+            Save {loading && <Spinner type="inline" />}
+          </Button>
         </div>
-        <Separator orientation="vertical" className="w-0.5 h-8" />
-        <Button
-          variant="outline"
-          className="p-1 h-[28px]"
-          disabled={deleting}
-          onClick={() => {
-            handleDeleteAvailability();
-          }}
-        >
-          <RiDeleteBin6Line size={18} color="#b6b6b6" />
-        </Button>
-        <Separator orientation="vertical" className="w-0.5 h-8" />
-        <Button
-          onClick={handleUpdateAvailability}
-          disabled={loading || deleting}
-          className="h-fit lg:h-auto"
-        >
-          Save {loading && <Spinner type="inline" />}
-        </Button>
       </div>
     </div>
   );

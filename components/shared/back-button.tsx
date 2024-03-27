@@ -1,10 +1,10 @@
 import React from "react";
-import { MdArrowBackIos } from "react-icons/md";
+import { IoChevronBack } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { revalidate } from "@/actions/(public)/revalidate";
 
-const BackButton = ({ to }: { to?: string }) => {
+const BackButton = ({ to, icon = false }: { to?: string; icon?: boolean }) => {
   const router = useRouter();
   return (
     <Button
@@ -16,9 +16,10 @@ const BackButton = ({ to }: { to?: string }) => {
           router.back();
         }
       }}
+      className="p-2 h-fit lg:px-4 "
     >
-      <MdArrowBackIos />
-      <span>Back</span>
+      <IoChevronBack />
+      {!icon ? <span>Back</span> : null}
     </Button>
   );
 };

@@ -11,8 +11,8 @@ export default async function InvoicesPage() {
     <div>
       <div className="text-right">
         <Link href="/business/invoices/generate" className="w-fit inline-block">
-          <Button className="flex gap-1 items-center">
-            <LiaPlusSolid size={14} className="text-black" /> Create Invoice
+          <Button className="flex gap-1 items-center p-2 h-fit lg:px-2">
+            <LiaPlusSolid size={14} className=" text-black" /> Create Invoice
           </Button>
         </Link>
       </div>

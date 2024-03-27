@@ -78,20 +78,20 @@ const InvoicePreview = ({
         <div className="flex justify-end gap-4">
           <Button
             variant="outline"
-            className="py-1 px-2 gap-1"
+            className="p-2 h-fit lg:px-2 gap-1"
             onClick={handlePrintFile}
             disabled={isDraft}
           >
             <IoPrintOutline className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />{" "}
-            <span className="text-sm lg:text-base">Print</span>
+            <span>Print</span>
           </Button>
           <Button
-            className="py-1 px-2 gap-1"
+            className="p-2 h-fit lg:px-2 gap-1"
             onClick={handleSaveInvoice}
             disabled={isDraft}
           >
             <FiDownload className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />{" "}
-            <span className="text-sm lg:text-base">Download</span>
+            <span>Download</span>
           </Button>
         </div>
       </div>

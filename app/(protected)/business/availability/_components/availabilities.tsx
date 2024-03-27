@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import { useState } from "react";
 import { PiPlus } from "react-icons/pi";
 import CreateAvailability from "./create-availability";
 import { getAvailabilityType } from "@/actions/_utils/types.type";
