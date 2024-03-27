@@ -79,6 +79,7 @@ const AvailabilityForm = (props: propType) => {
         setName={setName}
         setIsDefault={setIsDefault}
         alreadyDefault={isAvailabilityDefault ?? false}
+        availabilityDetail={availabilityDetail}
       />
       <div className="flex gap-5 flex-col lg:flex-row">
         <TimeSlot

@@ -26,9 +26,9 @@ const AvailabilityCard = (props: propType) => {
   };
 
   return (
-    <div className="flex gap-2 border border-gray1 rounded-md p-2 items-center">
+    <div className="flex gap-2 border border-gray1 first:rounded-t-md last:rounded-b-md p-2 lg:p-4 items-center">
       <div className="flex-1 flex flex-col gap-0.5">
-        <div className="text-sm md:text-base font-semibold">
+        <div className="text-sm md:text-base font-semibold flex gap-1">
           {name}{" "}
           {isDefault && (
             <Badge className="bg-green-800 hover:bg-green-900 text-white">
@@ -36,8 +36,15 @@ const AvailabilityCard = (props: propType) => {
             </Badge>
           )}
         </div>
-        <div className="flex items-center gap-1 text-xs md:text-sm text-secondary-light-gray">
-          {availabilityAsString(availability, { locale: "en", hour12: true })}
+        <div className="flex flex-col  text-secondary-light-gray">
+          {availabilityAsString(availability, {
+            locale: "en",
+            hour12: true,
+          }).map(i => (
+            <span className="text-xs text-secondary-light-gray" key={i}>
+              {i}
+            </span>
+          ))}
         </div>
         <div className="flex items-center gap-1 text-xs md:text-sm text-secondary-light-gray">
           <IoIosGlobe className="h-5 md:h-6 w-5 md:w-6" />

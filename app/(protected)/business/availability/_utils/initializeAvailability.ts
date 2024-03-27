@@ -1,4 +1,8 @@
-import { createAvailabilitySchemaType, getAvailabilityType } from "@/actions/_utils/types.type";
+import {
+  createAvailabilitySchemaType,
+  getAvailabilityDetailType,
+  getAvailabilityType,
+} from "@/actions/_utils/types.type";
 import { weekDays } from "@/lib/constant";
 import { daysCode } from "@/lib/enum";
 import { v4 as uuid } from "uuid";
@@ -145,15 +149,36 @@ export const getTimeSlotsFromTime = (
   );
 };
 
+type availabilitySummary = {
+  [key: string]: number[];
+};
+
 export function availabilityAsString(
-  availability: NonNullable<getAvailabilityType["data"]>[0],
+  availability:
+    | NonNullable<getAvailabilityType["data"]>[0]
+    | NonNullable<getAvailabilityDetailType["data"]>,
   { locale, hour12 }: { locale?: string; hour12?: boolean }
 ) {
-  const weekSpan = (
-    availability: NonNullable<getAvailabilityType["data"]>[0]
-  ) => {
-    const days = availability
-      .days!.sort()
+  const setAvailability =
+    availability.availability as createAvailabilitySchemaType["availability"];
+
+  const resultArray = setAvailability.reduce((prev, dayAvailability, index) => {
+    dayAvailability.reduce((innerPrev, availability) => {
+      const key = `${availability.start_time} - ${availability.end_time}`;
+
+      if (key in innerPrev) {
+        innerPrev[key] = [...innerPrev[key], index];
+      } else {
+        innerPrev[key] = [index];
+      }
+      return innerPrev;
+    }, prev as availabilitySummary);
+    return prev;
+  }, {} as availabilitySummary);
+
+  const weekSpan = (matchDays: number[]) => {
+    const days = matchDays
+      .sort()
       .slice(1)
       .reduce(
         (days, day) => {
@@ -175,7 +200,7 @@ export function availabilityAsString(
           }
           return days;
         },
-        [[availability.days![0]]] as number[][]
+        [[matchDays[0]]] as number[][]
       );
     return days
       .map(dayRange =>
@@ -184,5 +209,7 @@ export function availabilityAsString(
       .join(", ");
   };
 
-  return `${weekSpan(availability)}`;
+  return Object.keys(resultArray).map(
+    i => `${weekSpan(resultArray[i])}, ${i.toUpperCase()}`
+  );
 }

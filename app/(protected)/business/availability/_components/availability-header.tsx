@@ -8,6 +8,8 @@ import { useRef, useState } from "react";
 import Spinner from "@/components/shared/spinner";
 import { useParams } from "next/navigation";
 import { deleteAvailability } from "@/actions/(protected)/availability/deleteAvailability";
+import { getAvailabilityDetailType } from "@/actions/_utils/types.type";
+import { availabilityAsString } from "../_utils/initializeAvailability";
 
 type propType = {
   handleUpdateAvailability: () => void;
@@ -17,6 +19,7 @@ type propType = {
   alreadyDefault: boolean;
   setName: React.Dispatch<React.SetStateAction<string>>;
   setIsDefault: React.Dispatch<React.SetStateAction<boolean>>;
+  availabilityDetail: getAvailabilityDetailType["data"];
 };
 
 const AvailabilityHeader = (props: propType) => {
@@ -28,6 +31,7 @@ const AvailabilityHeader = (props: propType) => {
     alreadyDefault,
     setIsDefault,
     setName,
+    availabilityDetail,
   } = props;
   const params = useParams();
   const inputRef = useRef<HTMLInputElement>(null!);
@@ -42,34 +46,46 @@ const AvailabilityHeader = (props: propType) => {
 
   return (
     <div className="flex flex-col gap-1 lg:flex-row justify-between lg:items-center">
-      <div className="flex gap-1 items-center">
-        <div className="relative w-min ">
-          <span className="invisible whitespace-pre	px-1 ">{name}</span>
-          <input
-            value={name}
-            ref={inputRef}
-            onBlur={() => {
-              setHideEditIcon(false);
-            }}
-            onFocus={() => {
-              setHideEditIcon(true);
-            }}
-            className="absolute left-0 p-0 w-full font-semibold border-none outline-none bg-transparent max-w-fit"
-            onChange={e => setName(e.target.value)}
-          ></input>
+      <div className="flex flex-col gap-1">
+        <div className="flex gap-1 items-center">
+          <div className="relative w-min ">
+            <span className="invisible whitespace-pre	px-1 ">{name}</span>
+            <input
+              value={name}
+              ref={inputRef}
+              onBlur={() => {
+                setHideEditIcon(false);
+              }}
+              onFocus={() => {
+                setHideEditIcon(true);
+              }}
+              className="absolute left-0 p-0 w-full font-semibold border-none outline-none bg-transparent max-w-fit"
+              onChange={e => setName(e.target.value)}
+            ></input>
+          </div>
+          {!hideEditIcon ? (
+            <Button
+              variant="link"
+              className="p-0 h-fit"
+              onClick={() => {
+                inputRef.current.focus();
+                setHideEditIcon(true);
+              }}
+            >
+              <MdEdit size={18} color="#b6b6b6" />
+            </Button>
+          ) : null}
         </div>
-        {!hideEditIcon ? (
-          <Button
-            variant="link"
-            className="p-0 h-fit"
-            onClick={() => {
-              inputRef.current.focus();
-              setHideEditIcon(true);
-            }}
-          >
-            <MdEdit size={18} color="#b6b6b6" />
-          </Button>
-        ) : null}
+        <div className="flex flex-col  text-secondary-light-gray">
+          {availabilityAsString(availabilityDetail!, {
+            locale: "en",
+            hour12: true,
+          }).map(i => (
+            <span className="text-xs text-secondary-light-gray" key={i}>
+              {i}
+            </span>
+          ))}
+        </div>
       </div>
       <div className="flex gap-2 items-center">
         <div className="flex items-center space-x-2">

@@ -32,7 +32,7 @@ const Availabilities = (props: propType) => {
           New
         </Button>
       </div>
-      <div className="mt-4 flex flex-col gap-3">
+      <div className="mt-4 flex flex-col">
         {data && data.length > 0 ? (
           data.map(i => (
             <AvailabilityCard data={i} key={i.id}></AvailabilityCard>
