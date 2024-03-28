@@ -1,7 +1,7 @@
 import React from "react";
-import CustomSelect from "./custom-select";
 import { getTimeZones } from "@vvo/tzdb";
 import { parseTimezone } from "@/lib/common";
+import { SearchableSelect } from "@/components/shared/searchable-select";
 
 type propType = {
   value: string;
@@ -19,12 +19,13 @@ const TimezoneSelect = (prop: propType) => {
   }));
 
   return (
-    <CustomSelect
-      onChange={value => onChange(value)}
-      placeholder="Select timezone"
+    <SearchableSelect
       options={options}
+      onChange={value => {
+        onChange(value);
+      }}
+      placeholder="timezone"
       value={parseTimezone(value)}
-      contentClassName="min-w-[300px]"
     />
   );
 };
