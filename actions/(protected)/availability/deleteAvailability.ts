@@ -8,6 +8,7 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
+import { errorType } from "@/actions/_utils/types.type";
 
 const handler = async (user: User, availabilityId: string) => {
   try {
@@ -18,9 +19,16 @@ const handler = async (user: User, availabilityId: string) => {
       await db.query.availability.findMany({
         where: eq(availability.deleted, false),
         orderBy: [asc(availability.created_at)],
-        limit: 1,
+        limit: 2,
       }),
     ]);
+
+    if (firstAvailability.length === 1) {
+      return {
+        success: false,
+        error: "You are required to have atleast one availability",
+      } as errorType;
+    }
 
     if (currentAvailability?.default && firstAvailability[0]?.id) {
       await db

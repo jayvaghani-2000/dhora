@@ -4,7 +4,6 @@ import { uploadBusinessLogo } from "@/actions/(protected)/business/uploadBusines
 import Spinner from "@/components/shared/spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { useAuthStore } from "@/provider/store/authentication";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";

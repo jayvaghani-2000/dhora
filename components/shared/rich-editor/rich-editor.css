@@ -1,0 +1,19 @@
+.quillWrapper > .quill > .ql-toolbar {
+  border-bottom: none;
+  border-color: rgb(30, 41, 59);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.quillWrapper > .quill > .ql-container {
+  border-color: #1e293b;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.quillWrapper > .quill > .ql-toolbar > .ql-formats {
+  path {
+    stroke: #707070;
+  }
+  line {
+    stroke: #707070;
+  }
+}

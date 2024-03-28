@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { deleteAvailability } from "@/actions/(protected)/availability/deleteAvailability";
 import { availabilityAsString } from "../../_utils/initializeAvailability";
+import { useToast } from "@/components/ui/use-toast";
 
 type propType = {
   data: NonNullable<getAvailabilityType["data"]>[0];
@@ -18,10 +19,14 @@ const AvailabilityCard = (props: propType) => {
   const navigate = useRouter();
   const [loading, setLoading] = useState(false);
   const { name, timezone, default: isDefault } = availability!;
+  const { toast } = useToast();
 
   const handleDeleteAvailability = async () => {
     setLoading(true);
-    await deleteAvailability(availability.id as unknown as string);
+    const res = await deleteAvailability(availability.id as unknown as string);
+    if (!res.success) {
+      toast({ title: res.error });
+    }
     setLoading(false);
   };
 

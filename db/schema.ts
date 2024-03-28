@@ -92,6 +92,7 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   contacts: many(contracts),
   invoices: many(invoices),
   availability: many(availability),
+  booking_types: many(bookingTypes),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -163,9 +164,42 @@ export const availability = pgTable("availability", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const availabilityRelations = relations(availability, ({ one }) => ({
+export const bookingTypes = pgTable("booking_types", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  duration: integer("duration").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted: boolean("deleted").default(false),
+  availability_id: bigint("availability_id", { mode: "bigint" })
+    .references(() => availability.id)
+    .notNull(),
+  business_id: bigint("business_id", { mode: "bigint" })
+    .references(() => businesses.id)
+    .notNull(),
+});
+
+export const availabilityRelations = relations(
+  availability,
+  ({ one, many }) => ({
+    business: one(businesses, {
+      fields: [availability.business_id],
+      references: [businesses.id],
+    }),
+    booking_types: many(bookingTypes),
+  })
+);
+
+export const bookingTypesRelations = relations(bookingTypes, ({ one }) => ({
+  availability: one(availability, {
+    fields: [bookingTypes.availability_id],
+    references: [availability.id],
+  }),
   business: one(businesses, {
-    fields: [availability.business_id],
+    fields: [bookingTypes.business_id],
     references: [businesses.id],
   }),
 }));

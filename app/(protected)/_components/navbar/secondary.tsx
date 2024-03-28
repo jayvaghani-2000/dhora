@@ -11,6 +11,7 @@ import {
   LiaFileContractSolid,
   LiaFileInvoiceDollarSolid,
 } from "react-icons/lia";
+import { FaLink } from "react-icons/fa6";
 import { FaRegClock } from "react-icons/fa";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 
@@ -57,6 +58,12 @@ export const StaticOptions = [
         title: "Availability",
         icon: <FaRegClock />,
         path: "/business/availability",
+      },
+      {
+        key: "booking-types",
+        title: "Booking Types",
+        icon: <FaLink />,
+        path: "/business/booking-types",
       },
     ],
   },

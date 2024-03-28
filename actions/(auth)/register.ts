@@ -2,7 +2,9 @@
 
 import { z } from "zod";
 import {
+  availability,
   businesses,
+  createAvailabilitySchema,
   createBusinessSchema,
   registerSchema,
   users,
@@ -20,7 +22,13 @@ import {
   DEFAULT_USER_LOGIN_REDIRECT,
 } from "@/routes";
 
-export const register = async (values: z.infer<typeof registerSchema>) => {
+export const register = async ({
+  values,
+  availability: newAvailabilityData,
+}: {
+  values: z.infer<typeof registerSchema>;
+  availability?: z.infer<typeof createAvailabilitySchema>;
+}) => {
   const validatedFields = registerSchema.safeParse(values);
   const businessPayload = values.is_business
     ? createBusinessSchema.safeParse({
@@ -63,6 +71,14 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
       stripe_id: stripeAccount.id,
     })
     .returning();
+
+  // create default availability
+  if (newAvailabilityData && business) {
+    await db.insert(availability).values({
+      business_id: business[0].id,
+      ...newAvailabilityData,
+    });
+  }
 
   await sendEmail("Email Verification", {
     email: user[0].email,

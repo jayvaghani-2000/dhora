@@ -7,13 +7,13 @@ export type businessDetailSchemaType = z.infer<typeof businessDetailSchema>;
 export const businessDetailSchema = z.object({
   business_name: z
     .string()
-    .refine(data => data.length > 0, { message: "Name is required" }),
+    .refine(data => data.trim().length > 0, { message: "Name is required" }),
   business_address: z
     .string()
-    .refine(data => data.length > 0, { message: "Address is required" }),
+    .refine(data => data.trim().length > 0, { message: "Address is required" }),
   business_contact: z
     .string()
-    .refine(data => data.length > 0, { message: "Contact is required" }),
+    .refine(data => data.trim().length > 0, { message: "Contact is required" }),
   business_email: z.string().email({ message: "Enter valid email" }),
 });
 

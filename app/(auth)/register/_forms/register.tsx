@@ -1,6 +1,10 @@
 "use client";
 
-import { businessTypeEnum, registerSchema } from "@/db/schema";
+import {
+  businessTypeEnum,
+  createAvailabilitySchema,
+  registerSchema,
+} from "@/db/schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -30,6 +34,11 @@ import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
 import { businessTypes } from "@/actions/_utils/types.type";
+import {
+  getTimeSlotsFromDate,
+  initializeAvailability,
+} from "@/app/(protected)/business/availability/_utils/initializeAvailability";
+import { parseTimezone, timeZone } from "@/lib/common";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
@@ -51,9 +60,25 @@ export function RegisterForm() {
     },
   });
 
+  const getAvailabilityData = () => {
+    const data = initializeAvailability();
+    const userTimeZone = parseTimezone(timeZone);
+
+    return {
+      availability: getTimeSlotsFromDate(data.timeSlots),
+      days: data.days,
+      timezone: userTimeZone,
+      default: true,
+      name: "Default Availability",
+    } as z.infer<typeof createAvailabilitySchema>;
+  };
+
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setLoading(true);
-    await register(values);
+    await register({
+      values,
+      availability: values.is_business ? getAvailabilityData() : undefined,
+    });
     setLoading(false);
   }
 
