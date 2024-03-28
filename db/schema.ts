@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   doublePrecision,
   integer,
   jsonb,
@@ -90,6 +91,7 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   users: many(users),
   contacts: many(contracts),
   invoices: many(invoices),
+  availability: many(availability),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -140,6 +142,30 @@ export const invoices = pgTable("invoices", {
 export const invoicesRelations = relations(invoices, ({ one }) => ({
   business: one(businesses, {
     fields: [invoices.business_id],
+    references: [businesses.id],
+  }),
+}));
+
+export const availability = pgTable("availability", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  business_id: bigint("business_id", { mode: "bigint" })
+    .references(() => businesses.id)
+    .notNull(),
+  name: text("name"),
+  days: integer("days").array(),
+  timezone: text("timezone"),
+  availability: jsonb("availability"),
+  default: boolean("default"),
+  deleted: boolean("deleted").default(false),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const availabilityRelations = relations(availability, ({ one }) => ({
+  business: one(businesses, {
+    fields: [availability.business_id],
     references: [businesses.id],
   }),
 }));
@@ -244,6 +270,25 @@ export const createInvoiceSchema = createInsertSchema(invoices)
           return false;
         },
         { message: "Tax is invalid" }
+      ),
+    })
+  );
+export const createAvailabilitySchema = createInsertSchema(availability)
+  .omit({
+    id: true,
+    business_id: true,
+    created_at: true,
+    updated_at: true,
+  })
+  .merge(
+    z.object({
+      availability: z.array(
+        z
+          .object({
+            start_time: z.string(),
+            end_time: z.string(),
+          })
+          .array()
       ),
     })
   );

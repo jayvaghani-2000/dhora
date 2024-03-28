@@ -4,10 +4,9 @@ import {
   invoiceStatusTypes,
 } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
-import { formatAmount, formatDate, invoiceStatusClass } from "@/lib/common";
+import { formatAmount, formatDate } from "@/lib/common";
 import React from "react";
 import { CustomTable } from "@/components/shared/custom-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown } from "lucide-react";
 import { isWithinInterval } from "date-fns";
 import { DateRangePicker } from "@/components/shared/range-picker";
@@ -86,34 +85,36 @@ const ExtraFilters = (props: extraFilterPropType) => {
         }
         placeholder="Pick a due date"
       />
-      <CustomSelect
-        onChange={value => {
-          table.getColumn("status")?.setFilterValue(value);
-        }}
-        value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
-        options={[
-          {
-            label: "Paid",
-            value: "paid",
-            className: "text-green-600",
-          },
-          {
-            label: "Overdue",
-            value: "overdue",
-            className: "text-pink-700",
-          },
-          {
-            label: "Pending",
-            value: "pending",
-            className: "text-yellow-700",
-          },
-          {
-            label: "Draft",
-            value: "draft",
-            className: "text-gray-400",
-          },
-        ]}
-      />
+      <div className="w-[180px]]">
+        <CustomSelect
+          onChange={value => {
+            table.getColumn("status")?.setFilterValue(value);
+          }}
+          value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
+          options={[
+            {
+              label: "Paid",
+              value: "paid",
+              className: "text-green-600",
+            },
+            {
+              label: "Overdue",
+              value: "overdue",
+              className: "text-pink-700",
+            },
+            {
+              label: "Pending",
+              value: "pending",
+              className: "text-yellow-700",
+            },
+            {
+              label: "Draft",
+              value: "draft",
+              className: "text-gray-400",
+            },
+          ]}
+        />
+      </div>
 
       <div className="flex gap-1 items-center">
         <span className="text-xs">Amount</span>

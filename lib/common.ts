@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
 import { invoiceStatusTypes } from "@/actions/_utils/types.type";
+import { getTimeZones } from "@vvo/tzdb";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -89,19 +90,6 @@ export const itemRateWithFeeAndTaxes = (
   };
 };
 
-export const invoiceStatusClass = (status: invoiceStatusTypes) =>
-  clsx({
-    "relative capitalize flex gap-1 items-center before:content-['']  before:h-2 before:w-2 before:rounded-full":
-      true,
-    "text-green-600 hover:text-green-600 before:bg-green-600":
-      status === "paid",
-    "text-pink-700 hover:text-pink-700 before:bg-pink-700":
-      status === "overdue",
-    "text-gray-400 before:bg-gray-600 hover:text-gray-400 ": status === "draft",
-    "text-yellow-600 hover:text-yellow-600 before:bg-yellow-600":
-      status === "pending",
-  });
-
 export const invoiceStatusColor = (status: invoiceStatusTypes) =>
   clsx({
     "relative capitalize flex gap-1 items-center": true,
@@ -110,3 +98,11 @@ export const invoiceStatusColor = (status: invoiceStatusTypes) =>
     "text-yellow-600 hover:text-yellow-600": status === "pending",
     "text-gray-400 hover:text-gray-400": status === "draft",
   });
+
+export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+export const parseTimezone = (timeZone: string) => {
+  const timeZonesWithUtc = getTimeZones({ includeUtc: true });
+
+  return timeZonesWithUtc.find(i => i.group.includes(timeZone))?.name;
+};

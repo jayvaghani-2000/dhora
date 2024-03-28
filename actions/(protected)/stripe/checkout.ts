@@ -126,7 +126,6 @@ const handler = async (user: User, params: paramsType) => {
       file: file,
     });
   } catch (err) {
-    console.log("AAAAAAAAAAAAA", err);
     return errorHandler(err);
   }
 };
