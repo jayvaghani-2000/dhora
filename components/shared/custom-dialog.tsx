@@ -61,7 +61,7 @@ const CustomDialog = (prop: propType) => {
       }}
     >
       <DialogContent
-        className={cn("max-w-[calc(100dvw-40px)] p-0", className)}
+        className={cn("max-w-[calc(100dvw-40px)] max-h-[calc(100dvh-40px)] p-0 overflow-auto", className)}
         closable={closable}
       >
         {title ? (

@@ -17,3 +17,19 @@
     stroke: #707070;
   }
 }
+
+.readOnly-quillWrapper > .quill > .ql-toolbar {
+  display: none;
+}
+.readOnly-quillWrapper > .quill > .ql-disabled {
+  border: none;
+}
+.readOnly-quillWrapper > .quill > .ql-disabled > .ql-editor {
+  padding: 0px;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}

@@ -46,6 +46,8 @@ const AvailabilityHeader = (props: propType) => {
     const res = await deleteAvailability(params.availability_id as string);
     if (res && !res.success) {
       toast({ title: res.error });
+    } else {
+      toast({ title: "Availability deleted successfully!" });
     }
     setDeleting(false);
   };

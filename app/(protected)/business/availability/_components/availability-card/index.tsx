@@ -26,6 +26,8 @@ const AvailabilityCard = (props: propType) => {
     const res = await deleteAvailability(availability.id as unknown as string);
     if (res && !res.success) {
       toast({ title: res.error });
+    } else {
+      toast({ title: "Availability deleted successfully!" });
     }
     setLoading(false);
   };
@@ -36,7 +38,7 @@ const AvailabilityCard = (props: propType) => {
         <div className="text-sm md:text-base font-semibold flex gap-1">
           {name}{" "}
           {isDefault && (
-            <Badge className="bg-green-800 hover:bg-green-900 text-white">
+            <Badge className="bg-green-800 hover:bg-green-900 text-white text-xs rounded-sm px-1">
               Default
             </Badge>
           )}

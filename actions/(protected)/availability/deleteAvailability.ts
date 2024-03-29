@@ -1,6 +1,6 @@
 "use server";
 
-import { availability } from "@/db/schema";
+import { availability, bookingTypes } from "@/db/schema";
 import { db } from "@/lib/db";
 import { and, asc, eq, ne } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
@@ -22,14 +22,15 @@ const handler = async (user: User, availabilityId: string) => {
       await db.query.availability.findMany({
         where: and(
           eq(availability.deleted, false),
-          eq(availability.business_id, user.business_id!)
+          eq(availability.business_id, user.business_id!),
+          ne(availability.id, BigInt(availabilityId))
         ),
         orderBy: [asc(availability.created_at)],
-        limit: 2,
+        limit: 1,
       }),
     ]);
 
-    if (firstAvailability.length === 1) {
+    if (firstAvailability.length === 0) {
       return {
         success: false,
         error: "You are required to have atleast one availability",
@@ -37,13 +38,22 @@ const handler = async (user: User, availabilityId: string) => {
     }
 
     if (currentAvailability?.default && firstAvailability[0]?.id) {
-      await db
-        .update(availability)
-        .set({
-          default: true,
-          updated_at: new Date(),
-        })
-        .where(and(eq(availability.id, firstAvailability[0].id)));
+      await Promise.all([
+        await db
+          .update(availability)
+          .set({
+            default: true,
+            updated_at: new Date(),
+          })
+          .where(and(eq(availability.id, firstAvailability[0].id))),
+        await db
+          .update(bookingTypes)
+          .set({
+            availability_id: firstAvailability[0].id,
+            updated_at: new Date(),
+          })
+          .where(and(eq(bookingTypes.availability_id, BigInt(availabilityId)))),
+      ]);
     }
 
     await db
@@ -53,7 +63,12 @@ const handler = async (user: User, availabilityId: string) => {
         default: false,
         updated_at: new Date(),
       })
-      .where(and(eq(availability.id, BigInt(availabilityId))));
+      .where(
+        and(
+          eq(availability.id, BigInt(availabilityId)),
+          eq(availability.business_id, user.business_id!)
+        )
+      );
 
     return {
       success: true as true,

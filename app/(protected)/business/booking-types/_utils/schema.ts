@@ -22,3 +22,9 @@ export const createBookingTypeSchema = z.object({
     .positive({ message: "Duration must be valid number" })
     .refine(data => data > 0, { message: "Duration is required" }),
 });
+
+export const editBookingTypeSchema = createBookingTypeSchema.merge(
+  z.object({
+    availability_id: z.string(),
+  })
+);

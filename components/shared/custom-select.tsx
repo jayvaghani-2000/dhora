@@ -1,4 +1,4 @@
-import { HTMLProps } from "react";
+import { HTMLProps, ReactNode } from "react";
 import {
   Select,
   SelectContent,
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 type propType = {
   options: {
-    label: string;
+    label: ReactNode;
     value: string;
     className?: HTMLProps<HTMLElement>["className"];
   }[];

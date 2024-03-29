@@ -17,9 +17,11 @@ import { createBookingTypeSchema } from "../_utils/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomDialog from "@/components/shared/custom-dialog";
+import { createBookingType } from "@/actions/(protected)/booking-types/createBookingType";
 
-const CreateBookingType = () => {
-  const [createBookingType, setCreateBookingType] = useState(false);
+const CreateBookingTypeModel = () => {
+  
+  const [openCreateBookingType, setOpenCreateBookingType] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof createBookingTypeSchema>>({
@@ -27,12 +29,12 @@ const CreateBookingType = () => {
     defaultValues: {
       title: "",
       description: "",
-      duration: undefined as unknown as number,
+      duration: 15,
     },
   });
 
   const handleClose = () => {
-    setCreateBookingType(false);
+    setOpenCreateBookingType(false);
     form.reset();
   };
 
@@ -40,7 +42,7 @@ const CreateBookingType = () => {
     value: z.infer<typeof createBookingTypeSchema>
   ) => {
     setLoading(true);
-
+    await createBookingType(value);
     setLoading(false);
   };
 
@@ -52,7 +54,7 @@ const CreateBookingType = () => {
         </div>
         <Button
           onClick={() => {
-            setCreateBookingType(true);
+            setOpenCreateBookingType(true);
           }}
           className="text-xs lg:text-sm p-2 h-fit lg:px-4 "
         >
@@ -61,7 +63,7 @@ const CreateBookingType = () => {
         </Button>
       </div>
       <CustomDialog
-        open={createBookingType}
+        open={openCreateBookingType}
         title="Add a Booking Type"
         className="w-[600px]"
         onClose={handleClose}
@@ -139,4 +141,4 @@ const CreateBookingType = () => {
   );
 };
 
-export default CreateBookingType;
+export default CreateBookingTypeModel;

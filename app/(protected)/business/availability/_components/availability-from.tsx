@@ -64,6 +64,10 @@ const AvailabilityForm = (props: propType) => {
       toast({
         title: res.error,
       });
+    } else {
+      toast({
+        title: "Availability updated successfully!",
+      });
     }
     setLoading(false);
   };

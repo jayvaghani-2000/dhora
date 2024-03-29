@@ -60,25 +60,30 @@ export const register = async ({
     ? await db.insert(businesses).values(businessPayload.data).returning()
     : null;
 
-  const user = await db
-    .insert(users)
-    .values({
-      name: validatedFields.data.name,
-      email: validatedFields.data.email,
-      password: hashedPassword,
-      verification_code: hashedVerificationCode,
-      business_id: business ? business[0].id : null,
-      stripe_id: stripeAccount.id,
-    })
-    .returning();
+  const createAvailability = async () => {
+    // create default availability
+    if (newAvailabilityData && business) {
+      await db.insert(availability).values({
+        business_id: business[0].id,
+        ...newAvailabilityData,
+      });
+    }
+  };
 
-  // create default availability
-  if (newAvailabilityData && business) {
-    await db.insert(availability).values({
-      business_id: business[0].id,
-      ...newAvailabilityData,
-    });
-  }
+  const [user] = await Promise.all([
+    await db
+      .insert(users)
+      .values({
+        name: validatedFields.data.name,
+        email: validatedFields.data.email,
+        password: hashedPassword,
+        verification_code: hashedVerificationCode,
+        business_id: business ? business[0].id : null,
+        stripe_id: stripeAccount.id,
+      })
+      .returning(),
+    await createAvailability(),
+  ]);
 
   await sendEmail("Email Verification", {
     email: user[0].email,

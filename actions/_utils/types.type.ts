@@ -8,9 +8,10 @@ import { createAvailabilitySchema, createInvoiceSchema } from "@/db/schema";
 import { z } from "zod";
 import { getInvoiceDetail } from "../(protected)/invoices/getInvoiceDetail";
 import { getInvoiceInfo } from "../(protected)/stripe/checkout";
-import { NotNull } from "drizzle-orm";
 import { getAvailabilityDetail } from "../(protected)/availability/getAvailabilityDetail";
 import { getAvailability } from "../(protected)/availability/getAvailability";
+import { getBookingTypes } from "../(protected)/booking-types/getBookingTypes";
+import { getBookingTypeDetails } from "../(protected)/booking-types/getBookingTypeDetails";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -46,6 +47,12 @@ export type getAvailabilityDetailType = NonNullable<
 >;
 export type getAvailabilityType = NonNullable<
   Awaited<ReturnType<typeof getAvailability>>
+>;
+export type getBookingTypesType = NonNullable<
+  Awaited<ReturnType<typeof getBookingTypes>>
+>;
+export type getBookingTypeDetailType = NonNullable<
+  Awaited<ReturnType<typeof getBookingTypeDetails>>
 >;
 
 export type businessTypes =

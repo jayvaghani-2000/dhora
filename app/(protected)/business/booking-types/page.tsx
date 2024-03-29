@@ -1,9 +1,15 @@
+import { getBookingTypes } from "@/actions/(protected)/booking-types/getBookingTypes";
 import CreateBookingType from "./_components/create-booking-type";
+import BookingTypes from "./_components/booking-types";
 
 export default async function BookingTypePage() {
-  return (
+  const res = await getBookingTypes();
+  return res.success ? (
     <div>
       <CreateBookingType />
+      <BookingTypes data={res.data} />
     </div>
+  ) : (
+    <span>{res.error}</span>
   );
 }
