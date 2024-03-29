@@ -28,14 +28,14 @@ const handler = async (user: User, params: paramsType) => {
       .update(bookingTypes)
       .set({
         ...rest,
-        // availability_id: BigInt(availability_id),
+        availability_id: BigInt(availability_id),
         updated_at: new Date(),
       })
       .where(
         and(
           eq(bookingTypes.business_id, user.business_id!),
           eq(bookingTypes.id, BigInt(bookingTypeId)),
-          ne(availability.deleted, true)
+          ne(bookingTypes.deleted, true)
         )
       );
 
@@ -51,7 +51,6 @@ const handler = async (user: User, params: paramsType) => {
       data: stringifyBigint(data),
     };
   } catch (err) {
-    console.log(err)
     return errorHandler(err);
   }
 };

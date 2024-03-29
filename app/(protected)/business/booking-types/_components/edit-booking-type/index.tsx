@@ -61,7 +61,11 @@ const EditBookingType = (props: propType) => {
       values: form.getValues(),
     });
 
-    console.log(res, form.getValues());
+    if (res && !res.success) {
+      toast({ title: res.error });
+    } else {
+      toast({ title: "Booking type updated successfully!" });
+    }
 
     setLoading(false);
   };
