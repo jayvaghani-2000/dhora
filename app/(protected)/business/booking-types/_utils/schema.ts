@@ -34,6 +34,7 @@ export const editBookingTypeSchema = createBookingTypeSchema.merge(
         year: z.number().positive().int().optional(),
       })
       .optional()
+      .nullable()
       .refine(
         data => {
           const { day, month, week, year } = data || {};
