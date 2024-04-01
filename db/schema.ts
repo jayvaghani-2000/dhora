@@ -180,6 +180,7 @@ export const bookingTypes = pgTable("booking_types", {
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)
     .notNull(),
+  booking_frequency: jsonb("booking_frequency"),
 });
 
 export const availabilityRelations = relations(

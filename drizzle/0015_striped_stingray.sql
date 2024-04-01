@@ -1,0 +1,1 @@
+ALTER TABLE "booking_types" ADD COLUMN "booking_frequency" jsonb;

@@ -40,6 +40,9 @@ const EditBookingType = (props: propType) => {
       description: bookingType?.description,
       duration: bookingType?.duration,
       availability_id: bookingType?.availability_id as unknown as string,
+      booking_frequency: bookingType?.booking_frequency as z.infer<
+        typeof editBookingTypeSchema
+      >["booking_frequency"],
     },
   });
 
@@ -55,19 +58,34 @@ const EditBookingType = (props: propType) => {
   };
 
   const handleUpdateBookingType = async () => {
-    setLoading(true);
-    const res = await updateBookingType({
-      bookingTypeId: params.booking_type_id as string,
-      values: form.getValues(),
-    });
+    await form.trigger();
+    if (form.formState.isValid) {
+      setLoading(true);
+      const res = await updateBookingType({
+        bookingTypeId: params.booking_type_id as string,
+        values: form.getValues(),
+      });
 
-    if (res && !res.success) {
-      toast({ title: res.error });
+      if (res && !res.success) {
+        toast({ title: res.error });
+      } else {
+        toast({ title: "Booking type updated successfully!" });
+      }
+
+      setLoading(false);
     } else {
-      toast({ title: "Booking type updated successfully!" });
-    }
+      const error = form.formState.errors;
 
-    setLoading(false);
+      const errorMsg = Object.values(error);
+      const errorMsgKey = Object.keys(error);
+      if (errorMsg[0]) {
+        toast({
+          title:
+            errorMsg[0].message ??
+            `Error in ${errorMsgKey[0].replace(/_/g, " ")}`,
+        });
+      }
+    }
   };
 
   return (
@@ -81,7 +99,7 @@ const EditBookingType = (props: propType) => {
           <Button
             variant="outline"
             className="p-1 h-[28px]"
-            disabled={deleting}
+            disabled={loading || deleting}
             onClick={() => {
               handleDeleteBookingType();
             }}
