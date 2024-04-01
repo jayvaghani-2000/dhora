@@ -10,7 +10,10 @@ export async function middleware(req: NextRequest) {
     if (authRoutes.includes(req.nextUrl.pathname)) {
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
     } else if (req.nextUrl.pathname.startsWith("/@me")) {
-      return NextResponse.rewrite(new URL("/me", req.nextUrl));
+      const { pathname, origin, searchParams } = req.nextUrl;
+      return NextResponse.rewrite(
+        new URL(`/me${pathname.replace("/@me", "")}?${searchParams}`, origin)
+      );
     } else if (req.nextUrl.pathname == "/me") {
       return NextResponse.redirect(new URL("/404", req.nextUrl));
     } else {

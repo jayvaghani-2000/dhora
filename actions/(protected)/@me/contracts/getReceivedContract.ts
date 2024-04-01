@@ -1,12 +1,11 @@
 "use server";
 
-import { validateBusinessToken } from "@/actions/_utils/validateToken";
+import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
-import { SubmittedTemplateType } from "./_utils/submittedContract.type";
-import { errorType } from "@/actions/_utils/types.type";
+import { SubmittedTemplateType } from "../../contracts/_utils/submittedContract.type";
 
 const handler = async (user: User) => {
   try {
@@ -17,8 +16,8 @@ const handler = async (user: User) => {
       const options = {
         method: "GET",
         url: next
-          ? `https://api.docuseal.co/submissions?template_folder=${user.business_id!.toString()}&after=${next}&limit=100`
-          : `https://api.docuseal.co/submissions?template_folder=${user.business_id!.toString()}&limit=100`,
+          ? `https://api.docuseal.co/submissions?q=${user.email!.toString()}&after=${next}&limit=100`
+          : `https://api.docuseal.co/submissions?q=${user.email!.toString()}&limit=100`,
         headers: { "X-Auth-Token": config.env.DOCU_SEAL },
       };
 
@@ -35,6 +34,6 @@ const handler = async (user: User) => {
   }
 };
 
-export const getSubmittedContracts: () => Promise<
+export const getReceivedContracts: () => Promise<
   Awaited<ReturnType<typeof handler>>
-> = validateBusinessToken(handler);
+> = validateToken(handler);

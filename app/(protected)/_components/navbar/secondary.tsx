@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import SecondaryNavbarHeader from "./components/secondaryNavbarHeader";
 import SecondaryNavbarSearch from "./components/secondaryNavbarSearch";
 import { Separator } from "@/components/ui/separator";
-import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { BsShop } from "react-icons/bs";
 import {
   LiaFileContractSolid,
@@ -17,24 +16,25 @@ import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 
 export const StaticOptions = [
   {
-    key: "me",
-    options: [
-      {
-        key: "marketplace",
-        title: "Marketplace",
-        icon: <BsShop />,
-        path: "/marketplace",
-      },
-    ],
-  },
-  {
     key: "@me",
     options: [
       {
         key: "marketplace",
         title: "Marketplace",
         icon: <BsShop />,
-        path: "/marketplace",
+        path: "/@me/marketplace",
+      },
+      {
+        key: "contracts",
+        title: "Contracts",
+        icon: <LiaFileContractSolid />,
+        path: "/@me/contracts",
+      },
+      {
+        key: "invoices",
+        title: "Invoices",
+        icon: <LiaFileInvoiceDollarSolid />,
+        path: "/@me/invoices",
       },
     ],
   },
@@ -64,17 +64,6 @@ export const StaticOptions = [
         title: "Booking Types",
         icon: <FaLink />,
         path: "/business/booking-types",
-      },
-    ],
-  },
-  {
-    key: "app",
-    options: [
-      {
-        key: "marketplace",
-        title: "Marketplace",
-        icon: <HiOutlineBuildingOffice2 />,
-        path: "/marketplace",
       },
     ],
   },

@@ -5,7 +5,6 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
-import { errorType } from "@/actions/_utils/types.type";
 
 type paramsType = { templateId: string; email: string };
 
