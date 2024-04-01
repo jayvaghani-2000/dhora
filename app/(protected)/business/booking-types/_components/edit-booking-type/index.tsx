@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { deleteBookingType } from "@/actions/(protected)/booking-types/deleteBookingType";
 import { updateBookingType } from "@/actions/(protected)/booking-types/updateBookingType";
+import BackButton from "@/components/shared/back-button";
 
 type propType = {
   bookingType: getBookingTypeDetailType["data"];
@@ -90,7 +91,8 @@ const EditBookingType = (props: propType) => {
 
   return (
     <Tabs defaultValue="event">
-      <div className="flex justify-between gap-5">
+      <BackButton to="/business/booking-types" />
+      <div className="flex justify-between gap-5 mt-2">
         <TabsList className="overflow-auto flex items-start justify-start max-w-full w-fit scrollbar-hide ">
           <TabsTrigger value="event">Event setup</TabsTrigger>
           <TabsTrigger value="availability">Availability</TabsTrigger>

@@ -85,7 +85,7 @@ const Availability = (props: propType) => {
             >
               <span
                 className={clsx({
-                  "capitalize w-[180px]": true,
+                  "capitalize w-24 lg:w-[180px]": true,
                   "line-through	": slots.length === 0,
                 })}
               >
@@ -97,7 +97,7 @@ const Availability = (props: propType) => {
                 <div className="flex flex-1 flex-col gap-2">
                   {slots.map((slot, index) => (
                     <div
-                      className="max-w-[200px] flex justify-between  gap-5"
+                      className="max-w-[160px] lg:max-w-[200px] flex justify-between  gap-5"
                       key={`${slot.start_time}-${slot.end_time}${index}`}
                     >
                       <div>{slot.start_time}</div>
