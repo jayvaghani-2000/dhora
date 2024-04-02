@@ -6,7 +6,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Event from "./event";
 import Availability from "./availability";
-import { editBookingTypeSchema } from "../../_utils/schema";
+import { editBookingTypeSchema } from "@/lib/schema";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

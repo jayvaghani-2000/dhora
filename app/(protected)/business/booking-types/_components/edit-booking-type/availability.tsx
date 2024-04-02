@@ -5,7 +5,7 @@ import {
 } from "@/actions/_utils/types.type";
 import React from "react";
 import { z } from "zod";
-import { editBookingTypeSchema } from "../../_utils/schema";
+import { editBookingTypeSchema } from "@/lib/schema";
 import { UseFormReturn } from "react-hook-form";
 import {
   Form,

@@ -1,6 +1,5 @@
 import React from "react";
 import { z } from "zod";
-import { editBookingTypeSchema } from "../../_utils/schema";
 import { UseFormReturn } from "react-hook-form";
 import {
   Form,
@@ -18,9 +17,10 @@ import { Button } from "@/components/ui/button";
 import { LiaPlusSolid } from "react-icons/lia";
 import { cloneDeep } from "lodash";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { editBookingTypeSchemaType } from "@/lib/schema";
 
 type propType = {
-  form: UseFormReturn<z.infer<typeof editBookingTypeSchema>>;
+  form: UseFormReturn<editBookingTypeSchemaType>;
 };
 
 const Event = (props: propType) => {

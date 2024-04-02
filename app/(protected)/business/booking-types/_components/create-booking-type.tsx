@@ -13,14 +13,13 @@ import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PiPlus } from "react-icons/pi";
-import { createBookingTypeSchema } from "../_utils/schema";
+import { createBookingTypeSchema } from "@/lib/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { createBookingType } from "@/actions/(protected)/booking-types/createBookingType";
 
 const CreateBookingTypeModel = () => {
-  
   const [openCreateBookingType, setOpenCreateBookingType] = useState(false);
   const [loading, setLoading] = useState(false);
 

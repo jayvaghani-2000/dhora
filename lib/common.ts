@@ -1,9 +1,10 @@
-import { invoiceSchemaType } from "@/app/(protected)/business/invoices/_utils/schema";
+import { invoiceSchemaType } from "@/lib/schema";
 import { format } from "date-fns";
 import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
 import { invoiceStatusTypes } from "@/actions/_utils/types.type";
 import { getTimeZones } from "@vvo/tzdb";
+import { invoiceStatusTypeEnum } from "@/db/schema";
 
 export function getInitial(name: string) {
   const words = name.split(" ");

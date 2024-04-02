@@ -5,6 +5,7 @@ import Spinner from "@/components/shared/spinner";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 const allowFileType = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
@@ -77,6 +78,16 @@ const BusinessLogo = ({ file, setFile, user }: Props) => {
           disabled={loading}
           className="absolute z-10 inset-0 opacity-0 cursor-pointer"
         />
+
+        <div
+          className="cursor-pointer absolute -right-1.5 -bottom-1.5 bg-white h-5 w-5 rounded-full flex justify-center items-center"
+          onClick={e => {
+            e.stopPropagation();
+            ref.current.click();
+          }}
+        >
+          <MdOutlineModeEdit color="#000" />
+        </div>
       </button>
     </div>
   );

@@ -8,7 +8,7 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { and, eq } from "drizzle-orm";
-import { createBookingTypeSchema } from "@/app/(protected)/business/booking-types/_utils/schema";
+import { createBookingTypeSchema } from "@/lib/schema";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
 

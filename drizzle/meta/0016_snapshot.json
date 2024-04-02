@@ -1,6 +1,6 @@
 {
-  "id": "0ddf415e-df86-4407-9241-65a1cf236e94",
-  "prevId": "ba65439b-4946-49c7-9dff-834965f8e051",
+  "id": "d6fb7704-5ecd-4d33-9311-756f74a0d426",
+  "prevId": "47477d5c-307b-4364-bc7c-cea6bf44abea",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -143,6 +143,18 @@
           "type": "bigint",
           "primaryKey": false,
           "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "booking_frequency": {
+          "name": "booking_frequency",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -152,6 +164,15 @@
           "tableFrom": "booking_types",
           "tableTo": "availability",
           "columnsFrom": ["availability_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "booking_types_business_id_business_id_fk": {
+          "name": "booking_types_business_id_business_id_fk",
+          "tableFrom": "booking_types",
+          "tableTo": "business",
+          "columnsFrom": ["business_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -212,6 +233,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -527,6 +555,20 @@
           "type": "bigint",
           "primaryKey": false,
           "notNull": false
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "disabled": {
+          "name": "disabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",

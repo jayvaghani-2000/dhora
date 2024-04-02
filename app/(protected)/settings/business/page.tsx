@@ -4,9 +4,5 @@ import { me } from "@/actions/(auth)/me";
 
 export default async function BusinessDetailPage() {
   const user = await me();
-  return (
-    <div >
-      {user.success ? <BusinessDetail user={user.data} /> : null}
-    </div>
-  );
+  return <div>{user.success ? <BusinessDetail user={user.data} /> : null}</div>;
 }

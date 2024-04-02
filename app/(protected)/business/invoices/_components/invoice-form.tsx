@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { invoiceSchema, invoiceSchemaType } from "../_utils/schema";
+import { invoiceSchema, invoiceSchemaType } from "@/lib/schema";
 import { LiaPlusSolid } from "react-icons/lia";
 import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
 import { IconInput } from "@/components/shared/icon-input";

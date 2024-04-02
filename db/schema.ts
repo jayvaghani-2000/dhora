@@ -47,6 +47,8 @@ export const users = pgTable("users", {
   business_id: bigint("business_id", { mode: "bigint" }).references(
     () => businesses.id
   ),
+  deleted: boolean("deleted").default(false),
+  disabled: boolean("disabled").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -82,6 +84,7 @@ export const businesses = pgTable("business", {
   stripe_account_verified: timestamp("stripe_account_verified", {
     mode: "date",
   }),
+  deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

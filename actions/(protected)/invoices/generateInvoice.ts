@@ -6,7 +6,7 @@ import { createInvoiceSchema, invoices } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { invoiceSchema } from "@/app/(protected)/business/invoices/_utils/schema";
+import { invoiceSchema } from "@/lib/schema";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (

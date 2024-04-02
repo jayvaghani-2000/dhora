@@ -11,7 +11,7 @@ import { Input, InputProps } from "@/components/ui/input";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { businessDetailSchema } from "../_utils/schema";
+import { businessDetailSchema } from "@/lib/schema";
 import { z } from "zod";
 import {
   Form,

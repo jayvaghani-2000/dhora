@@ -33,8 +33,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
-import { businessTypes } from "@/actions/_utils/types.type";
 import {
+  getAvailabilityData,
   getTimeSlotsFromDate,
   initializeAvailability,
 } from "@/app/(protected)/business/availability/_utils/initializeAvailability";
@@ -44,9 +44,7 @@ export function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const businessTypeOptions = Object.values(
-    businessTypeEnum
-  )[1] as businessTypes[];
+  const businessTypeOptions = businessTypeEnum.enumValues;
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -59,19 +57,6 @@ export function RegisterForm() {
       "t&c": false,
     },
   });
-
-  const getAvailabilityData = () => {
-    const data = initializeAvailability();
-    const userTimeZone = parseTimezone(timeZone);
-
-    return {
-      availability: getTimeSlotsFromDate(data.timeSlots),
-      days: data.days,
-      timezone: userTimeZone,
-      default: true,
-      name: "Default Availability",
-    } as z.infer<typeof createAvailabilitySchema>;
-  };
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setLoading(true);

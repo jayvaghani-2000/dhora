@@ -15,6 +15,7 @@ import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import Actions from "./actions";
 import clsx from "clsx";
+import { invoiceStatusTypeEnum } from "@/db/schema";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
@@ -26,7 +27,7 @@ export type recordType = {
   due_date: string;
   amount: number;
   id: string;
-  status: invoiceStatusTypes;
+  status: typeof invoiceStatusTypeEnum.enumValues;
 };
 
 type extraFilterPropType = {
@@ -165,14 +166,17 @@ const ExtraFilters = (props: extraFilterPropType) => {
 const Invoices = (props: propType) => {
   const { invoices } = props;
 
-  const parsedInvoices: recordType[] = invoices!.map(i => ({
-    id: String(i.id),
-    email: i.customer_email,
-    created_on: formatDate(i.created_at),
-    amount: Number(i.total),
-    due_date: formatDate(i.due_date),
-    status: i.status as invoiceStatusTypes,
-  }));
+  const parsedInvoices = invoices!.map(
+    i =>
+      ({
+        id: String(i.id),
+        email: i.customer_email,
+        created_on: formatDate(i.created_at),
+        amount: Number(i.total),
+        due_date: formatDate(i.due_date),
+        status: i.status as unknown as typeof invoiceStatusTypeEnum.enumValues,
+      }) as recordType
+  );
 
   const columns: ColumnDef<recordType>[] = [
     {

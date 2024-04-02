@@ -31,7 +31,7 @@ const SettingsNavbar = () => {
         <Link key={i.key} href={i.path}>
           <button
             className={clsx({
-              "py-2 rounded-md flex items-center gap-x-2 w-full  transition-all duration-300 text-secondary-light-gray hover:text-white uppercase text-sm font-semibold":
+              "py-3 rounded-md flex items-center gap-x-2 w-full  transition-all duration-300 text-secondary-light-gray hover:text-white uppercase text-sm font-semibold":
                 true,
               "text-white": path === i.path,
             })}

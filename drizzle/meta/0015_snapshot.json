@@ -79,12 +79,8 @@
           "name": "availability_business_id_business_id_fk",
           "tableFrom": "availability",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -167,12 +163,8 @@
           "name": "booking_types_availability_id_availability_id_fk",
           "tableFrom": "booking_types",
           "tableTo": "availability",
-          "columnsFrom": [
-            "availability_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["availability_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -180,12 +172,8 @@
           "name": "booking_types_business_id_business_id_fk",
           "tableFrom": "booking_types",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -317,12 +305,8 @@
           "name": "contracts_business_id_business_id_fk",
           "tableFrom": "contracts",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -332,9 +316,7 @@
         "contracts_template_id_unique": {
           "name": "contracts_template_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "template_id"
-          ]
+          "columns": ["template_id"]
         }
       }
     },
@@ -461,12 +443,8 @@
           "name": "invoices_business_id_business_id_fk",
           "tableFrom": "invoices",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -503,12 +481,8 @@
           "name": "session_user_id_users_id_fk",
           "tableFrom": "session",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -596,12 +570,8 @@
           "name": "users_business_id_business_id_fk",
           "tableFrom": "users",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -611,9 +581,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       }
     }

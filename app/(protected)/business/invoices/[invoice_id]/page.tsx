@@ -1,7 +1,7 @@
 import { getInvoiceDetail } from "@/actions/(protected)/invoices/getInvoiceDetail";
 import InvoiceForm from "../_components/invoice-form";
 import { me } from "@/actions/(auth)/me";
-import { invoiceSchemaType } from "../_utils/schema";
+import { invoiceSchemaType } from "@/lib/schema";
 
 type propType = {
   params: {

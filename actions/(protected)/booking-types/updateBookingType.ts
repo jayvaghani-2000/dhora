@@ -11,7 +11,7 @@ import { errorType } from "@/actions/_utils/types.type";
 import { z } from "zod";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
-import { editBookingTypeSchema } from "@/app/(protected)/business/booking-types/_utils/schema";
+import { editBookingTypeSchema } from "@/lib/schema";
 
 type paramsType = {
   bookingTypeId: string;

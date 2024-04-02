@@ -2,6 +2,7 @@ import { logout } from "@/actions/(auth)/logout";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
+import Link from "next/link";
 import React from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 
@@ -41,7 +42,7 @@ const SettingsPopover = () => {
         </div>
       ) : null}
 
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <Button
           onClick={handleSignOut}
           variant="link"
@@ -50,12 +51,14 @@ const SettingsPopover = () => {
           Logout
         </Button>
 
-        <Button
-          variant="ghost"
-          className="text-sm font-normal text-secondary-light-gray"
-        >
-          <IoSettingsOutline size={24} />
-        </Button>
+        <Link href="/settings/details">
+          <Button
+            variant="ghost"
+            className="text-sm font-normal text-secondary-light-gray"
+          >
+            <IoSettingsOutline size={24} />
+          </Button>
+        </Link>
       </div>
     </div>
   );

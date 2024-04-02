@@ -1,9 +1,9 @@
 "use server";
 
-import { validateBusinessToken } from "@/actions/_utils/validateToken";
+import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { updatePasswordSchemaType } from "@/app/(protected)/settings/details/_utils/schema";
+import { updatePasswordSchemaType } from "@/lib/schema";
 import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { users } from "@/db/schema";
@@ -49,5 +49,4 @@ const handler = async (user: User, data: updatePasswordSchemaType) => {
 
 export const updatePassword: (
   data: updatePasswordSchemaType
-) => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateBusinessToken(handler);
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);
