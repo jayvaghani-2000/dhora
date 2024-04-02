@@ -2,7 +2,6 @@ import { invoiceSchemaType } from "@/lib/schema";
 import { format } from "date-fns";
 import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
-import { invoiceStatusTypes } from "@/actions/_utils/types.type";
 import { getTimeZones } from "@vvo/tzdb";
 import { invoiceStatusTypeEnum } from "@/db/schema";
 
@@ -91,7 +90,9 @@ export const itemRateWithFeeAndTaxes = (
   };
 };
 
-export const invoiceStatusColor = (status: invoiceStatusTypes) =>
+export const invoiceStatusColor = (
+  status: (typeof invoiceStatusTypeEnum.enumValues)[number]
+) =>
   clsx({
     "relative capitalize flex gap-1 items-center": true,
     "text-green-600 hover:text-green-600": status === "paid",

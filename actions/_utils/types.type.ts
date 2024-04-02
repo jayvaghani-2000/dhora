@@ -55,14 +55,20 @@ export type getBookingTypeDetailType = NonNullable<
   Awaited<ReturnType<typeof getBookingTypeDetails>>
 >;
 
-export type businessTypes =
-  | "Event Planner"
-  | "Venue"
-  | "Photo & Video"
-  | "Entertainment"
-  | "Caterer"
-  | "Apparel"
-  | "Health & Beauty"
-  | "Other";
+export enum businessTypes {
+  "Event Planner",
+  "Venue",
+  "Photo & Video",
+  "Entertainment",
+  "Caterer",
+  "Apparel",
+  "Health & Beauty",
+  "Other",
+}
 
-export type invoiceStatusTypes = "paid" | "pending" | "draft" | "overdue";
+export enum invoiceStatusTypes {
+  "paid",
+  "pending",
+  "draft",
+  "overdue",
+}

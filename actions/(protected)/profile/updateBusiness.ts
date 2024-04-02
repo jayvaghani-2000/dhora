@@ -24,6 +24,7 @@ const handler = async (user: User, params: parmaTypes) => {
   if (image) {
     const uploadedImageUrl = await createPublicBusinessImgUrl(
       user.business_id!,
+      BigInt(user.id),
       image
     );
 

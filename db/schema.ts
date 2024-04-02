@@ -84,6 +84,7 @@ export const businesses = pgTable("business", {
   stripe_account_verified: timestamp("stripe_account_verified", {
     mode: "date",
   }),
+  user_id: bigint("user_id", { mode: "bigint" }),
   deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),

@@ -1,8 +1,5 @@
 "use client";
-import {
-  getInvoicesResponseType,
-  invoiceStatusTypes,
-} from "@/actions/_utils/types.type";
+import { getInvoicesResponseType } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { formatAmount, formatDate } from "@/lib/common";
 import React from "react";
@@ -21,13 +18,15 @@ type propType = {
   invoices: getInvoicesResponseType["data"];
 };
 
+const statusMode = invoiceStatusTypeEnum.enumValues;
+
 export type recordType = {
   email: string;
   created_on: string;
   due_date: string;
   amount: number;
   id: string;
-  status: typeof invoiceStatusTypeEnum.enumValues;
+  status: (typeof statusMode)[number];
 };
 
 type extraFilterPropType = {
@@ -166,17 +165,14 @@ const ExtraFilters = (props: extraFilterPropType) => {
 const Invoices = (props: propType) => {
   const { invoices } = props;
 
-  const parsedInvoices = invoices!.map(
-    i =>
-      ({
-        id: String(i.id),
-        email: i.customer_email,
-        created_on: formatDate(i.created_at),
-        amount: Number(i.total),
-        due_date: formatDate(i.due_date),
-        status: i.status as unknown as typeof invoiceStatusTypeEnum.enumValues,
-      }) as recordType
-  );
+  const parsedInvoices: recordType[] = invoices!.map(i => ({
+    id: String(i.id),
+    email: i.customer_email,
+    created_on: formatDate(i.created_at),
+    amount: Number(i.total),
+    due_date: formatDate(i.due_date),
+    status: i.status,
+  }));
 
   const columns: ColumnDef<recordType>[] = [
     {

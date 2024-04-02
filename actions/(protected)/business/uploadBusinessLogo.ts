@@ -3,7 +3,10 @@
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { createPublicBusinessImgUrl, removeImage } from "../../../lib/minio";
+import {
+  createPublicBusinessImgUrl,
+  removeBusinessImage,
+} from "../../../lib/minio";
 import { db } from "@/lib/db";
 import { businesses } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
@@ -15,12 +18,13 @@ const handler = async (user: User, file: FormData) => {
     });
 
     if (business?.logo) {
-      await removeImage(business.logo);
+      await removeBusinessImage(business.logo);
     }
 
     const image = file.get("image") as File;
     const uploadedImageUrl = await createPublicBusinessImgUrl(
       user.business_id as bigint,
+      BigInt(user.id),
       image
     );
 

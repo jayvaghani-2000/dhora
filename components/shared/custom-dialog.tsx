@@ -21,6 +21,13 @@ type propType = {
   disableAction?: boolean;
   onClose?: () => void;
   onSubmit?: () => void;
+  saveVariant?:
+    | "link"
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
 };
 
 const CustomDialog = (prop: propType) => {
@@ -32,6 +39,7 @@ const CustomDialog = (prop: propType) => {
     onClose = () => {},
     children,
     saveText = "Save",
+    saveVariant = "default",
     disableAction = false,
     onSubmit = async () => {},
   } = prop;
@@ -88,7 +96,7 @@ const CustomDialog = (prop: propType) => {
             </Button>
           ) : null}
           <Button
-            variant="default"
+            variant={saveVariant}
             disabled={loading || disableAction}
             onClick={async () => {
               setLoading(true);

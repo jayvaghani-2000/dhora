@@ -6,6 +6,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
 import { MdOutlineModeEdit } from "react-icons/md";
+import { RxAvatar } from "react-icons/rx";
 
 const allowFileType = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
@@ -15,10 +16,10 @@ type Props = {
   user: profileType;
 };
 
-const BusinessLogo = ({ file, setFile, user }: Props) => {
+const ProfileAvatar = ({ file, setFile, user }: Props) => {
   const ref = useRef<HTMLInputElement>(null!);
   const [imageStr, setImageStr] = useState({
-    base64: user?.business?.logo ?? "",
+    base64: user?.image ?? "",
     name: "",
   });
   const [loading, setLoading] = useState(false);
@@ -52,23 +53,20 @@ const BusinessLogo = ({ file, setFile, user }: Props) => {
     <div className="relative h-fit">
       {loading ? <Spinner /> : null}
       <div
-        className="relative h-[120px] border border-dashed border-divider  md:h-[140px] rounded-sm flex flex-col justify-center items-center"
+        className="relative h-[120px] border border-dashed border-divider  md:h-[140px] rounded-full flex flex-col justify-center items-center"
         style={{ aspectRatio: 1 }}
       >
         {imageStr.base64 ? (
           <div className="h-full w-full ">
             <Image
               src={imageStr.base64}
-              className="group object-cover rounded-sm "
+              className="group object-cover rounded-full "
               alt={imageStr.name}
               fill
             />
           </div>
         ) : (
-          <>
-            <LiaPlusSolid size={60} />
-            <div className="font-bold text-xs md:text-base">Upload Photo</div>
-          </>
+          <RxAvatar className="h-[120px] w-[120px] md:h-[140px] md:w-[140px]" />
         )}
         <input
           ref={ref}
@@ -80,7 +78,7 @@ const BusinessLogo = ({ file, setFile, user }: Props) => {
         />
 
         <button
-          className="cursor-pointer absolute -right-1.5 -bottom-1.5 bg-white h-5 w-5 rounded-full flex justify-center items-center"
+          className="cursor-pointer absolute  bottom-4 right-0 md:right-1.5 md:bottom-5 bg-white h-5 w-5 rounded-full flex justify-center items-center"
           onClick={e => {
             e.stopPropagation();
             ref.current.click();
@@ -93,4 +91,4 @@ const BusinessLogo = ({ file, setFile, user }: Props) => {
   );
 };
 
-export default BusinessLogo;
+export default ProfileAvatar;

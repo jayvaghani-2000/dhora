@@ -27,6 +27,7 @@ const handler = async (user: User, params: paramsType) => {
   try {
     const uploadedPdfImage = await createPublicInvoicePdfUrl(
       user.business_id!,
+      BigInt(user.id),
       pdf
     );
 

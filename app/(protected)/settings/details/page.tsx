@@ -2,11 +2,13 @@ import React from "react";
 import UpdatePassword from "./_components/update-password";
 import PersonalDetails from "./_components/personal-detail";
 import { Button } from "@/components/ui/button";
+import { me } from "@/actions/(auth)/me";
 
-const Details = () => {
+const Details = async () => {
+  const user = await me();
   return (
     <div>
-      <PersonalDetails />
+      <PersonalDetails user={user.data} />
       <UpdatePassword />
 
       <div className="mt-5 flex gap-5">

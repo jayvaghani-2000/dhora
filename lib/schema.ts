@@ -13,6 +13,7 @@ export type updatePasswordSchemaType = z.infer<typeof updatePasswordSchema>;
 export type settingsBusinessDetailSchemaType = z.infer<
   typeof settingsBusinessDetailSchema
 >;
+export type editProfileSchemaType = z.infer<typeof editProfileSchema>;
 export type editBookingTypeSchemaType = z.infer<typeof editBookingTypeSchema>;
 
 export const businessDetailSchema = z.object({
@@ -115,3 +116,10 @@ export const editBookingTypeSchema = createBookingTypeSchema.merge(
       ),
   })
 );
+
+export const editProfileSchema = z.object({
+  name: z
+    .string()
+    .refine(data => data.trim().length > 0, { message: "Name is required" }),
+  email: z.string().email({ message: "Enter valid email" }),
+});

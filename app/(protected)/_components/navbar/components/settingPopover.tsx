@@ -1,5 +1,7 @@
 import { logout } from "@/actions/(auth)/logout";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { getInitial } from "@/lib/common";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import Link from "next/link";
@@ -10,7 +12,7 @@ const SettingsPopover = () => {
   const dispatch = useAppDispatch();
   const { profile, isBusinessUser } = useAuthStore();
 
-  const { name, created_at, business } = profile! ?? {};
+  const { name, created_at, business, image } = profile! ?? {};
   const { name: businessName } = business! ?? {};
 
   const handleSignOut = async () => {
@@ -26,11 +28,24 @@ const SettingsPopover = () => {
 
   return (
     <div>
-      <div className="text-base font-medium text-secondary-light-gray">
-        {name}
-      </div>
-      <div className="text-xs font-normal uppercase text-secondary-light-gray">
-        Member since {yearOfJoining}
+      <div className="flex gap-2">
+        <Avatar>
+          <AvatarImage
+            src={image ?? undefined}
+            alt="name"
+            className="object-cover"
+          />
+          <AvatarFallback>{getInitial(name)}</AvatarFallback>
+        </Avatar>
+
+        <div>
+          <div className="text-base font-medium text-secondary-light-gray">
+            {name}
+          </div>
+          <div className="text-xs font-normal uppercase text-secondary-light-gray">
+            Member since {yearOfJoining}
+          </div>
+        </div>
       </div>
 
       {isBusinessUser ? (
