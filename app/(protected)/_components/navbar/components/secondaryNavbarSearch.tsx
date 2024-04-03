@@ -2,7 +2,6 @@
 
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
 
 import {
   CommandDialog,
@@ -30,8 +29,6 @@ export default function SecondaryNavbarSearch({
   data,
 }: SecondaryNavbarSearchProps) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
-  const params = useParams();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

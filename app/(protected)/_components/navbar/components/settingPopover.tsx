@@ -1,6 +1,7 @@
 import { logout } from "@/actions/(auth)/logout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { getInitial } from "@/lib/common";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
@@ -11,17 +12,20 @@ import { IoSettingsOutline } from "react-icons/io5";
 const SettingsPopover = () => {
   const dispatch = useAppDispatch();
   const { profile, isBusinessUser } = useAuthStore();
-
+  const { toast } = useToast();
   const { name, created_at, business, image } = profile! ?? {};
   const { name: businessName } = business! ?? {};
 
   const handleSignOut = async () => {
-    await logout();
-    dispatch(
-      setAuthData({
-        authenticated: false,
-      })
-    );
+    const res = await logout();
+    if (res) {
+      toast({ title: res.data });
+      dispatch(
+        setAuthData({
+          authenticated: false,
+        })
+      );
+    }
   };
 
   const yearOfJoining = new Date(created_at).getFullYear();
@@ -35,7 +39,7 @@ const SettingsPopover = () => {
             alt="name"
             className="object-cover"
           />
-          <AvatarFallback>{getInitial(name)}</AvatarFallback>
+          <AvatarFallback>{getInitial(name ?? "")}</AvatarFallback>
         </Avatar>
 
         <div>

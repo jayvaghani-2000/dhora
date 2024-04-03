@@ -9,14 +9,14 @@ import { stringifyBigint } from "../_utils/stringifyBigint";
 import { TOKEN } from "@/cookie";
 import { errorType } from "@/actions/_utils/types.type";
 
-export const me: () => Promise<
+export const me: (clientSide?: boolean) => Promise<
   | {
       success: true;
       data: NonNullable<Awaited<ReturnType<typeof getUser>>>;
       error?: never;
     }
   | errorType
-> = async () => {
+> = async (clientSide = false) => {
   const token = cookies().get(TOKEN);
 
   if (token) {
@@ -31,9 +31,27 @@ export const me: () => Promise<
         return { success: false, error: "Something went wrong!" };
       }
     } else {
+      if (clientSide) {
+        const sessionCookie = lucia.createBlankSessionCookie();
+        cookies().set(
+          sessionCookie.name,
+          sessionCookie.value,
+          sessionCookie.attributes
+        );
+      }
+
       return { success: false, error: "Unauthenticated" };
     }
   } else {
+    if (clientSide) {
+      const sessionCookie = lucia.createBlankSessionCookie();
+      cookies().set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes
+      );
+    }
+
     return { success: false, error: "Unauthenticated" };
   }
 };

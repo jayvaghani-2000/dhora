@@ -26,6 +26,14 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
 
   if (!user) {
     return { error: "Invalid username or password", success: false };
+  } else {
+    if (user.deleted) {
+      return {
+        error:
+          "Your account is permanently closed, contact admin to enable account",
+        success: false,
+      };
+    }
   }
 
   const validPassword = await new Argon2id().verify(
@@ -45,6 +53,15 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     sessionCookie.value,
     sessionCookie.attributes
   );
+
+  await db
+    .update(users)
+    .set({
+      disabled: false,
+      updated_at: new Date(),
+    })
+    .where(eq(users.email, validatedFields.data.email));
+
   return redirect(
     user.business_id
       ? DEFAULT_BUSINESS_LOGIN_REDIRECT

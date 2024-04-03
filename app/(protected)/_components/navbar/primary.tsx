@@ -1,12 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-
 import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { logout } from "@/actions/(auth)/logout";
-import { useAppDispatch } from "@/provider/store";
-import { setAuthData, useAuthStore } from "@/provider/store/authentication";
+import { useAuthStore } from "@/provider/store/authentication";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PiPlus } from "react-icons/pi";
@@ -22,18 +19,8 @@ import {
 import SettingsPopover from "./components/settingPopover";
 
 const Primary = () => {
-  const dispatch = useAppDispatch();
   const { isBusinessUser } = useAuthStore();
   const path = usePathname();
-
-  const handleSignOut = async () => {
-    await logout();
-    dispatch(
-      setAuthData({
-        authenticated: false,
-      })
-    );
-  };
 
   return (
     <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">

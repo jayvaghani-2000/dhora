@@ -29,7 +29,7 @@ const WithAuth = ({ children }: propType) => {
 
   useEffect(() => {
     const handleVerifySession = async () => {
-      const user = await me();
+      const user = await me(true);
 
       const profile = user.data as profileType;
 

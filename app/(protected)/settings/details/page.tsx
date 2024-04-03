@@ -1,24 +1,19 @@
 import React from "react";
 import UpdatePassword from "./_components/update-password";
 import PersonalDetails from "./_components/personal-detail";
-import { Button } from "@/components/ui/button";
 import { me } from "@/actions/(auth)/me";
+import ProfileAction from "./_components/profile-actions";
 
-const Details = async () => {
+export default async function Details() {
   const user = await me();
-  return (
+  return user ? (
     <div>
       <PersonalDetails user={user.data} />
       <UpdatePassword />
-
-      <div className="mt-5 flex gap-5">
-        <Button className="bg-rose-700 text-destructive-foreground hover:bg-rose-700/90">
-          Disable My Account
-        </Button>
-        <Button variant="destructive">Delete My Account</Button>
-      </div>
+      <ProfileAction />
     </div>
+  ) : (
+    <div className="text-center">Unable to fetch user details</div>
   );
-};
+}
 
-export default Details;
