@@ -4,9 +4,12 @@ import { disableAccount } from "@/actions/(protected)/profile/disableAccount";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppDispatch } from "@/provider/store";
+import { setAuthData } from "@/provider/store/authentication";
 import React, { useState } from "react";
 
 const ProfileAction = () => {
+  const dispatch = useAppDispatch();
   const [confirmDisableAccount, setConfirmDisableAccount] = useState(false);
   const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,6 +22,12 @@ const ProfileAction = () => {
       toast({
         title: res.data,
       });
+
+      dispatch(
+        setAuthData({
+          authenticated: false,
+        })
+      );
       setConfirmDeleteAccount(false);
     } else {
       toast({
@@ -35,6 +44,11 @@ const ProfileAction = () => {
       toast({
         title: res.data,
       });
+      dispatch(
+        setAuthData({
+          authenticated: false,
+        })
+      );
       setConfirmDisableAccount(false);
     } else {
       toast({
