@@ -28,15 +28,6 @@ import {
   generateBreakdownPrice,
   stringCasting,
 } from "@/lib/common";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
@@ -44,6 +35,7 @@ import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoic
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { revalidate } from "@/actions/(public)/revalidate";
 import InvoicePdf from "./../_components/invoice-pdf/index";
+import { DatePicker } from "@/components/shared/date-picker";
 
 type propType =
   | {
@@ -453,7 +445,6 @@ const InvoiceForm = (props: propType) => {
                         <FormControl>
                           <Input
                             type="number"
-                            className="h-9"
                             placeholder="Item Quantity"
                             {...field}
                             onChange={e => {
@@ -547,41 +538,21 @@ const InvoiceForm = (props: propType) => {
             <FormField
               control={form.control}
               name="due_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full h-9 justify-start text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a due date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={date => {
-                            field.onChange(date);
-                          }}
-                          disabled={date => date < new Date()}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <DatePicker
+                        placeholder="Select due date"
+                        value={field.value}
+                        onChange={field.onChange}
+                        disabled={date => date < new Date()}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           </div>
 

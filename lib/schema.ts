@@ -16,6 +16,8 @@ export type settingsBusinessDetailSchemaType = z.infer<
 export type editProfileSchemaType = z.infer<typeof editProfileSchema>;
 export type editBookingTypeSchemaType = z.infer<typeof editBookingTypeSchema>;
 
+export type createEventSchemaType = z.infer<typeof createEventSchema>;
+
 export const businessDetailSchema = z.object({
   business_name: z
     .string()
@@ -122,4 +124,24 @@ export const editProfileSchema = z.object({
     .string()
     .refine(data => data.trim().length > 0, { message: "Name is required" }),
   email: z.string().email({ message: "Enter valid email" }),
+});
+
+export const createEventSchema = z.object({
+  name: z
+    .string()
+    .refine(data => data.trim().length > 0, { message: "Name is required" }),
+  description: z.string().refine(
+    data => {
+      if (data.trim() === "" || data === "<p><br></p>") {
+        return false;
+      }
+      return true;
+    },
+    { message: "Description is required" }
+  ),
+  single_day_event: z.boolean(),
+  date: z.object({
+    from: z.date(),
+    to: z.date(),
+  }),
 });

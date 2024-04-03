@@ -17,68 +17,78 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import SettingsPopover from "./components/settingPopover";
+import CreateEvent from "../create-event";
+import { useState } from "react";
 
 const Primary = () => {
   const { isBusinessUser } = useAuthStore();
   const path = usePathname();
+  const [createEvent, setCreateEvent] = useState(false);
 
   return (
-    <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
-      <PrimaryNavbarItem
-        path="/@me"
-        key="/@me"
-        tooltip="@me"
-        active={path.startsWith("/@me")}
-      >
-        <Image
-          src={assets.png.TRANSPARENT_LOGO}
-          alt="logo"
-          height={36}
-          width={36}
-        />
-      </PrimaryNavbarItem>
-      <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
-      <div className="flex flex-col gap-2">
-        {isBusinessUser && (
-          <>
-            <PrimaryNavbarItem
-              path="/business/contracts"
-              key="/business"
-              tooltip="Business"
-              active={path.startsWith("/business")}
-            >
-              <HiOutlineBuildingOffice size={32} />
-            </PrimaryNavbarItem>
-            <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
-          </>
-        )}
-      </div>
-      <ScrollArea className="flex-1">
-        <div className="flex flex-col gap-1 overflow-hidden"></div>
-      </ScrollArea>
-      <div className="flex items-center flex-col gap-y-2">
+    <>
+      <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
+        <PrimaryNavbarItem
+          path="/@me"
+          key="/@me"
+          tooltip="@me"
+          active={path.startsWith("/@me")}
+        >
+          <Image
+            src={assets.png.TRANSPARENT_LOGO}
+            alt="logo"
+            height={36}
+            width={36}
+          />
+        </PrimaryNavbarItem>
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
-        <Link href={DEFAULT_LOGIN_REDIRECT}>
-          <Button variant="ghost" className="h-[48px] w-[48px] p-0">
+        <div className="flex flex-col gap-2">
+          {isBusinessUser && (
+            <>
+              <PrimaryNavbarItem
+                path="/business/contracts"
+                key="/business"
+                tooltip="Business"
+                active={path.startsWith("/business")}
+              >
+                <HiOutlineBuildingOffice size={32} />
+              </PrimaryNavbarItem>
+              <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
+            </>
+          )}
+        </div>
+        <ScrollArea className="flex-1">
+          <div className="flex flex-col gap-1 overflow-hidden"></div>
+        </ScrollArea>
+        <div className="flex items-center flex-col gap-y-2">
+          <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
+          <Button
+            variant="ghost"
+            className="h-[48px] w-[48px] p-0"
+            onClick={() => {
+              setCreateEvent(true);
+            }}
+          >
             <PiPlus size={32} />
           </Button>
-        </Link>
-        <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              className="text-white p-2 h-[48px] w-[48px]"
-            >
-              <IoSettingsOutline size={32} />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="max-w-[calc(100vw-20px)] w-72">
-            <SettingsPopover />
-          </PopoverContent>
-        </Popover>
+          <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                className="text-white p-2 h-[48px] w-[48px]"
+              >
+                <IoSettingsOutline size={32} />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="max-w-[calc(100vw-20px)] w-72">
+              <SettingsPopover />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
-    </div>
+      <CreateEvent open={createEvent} setOpen={setCreateEvent} />
+    </>
   );
 };
 

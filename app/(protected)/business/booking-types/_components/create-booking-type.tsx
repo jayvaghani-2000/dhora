@@ -41,7 +41,10 @@ const CreateBookingTypeModel = () => {
     value: z.infer<typeof createBookingTypeSchema>
   ) => {
     setLoading(true);
-    await createBookingType(value);
+    await createBookingType({
+      ...value,
+      description: value.description.replace(/(<p><br><\/p>)+/g, "$1"),
+    });
     setLoading(false);
   };
 
