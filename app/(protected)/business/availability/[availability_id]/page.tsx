@@ -1,4 +1,4 @@
-import { getAvailabilityDetail } from "@/actions/(protected)/availability/getAvailabilityDetail";
+import { getAvailabilityDetail } from "@/actions/(protected)/business/availability/getAvailabilityDetail";
 import React from "react";
 import AvailabilityForm from "../_components/availability-from";
 

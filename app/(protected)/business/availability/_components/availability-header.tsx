@@ -7,7 +7,7 @@ import { MdEdit } from "react-icons/md";
 import { useRef, useState } from "react";
 import Spinner from "@/components/shared/spinner";
 import { useParams } from "next/navigation";
-import { deleteAvailability } from "@/actions/(protected)/availability/deleteAvailability";
+import { deleteAvailability } from "@/actions/(protected)/business/availability/deleteAvailability";
 import { getAvailabilityDetailType } from "@/actions/_utils/types.type";
 import { availabilityAsString } from "../_utils/initializeAvailability";
 import BackButton from "@/components/shared/back-button";

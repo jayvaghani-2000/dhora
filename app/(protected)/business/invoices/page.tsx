@@ -1,4 +1,4 @@
-import { getInvoices } from "@/actions/(protected)/invoices/getInvoices";
+import { getInvoices } from "@/actions/(protected)/business/invoices/getInvoices";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { LiaPlusSolid } from "react-icons/lia";

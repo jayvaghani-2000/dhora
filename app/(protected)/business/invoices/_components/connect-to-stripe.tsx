@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { onBoarding } from "@/actions/(protected)/stripe/onboarding";
+import { onBoarding } from "@/actions/(protected)/business/stripe/onboarding";
 import { BsCreditCard2Front } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { profileType } from "@/actions/_utils/types.type";

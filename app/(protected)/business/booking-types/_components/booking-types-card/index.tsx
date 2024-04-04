@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import RichEditor from "@/components/shared/rich-editor";
 import { FaRegClock } from "react-icons/fa";
-import { deleteBookingType } from "@/actions/(protected)/booking-types/deleteBookingType";
+import { deleteBookingType } from "@/actions/(protected)/business/booking-types/deleteBookingType";
 
 type propType = {
   data: NonNullable<getBookingTypesType["data"]>[0];

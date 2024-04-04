@@ -6,7 +6,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { deleteAvailability } from "@/actions/(protected)/availability/deleteAvailability";
+import { deleteAvailability } from "@/actions/(protected)/business/availability/deleteAvailability";
 import { availabilityAsString } from "../../_utils/initializeAvailability";
 import { useToast } from "@/components/ui/use-toast";
 

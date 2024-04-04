@@ -1,5 +1,5 @@
-import { getAvailability } from "@/actions/(protected)/availability/getAvailability";
-import { getBookingTypeDetails } from "@/actions/(protected)/booking-types/getBookingTypeDetails";
+import { getAvailability } from "@/actions/(protected)/business/availability/getAvailability";
+import { getBookingTypeDetails } from "@/actions/(protected)/business/booking-types/getBookingTypeDetails";
 import React from "react";
 import EditBookingType from "../_components/edit-booking-type";
 

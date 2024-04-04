@@ -5,12 +5,12 @@ import { recordType } from "./invoices";
 import { RiShareForwardFill } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { checkout } from "@/actions/(protected)/stripe/checkout";
+import { checkout } from "@/actions/(protected)/business/stripe/checkout";
 import { IoEyeOutline } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { ActionTooltip } from "@/components/shared/action-tooltip";
-import { getInvoiceDetail } from "@/actions/(protected)/invoices/getInvoiceDetail";
+import { getInvoiceDetail } from "@/actions/(protected)/business/invoices/getInvoiceDetail";
 import { getInvoicesDetailResponseType } from "@/actions/_utils/types.type";
 import InvoicePdf from "./invoice-pdf";
 

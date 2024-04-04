@@ -1,4 +1,4 @@
-import { getInvoiceDetail } from "@/actions/(protected)/invoices/getInvoiceDetail";
+import { getInvoiceDetail } from "@/actions/(protected)/business/invoices/getInvoiceDetail";
 import InvoiceForm from "../_components/invoice-form";
 import { me } from "@/actions/(auth)/me";
 import { invoiceSchemaType } from "@/lib/schema";

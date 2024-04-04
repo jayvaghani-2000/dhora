@@ -1,5 +1,5 @@
-import { getContracts } from "@/actions/(protected)/contracts/getContracts";
-import { getSubmittedContracts } from "@/actions/(protected)/contracts/getSubmittedContract";
+import { getContracts } from "@/actions/(protected)/business/contracts/getContracts";
+import { getSubmittedContracts } from "@/actions/(protected)/business/contracts/getSubmittedContract";
 import SubmittedContract from "./template/_components/submittedContract";
 import Templates from "./_components/templates";
 

@@ -22,7 +22,7 @@ const handler = async (user: User, data: paramsType) => {
       submitters: [
         {
           email: data.email,
-          external_id: user.business_id?.toString(),
+          external_id: user.business_id?.toString(), // event_id
         },
       ],
     },

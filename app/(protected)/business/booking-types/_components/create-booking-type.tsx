@@ -17,7 +17,7 @@ import { createBookingTypeSchema } from "@/lib/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomDialog from "@/components/shared/custom-dialog";
-import { createBookingType } from "@/actions/(protected)/booking-types/createBookingType";
+import { createBookingType } from "@/actions/(protected)/business/booking-types/createBookingType";
 
 const CreateBookingTypeModel = () => {
   const [openCreateBookingType, setOpenCreateBookingType] = useState(false);

@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { invoiceSchema, invoiceSchemaType } from "@/lib/schema";
 import { LiaPlusSolid } from "react-icons/lia";
-import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
+import { generateInvoice } from "@/actions/(protected)/business/invoices/generateInvoice";
 import { IconInput } from "@/components/shared/icon-input";
 import {
   formatAmount,
@@ -31,7 +31,7 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
-import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
+import { updateInvoiceDetail } from "@/actions/(protected)/business/invoices/updateInvoiceDetail";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { revalidate } from "@/actions/(public)/revalidate";
 import InvoicePdf from "./../_components/invoice-pdf/index";

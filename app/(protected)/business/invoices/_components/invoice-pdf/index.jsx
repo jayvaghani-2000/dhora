@@ -4,7 +4,7 @@ import { PLATFORM_FEE } from '@/lib/constant'
 import { useAuthStore } from '@/provider/store/authentication'
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from 'react';
-import { checkout } from '@/actions/(protected)/stripe/checkout';
+import { checkout } from '@/actions/(protected)/business/stripe/checkout';
 import { useRouter } from 'next/navigation';
 import html2pdf from "html2pdf.js"
 import { getBusinessLogo } from '@/actions/(protected)/business/getBusinessLogo';
@@ -235,7 +235,7 @@ const InvoicePdf = (props) => {
   }
 
   return (
-    <div className="fixed bottom-[300vh] -z-10 w-[1200px] overflow-hidden opacity-0 ">
+    <div className="fixed -z-10 w-[1200px] overflow-hidden opacity-0 " style={{ bottom: "300dvh" }}>
       <div id="invoice-pdf" style={{
         padding: "16px",
         borderRadius: "5px",

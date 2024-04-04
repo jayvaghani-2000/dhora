@@ -17,8 +17,8 @@ import Spinner from "@/components/shared/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { deleteBookingType } from "@/actions/(protected)/booking-types/deleteBookingType";
-import { updateBookingType } from "@/actions/(protected)/booking-types/updateBookingType";
+import { deleteBookingType } from "@/actions/(protected)/business/booking-types/deleteBookingType";
+import { updateBookingType } from "@/actions/(protected)/business/booking-types/updateBookingType";
 import BackButton from "@/components/shared/back-button";
 
 type propType = {

@@ -107,6 +107,7 @@ export const contracts = pgTable("contracts", {
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)
     .notNull(),
+  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -115,6 +116,10 @@ export const contractsRelations = relations(contracts, ({ one }) => ({
   business: one(businesses, {
     fields: [contracts.business_id],
     references: [businesses.id],
+  }),
+  event: one(events, {
+    fields: [contracts.event_id],
+    references: [events.id],
   }),
 }));
 
@@ -167,6 +172,17 @@ export const availability = pgTable("availability", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const availabilityRelations = relations(
+  availability,
+  ({ one, many }) => ({
+    business: one(businesses, {
+      fields: [availability.business_id],
+      references: [businesses.id],
+    }),
+    booking_types: many(bookingTypes),
+  })
+);
+
 export const bookingTypes = pgTable("booking_types", {
   id: bigint("id", { mode: "bigint" })
     .primaryKey()
@@ -186,17 +202,6 @@ export const bookingTypes = pgTable("booking_types", {
   booking_frequency: jsonb("booking_frequency"),
 });
 
-export const availabilityRelations = relations(
-  availability,
-  ({ one, many }) => ({
-    business: one(businesses, {
-      fields: [availability.business_id],
-      references: [businesses.id],
-    }),
-    booking_types: many(bookingTypes),
-  })
-);
-
 export const bookingTypesRelations = relations(bookingTypes, ({ one }) => ({
   availability: one(availability, {
     fields: [bookingTypes.availability_id],
@@ -206,6 +211,26 @@ export const bookingTypesRelations = relations(bookingTypes, ({ one }) => ({
     fields: [bookingTypes.business_id],
     references: [businesses.id],
   }),
+}));
+
+export const events = pgTable("events", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  title: text("title").notNull(),
+  logo: text("logo"),
+  description: text("description").notNull(),
+  deleted: boolean("deleted").default(false),
+  completed: boolean("completed").default(false),
+  single_day_event: boolean("single_day_event").default(false),
+  from_date: timestamp("from_date"),
+  to_date: timestamp("to_date"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const eventsRelations = relations(events, ({ many }) => ({
+  invoices: many(invoices),
 }));
 
 export const registerSchema = createInsertSchema(users)

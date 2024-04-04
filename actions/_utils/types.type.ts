@@ -1,17 +1,17 @@
-import { getContracts } from "../(protected)/contracts/getContracts";
-import { getSubmittedContracts } from "../(protected)/contracts/getSubmittedContract";
-import { initiateContract } from "../(protected)/contracts/initiateContract";
-import { submitContract } from "../(protected)/contracts/submitContract";
+import { getContracts } from "../(protected)/business/contracts/getContracts";
+import { getSubmittedContracts } from "../(protected)/business/contracts/getSubmittedContract";
+import { initiateContract } from "../(protected)/business/contracts/initiateContract";
+import { submitContract } from "../(protected)/business/contracts/submitContract";
 import { getUser } from "../(auth)/me";
-import { getInvoices } from "../(protected)/invoices/getInvoices";
+import { getInvoices } from "../(protected)/business/invoices/getInvoices";
 import { createAvailabilitySchema, createInvoiceSchema } from "@/db/schema";
 import { z } from "zod";
-import { getInvoiceDetail } from "../(protected)/invoices/getInvoiceDetail";
-import { getInvoiceInfo } from "../(protected)/stripe/checkout";
-import { getAvailabilityDetail } from "../(protected)/availability/getAvailabilityDetail";
-import { getAvailability } from "../(protected)/availability/getAvailability";
-import { getBookingTypes } from "../(protected)/booking-types/getBookingTypes";
-import { getBookingTypeDetails } from "../(protected)/booking-types/getBookingTypeDetails";
+import { getInvoiceDetail } from "../(protected)/business/invoices/getInvoiceDetail";
+import { getInvoiceInfo } from "../(protected)/business/stripe/checkout";
+import { getAvailabilityDetail } from "../(protected)/business/availability/getAvailabilityDetail";
+import { getAvailability } from "../(protected)/business/availability/getAvailability";
+import { getBookingTypes } from "../(protected)/business/booking-types/getBookingTypes";
+import { getBookingTypeDetails } from "../(protected)/business/booking-types/getBookingTypeDetails";
 
 export type errorType = { success: false; error: string; data?: never };
 

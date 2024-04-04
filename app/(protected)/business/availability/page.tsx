@@ -1,4 +1,4 @@
-import { getAvailability } from "@/actions/(protected)/availability/getAvailability";
+import { getAvailability } from "@/actions/(protected)/business/availability/getAvailability";
 import Availabilities from "./_components/availabilities";
 
 export default async function AvailabilitiesPage() {

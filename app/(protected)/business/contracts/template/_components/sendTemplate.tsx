@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { submitContract } from "@/actions/(protected)/contracts/submitContract";
+import { submitContract } from "@/actions/(protected)/business/contracts/submitContract";
 import { submitContractResponseType } from "@/actions/_utils/types.type";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PARAMS } from "./contractBuilder";

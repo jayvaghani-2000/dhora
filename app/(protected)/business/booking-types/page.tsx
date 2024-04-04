@@ -1,4 +1,4 @@
-import { getBookingTypes } from "@/actions/(protected)/booking-types/getBookingTypes";
+import { getBookingTypes } from "@/actions/(protected)/business/booking-types/getBookingTypes";
 import CreateBookingType from "./_components/create-booking-type";
 import BookingTypes from "./_components/booking-types";
 
