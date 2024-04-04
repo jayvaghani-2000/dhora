@@ -1,8 +1,8 @@
 "use server";
 
-import { users } from "@/db/schema";
+import { events, users } from "@/db/schema";
 import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { stringifyBigint } from "../_utils/stringifyBigint";
@@ -59,6 +59,13 @@ export const me: (clientSide?: boolean) => Promise<
 export const getUser = async (email: string) => {
   return db.query.users.findFirst({
     where: eq(users.email, email),
-    with: { business: true },
+    with: {
+      business: true,
+      events: {
+        columns: { id: true, title: true, logo: true },
+        where: eq(events.deleted, false),
+        orderBy: [asc(events.updated_at)],
+      },
+    },
   });
 };

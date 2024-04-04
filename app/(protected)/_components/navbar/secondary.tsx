@@ -10,6 +10,7 @@ import {
   LiaFileContractSolid,
   LiaFileInvoiceDollarSolid,
 } from "react-icons/lia";
+import { IoIosArrowDropdown } from "react-icons/io";
 import { FaLink } from "react-icons/fa6";
 import { FaRegClock } from "react-icons/fa";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
@@ -24,18 +25,6 @@ export const StaticOptions = [
         title: "Marketplace",
         icon: <BsShop />,
         path: "/@me/marketplace",
-      },
-      {
-        key: "contracts",
-        title: "Contracts",
-        icon: <LiaFileContractSolid />,
-        path: "/@me/contracts",
-      },
-      {
-        key: "invoices",
-        title: "Invoices",
-        icon: <LiaFileInvoiceDollarSolid />,
-        path: "/@me/invoices",
       },
     ],
   },
@@ -65,6 +54,29 @@ export const StaticOptions = [
         title: "Booking Types",
         icon: <FaLink />,
         path: "/business/booking-types",
+      },
+    ],
+  },
+  {
+    key: "event",
+    options: [
+      {
+        key: "contracts",
+        title: "Contracts",
+        icon: <LiaFileContractSolid />,
+        path: "contracts",
+      },
+      {
+        key: "invoices",
+        title: "Invoices",
+        icon: <LiaFileInvoiceDollarSolid />,
+        path: "invoices",
+      },
+      {
+        key: "event-setup",
+        title: "Event Setup",
+        icon: <IoIosArrowDropdown />,
+        path: "event-setup",
       },
     ],
   },

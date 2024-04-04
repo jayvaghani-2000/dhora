@@ -20,6 +20,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DatePicker } from "@/components/shared/date-picker";
 import { createEvent } from "@/actions/(protected)/customer/events/createEvent";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppDispatch } from "@/provider/store";
+import { setAuthData } from "@/provider/store/authentication";
+import { me } from "@/actions/(auth)/me";
 
 const CreateEvent = (
   props: Partial<React.ComponentProps<typeof CustomDialog>> & {
@@ -30,6 +33,7 @@ const CreateEvent = (
   const [loading, setLoading] = useState(false);
   const [submitCount, setSubmitCount] = useState(0);
   const { open = false, setOpen } = props;
+  const dispatch = useAppDispatch();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof createEventSchema>>({
@@ -66,6 +70,17 @@ const CreateEvent = (
       toast({
         title: res.data,
       });
+
+      const userData = await me();
+
+      if (userData.success) {
+        dispatch(
+          setAuthData({
+            profile: userData.data,
+          })
+        );
+      }
+
       handleCloseCreateEvent();
     } else {
       toast({

@@ -15,21 +15,19 @@ export default function PrimaryNavbarItem(props: PrimaryNavbarProps) {
   const { path, children, tooltip, active } = props;
 
   return (
-    <div>
-      <ActionTooltip side="right" align="center" label={tooltip}>
-        <Link href={path}>
-          <Button
-            variant="ghost"
-            className={clsx({
-              "border border-white": active,
-              "": !active,
-              "w-[48px] h-[48px] p-0": true,
-            })}
-          >
-            <span>{children}</span>
-          </Button>
-        </Link>
-      </ActionTooltip>
-    </div>
+    <ActionTooltip side="right" align="center" label={tooltip}>
+      <Link href={path}>
+        <Button
+          variant="ghost"
+          className={clsx({
+            "border border-white": active,
+            "": !active,
+            "w-[48px] h-[48px] p-0": true,
+          })}
+        >
+          <span className="text-ellipsis">{children}</span>
+        </Button>
+      </Link>
+    </ActionTooltip>
   );
 }

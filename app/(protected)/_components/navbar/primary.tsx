@@ -17,6 +17,8 @@ import SettingsPopover from "./components/settingPopover";
 import CreateEvent from "../create-event";
 import { useState } from "react";
 import { profileType } from "@/actions/_utils/types.type";
+import { getInitial } from "@/lib/common";
+import { useAuthStore } from "@/provider/store/authentication";
 
 type propType = {
   user: profileType;
@@ -26,7 +28,10 @@ const Primary = (props: propType) => {
   const { user } = props;
   const isBusinessUser = !!user?.business_id;
   const path = usePathname();
+  const { profile } = useAuthStore();
   const [createEvent, setCreateEvent] = useState(false);
+
+  const userEvents = profile?.events ? profile?.events : user?.events;
 
   return (
     <>
@@ -42,6 +47,7 @@ const Primary = (props: propType) => {
             alt="logo"
             height={36}
             width={36}
+            className="rounded-md"
           />
         </PrimaryNavbarItem>
         <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
@@ -61,7 +67,29 @@ const Primary = (props: propType) => {
           )}
         </div>
         <ScrollArea className="flex-1">
-          <div className="flex flex-col gap-1 overflow-hidden"></div>
+          <div className="flex flex-col gap-1 overflow-hidden">
+            {userEvents?.map(i => (
+              <PrimaryNavbarItem
+                path={`/event/${i.id}/contracts`}
+                key={i.id}
+                tooltip={i.title}
+                active={path.startsWith(`/event/${i.id}`)}
+              >
+                {i.logo ? (
+                  <Image
+                    src={i.logo}
+                    alt="logo"
+                    height={36}
+                    width={36}
+                    className="h-9 rounded-md object-cover"
+                    sizes="100px"
+                  />
+                ) : (
+                  getInitial(i.title)
+                )}
+              </PrimaryNavbarItem>
+            ))}
+          </div>
         </ScrollArea>
         <div className="flex items-center flex-col gap-y-2">
           <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
