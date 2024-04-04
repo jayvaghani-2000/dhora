@@ -73,3 +73,13 @@ export async function createPublicProfileImgUrl(user_id: bigint, img: File) {
   await setPublicPolicy(user_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
+
+export async function createPublicEventImgUrl(user_id: bigint, img: File) {
+  const buffer = Buffer.from(await img.arrayBuffer());
+  const metadata = await assetsMetadata(buffer);
+  const id = (await getBigIntId)[0].id_generator;
+  const filepath = `${user_id}/public/events/${id}.${metadata.type?.toLowerCase()}`;
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
+  await setPublicPolicy(user_id);
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
+}

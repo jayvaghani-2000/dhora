@@ -141,6 +141,13 @@
       "when": 1712213091087,
       "tag": "0019_worried_hairball",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1712214837474,
+      "tag": "0020_colorful_smiling_tiger",
+      "breakpoints": true
     }
   ]
 }

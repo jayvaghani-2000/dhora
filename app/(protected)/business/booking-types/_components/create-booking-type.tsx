@@ -43,7 +43,7 @@ const CreateBookingTypeModel = () => {
     setLoading(true);
     await createBookingType({
       ...value,
-      description: value.description.replace(/(<p><br><\/p>)+/g, "$1"),
+      description: value.description,
     });
     setLoading(false);
   };

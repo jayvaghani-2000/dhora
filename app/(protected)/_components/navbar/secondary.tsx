@@ -13,6 +13,7 @@ import {
 import { FaLink } from "react-icons/fa6";
 import { FaRegClock } from "react-icons/fa";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
+import { profileType } from "@/actions/_utils/types.type";
 
 export const StaticOptions = [
   {
@@ -69,7 +70,11 @@ export const StaticOptions = [
   },
 ];
 
-const Secondary = () => {
+type propType = {
+  user: profileType;
+};
+
+const Secondary = (prop: propType) => {
   const path = usePathname();
   const key = StaticOptions.findIndex(o => path.startsWith(`/${o.key}`));
   const route = StaticOptions[key];

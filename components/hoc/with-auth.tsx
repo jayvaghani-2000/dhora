@@ -1,13 +1,13 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData, useAuthStore } from "@/provider/store/authentication";
 import { ConfirmAccount } from "@/components/confirm-account";
 import { me } from "@/actions/(auth)/me";
-import { profileType } from "@/actions/_utils/types.type";
+import { getProfileType, profileType } from "@/actions/_utils/types.type";
 import { authRoutes, publicRoutes } from "@/routes";
 import Spinner from "../shared/spinner";
 import Script from "next/script";
@@ -17,23 +17,25 @@ const publicRouteList = [...publicRoutes, ...authRoutes];
 
 type propType = {
   children: React.ReactNode;
+  user: getProfileType;
 };
 
-const WithAuth = ({ children }: propType) => {
+const WithAuth = ({ children, user }: propType) => {
   const path = usePathname();
   const router = useRouter();
   const { authCheck, profile, authenticated } = useAuthStore();
   const dispatch = useAppDispatch();
+  const [rendered, setRendered] = useState(false);
 
   const isPublicRoute = publicRouteList.includes(path);
 
   useEffect(() => {
     const handleVerifySession = async () => {
-      const user = await me(true);
+      const userData = rendered ? await me(true) : user;
 
-      const profile = user.data as profileType;
+      const profile = userData.data;
 
-      if (user.success) {
+      if (userData.success) {
         dispatch(
           setAuthData({
             profile: profile,
@@ -56,9 +58,12 @@ const WithAuth = ({ children }: propType) => {
           router.replace(authRoutes[0]);
         }
       }
+      if (!rendered) {
+        setRendered(true);
+      }
     };
     handleVerifySession();
-  }, [authenticated, router, dispatch, path]);
+  }, [authenticated, router, dispatch]);
 
   const body =
     authenticated && !profile?.email_verified ? <ConfirmAccount /> : children;

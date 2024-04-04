@@ -1,9 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { assets } from "@/components/assets";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { useAuthStore } from "@/provider/store/authentication";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PiPlus } from "react-icons/pi";
@@ -19,9 +16,15 @@ import {
 import SettingsPopover from "./components/settingPopover";
 import CreateEvent from "../create-event";
 import { useState } from "react";
+import { profileType } from "@/actions/_utils/types.type";
 
-const Primary = () => {
-  const { isBusinessUser } = useAuthStore();
+type propType = {
+  user: profileType;
+};
+
+const Primary = (props: propType) => {
+  const { user } = props;
+  const isBusinessUser = !!user?.business_id;
   const path = usePathname();
   const [createEvent, setCreateEvent] = useState(false);
 

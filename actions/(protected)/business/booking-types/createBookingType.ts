@@ -11,11 +11,13 @@ import { and, eq } from "drizzle-orm";
 import { createBookingTypeSchema } from "@/lib/schema";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
+import { trimRichEditor } from "@/lib/common";
 
 const handler = async (
   user: User,
   values: z.infer<typeof createBookingTypeSchema>
 ) => {
+  const { description, ...rest } = values;
   const defaultAvailability = await db.query.availability.findFirst({
     where: and(
       eq(availability.business_id, user.business_id!),
@@ -28,7 +30,8 @@ const handler = async (
       .values({
         business_id: user.business_id!,
         availability_id: defaultAvailability!.id,
-        ...values,
+        ...rest,
+        description: trimRichEditor(description),
       })
       .returning();
 

@@ -18,6 +18,8 @@ import RichEditor from "@/components/shared/rich-editor";
 import { DateRangePicker } from "@/components/shared/range-picker";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePicker } from "@/components/shared/date-picker";
+import { createEvent } from "@/actions/(protected)/customer/events/createEvent";
+import { useToast } from "@/components/ui/use-toast";
 
 const CreateEvent = (
   props: Partial<React.ComponentProps<typeof CustomDialog>> & {
@@ -25,17 +27,52 @@ const CreateEvent = (
   }
 ) => {
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [submitCount, setSubmitCount] = useState(0);
   const { open = false, setOpen } = props;
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof createEventSchema>>({
     resolver: zodResolver(createEventSchema),
-    defaultValues: {},
+    defaultValues: {
+      single_day_event: false,
+      description: "",
+      title: "",
+      date: {
+        from: undefined,
+        to: undefined,
+      },
+    },
+    reValidateMode: "onChange",
   });
 
   const handleCloseCreateEvent = () => {
     setOpen(false);
     setFile(null);
     form.reset();
+  };
+
+  const handleSubmit = async (value: z.infer<typeof createEventSchema>) => {
+    setLoading(true);
+    const logo = new FormData();
+    if (file) {
+      logo.append("image", file);
+    }
+    const res = await createEvent({
+      eventDetail: value,
+      logo,
+    });
+    if (res.success) {
+      toast({
+        title: res.data,
+      });
+      handleCloseCreateEvent();
+    } else {
+      toast({
+        title: res.error,
+      });
+    }
+    setLoading(false);
   };
 
   return (
@@ -45,6 +82,15 @@ const CreateEvent = (
       className="w-[800px]"
       saveText="Create"
       onClose={handleCloseCreateEvent}
+      onSubmit={async () => {
+        await form.trigger();
+        if (form.formState.isValid) {
+          await handleSubmit(form.getValues());
+        } else {
+          setSubmitCount(prev => prev + 1);
+        }
+      }}
+      disableAction={loading}
     >
       <div className="flex gap-5 flex-col md:flex-row items-center md:items-start">
         <UploadEventLogo setFile={setFile} file={file} />
@@ -52,7 +98,7 @@ const CreateEvent = (
           <div className="flex-1 flex gap-2 flex-col w-full">
             <FormField
               control={form.control}
-              name="name"
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Title</FormLabel>
@@ -102,7 +148,7 @@ const CreateEvent = (
                           <FormControl>
                             <DatePicker
                               placeholder="Select event date"
-                              value={field.value?.from}
+                              value={field.value.from}
                               onChange={date => {
                                 field.onChange({
                                   from: date,
@@ -112,7 +158,13 @@ const CreateEvent = (
                               disabled={date => date < new Date()}
                             />
                           </FormControl>
-                          <FormMessage />
+                          {!field.value.from && submitCount > 0 ? (
+                            <p
+                              className={"text-sm font-medium text-destructive"}
+                            >
+                              Select a date
+                            </p>
+                          ) : null}
                         </FormItem>
                       )}
                     />
@@ -142,7 +194,17 @@ const CreateEvent = (
                               disabled={date => date < new Date()}
                             />
                           </FormControl>
-                          <FormMessage />
+                          {!field.value.from &&
+                            !field.value.to &&
+                            submitCount > 0 && (
+                              <p
+                                className={
+                                  "text-sm font-medium text-destructive"
+                                }
+                              >
+                                Select a date
+                              </p>
+                            )}
                         </FormItem>
                       )}
                     />

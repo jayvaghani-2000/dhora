@@ -108,3 +108,7 @@ export const parseTimezone = (timeZone: string) => {
 
   return timeZonesWithUtc.find(i => i.group.includes(timeZone))?.name;
 };
+
+export const trimRichEditor = (value: string) => {
+  return (value ?? "").replace(/(<p><br><\/p>)+/g, "$1");
+};

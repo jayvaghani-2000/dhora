@@ -12,6 +12,7 @@ import { z } from "zod";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
 import { editBookingTypeSchema } from "@/lib/schema";
+import { trimRichEditor } from "@/lib/common";
 
 type paramsType = {
   bookingTypeId: string;
@@ -21,13 +22,14 @@ type paramsType = {
 const handler = async (user: User, params: paramsType) => {
   const { bookingTypeId, values } = params;
 
-  const { availability_id, ...rest } = values;
+  const { availability_id, description, ...rest } = values;
 
   try {
     const data = await db
       .update(bookingTypes)
       .set({
         ...rest,
+        description: trimRichEditor(description),
         availability_id: BigInt(availability_id),
         updated_at: new Date(),
       })

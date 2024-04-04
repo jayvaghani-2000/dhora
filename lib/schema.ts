@@ -127,7 +127,7 @@ export const editProfileSchema = z.object({
 });
 
 export const createEventSchema = z.object({
-  name: z
+  title: z
     .string()
     .refine(data => data.trim().length > 0, { message: "Name is required" }),
   description: z.string().refine(
@@ -142,6 +142,6 @@ export const createEventSchema = z.object({
   single_day_event: z.boolean(),
   date: z.object({
     from: z.date(),
-    to: z.date(),
+    to: z.date().optional(),
   }),
 });

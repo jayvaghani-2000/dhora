@@ -53,11 +53,12 @@ export const users = pgTable("users", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const usersRelations = relations(users, ({ one }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   business: one(businesses, {
     fields: [users.business_id],
     references: [businesses.id],
   }),
+  events: many(events),
 }));
 
 export const sessions = pgTable("session", {
@@ -225,11 +226,18 @@ export const events = pgTable("events", {
   single_day_event: boolean("single_day_event").default(false),
   from_date: timestamp("from_date"),
   to_date: timestamp("to_date"),
+  user_id: text("user_id")
+    .notNull()
+    .references(() => users.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const eventsRelations = relations(events, ({ many }) => ({
+export const eventsRelations = relations(events, ({ many, one }) => ({
+  user: one(users, {
+    fields: [events.user_id],
+    references: [users.id],
+  }),
   invoices: many(invoices),
 }));
 
