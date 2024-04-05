@@ -1,13 +1,11 @@
 "use client";
 
 import { profileType } from "@/actions/_utils/types.type";
-import Spinner from "@/components/shared/spinner";
+import { allowedImageType } from "@/lib/constant";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
 import { MdOutlineModeEdit } from "react-icons/md";
-
-const allowFileType = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
 type Props = {
   file: File | null;
@@ -21,13 +19,12 @@ const BusinessLogo = ({ file, setFile, user }: Props) => {
     base64: user?.business?.logo ?? "",
     name: "",
   });
-  const [loading, setLoading] = useState(false);
 
   const files = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = e.target.files;
 
-      if (allowFileType.includes(files[0].type)) {
+      if (allowedImageType.includes(files[0].type)) {
         setFile(files[0]);
       }
       ref.current.value = "";
@@ -50,7 +47,6 @@ const BusinessLogo = ({ file, setFile, user }: Props) => {
 
   return (
     <div className="relative h-fit">
-      {loading ? <Spinner /> : null}
       <div
         className="relative h-[120px] border border-dashed border-divider  md:h-[140px] rounded-sm flex flex-col justify-center items-center"
         style={{ aspectRatio: 1 }}
@@ -73,9 +69,8 @@ const BusinessLogo = ({ file, setFile, user }: Props) => {
         <input
           ref={ref}
           type="file"
-          accept={allowFileType.toString()}
+          accept={allowedImageType.toString()}
           onChange={files}
-          disabled={loading}
           className="absolute z-10 inset-0 opacity-0 cursor-pointer"
         />
 

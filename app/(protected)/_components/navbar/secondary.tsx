@@ -15,6 +15,7 @@ import { FaLink } from "react-icons/fa6";
 import { FaRegClock } from "react-icons/fa";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 import { profileType } from "@/actions/_utils/types.type";
+import { CgProfile } from "react-icons/cg";
 
 export const StaticOptions = [
   {
@@ -31,6 +32,12 @@ export const StaticOptions = [
   {
     key: "business",
     options: [
+      {
+        key: "business-profile",
+        title: "Business Profile",
+        icon: <CgProfile />,
+        path: "/business/business-profile",
+      },
       {
         key: "contracts",
         title: "Contracts",

@@ -29,7 +29,7 @@ export default async function InvoicesPage(props: propType) {
   delete invoiceDetail.created_at;
   delete invoiceDetail.updated_at;
 
-  if (!user) {
+  if (!user.success) {
     return <div className="text-center">Unable to fetch user details</div>;
   }
 

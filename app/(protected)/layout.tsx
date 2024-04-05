@@ -9,7 +9,7 @@ export default async function ProtectedLayout({
 }>) {
   const user = await me();
 
-  if (!user) {
+  if (!user.success) {
     return <div className="text-center">Unable to fetch user details</div>;
   }
 

@@ -1,5 +1,6 @@
 import { createInvoiceSchema, businessTypeEnum } from "@/db/schema";
 import { z } from "zod";
+import { trimRichEditor } from "./common";
 
 export type invoiceSchemaType = z.infer<typeof invoiceSchema>;
 
@@ -19,25 +20,26 @@ export type editBookingTypeSchemaType = z.infer<typeof editBookingTypeSchema>;
 export type createEventSchemaType = z.infer<typeof createEventSchema>;
 
 export const businessDetailSchema = z.object({
-  business_name: z
+  name: z
     .string()
     .refine(data => data.trim().length > 0, { message: "Name is required" }),
-  business_address: z
+  address: z
     .string()
     .refine(data => data.trim().length > 0, { message: "Address is required" }),
-  business_contact: z
+  contact: z
     .string()
     .refine(data => data.trim().length > 0, { message: "Contact is required" }),
-  business_email: z.string().email({ message: "Enter valid email" }),
+  email: z.string().email({ message: "Enter valid email" }),
 });
 
 export const invoiceSchema = createInvoiceSchema.merge(businessDetailSchema);
 
 export const settingsBusinessDetailSchema = businessDetailSchema.merge(
   z.object({
-    business_type: z.enum(businessTypeEnum.enumValues, {
+    type: z.enum(businessTypeEnum.enumValues, {
       required_error: "Category is required",
     }),
+    description: z.string(),
   })
 );
 
@@ -67,7 +69,7 @@ export const createBookingTypeSchema = z.object({
     .refine(data => data.trim().length > 0, { message: "Title is required" }),
   description: z.string().refine(
     data => {
-      if (data.trim() === "" || data === "<p><br></p>") {
+      if (data.trim() === "" || trimRichEditor(data ?? "") === "<p><br></p>") {
         return false;
       }
       return true;
@@ -132,7 +134,7 @@ export const createEventSchema = z.object({
     .refine(data => data.trim().length > 0, { message: "Name is required" }),
   description: z.string().refine(
     data => {
-      if (data.trim() === "" || data === "<p><br></p>") {
+      if (data.trim() === "" || trimRichEditor(data ?? "") === "<p><br></p>") {
         return false;
       }
       return true;

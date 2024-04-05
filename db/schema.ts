@@ -31,6 +31,7 @@ export const invoiceStatusTypeEnum = pgEnum("invoiceStatusType", [
   "draft",
   "overdue",
 ]);
+export const assetsTypeEnum = pgEnum("assetsType", ["business_assets"]);
 
 export const users = pgTable("users", {
   id: text("id")
@@ -59,6 +60,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     references: [businesses.id],
   }),
   events: many(events),
+  assets: many(assets),
 }));
 
 export const sessions = pgTable("session", {
@@ -77,6 +79,7 @@ export const businesses = pgTable("business", {
     .primaryKey()
     .default(sql`public.id_generator()`),
   type: businessTypeEnum("type").notNull(),
+  description: text("description"),
   name: text("name").notNull(),
   address: text("address"),
   contact: varchar("contact", { length: 20 }),
@@ -97,6 +100,7 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   invoices: many(invoices),
   availability: many(availability),
   booking_types: many(bookingTypes),
+  assets: many(assets),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -239,6 +243,35 @@ export const eventsRelations = relations(events, ({ many, one }) => ({
     references: [users.id],
   }),
   invoices: many(invoices),
+}));
+
+export const assets = pgTable("assets", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  height: integer("height"),
+  width: integer("width"),
+  blur_url: text("blur_url"),
+  url: text("url"),
+  asset_type: assetsTypeEnum("asset_type").notNull(),
+  type: text("type"),
+  business_id: bigint("business_id", { mode: "bigint" }).references(
+    () => businesses.id
+  ),
+  user_id: text("user_id").references(() => users.id),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const assetsRelations = relations(assets, ({ one }) => ({
+  user: one(users, {
+    fields: [assets.user_id],
+    references: [users.id],
+  }),
+  business: one(businesses, {
+    fields: [assets.user_id],
+    references: [businesses.id],
+  }),
 }));
 
 export const registerSchema = createInsertSchema(users)

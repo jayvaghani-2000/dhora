@@ -1,8 +1,10 @@
 import React from "react";
-import BusinessDetail from "./_components/business-detail";
 import { me } from "@/actions/(auth)/me";
+import BusinessDetailForm from "../../_components/business-detail-form";
 
 export default async function BusinessDetailPage() {
   const user = await me();
-  return <div>{user.success ? <BusinessDetail user={user.data} /> : null}</div>;
+  return (
+    <div>{user.success ? <BusinessDetailForm user={user.data} /> : null}</div>
+  );
 }

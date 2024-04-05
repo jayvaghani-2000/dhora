@@ -2,11 +2,10 @@
 
 import Spinner from "@/components/shared/spinner";
 import { Button } from "@/components/ui/button";
+import { allowedImageType } from "@/lib/constant";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
-
-const allowFileType = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
 type Props = {
   file: File | null;
@@ -25,7 +24,7 @@ const UploadEventLogo = ({ file, setFile }: Props) => {
     if (e.target.files) {
       const files = e.target.files;
 
-      if (allowFileType.includes(files[0].type)) {
+      if (allowedImageType.includes(files[0].type)) {
         setFile(files[0]);
       }
       ref.current.value = "";
@@ -73,7 +72,7 @@ const UploadEventLogo = ({ file, setFile }: Props) => {
         <input
           ref={ref}
           type="file"
-          accept={allowFileType.toString()}
+          accept={allowedImageType.toString()}
           onChange={files}
           disabled={loading}
           className="absolute z-10 inset-0 opacity-0 cursor-pointer"

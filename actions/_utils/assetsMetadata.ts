@@ -10,7 +10,7 @@ export const assetsMetadata = async (buffer: Buffer) => {
   return {
     height: meta.height,
     width: meta.width,
-    blurUrl: dataUrl,
+    blur_url: dataUrl,
     type: meta.format,
   };
 };

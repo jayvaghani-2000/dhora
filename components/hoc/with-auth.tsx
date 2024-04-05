@@ -12,6 +12,7 @@ import { authRoutes, publicRoutes } from "@/routes";
 import Spinner from "../shared/spinner";
 import Script from "next/script";
 import { setGlobalData } from "@/provider/store/global";
+import RichEditor from "../shared/rich-editor";
 
 const publicRouteList = [...publicRoutes, ...authRoutes];
 
@@ -91,6 +92,9 @@ const WithAuth = ({ children, user }: propType) => {
           );
         }}
       ></Script>
+      <div className="fixed" style={{ bottom: "300dvh" }}>
+        <RichEditor />
+      </div>
     </>
   );
 };

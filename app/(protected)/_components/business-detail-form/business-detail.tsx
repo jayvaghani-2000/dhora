@@ -33,13 +33,15 @@ import { getAvailabilityData } from "@/app/(protected)/business/availability/_ut
 import Spinner from "@/components/shared/spinner";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { deleteBusiness } from "@/actions/(protected)/profile/deleteBusiness";
+import RichEditor from "@/components/shared/rich-editor";
 
 type propType = {
   user: profileType;
+  deletable?: boolean;
 };
 
 const BusinessDetailForm = (prop: propType) => {
-  const { user } = prop;
+  const { user, deletable = true } = prop;
   const [file, setFile] = useState<File | null>(null);
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,11 +54,12 @@ const BusinessDetailForm = (prop: propType) => {
   const form = useForm<z.infer<typeof settingsBusinessDetailSchema>>({
     resolver: zodResolver(settingsBusinessDetailSchema),
     defaultValues: {
-      business_name: user?.business?.name ?? "",
-      business_address: user?.business?.address ?? "",
-      business_email: user?.email ?? "",
-      business_contact: user?.business?.contact ?? "",
-      business_type: user?.business?.type,
+      name: user?.business?.name ?? "",
+      address: user?.business?.address ?? "",
+      email: user?.email ?? "",
+      contact: user?.business?.contact ?? "",
+      type: user?.business?.type,
+      description: user?.business?.description ?? "",
     },
   });
 
@@ -138,7 +141,7 @@ const BusinessDetailForm = (prop: propType) => {
                 <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                   <FormField
                     control={form.control}
-                    name="business_name"
+                    name="name"
                     render={({ field }) => (
                       <FormItem className="col-span-2">
                         <FormLabel>Business Name</FormLabel>
@@ -156,7 +159,7 @@ const BusinessDetailForm = (prop: propType) => {
 
                   <FormField
                     control={form.control}
-                    name="business_email"
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Business Email</FormLabel>
@@ -175,7 +178,7 @@ const BusinessDetailForm = (prop: propType) => {
 
                   <FormField
                     control={form.control}
-                    name="business_contact"
+                    name="contact"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Business Contact</FormLabel>
@@ -190,6 +193,22 @@ const BusinessDetailForm = (prop: propType) => {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2 ">
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <RichEditor
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <div className="col-span-2 flex flex-col gap-2 relative">
                     <FormLabel>Business Address</FormLabel>
                     <PlacesAutocompleteInput
@@ -198,15 +217,15 @@ const BusinessDetailForm = (prop: propType) => {
                         setAddress(e);
                       }}
                       form={form}
-                      fieldName="business_address"
+                      fieldName="address"
                       placeholder="Business Address"
-                      defaultValue={form.getValues("business_address")}
+                      defaultValue={form.getValues("address")}
                     />
                   </div>
 
                   <FormField
                     control={form.control}
-                    name="business_type"
+                    name="type"
                     render={({ field }) => (
                       <FormItem className="col-span-2 ">
                         <FormLabel>Business Category</FormLabel>
@@ -268,18 +287,20 @@ const BusinessDetailForm = (prop: propType) => {
           </Form>
         </div>
       </div>
-      <div className="mt-5">
-        {user!.business ? (
-          <Button
-            variant="destructive"
-            onClick={() => {
-              setConfirmDeleteBusiness(true);
-            }}
-          >
-            Delete Business
-          </Button>
-        ) : null}
-      </div>
+      {deletable ? (
+        <div className="mt-5">
+          {user!.business ? (
+            <Button
+              variant="destructive"
+              onClick={() => {
+                setConfirmDeleteBusiness(true);
+              }}
+            >
+              Delete Business
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
 
       <CustomDialog
         open={confirmDeleteBusiness}

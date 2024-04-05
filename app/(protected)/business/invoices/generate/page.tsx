@@ -6,7 +6,7 @@ import ConnectToStripe from "../_components/connect-to-stripe";
 export default async function GenerateInvoice() {
   const user = await me();
 
-  if (!user) {
+  if (!user.success) {
     return <div className="text-center">Unable to fetch user details</div>;
   }
   return user.data?.business?.stripe_account_verified ? (

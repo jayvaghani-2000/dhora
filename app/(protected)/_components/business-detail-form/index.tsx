@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import { profileType } from "@/actions/_utils/types.type";
-import BusinessDetailForm from "./business-detail-form";
+import BusinessDetail from "./business-detail";
 import { Button } from "@/components/ui/button";
 
 type propType = {
   user: profileType;
+  deletable?: boolean;
 };
 
-const BusinessDetail = (prop: propType) => {
+const BusinessDetailForm = (prop: propType) => {
   const { user } = prop;
   const [createNewBusiness, setCreateNewBusiness] = useState(false);
 
@@ -18,7 +19,7 @@ const BusinessDetail = (prop: propType) => {
         Business Details
       </div>
       {createNewBusiness || user?.business ? (
-        <BusinessDetailForm user={user} />
+        <BusinessDetail {...prop} />
       ) : (
         <div className="flex flex-col gap-4 mt-4 justify-center items-center">
           <div>Create your business now!</div>
@@ -35,4 +36,4 @@ const BusinessDetail = (prop: propType) => {
   );
 };
 
-export default BusinessDetail;
+export default BusinessDetailForm;

@@ -12,6 +12,7 @@ import { getAvailabilityDetail } from "../(protected)/business/availability/getA
 import { getAvailability } from "../(protected)/business/availability/getAvailability";
 import { getBookingTypes } from "../(protected)/business/booking-types/getBookingTypes";
 import { getBookingTypeDetails } from "../(protected)/business/booking-types/getBookingTypeDetails";
+import { getBusinessAssets } from "../(protected)/business/profile/assets/getBusinessAssets";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -54,6 +55,9 @@ export type getBookingTypesType = NonNullable<
 >;
 export type getBookingTypeDetailType = NonNullable<
   Awaited<ReturnType<typeof getBookingTypeDetails>>
+>;
+export type getBusinessAssetsType = NonNullable<
+  Awaited<ReturnType<typeof getBusinessAssets>>
 >;
 
 export enum businessTypes {

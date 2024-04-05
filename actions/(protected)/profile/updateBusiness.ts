@@ -8,6 +8,7 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { eq } from "drizzle-orm";
 import { settingsBusinessDetailSchemaType } from "@/lib/schema";
 import { createPublicBusinessImgUrl } from "@/lib/minio";
+import { trimRichEditor } from "@/lib/common";
 
 type parmaTypes = {
   businessDetail: settingsBusinessDetailSchemaType;
@@ -32,16 +33,13 @@ const handler = async (user: User, params: parmaTypes) => {
   }
 
   try {
-    const { business_address, business_contact, business_type, business_name } =
-      businessDetail;
+    const { email, description, ...rest } = businessDetail;
     await db
       .update(businesses)
       .set({
-        address: business_address,
-        contact: business_contact,
-        type: business_type,
-        name: business_name,
         updated_at: new Date(),
+        ...rest,
+        description: trimRichEditor(description),
         ...logoUrl,
       })
       .where(eq(businesses.id, user.business_id!));

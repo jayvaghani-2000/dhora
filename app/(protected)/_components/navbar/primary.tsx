@@ -7,7 +7,6 @@ import { PiPlus } from "react-icons/pi";
 import { HiOutlineBuildingOffice } from "react-icons/hi2";
 import PrimaryNavbarItem from "./components/primaryNavbarItem";
 import { usePathname } from "next/navigation";
-import { IoSettingsOutline } from "react-icons/io5";
 import {
   Popover,
   PopoverContent,
@@ -19,6 +18,7 @@ import { useState } from "react";
 import { profileType } from "@/actions/_utils/types.type";
 import { getInitial } from "@/lib/common";
 import { useAuthStore } from "@/provider/store/authentication";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type propType = {
   user: profileType;
@@ -109,7 +109,16 @@ const Primary = (props: propType) => {
                 variant="ghost"
                 className="text-white p-2 h-[48px] w-[48px]"
               >
-                <IoSettingsOutline size={32} />
+                <Avatar>
+                  <AvatarImage
+                    src={user?.image ?? undefined}
+                    alt="name"
+                    className="object-cover"
+                  />
+                  <AvatarFallback>
+                    {getInitial(user?.name ?? "")}
+                  </AvatarFallback>
+                </Avatar>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="max-w-[calc(100vw-20px)] w-72">

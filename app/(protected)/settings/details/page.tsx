@@ -6,7 +6,7 @@ import ProfileAction from "./_components/profile-actions";
 
 export default async function Details() {
   const user = await me();
-  return user ? (
+  return user.success ? (
     <div>
       <PersonalDetails user={user.data} />
       <UpdatePassword />
@@ -16,4 +16,3 @@ export default async function Details() {
     <div className="text-center">Unable to fetch user details</div>
   );
 }
-
