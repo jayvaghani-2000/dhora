@@ -17,10 +17,10 @@ export default async function InvoicesPage(props: propType) {
   const user = await me();
 
   const invoiceDetail = {
-    business_name: user?.data?.business?.name ?? "",
-    business_address: user?.data?.business?.address ?? "",
-    business_email: user?.data?.email ?? "",
-    business_contact: user?.data?.business?.contact ?? "",
+    name: user?.data?.business?.name ?? "",
+    address: user?.data?.business?.address ?? "",
+    email: user?.data?.email ?? "",
+    contact: user?.data?.business?.contact ?? "",
     ...result.data,
   };
 

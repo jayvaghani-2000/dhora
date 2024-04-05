@@ -14,6 +14,7 @@ import { settingsBusinessDetailSchemaType } from "@/lib/schema";
 import { createPublicBusinessImgUrl } from "@/lib/minio";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { trimRichEditor } from "@/lib/common";
 
 type parmaTypes = {
   businessDetail: settingsBusinessDetailSchemaType;
@@ -41,13 +42,10 @@ const handler = async (user: User, params: parmaTypes) => {
   }
 
   try {
-    const { business_address, business_contact, business_type, business_name } =
-      businessDetail;
+    const { email,description,  ...rest } = businessDetail;
     await db.insert(businesses).values({
-      address: business_address,
-      contact: business_contact,
-      type: business_type,
-      name: business_name,
+      ...rest,
+      description: trimRichEditor(description),
       id: id,
       user_id: user.id,
       ...logoUrl,

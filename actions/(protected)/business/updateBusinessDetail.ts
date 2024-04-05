@@ -17,12 +17,12 @@ const handler = async (
   const { businessDetail } = params;
 
   try {
-    const { business_address, business_contact } = businessDetail;
+    const { address, contact } = businessDetail;
     await db
       .update(businesses)
       .set({
-        address: business_address,
-        contact: business_contact,
+        address: address,
+        contact: contact,
         updated_at: new Date(),
       })
       .where(eq(businesses.id, user.business_id!))

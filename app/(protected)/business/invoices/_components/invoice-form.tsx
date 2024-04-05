@@ -67,10 +67,10 @@ const InvoiceForm = (props: propType) => {
       mode === "EDIT"
         ? { ...invoiceData, due_date: new Date(invoiceData!.due_date) }
         : {
-            business_name: user?.business?.name ?? "",
-            business_address: user?.business?.address ?? "",
-            business_email: user?.email ?? "",
-            business_contact: user?.business?.contact ?? "",
+            name: user?.business?.name ?? "",
+            address: user?.business?.address ?? "",
+            email: user?.email ?? "",
+            contact: user?.business?.contact ?? "",
             customer_name: "",
             customer_email: "",
             customer_contact: "",
@@ -117,13 +117,7 @@ const InvoiceForm = (props: propType) => {
     values: z.infer<typeof invoiceSchema>,
     handleCheckout?: boolean
   ) {
-    const {
-      business_address,
-      business_contact,
-      business_email,
-      business_name,
-      ...rest
-    } = values;
+    const { address, contact, email, name, ...rest } = values;
 
     if (values.items.length === 0) {
       toast({
@@ -213,7 +207,7 @@ const InvoiceForm = (props: propType) => {
               <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                 <FormField
                   control={form.control}
-                  name="business_name"
+                  name="name"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
                       <FormControl>
@@ -231,7 +225,7 @@ const InvoiceForm = (props: propType) => {
 
                 <FormField
                   control={form.control}
-                  name="business_email"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -249,7 +243,7 @@ const InvoiceForm = (props: propType) => {
 
                 <FormField
                   control={form.control}
-                  name="business_contact"
+                  name="contact"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -267,7 +261,7 @@ const InvoiceForm = (props: propType) => {
 
                 <FormField
                   control={form.control}
-                  name="business_address"
+                  name="address"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
                       <FormControl>
