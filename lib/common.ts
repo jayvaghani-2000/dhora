@@ -112,3 +112,31 @@ export const parseTimezone = (timeZone: string) => {
 export const trimRichEditor = (value: string) => {
   return (value ?? "").replace(/(<p><br><\/p>)+/g, "$1");
 };
+
+export function extractVideoMetadata(file: File) {
+  return new Promise((resolve, reject) => {
+    let mime = file.type;
+    let rd = new FileReader();
+
+    rd.onload = function (e) {
+      let blob = new Blob([e.target!.result as string], {
+        type: mime,
+      });
+      let url = (URL || webkitURL).createObjectURL(blob);
+      let video = document.createElement("video");
+      video.preload = "metadata";
+      video.addEventListener("loadedmetadata", function () {
+        const metadata = {
+          height: video.videoHeight,
+          width: video.videoWidth,
+        };
+
+        (URL || webkitURL).revokeObjectURL(url);
+        resolve(metadata);
+      });
+      video.src = url;
+    };
+    let chunk = file.slice(0, 500000);
+    rd.readAsArrayBuffer(chunk);
+  });
+}

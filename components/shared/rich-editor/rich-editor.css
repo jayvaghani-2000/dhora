@@ -33,3 +33,13 @@
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 }
+
+.quillWrapper > .quill > .ql-container > .ql-editor.ql-blank::before {
+  color: hsl(215.4 16.3% 46.9%);
+  font-style: normal;
+}
+
+.quillWrapper > .quill > .ql-toolbar,
+.quillWrapper > .quill > .ql-container {
+  background: hsl(222.2 84% 4.9%);
+}

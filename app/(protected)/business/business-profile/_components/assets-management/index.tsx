@@ -19,7 +19,7 @@ const AssetsManagement = (props: propTypes) => {
       <div className="text-secondary-light-gray font-semibold text-base">
         Assets Management
       </div>
-      <div className=" border rounded-md border-divider  p-4 mt-2 flex gap-6">
+      <div className=" border rounded-md border-divider  p-4 mt-2 flex gap-2">
         <UploadAssets />
         {assets?.map(i =>
           allowedImageType.includes(i.type ?? "") ? (
@@ -46,7 +46,7 @@ const AssetsManagement = (props: propTypes) => {
               key={i.id}
               className="relative h-[120px] border border-dashed border-divider  md:h-[140px] rounded-sm flex flex-col justify-center items-center"
               style={{
-                aspectRatio: 1.5,
+                aspectRatio: i.width && i.height ? i.width / i.height : 1,
               }}
             >
               <video

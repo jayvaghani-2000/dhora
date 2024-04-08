@@ -1,8 +1,10 @@
 "use client";
 
 import { uploadBusinessAssets } from "@/actions/(protected)/business/profile/assets/uploadBusinessAssets";
+import { uploadBusinessAssetsType } from "@/actions/_utils/types.type";
 import Spinner from "@/components/shared/spinner";
 import { useToast } from "@/components/ui/use-toast";
+import { extractVideoMetadata } from "@/lib/common";
 import { allowedImageType, allowedVideoType } from "@/lib/constant";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
@@ -24,16 +26,18 @@ const UploadAssets = () => {
       const files = e.target.files;
 
       if ([...allowedImageType, ...allowedVideoType].includes(files[0].type)) {
+        let res = {} as uploadBusinessAssetsType;
         setFile(files[0]);
-
         setLoading(true);
         const assetsForm = new FormData();
         if (allowedImageType.includes(files[0].type)) {
           assetsForm.append("image", files[0]!);
+          res = await uploadBusinessAssets({ file: assetsForm });
         } else {
           assetsForm.append("video", files[0]!);
+          const metadata = await extractVideoMetadata(files[0]);
+          res = await uploadBusinessAssets({ file: assetsForm, metadata });
         }
-        const res = await uploadBusinessAssets(assetsForm);
         if (!res.success) {
           toast({
             title: "Unable to upload asset.",
@@ -75,7 +79,7 @@ const UploadAssets = () => {
             {allowedVideoType.includes(assetsStr.type) ? (
               <video
                 src={assetsStr.base64}
-                className="object-cover rounded-sm"
+                className="object-cover rounded-sm h-full w-full"
                 controls
                 autoPlay
                 onPlay={e => e.stopPropagation()}
