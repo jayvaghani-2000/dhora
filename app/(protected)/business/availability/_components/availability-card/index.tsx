@@ -35,7 +35,7 @@ const AvailabilityCard = (props: propType) => {
   return (
     <div className="flex gap-2 border border-gray1 first:rounded-t-md last:rounded-b-md p-2 lg:p-4 items-center">
       <div className="flex-1 flex flex-col gap-0.5">
-        <div className="text-sm md:text-base font-semibold flex gap-1">
+        <div className="text-sm md:text-base font-semibold flex gap-3">
           {name}{" "}
           {isDefault && (
             <Badge className="bg-green-800 hover:bg-green-900 text-white text-xs rounded-sm px-1">

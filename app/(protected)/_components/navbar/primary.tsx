@@ -122,7 +122,7 @@ const Primary = (props: propType) => {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="max-w-[calc(100vw-20px)] w-72">
-              <SettingsPopover />
+              <SettingsPopover user={user} />
             </PopoverContent>
           </Popover>
         </div>

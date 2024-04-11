@@ -1,5 +1,5 @@
 import { createInvoiceSchema, businessTypeEnum } from "@/db/schema";
-import { z } from "zod";
+import { z, ZodObject, ZodRawShape } from "zod";
 import { trimRichEditor } from "./common";
 
 export type invoiceSchemaType = z.infer<typeof invoiceSchema>;

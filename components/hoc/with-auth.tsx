@@ -32,7 +32,7 @@ const WithAuth = ({ children, user }: propType) => {
 
   useEffect(() => {
     const handleVerifySession = async () => {
-      const userData = rendered ? await me(true) : user;
+      const userData = rendered || user.error ? await me(true) : user;
 
       const profile = userData.data;
 
@@ -64,7 +64,7 @@ const WithAuth = ({ children, user }: propType) => {
       }
     };
     handleVerifySession();
-  }, [authenticated, router, dispatch]);
+  }, [authenticated, router, dispatch, path]);
 
   const body =
     authenticated && !profile?.email_verified ? <ConfirmAccount /> : children;

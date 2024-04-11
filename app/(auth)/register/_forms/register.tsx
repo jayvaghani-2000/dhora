@@ -33,12 +33,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
-import {
-  getAvailabilityData,
-  getTimeSlotsFromDate,
-  initializeAvailability,
-} from "@/app/(protected)/business/availability/_utils/initializeAvailability";
-import { parseTimezone, timeZone } from "@/lib/common";
+import { getAvailabilityData } from "@/app/(protected)/business/availability/_utils/initializeAvailability";
+import Spinner from "@/components/shared/spinner";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
@@ -268,7 +264,14 @@ export function RegisterForm() {
                 </FormControl>
                 <div className="space-y-1 leading-1 sm:leading-none w-full text-sm my-2 font-semibold">
                   <FormLabel>
-                    By signing up, you agree to our Terms & Privacy Policy
+                    By signing up, you agree to our{" "}
+                    <Link href="/terms" target="_blank">
+                      Terms
+                    </Link>{" "}
+                    &{" "}
+                    <Link href="/privacy" target="_blank">
+                      Privacy Policy
+                    </Link>
                   </FormLabel>
                 </div>
               </FormItem>
@@ -280,7 +283,7 @@ export function RegisterForm() {
             type="submit"
             disabled={loading || !form.formState.isValid}
           >
-            Get Started
+            Get Started {loading ? <Spinner type="inline" /> : null}
           </Button>
         </form>
       </Form>

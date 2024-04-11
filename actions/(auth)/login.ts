@@ -24,6 +24,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     where: eq(users.email, validatedFields.data.email),
   });
 
+
   if (!user) {
     return { error: "Invalid username or password", success: false };
   } else {

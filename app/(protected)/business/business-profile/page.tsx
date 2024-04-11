@@ -3,6 +3,7 @@ import { me } from "@/actions/(auth)/me";
 import BusinessDetailForm from "../../_components/business-detail-form";
 import AssetsManagement from "./_components/assets-management";
 import { getBusinessAssets } from "@/actions/(protected)/business/profile/assets/getBusinessAssets";
+import Assets from "./_components/assets";
 
 export default async function BusinessProfile() {
   const [user, assets] = await Promise.all([
@@ -18,6 +19,7 @@ export default async function BusinessProfile() {
     <div className="flex flex-col gap-5">
       <BusinessDetailForm user={user.data} deletable={false} />
       <AssetsManagement assets={assets} />
+      <Assets assets={assets} />
     </div>
   );
 }

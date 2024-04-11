@@ -92,7 +92,7 @@ const UpdatePasswordFrom = () => {
 
             <Button
               type="submit"
-              className="w-fit"
+              className="w-full"
               disabled={loading}
             >
               Update {loading ? <Spinner type="inline" /> : null}

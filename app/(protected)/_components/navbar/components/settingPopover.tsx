@@ -1,19 +1,25 @@
 import { logout } from "@/actions/(auth)/logout";
+import { profileType } from "@/actions/_utils/types.type";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { getInitial } from "@/lib/common";
 import { useAppDispatch } from "@/provider/store";
-import { setAuthData, useAuthStore } from "@/provider/store/authentication";
+import { setAuthData } from "@/provider/store/authentication";
 import Link from "next/link";
 import React from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 
-const SettingsPopover = () => {
+type propType = {
+  user: profileType;
+};
+
+const SettingsPopover = (props: propType) => {
+  const { user } = props;
   const dispatch = useAppDispatch();
-  const { profile, isBusinessUser } = useAuthStore();
   const { toast } = useToast();
-  const { name, created_at, business, image } = profile! ?? {};
+  const { business_id, business, image, created_at, name } = user ?? {};
+  const isBusinessUser = !!business_id;
   const { name: businessName } = business! ?? {};
 
   const handleSignOut = async () => {
@@ -28,7 +34,7 @@ const SettingsPopover = () => {
     }
   };
 
-  const yearOfJoining = new Date(created_at).getFullYear();
+  const yearOfJoining = new Date(created_at ?? Date.now()).getFullYear();
 
   return (
     <div>

@@ -58,7 +58,7 @@ const Availability = (props: propType) => {
                     options={
                       availability?.map(i => ({
                         label: (
-                          <div>
+                          <div className="flex gap-3">
                             {i.name!}{" "}
                             {i.default ? (
                               <Badge className="bg-green-800 hover:bg-green-900 text-white text-xs rounded-sm px-1">

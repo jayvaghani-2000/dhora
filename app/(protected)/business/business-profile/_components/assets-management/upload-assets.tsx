@@ -1,7 +1,11 @@
 "use client";
 
+import { getBusinessAssets } from "@/actions/(protected)/business/profile/assets/getBusinessAssets";
 import { uploadBusinessAssets } from "@/actions/(protected)/business/profile/assets/uploadBusinessAssets";
-import { uploadBusinessAssetsType } from "@/actions/_utils/types.type";
+import {
+  getBusinessAssetsType,
+  uploadBusinessAssetsType,
+} from "@/actions/_utils/types.type";
 import Spinner from "@/components/shared/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import { extractVideoMetadata } from "@/lib/common";
@@ -10,7 +14,14 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
 
-const UploadAssets = () => {
+type propType = {
+  setAssets: React.Dispatch<
+    React.SetStateAction<getBusinessAssetsType["data"]>
+  >;
+};
+
+const UploadAssets = (prop: propType) => {
+  const { setAssets } = prop;
   const ref = useRef<HTMLInputElement>(null!);
   const [assetsStr, setAssetsStr] = useState({
     base64: "",
@@ -46,6 +57,14 @@ const UploadAssets = () => {
           toast({
             title: "Asset uploaded successfully.",
           });
+
+          setAssetsStr({
+            base64: "",
+            name: "",
+            type: "",
+          });
+          const assets = await getBusinessAssets();
+          setAssets(assets.data);
         }
         setLoading(false);
       }

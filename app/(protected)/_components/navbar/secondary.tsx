@@ -33,12 +33,6 @@ export const StaticOptions = [
     key: "business",
     options: [
       {
-        key: "business-profile",
-        title: "Business Profile",
-        icon: <CgProfile />,
-        path: "/business/business-profile",
-      },
-      {
         key: "contracts",
         title: "Contracts",
         icon: <LiaFileContractSolid />,
@@ -61,6 +55,12 @@ export const StaticOptions = [
         title: "Booking Types",
         icon: <FaLink />,
         path: "/business/booking-types",
+      },
+      {
+        key: "business-profile",
+        title: "Market Profile",
+        icon: <CgProfile />,
+        path: "/business/business-profile",
       },
     ],
   },

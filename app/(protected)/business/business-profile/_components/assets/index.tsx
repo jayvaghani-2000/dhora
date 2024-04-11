@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import UploadAssets from "./upload-assets";
 import { getBusinessAssetsType } from "@/actions/_utils/types.type";
 import { MotionImage } from "@/components/shared/MotionImage";
 import { allowedImageType } from "@/lib/constant";
@@ -9,7 +8,7 @@ type propTypes = {
   assets: getBusinessAssetsType;
 };
 
-const AssetsManagement = (props: propTypes) => {
+const Assets = (props: propTypes) => {
   const [assets, setAssets] = useState<getBusinessAssetsType["data"]>(
     props.assets.data ?? []
   );
@@ -17,15 +16,14 @@ const AssetsManagement = (props: propTypes) => {
   return (
     <div>
       <div className="text-secondary-light-gray font-semibold text-base">
-        Assets Management
+        Assets
       </div>
-      <div className=" border rounded-md border-divider  p-4 mt-2 flex gap-2 overflow-auto">
-        <UploadAssets setAssets={setAssets} />
+      <div className="mt-6 columns-2 lg:columns-3 gap-x-2  lg:gap-x-3  ">
         {assets?.map(i =>
           allowedImageType.includes(i.type ?? "") ? (
             <div
               key={i.id}
-              className="relative h-[120px]  md:h-[140px] rounded-sm flex flex-col justify-center items-center"
+              className="relative rounded-sm mb-2 lg:mb-3 overflow-hidden"
               style={{
                 aspectRatio: i.width && i.height ? i.width / i.height : 1,
               }}
@@ -44,14 +42,14 @@ const AssetsManagement = (props: propTypes) => {
           ) : (
             <div
               key={i.id}
-              className="relative h-[120px]  md:h-[140px] rounded-sm flex flex-col justify-center items-center"
+              className="relative rounded-sm mb-2 lg:mb-3"
               style={{
                 aspectRatio: i.width && i.height ? i.width / i.height : 1,
               }}
             >
               <video
                 src={i.url ?? ""}
-                className="object-cover rounded-sm"
+                className="object-cover rounded-sm w-full h-full"
                 controls
                 onPlay={e => e.stopPropagation()}
                 onPause={e => e.stopPropagation()}
@@ -65,4 +63,4 @@ const AssetsManagement = (props: propTypes) => {
   );
 };
 
-export default AssetsManagement;
+export default Assets;
