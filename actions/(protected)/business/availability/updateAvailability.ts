@@ -2,7 +2,7 @@
 
 import { availability, createAvailabilitySchema } from "@/db/schema";
 import { db } from "@/lib/db";
-import { and, eq, ne } from "drizzle-orm";
+import { and, asc, eq, ne } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
@@ -30,9 +30,52 @@ const handler = async (user: User, params: paramsType) => {
       .where(
         and(
           eq(availability.business_id, user.business_id!),
-          eq(availability.default, true)
+          eq(availability.default, true),
+          ne(availability.id, BigInt(availabilityId))
         )
       );
+  } else {
+    const [isAlreadyDefault, unDefaultAvailability] = await Promise.all([
+      await db.query.availability.findMany({
+        where: and(
+          eq(availability.business_id, user.business_id!),
+          eq(availability.default, true),
+          ne(availability.deleted, true)
+        ),
+        orderBy: [asc(availability.created_at)],
+        limit: 1,
+      }),
+      await db.query.availability.findMany({
+        where: and(
+          eq(availability.business_id, user.business_id!),
+          eq(availability.default, false),
+          ne(availability.deleted, true),
+          ne(availability.id, BigInt(availabilityId))
+        ),
+        orderBy: [asc(availability.created_at)],
+        limit: 1,
+      }),
+    ]);
+
+    if (isAlreadyDefault.length && unDefaultAvailability) {
+      await db
+        .update(availability)
+        .set({
+          default: true,
+          updated_at: new Date(),
+        })
+        .where(
+          and(
+            eq(availability.business_id, user.business_id!),
+            eq(availability.id, unDefaultAvailability[0].id)
+          )
+        );
+    } else {
+      return {
+        success: false,
+        error: "Availability needs to be default as is only one availability.",
+      };
+    }
   }
 
   try {

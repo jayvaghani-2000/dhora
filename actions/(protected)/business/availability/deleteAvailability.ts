@@ -21,8 +21,8 @@ const handler = async (user: User, availabilityId: string) => {
       }),
       await db.query.availability.findMany({
         where: and(
-          eq(availability.deleted, false),
           eq(availability.business_id, user.business_id!),
+          ne(availability.deleted, true),
           ne(availability.id, BigInt(availabilityId))
         ),
         orderBy: [asc(availability.created_at)],

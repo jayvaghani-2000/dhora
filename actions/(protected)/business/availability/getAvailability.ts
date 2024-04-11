@@ -2,7 +2,7 @@
 
 import { availability } from "@/db/schema";
 import { db } from "@/lib/db";
-import { and, eq, ne } from "drizzle-orm";
+import { and, desc, eq, ne } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
@@ -15,6 +15,7 @@ const handler = async (user: User) => {
         eq(availability.business_id, user.business_id!),
         ne(availability.deleted, true)
       ),
+      orderBy: [desc(availability.updated_at)],
     });
 
     return { success: true as true, data: data.map(i => stringifyBigint(i)) };

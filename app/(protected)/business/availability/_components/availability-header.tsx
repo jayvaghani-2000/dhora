@@ -108,7 +108,6 @@ const AvailabilityHeader = (props: propType) => {
             </Label>
             <Switch
               id={`set_as_default`}
-              disabled={alreadyDefault}
               checked={isDefault}
               onCheckedChange={checked => {
                 setIsDefault(checked);
