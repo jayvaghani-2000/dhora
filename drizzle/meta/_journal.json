@@ -127,20 +127,6 @@
       "when": 1712051011935,
       "tag": "0017_red_wrecking_crew",
       "breakpoints": true
-    },
-    {
-      "idx": 18,
-      "version": "5",
-      "when": 1712902118355,
-      "tag": "0018_stormy_scrambler",
-      "breakpoints": true
-    },
-    {
-      "idx": 19,
-      "version": "5",
-      "when": 1712904231729,
-      "tag": "0019_married_vector",
-      "breakpoints": true
     }
   ]
 }
