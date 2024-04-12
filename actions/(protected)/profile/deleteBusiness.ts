@@ -20,7 +20,7 @@ const handler = async (user: User) => {
           .update(businesses)
           .set({
             deleted: true,
-            user_id: BigInt(user.id),
+            user_id: user.id,
             updated_at: new Date(),
           })
           .where(eq(businesses.id, userDetail.business_id!)),

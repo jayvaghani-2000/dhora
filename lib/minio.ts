@@ -37,9 +37,9 @@ export async function createPublicBusinessImgUrl(
   const buffer = Buffer.from(await img.arrayBuffer());
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
-  const filepath = `${user_id}/${business_id}/public/logo/${id}.${metadata.type?.toLowerCase()}`;
+  const filepath = `${user_id}/public/${business_id}/logo/${id}.${metadata.type?.toLowerCase()}`;
   await mc.putObject(config.env.NODE_ENV, filepath, buffer);
-  await setPublicPolicy(business_id);
+  await setPublicPolicy(user_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
@@ -58,9 +58,9 @@ export async function createPublicInvoicePdfUrl(
 ) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const id = (await getBigIntId)[0].id_generator;
-  const filepath = `${user_id}/${business_id}/public/invoices/${id}.pdf`;
+  const filepath = `${user_id}/public/${business_id}/invoices/${id}.pdf`;
   await mc.putObject(config.env.NODE_ENV, filepath, buffer);
-  await setPublicPolicy(business_id);
+  await setPublicPolicy(user_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 

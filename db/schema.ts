@@ -38,7 +38,7 @@ export const users = pgTable("users", {
     .primaryKey()
     .default(sql`public.id_generator()`),
   name: text("name").notNull(),
-  email: text("email").notNull().unique(),
+  email: text("email").notNull(),
   email_verified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
   password: text("password").notNull(),
@@ -84,7 +84,7 @@ export const businesses = pgTable("business", {
   stripe_account_verified: timestamp("stripe_account_verified", {
     mode: "date",
   }),
-  user_id: bigint("user_id", { mode: "bigint" }),
+  user_id: text("user_id"),
   deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),

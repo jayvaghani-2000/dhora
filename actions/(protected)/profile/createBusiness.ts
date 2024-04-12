@@ -31,7 +31,11 @@ const handler = async (user: User, params: parmaTypes) => {
   const image = logo.get("image") as File;
 
   if (image) {
-    const uploadedImageUrl = await createPublicBusinessImgUrl(id, BigInt(user.id),image);
+    const uploadedImageUrl = await createPublicBusinessImgUrl(
+      id,
+      BigInt(user.id),
+      image
+    );
 
     logoUrl.logo = uploadedImageUrl;
   }
@@ -45,6 +49,7 @@ const handler = async (user: User, params: parmaTypes) => {
       type: business_type,
       name: business_name,
       id: id,
+      user_id: user.id,
       ...logoUrl,
     });
 
