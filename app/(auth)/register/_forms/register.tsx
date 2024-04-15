@@ -60,7 +60,9 @@ export function RegisterForm() {
       values,
       availability: values.is_business ? getAvailabilityData() : undefined,
     });
-    console.log(res);
+    if (res && res.error) {
+      setError(res.error);
+    }
     setLoading(false);
   }
 
