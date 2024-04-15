@@ -56,10 +56,11 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setLoading(true);
-    await register({
+    const res = await register({
       values,
       availability: values.is_business ? getAvailabilityData() : undefined,
     });
+    console.log(res);
     setLoading(false);
   }
 

@@ -127,10 +127,10 @@ const BusinessDetailForm = (prop: propType) => {
   }
 
   return (
-    <div>
-      <div className=" border rounded-md border-divider  p-4 mt-2 flex gap-6">
+    <>
+      <div className=" border rounded-md border-divider  p-4 mt-2 flex flex-col lg:flex-row items-center lg:items-start gap-6">
         <BusinessLogo file={file} setFile={setFile} user={prop.user} />
-        <div className="flex-1">
+        <div className="flex-1 w-full">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -161,7 +161,7 @@ const BusinessDetailForm = (prop: propType) => {
                     control={form.control}
                     name="email"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="col-span-2 lg:col-span-1 ">
                         <FormLabel>Business Email</FormLabel>
                         <FormControl>
                           <Input
@@ -180,7 +180,7 @@ const BusinessDetailForm = (prop: propType) => {
                     control={form.control}
                     name="contact"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="col-span-2 lg:col-span-1 ">
                         <FormLabel>Business Contact</FormLabel>
                         <FormControl>
                           <Input
@@ -319,7 +319,7 @@ const BusinessDetailForm = (prop: propType) => {
         Are you sure, want to delete this business. This action is not
         reversible.
       </CustomDialog>
-    </div>
+    </>
   );
 };
 

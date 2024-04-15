@@ -1,6 +1,6 @@
 "use client";
 import { profileType } from "@/actions/_utils/types.type";
-import React, { useState } from "react";
+import { useState } from "react";
 import ProfileAvatar from "./profile-avatar";
 import { editProfileSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -65,18 +65,18 @@ const PersonalDetails = (props: propType) => {
       <div className="text-secondary-light-gray font-semibold text-base">
         Personal Details
       </div>
-      <div className=" border rounded-md border-divider  p-4 mt-2 flex gap-6">
+      <div className=" border rounded-md border-divider  p-4 mt-2 flex gap-6 flex-col items-center lg:flex-row">
         <ProfileAvatar file={file} setFile={setFile} user={user} />
 
-        <div className="flex-1">
+        <div className="flex-1 w-full">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="text-zinc-600 dark:text-zinc-200 flex flex-col xl:grid grid-cols-1 gap-5 justify-center relative"
+              className="text-zinc-600 dark:text-zinc-200 relative w-full"
               autoComplete="off"
             >
               <div className="rounded-md  flex flex-col gap-5 xl:grid grid-cols-1">
-                <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                <div className="flex flex-col lg:grid lg:grid-cols-2 gap-x-4 gap-y-3">
                   <FormField
                     control={form.control}
                     name="name"

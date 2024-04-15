@@ -24,7 +24,7 @@ const ProtectedNavbarLayout = (props: propType) => {
   return routesWithoutNavbar.includes(path) ? (
     <div className="h-screen">
       <main className="h-full flex">
-        <div className="flex-1 h-full relative bg-body-background">
+        <div className="flex-1 min-h-full relative bg-body-background h-fit">
           {children}
         </div>
       </main>

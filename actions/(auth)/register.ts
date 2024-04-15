@@ -21,6 +21,7 @@ import {
   DEFAULT_BUSINESS_LOGIN_REDIRECT,
   DEFAULT_USER_LOGIN_REDIRECT,
 } from "@/routes";
+import { errorHandler } from "../_utils/errorHandler";
 
 export const register = async ({
   values,
@@ -70,35 +71,38 @@ export const register = async ({
     }
   };
 
-  const [user] = await Promise.all([
-    await db
-      .insert(users)
-      .values({
-        name: validatedFields.data.name,
-        email: validatedFields.data.email,
-        password: hashedPassword,
-        verification_code: hashedVerificationCode,
-        business_id: business ? business[0].id : null,
-        stripe_id: stripeAccount.id,
-      })
-      .returning(),
-    await createAvailability(),
-  ]);
+  try {
+    const [user] = await Promise.all([
+      await db
+        .insert(users)
+        .values({
+          name: validatedFields.data.name,
+          email: validatedFields.data.email,
+          password: hashedPassword,
+          verification_code: hashedVerificationCode,
+          business_id: business ? business[0].id : null,
+          stripe_id: stripeAccount.id,
+        })
+        .returning(),
+      await createAvailability(),
+    ]);
+    await sendEmail("Email Verification", {
+      email: user[0].email,
+      verification_code: verification_code,
+    });
 
-  await sendEmail("Email Verification", {
-    email: user[0].email,
-    verification_code: verification_code,
-  });
+    const session = await lucia.createSession(user[0].id, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    );
 
-  const session = await lucia.createSession(user[0].id, {});
-  const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes
-  );
-
-  return redirect(
-    business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_USER_LOGIN_REDIRECT
-  );
+    return redirect(
+      business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_USER_LOGIN_REDIRECT
+    );
+  } catch (err) {
+    return errorHandler(err);
+  }
 };

@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { loginSchema, users } from "@/db/schema";
 import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { Argon2id } from "oslo/password";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
@@ -22,8 +22,8 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
 
   const user = await db.query.users.findFirst({
     where: eq(users.email, validatedFields.data.email),
+    orderBy: [desc(users.created_at)],
   });
-
 
   if (!user) {
     return { error: "Invalid username or password", success: false };
