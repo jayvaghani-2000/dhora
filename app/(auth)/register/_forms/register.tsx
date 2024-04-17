@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  businessTypeEnum,
-  createAvailabilitySchema,
-  registerSchema,
-} from "@/db/schema";
+import { businessTypeEnum, registerSchema } from "@/db/schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,7 +29,6 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
-import { getAvailabilityData } from "@/app/(protected)/business/availability/_utils/initializeAvailability";
 import Spinner from "@/components/shared/spinner";
 
 export function RegisterForm() {
@@ -56,10 +51,7 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setLoading(true);
-    const res = await register({
-      values,
-      availability: values.is_business ? getAvailabilityData() : undefined,
-    });
+    const res = await register(values);
     if (res && res.error) {
       setError(res.error);
     }

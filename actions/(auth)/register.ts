@@ -2,9 +2,7 @@
 
 import { z } from "zod";
 import {
-  availability,
   businesses,
-  createAvailabilitySchema,
   createBusinessSchema,
   registerSchema,
   users,
@@ -21,15 +19,8 @@ import {
   DEFAULT_BUSINESS_LOGIN_REDIRECT,
   DEFAULT_USER_LOGIN_REDIRECT,
 } from "@/routes";
-import { errorHandler } from "../_utils/errorHandler";
 
-export const register = async ({
-  values,
-  availability: newAvailabilityData,
-}: {
-  values: z.infer<typeof registerSchema>;
-  availability?: z.infer<typeof createAvailabilitySchema>;
-}) => {
+export const register = async (values: z.infer<typeof registerSchema>) => {
   const validatedFields = registerSchema.safeParse(values);
   const businessPayload = values.is_business
     ? createBusinessSchema.safeParse({
@@ -61,49 +52,32 @@ export const register = async ({
     ? await db.insert(businesses).values(businessPayload.data).returning()
     : null;
 
-  const createAvailability = async () => {
-    // create default availability
-    if (newAvailabilityData && business) {
-      await db.insert(availability).values({
-        business_id: business[0].id,
-        ...newAvailabilityData,
-      });
-    }
-  };
+  const user = await db
+    .insert(users)
+    .values({
+      name: validatedFields.data.name,
+      email: validatedFields.data.email,
+      password: hashedPassword,
+      verification_code: hashedVerificationCode,
+      business_id: business ? business[0].id : null,
+      stripe_id: stripeAccount.id,
+    })
+    .returning();
 
-  try {
-    const [user] = await Promise.all([
-      await db
-        .insert(users)
-        .values({
-          name: validatedFields.data.name,
-          email: validatedFields.data.email,
-          password: hashedPassword,
-          verification_code: hashedVerificationCode,
-          business_id: business ? business[0].id : null,
-          stripe_id: stripeAccount.id,
-        })
-        .returning(),
-      await createAvailability(),
-    ]);
-    await sendEmail("Email Verification", {
-      email: user[0].email,
-      verification_code: verification_code,
-    });
+  await sendEmail("Email Verification", {
+    email: user[0].email,
+    verification_code: verification_code,
+  });
 
-    const session = await lucia.createSession(user[0].id, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes
-    );
+  const session = await lucia.createSession(user[0].id, {});
+  const sessionCookie = lucia.createSessionCookie(session.id);
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes
+  );
 
-    return redirect(
-      business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_USER_LOGIN_REDIRECT
-    );
-  } catch (err) {
-    console.log(err);
-    return errorHandler(err);
-  }
+  return redirect(
+    business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_USER_LOGIN_REDIRECT
+  );
 };
