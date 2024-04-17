@@ -103,6 +103,7 @@ export const register = async ({
       business ? DEFAULT_BUSINESS_LOGIN_REDIRECT : DEFAULT_USER_LOGIN_REDIRECT
     );
   } catch (err) {
+    console.log(err);
     return errorHandler(err);
   }
 };

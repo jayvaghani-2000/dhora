@@ -21,7 +21,10 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
   }
 
   const user = await db.query.users.findFirst({
-    where: eq(users.email, validatedFields.data.email),
+    where: and(
+      eq(users.email, validatedFields.data.email),
+      eq(users.deleted, false)
+    ),
     orderBy: [desc(users.created_at)],
   });
 

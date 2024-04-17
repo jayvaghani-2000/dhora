@@ -7,6 +7,7 @@ import { validateToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { eq } from "drizzle-orm";
 import { lucia } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 const handler = async (user: User) => {
   try {
@@ -19,7 +20,12 @@ const handler = async (user: User) => {
       .where(eq(users.id, user.id));
     await lucia.invalidateUserSessions(user.id);
     await lucia.deleteExpiredSessions();
-
+    const sessionCookie = lucia.createBlankSessionCookie();
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    );
     return {
       success: true as true,
       data: "Account deleted successfully.",

@@ -58,7 +58,7 @@ export const me: (clientSide?: boolean) => Promise<
 
 export const getUser = async (email: string) => {
   return db.query.users.findFirst({
-    where: eq(users.email, email),
+    where: and(eq(users.email, email), eq(users.deleted, false)),
     with: {
       business: true,
       events: {

@@ -2,7 +2,7 @@
 
 import { mailVerificationUserSchema, users } from "@/db/schema";
 import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Argon2id } from "oslo/password";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
@@ -26,7 +26,7 @@ export const verifyEmail = async (
 
     if (session) {
       const userInfo = await db.query.users.findFirst({
-        where: eq(users.email, user.email),
+        where: and(eq(users.email, user.email), eq(users.deleted, false)),
       });
 
       if (userInfo) {
@@ -43,7 +43,7 @@ export const verifyEmail = async (
               email_verified: new Date(),
               updated_at: new Date(),
             })
-            .where(eq(users.email, user.email))
+            .where(and(eq(users.email, user.email), eq(users.deleted, false)))
             .returning();
 
           return { success: true, data: stringifyBigint(userInfo[0]) };
