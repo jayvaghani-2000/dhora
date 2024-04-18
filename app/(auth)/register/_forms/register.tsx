@@ -30,6 +30,7 @@ import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
 import Spinner from "@/components/shared/spinner";
+import { Password } from "@/components/shared/password";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
@@ -106,7 +107,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" type="password" {...field} />
+                  <Password placeholder="Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -119,11 +120,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Confirm Password"
-                    type="password"
-                    {...field}
-                  />
+                  <Password placeholder="Confirm Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

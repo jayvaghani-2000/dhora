@@ -65,7 +65,7 @@ const PersonalDetails = (props: propType) => {
       <div className="text-secondary-light-gray font-semibold text-base">
         Personal Details
       </div>
-      <div className=" border rounded-md border-divider  p-4 mt-2 flex gap-6 flex-col items-center lg:flex-row">
+      <div className="border rounded-md border-divider  p-4 mt-2 flex gap-6 flex-col items-center lg:flex-row">
         <ProfileAvatar file={file} setFile={setFile} user={user} />
 
         <div className="flex-1 w-full">

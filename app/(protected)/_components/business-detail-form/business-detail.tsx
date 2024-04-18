@@ -295,6 +295,7 @@ const BusinessDetailForm = (prop: propType) => {
               onClick={() => {
                 setConfirmDeleteBusiness(true);
               }}
+              type="button"
             >
               Delete Business
             </Button>

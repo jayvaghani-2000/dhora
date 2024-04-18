@@ -50,10 +50,7 @@ const CreateBookingTypeModel = () => {
 
   return (
     <div>
-      <div className="flex justify-between gap-5 items-center">
-        <div className="text-xs md:text-sm">
-          Create bookings type book event on your calendar.
-        </div>
+      <div className="flex justify-end gap-5 items-center">
         <Button
           onClick={() => {
             setOpenCreateBookingType(true);

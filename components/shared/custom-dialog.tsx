@@ -53,11 +53,13 @@ const CustomDialog = (prop: propType) => {
         setLoading(false);
       }
     };
-    document.addEventListener("keydown", handleKeyPress);
+    if (open) {
+      document.addEventListener("keydown", handleKeyPress);
+    }
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  }, [open]);
 
   return (
     <Dialog

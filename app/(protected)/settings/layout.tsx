@@ -17,7 +17,7 @@ export default async function SettingsLayout({
   const user = await me();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-screen">
       <div className="flex bg-primary-light-gray px-3 py-2 md:hidden justify-between">
         <div className="flex items-center gap-1">
           <MobileToggle />

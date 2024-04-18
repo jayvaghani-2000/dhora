@@ -59,17 +59,19 @@ const ProfileAction = () => {
   }
 
   return (
-    <div className="mt-5 flex gap-5">
+    <div className="mt-5 flex gap-4 flex-col md:flex-row ">
       <Button
         className="bg-rose-700 text-destructive-foreground hover:bg-rose-700/90"
         onClick={() => {
           setConfirmDisableAccount(true);
         }}
+        type="button"
       >
         Disable My Account
       </Button>
       <Button
         variant="destructive"
+        type="button"
         onClick={() => {
           setConfirmDeleteAccount(true);
         }}

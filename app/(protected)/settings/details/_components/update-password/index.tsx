@@ -11,11 +11,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { updatePassword } from "@/actions/(auth)/update-password";
 import Spinner from "@/components/shared/spinner";
 import { useToast } from "@/components/ui/use-toast";
+import { Password } from "@/components/shared/password";
 
 const UpdatePasswordFrom = () => {
   const [loading, setLoading] = useState(false);
@@ -59,7 +59,7 @@ const UpdatePasswordFrom = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="Old Password" {...field} />
+                    <Password placeholder="Old Password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -71,7 +71,7 @@ const UpdatePasswordFrom = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="New Password" {...field} />
+                    <Password placeholder="New Password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,18 +83,14 @@ const UpdatePasswordFrom = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="Confirm Password" {...field} />
+                    <Password placeholder="Confirm Password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full" disabled={loading}>
               Update {loading ? <Spinner type="inline" /> : null}
             </Button>
           </form>
