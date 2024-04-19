@@ -58,7 +58,7 @@ const CreateBookingTypeModel = () => {
           className="text-xs lg:text-sm p-2 h-fit lg:px-4 "
         >
           <PiPlus size={16} className="mr-2" />
-          New
+          Create Booking Type
         </Button>
       </div>
       <CustomDialog

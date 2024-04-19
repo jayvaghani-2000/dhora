@@ -19,7 +19,7 @@ const BookingTypes = (props: propType) => {
       ))}
     </div>
   ) : (
-    <div className="text-center mt-4">Create Booking Type</div>
+    null
   );
 };
 
