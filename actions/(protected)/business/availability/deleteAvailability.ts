@@ -43,14 +43,12 @@ const handler = async (user: User, availabilityId: string) => {
           .update(availability)
           .set({
             default: true,
-            updated_at: new Date(),
           })
           .where(and(eq(availability.id, firstAvailability[0].id))),
         await db
           .update(bookingTypes)
           .set({
             availability_id: firstAvailability[0].id,
-            updated_at: new Date(),
           })
           .where(and(eq(bookingTypes.availability_id, BigInt(availabilityId)))),
       ]);
@@ -61,7 +59,6 @@ const handler = async (user: User, availabilityId: string) => {
       .set({
         deleted: true,
         default: false,
-        updated_at: new Date(),
       })
       .where(
         and(

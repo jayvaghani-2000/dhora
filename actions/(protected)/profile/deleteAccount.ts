@@ -15,7 +15,6 @@ const handler = async (user: User) => {
       .update(users)
       .set({
         deleted: true,
-        updated_at: new Date(),
       })
       .where(eq(users.id, user.id));
     await lucia.invalidateUserSessions(user.id);

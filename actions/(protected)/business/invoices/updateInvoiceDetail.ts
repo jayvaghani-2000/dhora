@@ -28,7 +28,6 @@ const handler = async (
       .set({
         ...rest,
         due_date: values.due_date,
-        updated_at: new Date(),
       })
       .where(
         and(

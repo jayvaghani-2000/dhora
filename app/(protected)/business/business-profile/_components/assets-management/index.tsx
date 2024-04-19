@@ -20,7 +20,7 @@ const AssetsManagement = (props: propTypes) => {
       <div className="text-secondary-light-gray font-semibold text-base">
         Assets Management
       </div>
-      <ScrollArea className=" border rounded-md border-divider  ">
+      <ScrollArea className=" border rounded-md border-divider mt-2">
         <div className="p-4 flex gap-2">
           <UploadAssets setAssets={setAssets} />
           {assets?.map(i =>

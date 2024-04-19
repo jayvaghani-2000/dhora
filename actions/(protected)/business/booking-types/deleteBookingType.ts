@@ -15,7 +15,6 @@ const handler = async (user: User, bookingTypeId: string) => {
       .update(bookingTypes)
       .set({
         deleted: true,
-        updated_at: new Date(),
       })
       .where(
         and(

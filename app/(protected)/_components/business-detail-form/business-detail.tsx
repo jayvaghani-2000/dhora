@@ -29,7 +29,6 @@ import { updateBusinessDetail } from "@/actions/(protected)/profile/updateBusine
 import { createBusiness } from "@/actions/(protected)/profile/createBusiness";
 import { useToast } from "@/components/ui/use-toast";
 import { revalidate } from "@/actions/(public)/revalidate";
-import { getAvailabilityData } from "@/app/(protected)/business/availability/_utils/initializeAvailability";
 import Spinner from "@/components/shared/spinner";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { deleteBusiness } from "@/actions/(protected)/profile/deleteBusiness";
@@ -92,7 +91,6 @@ const BusinessDetailForm = (prop: propType) => {
       const res = await createBusiness({
         businessDetail: values,
         logo,
-        availability: getAvailabilityData(),
       });
 
       if (res.success) {

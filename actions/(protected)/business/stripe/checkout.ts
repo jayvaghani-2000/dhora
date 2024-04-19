@@ -110,7 +110,6 @@ const handler = async (user: User, params: paramsType) => {
       .update(invoices)
       .set({
         stripe_ref: session.id,
-        updated_at: new Date(),
         status: "pending",
       })
       .where(

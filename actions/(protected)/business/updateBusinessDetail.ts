@@ -23,7 +23,6 @@ const handler = async (
       .set({
         address: address,
         contact: contact,
-        updated_at: new Date(),
       })
       .where(eq(businesses.id, user.business_id!))
       .returning();

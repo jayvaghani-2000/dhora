@@ -62,7 +62,6 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     .update(users)
     .set({
       disabled: false,
-      updated_at: new Date(),
     })
     .where(eq(users.email, validatedFields.data.email));
 

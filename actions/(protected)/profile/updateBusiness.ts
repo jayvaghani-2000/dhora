@@ -37,7 +37,6 @@ const handler = async (user: User, params: parmaTypes) => {
     await db
       .update(businesses)
       .set({
-        updated_at: new Date(),
         ...rest,
         description: trimRichEditor(description),
         ...logoUrl,

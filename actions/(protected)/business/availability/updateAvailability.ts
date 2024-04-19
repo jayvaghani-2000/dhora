@@ -25,7 +25,6 @@ const handler = async (user: User, params: paramsType) => {
       .update(availability)
       .set({
         default: false,
-        updated_at: new Date(),
       })
       .where(
         and(
@@ -62,7 +61,6 @@ const handler = async (user: User, params: paramsType) => {
         .update(availability)
         .set({
           default: true,
-          updated_at: new Date(),
         })
         .where(
           and(
@@ -83,7 +81,6 @@ const handler = async (user: User, params: paramsType) => {
       .update(availability)
       .set({
         ...values,
-        updated_at: new Date(),
       })
       .where(
         and(

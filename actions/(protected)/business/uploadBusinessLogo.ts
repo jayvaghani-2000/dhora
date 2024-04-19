@@ -32,7 +32,6 @@ const handler = async (user: User, file: FormData) => {
       .update(businesses)
       .set({
         logo: uploadedImageUrl,
-        updated_at: new Date(),
       })
       .where(eq(businesses.id, user.business_id!))
       .returning();

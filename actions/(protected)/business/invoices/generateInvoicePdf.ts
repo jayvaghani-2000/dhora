@@ -41,7 +41,6 @@ const handler = async (user: User, params: paramsType) => {
       .update(invoices)
       .set({
         invoice: uploadedPdfImage,
-        updated_at: new Date(),
       })
       .where(and(eq(invoices.id, BigInt(invoice.id))));
 

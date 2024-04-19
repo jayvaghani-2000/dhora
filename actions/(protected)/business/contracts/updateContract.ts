@@ -17,7 +17,6 @@ const handler = async (
       .update(contracts)
       .set({
         name: values.name,
-        updated_at: new Date(),
       })
       .where(
         and(

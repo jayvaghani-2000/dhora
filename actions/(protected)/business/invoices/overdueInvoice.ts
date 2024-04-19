@@ -28,7 +28,6 @@ export const overdueInvoice = async () => {
           .update(invoices)
           .set({
             status: "overdue",
-            updated_at: new Date(),
           })
           .where(eq(invoices.id, invoice.id));
       })

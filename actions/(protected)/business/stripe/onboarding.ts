@@ -30,7 +30,6 @@ const handler = async (user: User) => {
         .update(businesses)
         .set({
           stripe_id: account.id,
-          updated_at: new Date(),
         })
         .where(eq(businesses.id, user.business_id!));
 

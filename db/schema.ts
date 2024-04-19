@@ -9,6 +9,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -31,7 +32,10 @@ export const invoiceStatusTypeEnum = pgEnum("invoiceStatusType", [
   "draft",
   "overdue",
 ]);
-export const assetsTypeEnum = pgEnum("assetsType", ["business_assets"]);
+export const assetsTypeEnum = pgEnum("assetsType", [
+  "business_assets",
+  "package_assets",
+]);
 
 export const users = pgTable("users", {
   id: text("id")
@@ -101,6 +105,8 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   availability: many(availability),
   booking_types: many(bookingTypes),
   assets: many(assets),
+  packages: many(packages),
+  package_groups: many(package_groups),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -259,6 +265,9 @@ export const assets = pgTable("assets", {
     () => businesses.id
   ),
   user_id: text("user_id").references(() => users.id),
+  package_id: bigint("package_id", { mode: "bigint" }).references(
+    () => packages.id
+  ),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -272,6 +281,75 @@ export const assetsRelations = relations(assets, ({ one }) => ({
     fields: [assets.user_id],
     references: [businesses.id],
   }),
+  package: one(packages, {
+    fields: [assets.package_id],
+    references: [packages.id],
+  }),
+}));
+
+export const package_groups = pgTable(
+  "package_groups",
+  {
+    id: bigint("id", { mode: "bigint" })
+      .primaryKey()
+      .default(sql`public.id_generator()`),
+    business_id: bigint("business_id", { mode: "bigint" }).references(
+      () => businesses.id
+    ),
+    name: text("name"),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+  },
+  t => ({
+    unique_grouped_name: unique("unique_grouped_name").on(
+      t.business_id,
+      t.name
+    ),
+  })
+);
+
+export const packageGroupsRelations = relations(
+  package_groups,
+  ({ one, many }) => ({
+    business: one(businesses, {
+      fields: [package_groups.business_id],
+      references: [businesses.id],
+    }),
+    packages: many(packages),
+  })
+);
+
+export const packages = pgTable(
+  "packages",
+  {
+    id: bigint("id", { mode: "bigint" })
+      .primaryKey()
+      .default(sql`public.id_generator()`),
+    business_id: bigint("business_id", { mode: "bigint" }).references(
+      () => businesses.id
+    ),
+    package_groups: bigint("package_group_id", { mode: "bigint" }).references(
+      () => package_groups.id
+    ),
+    name: text("name"),
+    description: text("description"),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+  },
+  t => ({
+    unique_package_name: unique("unique_package_name").on(
+      t.business_id,
+      t.name
+    ),
+  })
+);
+
+export const packagesRelations = relations(packages, ({ one, many }) => ({
+  business: one(businesses, {
+    fields: [packages.business_id],
+    references: [businesses.id],
+  }),
+  assets: many(assets),
 }));
 
 export const registerSchema = createInsertSchema(users)

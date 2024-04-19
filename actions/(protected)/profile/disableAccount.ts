@@ -14,7 +14,6 @@ const handler = async (user: User) => {
       .update(users)
       .set({
         disabled: true,
-        updated_at: new Date(),
       })
       .where(eq(users.id, user.id));
 

@@ -21,13 +21,11 @@ const handler = async (user: User) => {
           .set({
             deleted: true,
             user_id: user.id,
-            updated_at: new Date(),
           })
           .where(eq(businesses.id, userDetail.business_id!)),
         await db
           .update(users)
           .set({
-            updated_at: new Date(),
             business_id: null,
           })
           .where(eq(users.id, userDetail.id)),

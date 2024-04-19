@@ -176,6 +176,13 @@
       "when": 1713158689579,
       "tag": "0024_many_the_fallen",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1713516965897,
+      "tag": "0025_rapid_nomad",
+      "breakpoints": true
     }
   ]
 }

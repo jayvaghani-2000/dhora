@@ -31,7 +31,6 @@ const handler = async (user: User, params: paramsType) => {
         ...rest,
         description: trimRichEditor(description),
         availability_id: BigInt(availability_id),
-        updated_at: new Date(),
       })
       .where(
         and(

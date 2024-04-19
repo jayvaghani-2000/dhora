@@ -41,7 +41,6 @@ export const verifyEmail = async (
             .set({
               verification_code: null,
               email_verified: new Date(),
-              updated_at: new Date(),
             })
             .where(and(eq(users.email, user.email), eq(users.deleted, false)))
             .returning();
