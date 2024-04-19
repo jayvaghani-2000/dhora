@@ -14,7 +14,7 @@ type paramsType = {
 };
 
 const handler = async (user: User, params: paramsType) => {
-  const { defaultAvailability } = params;
+  const { defaultAvailability } = params || {};
   try {
     const data = await db.query.availability.findMany({
       where: and(
