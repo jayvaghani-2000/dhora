@@ -23,12 +23,12 @@ const handler = async (user: User, data: updatePasswordSchemaType) => {
       );
       if (validPassword) {
         const hashedPassword = await new Argon2id().hash(data.new_password);
-        await db
-          .update(users)
-          .set({
-            password: hashedPassword,
-          })
-          .where(eq(users.id, user.id));
+          await db
+            .update(users)
+            .set({
+              password: hashedPassword,
+            })
+            .where(eq(users.id, user.id));
         return {
           data: "Password updated successfully.",
           success: true as true,

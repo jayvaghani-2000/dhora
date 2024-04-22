@@ -1,6 +1,11 @@
-import { createInvoiceSchema, businessTypeEnum } from "@/db/schema";
-import { z, ZodObject, ZodRawShape } from "zod";
+import {
+  createInvoiceSchema,
+  businessTypeEnum,
+  packageUnitTypeEnum,
+} from "@/db/schema";
+import { z } from "zod";
 import { trimRichEditor } from "./common";
+import { isNumber } from "lodash";
 
 export type invoiceSchemaType = z.infer<typeof invoiceSchema>;
 
@@ -147,3 +152,92 @@ export const createEventSchema = z.object({
     to: z.date().optional(),
   }),
 });
+
+export const createPackageSchema = z
+  .object({
+    name: z
+      .string()
+      .refine(data => data.trim().length > 0, { message: "Name is required" }),
+    description: z.string().refine(
+      data => {
+        if (
+          data.trim() === "" ||
+          trimRichEditor(data ?? "") === "<p><br></p>"
+        ) {
+          return false;
+        }
+        return true;
+      },
+      { message: "Description is required" }
+    ),
+    fixed_priced: z.boolean(),
+    unit: z.enum(packageUnitTypeEnum.enumValues).optional(),
+    unit_rate: z.number().positive().optional(),
+    min_unit: z.number().int().optional(),
+    max_unit: z.number().int().optional(),
+  })
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (!data.unit) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Unit is required",
+      path: ["unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.min_unit && data.min_unit < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Should be a positive",
+      path: ["min_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.max_unit && data.max_unit < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Should be a positive",
+      path: ["max_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.max_unit === undefined) {
+        return true;
+      } else if (
+        isNumber(data.min_unit) &&
+        isNumber(data.max_unit) &&
+        data.max_unit > data.min_unit
+      ) {
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Max unit is invalid",
+      path: ["max_unit"],
+    }
+  );

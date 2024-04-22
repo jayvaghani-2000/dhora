@@ -37,6 +37,12 @@ export const assetsTypeEnum = pgEnum("assetsType", [
   "package_assets",
 ]);
 
+export const packageUnitTypeEnum = pgEnum("packageUnitType", [
+  "days",
+  "hours",
+  "peoples",
+]);
+
 export const users = pgTable("users", {
   id: text("id")
     .notNull()
@@ -333,6 +339,12 @@ export const packages = pgTable(
     ),
     name: text("name"),
     description: text("description"),
+    fixed_priced: boolean("fixed_priced").default(false),
+    unit: packageUnitTypeEnum("unit"),
+    min_unit: integer("min_unit"),
+    max_unit: integer("max_unit"),
+    unit_rate: integer("unit_rate"),
+    deleted: boolean("deleted").default(false),
     created_at: timestamp("created_at").defaultNow().notNull(),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
   },
@@ -455,6 +467,7 @@ export const createInvoiceSchema = createInsertSchema(invoices)
       ),
     })
   );
+
 export const createAvailabilitySchema = createInsertSchema(availability)
   .omit({
     id: true,

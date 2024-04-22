@@ -42,7 +42,7 @@ const Assets = (props: propTypes) => {
             ) : (
               <div
                 key={i.id}
-                className="relative rounded-sm mb-2 lg:mb-3"
+                className="relative rounded-sm mb-2 lg:mb-3 h-full"
                 style={{
                   aspectRatio: i.width && i.height ? i.width / i.height : 1,
                 }}
@@ -95,7 +95,7 @@ const Assets = (props: propTypes) => {
               ) : (
                 <div
                   key={i.id}
-                  className="relative rounded-sm mb-2 lg:mb-3"
+                  className="relative rounded-sm mb-2 lg:mb-3 h-full"
                   style={{
                     aspectRatio: i.width && i.height ? i.width / i.height : 1,
                   }}

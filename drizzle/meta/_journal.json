@@ -183,6 +183,13 @@
       "when": 1713516965897,
       "tag": "0025_rapid_nomad",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1713764507241,
+      "tag": "0026_round_the_stranger",
+      "breakpoints": true
     }
   ]
 }
