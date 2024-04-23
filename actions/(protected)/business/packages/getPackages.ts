@@ -1,20 +1,21 @@
 "use server";
 
-import { package_groups } from "@/db/schema";
+import { packages } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 const handler = async (user: User) => {
   try {
-    const data = await db.query.package_groups.findMany({
+    const data = await db.query.packages.findMany({
       where: and(
-        eq(package_groups.business_id, user.business_id!),
-        eq(package_groups.deleted, false)
+        eq(packages.business_id, user.business_id!),
+        eq(packages.deleted, false)
       ),
+      orderBy: [desc(packages.updated_at)],
     });
 
     return {
@@ -26,6 +27,5 @@ const handler = async (user: User) => {
   }
 };
 
-export const getPackageGroups: () => Promise<
-  Awaited<ReturnType<typeof handler>>
-> = validateBusinessToken(handler);
+export const getPackages: () => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

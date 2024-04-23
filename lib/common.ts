@@ -4,6 +4,7 @@ import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
 import { getTimeZones } from "@vvo/tzdb";
 import { invoiceStatusTypeEnum } from "@/db/schema";
+import { getPackagesType } from "@/actions/_utils/types.type";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -139,4 +140,38 @@ export function extractVideoMetadata(file: File) {
     let chunk = file.slice(0, 500000);
     rd.readAsArrayBuffer(chunk);
   });
+}
+
+export function groupPackagesByGroupId(packages: getPackagesType["data"]) {
+  const groupedPackages = {} as {
+    [key: string]: {
+      package_groups_id: string | null;
+      package: getPackagesType["data"];
+    };
+  };
+  const nonGroupedPackages: {
+    package_groups_id: string | null;
+    package: getPackagesType["data"];
+  }[] = [];
+
+  packages?.forEach(pack => {
+    const groupId = pack.package_groups_id as unknown as string;
+
+    if (groupId !== null) {
+      if (!groupedPackages[groupId]) {
+        groupedPackages[groupId] = {
+          package_groups_id: groupId,
+          package: [],
+        };
+      }
+      groupedPackages[groupId].package!.push(pack);
+    } else {
+      nonGroupedPackages.push({
+        package_groups_id: null,
+        package: [pack],
+      });
+    }
+  });
+
+  return Object.values(groupedPackages).concat(nonGroupedPackages);
 }

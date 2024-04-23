@@ -3,27 +3,64 @@ import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { PiPlus } from "react-icons/pi";
 import NewPackage from "./new-package";
+import NewPackageGroup from "./new-group";
+import {
+  getPackageGroupsType,
+  getPackagesType,
+} from "@/actions/_utils/types.type";
+import Preview from "./preview";
 
-const Package = () => {
+type propType = {
+  packagesGroups: getPackageGroupsType["data"];
+  groupedPackages: {
+    package_groups_id: string | null;
+    package: getPackagesType["data"];
+  }[];
+};
+
+const Package = (props: propType) => {
+  const { packagesGroups, groupedPackages } = props;
   const [open, setOpen] = useState(false);
+  const [openNewGroup, setOpenNewGroup] = useState(false);
+
   return (
     <div>
       <div className="flex justify-between items-center">
         <div className="text-secondary-light-gray font-semibold text-base">
           Packages
         </div>
-        <Button
-          onClick={() => {
-            setOpen(true);
-          }}
-          className="text-xs lg:text-sm p-2 h-fit lg:px-4 "
-        >
-          <PiPlus size={16} className="mr-2" />
-          Create Package
-        </Button>
+        <div className="flex gap-2 items-center">
+          <Button
+            onClick={() => {
+              setOpenNewGroup(true);
+            }}
+            className="text-xs lg:text-sm p-2 h-fit lg:px-4 "
+          >
+            Create Group
+          </Button>
+          <Button
+            onClick={() => {
+              setOpen(true);
+            }}
+            className="text-xs lg:text-sm p-2 h-fit lg:px-4 "
+          >
+            <PiPlus size={16} className="mr-2" />
+            New
+          </Button>
+        </div>
       </div>
 
-      <NewPackage open={open} setOpen={setOpen} />
+      <Preview
+        groupedPackages={groupedPackages}
+        packagesGroups={packagesGroups}
+      />
+
+      <NewPackage
+        open={open}
+        setOpen={setOpen}
+        packagesGroups={packagesGroups}
+      />
+      <NewPackageGroup open={openNewGroup} setOpen={setOpenNewGroup} />
     </div>
   );
 };

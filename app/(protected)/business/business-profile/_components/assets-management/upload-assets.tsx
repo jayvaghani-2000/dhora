@@ -1,7 +1,7 @@
 "use client";
 
-import { getBusinessAssets } from "@/actions/(protected)/business/profile/assets/getBusinessAssets";
-import { uploadBusinessAssets } from "@/actions/(protected)/business/profile/assets/uploadBusinessAssets";
+import { getBusinessAssets } from "@/actions/(protected)/business/assets/getBusinessAssets";
+import { uploadBusinessAssets } from "@/actions/(protected)/business/assets/uploadBusinessAssets";
 import {
   getBusinessAssetsType,
   uploadBusinessAssetsType,

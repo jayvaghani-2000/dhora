@@ -14,11 +14,8 @@ type propTypes = {
 const Assets = (props: propTypes) => {
   return (
     <div>
-      <div className="text-secondary-light-gray font-semibold text-base">
-        Assets
-      </div>
-      <div className="relative max-h-[600px] overflow-hidden">
-        <div className="mt-6 columns-2 lg:columns-3 gap-x-2  lg:gap-x-3">
+      <div className="relative max-h-[50dvh] lg:max-h-[600px] overflow-hidden">
+        <div className="columns-2 lg:columns-3 gap-x-2  lg:gap-x-3">
           {props.assets.data?.map(i =>
             allowedImageType.includes(i.type ?? "") ? (
               <div

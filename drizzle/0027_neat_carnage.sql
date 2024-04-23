@@ -1,0 +1,1 @@
+ALTER TABLE "package_groups" ADD COLUMN "deleted" boolean DEFAULT false;

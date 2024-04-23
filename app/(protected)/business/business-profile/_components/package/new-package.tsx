@@ -30,13 +30,18 @@ import { capitalize } from "lodash";
 import { Label } from "@/components/ui/label";
 import { createPackage } from "@/actions/(protected)/business/packages/createPackage";
 import { useToast } from "@/components/ui/use-toast";
+import { getPackageGroupsType } from "@/actions/_utils/types.type";
+import { CiCircleRemove } from "react-icons/ci";
+import { Button } from "@/components/ui/button";
 
 const NewPackage = (
   props: Partial<React.ComponentProps<typeof CustomDialog>> & {
     setOpen: Dispatch<SetStateAction<boolean>>;
+  } & {
+    packagesGroups: getPackageGroupsType["data"];
   }
 ) => {
-  const { open = false, setOpen } = props;
+  const { open = false, setOpen, packagesGroups } = props;
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof createPackageSchema>>({
@@ -44,6 +49,7 @@ const NewPackage = (
     defaultValues: {
       description: "",
       name: "",
+      package_group_id: undefined,
       fixed_priced: false,
       unit: undefined,
       unit_rate: undefined,
@@ -71,6 +77,7 @@ const NewPackage = (
       toast({
         title: "Package create successfully",
       });
+      handleCloseCreateEvent();
     }
     setLoading(false);
   };
@@ -93,6 +100,55 @@ const NewPackage = (
       <div className="flex gap-5 flex-col md:flex-row items-center md:items-start">
         <Form {...form}>
           <div className="flex-1 flex gap-2 flex-col w-full">
+            <FormField
+              control={form.control}
+              name="package_group_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Group in</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <div className="flex gap-1 items-center">
+                        <FormControl className="flex-1">
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                <span className="text-muted-foreground ">
+                                  Select Group
+                                </span>
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          className="p-1 h-[32px] lg:h-[40px]  w-[32px] lg:w-[40px]"
+                          onClick={() => {
+                            field.onChange(null);
+                          }}
+                        >
+                          <div className="h-6 w-6">
+                            <CiCircleRemove className="h-full w-full" />
+                          </div>
+                        </Button>
+                      </div>
+                      <SelectContent>
+                        {packagesGroups?.map(i => (
+                          <SelectItem
+                            key={i.id}
+                            value={i.id as unknown as string}
+                          >
+                            {i.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="name"

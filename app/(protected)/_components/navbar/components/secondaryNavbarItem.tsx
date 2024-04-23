@@ -1,16 +1,23 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface SecondaryNavbarItemProps {
   id: string;
   title: string;
   icon: React.ReactNode;
   path: string;
-  currentPath: string;
+  submenu?: {
+    title: string;
+    key: string;
+    icon: React.ReactNode;
+    path: string;
+  }[];
 }
 
 export default function SecondaryNavbarItem(props: SecondaryNavbarItemProps) {
-  const { id, title, icon, path, currentPath } = props;
+  const currentPath = usePathname();
+  const { id, title, icon, path, submenu = [] } = props;
 
   return (
     <div className="mb-1">
@@ -33,6 +40,21 @@ export default function SecondaryNavbarItem(props: SecondaryNavbarItemProps) {
           </p>
         </button>
       </Link>
+      {currentPath.includes(id) ? (
+        <div className="pl-4">
+          {submenu?.map(o => {
+            return (
+              <SecondaryNavbarItem
+                key={o.key}
+                id={o.key}
+                title={o.title}
+                icon={o.icon}
+                path={o.path}
+              />
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }

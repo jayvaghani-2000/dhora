@@ -155,6 +155,7 @@ export const createEventSchema = z.object({
 
 export const createPackageSchema = z
   .object({
+    package_group_id: z.string().optional(),
     name: z
       .string()
       .refine(data => data.trim().length > 0, { message: "Name is required" }),
@@ -241,3 +242,9 @@ export const createPackageSchema = z
       path: ["max_unit"],
     }
   );
+
+export const createPackageGroupSchema = z.object({
+  name: z
+    .string()
+    .refine(data => data.trim().length > 0, { message: "Name is required" }),
+});

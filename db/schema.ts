@@ -303,6 +303,7 @@ export const package_groups = pgTable(
       () => businesses.id
     ),
     name: text("name"),
+    deleted: boolean("deleted").default(false),
     created_at: timestamp("created_at").defaultNow().notNull(),
     updated_at: timestamp("updated_at").defaultNow().notNull(),
   },
@@ -334,9 +335,9 @@ export const packages = pgTable(
     business_id: bigint("business_id", { mode: "bigint" }).references(
       () => businesses.id
     ),
-    package_groups: bigint("package_group_id", { mode: "bigint" }).references(
-      () => package_groups.id
-    ),
+    package_groups_id: bigint("package_group_id", {
+      mode: "bigint",
+    }).references(() => package_groups.id),
     name: text("name"),
     description: text("description"),
     fixed_priced: boolean("fixed_priced").default(false),

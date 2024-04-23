@@ -113,3 +113,39 @@ export async function createPublicBusinessAssetsVideoUrl(
   await setPublicPolicy(user_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
+
+export async function createPublicPackageAssetsImageUrl(
+  {
+    business_id,
+    package_id,
+    user_id,
+  }: { business_id: bigint; user_id: bigint; package_id: bigint },
+  img: File
+) {
+  const buffer = Buffer.from(await img.arrayBuffer());
+  const metadata = await assetsMetadata(buffer);
+  const id = (await getBigIntId)[0].id_generator;
+  const filepath = `${user_id}/public/${business_id}/assets/${package_id}/${id}.${metadata.type?.toLowerCase()}`;
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
+  await setPublicPolicy(user_id);
+  return {
+    url: `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`,
+    ...metadata,
+  };
+}
+
+export async function createPublicPackageAssetsVideoUrl(
+  {
+    business_id,
+    package_id,
+    user_id,
+  }: { business_id: bigint; user_id: bigint; package_id: bigint },
+  video: File
+) {
+  const buffer = Buffer.from(await video.arrayBuffer());
+  const id = (await getBigIntId)[0].id_generator;
+  const filepath = `${user_id}/public/${business_id}/assets/${package_id}/${id}.mp4`;
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
+  await setPublicPolicy(user_id);
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
+}

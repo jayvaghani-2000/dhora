@@ -16,8 +16,15 @@ const handler = async (
   user: User,
   values: z.infer<typeof createPackageSchema>
 ) => {
-  const { description, fixed_priced, max_unit, min_unit, unit, ...rest } =
-    values;
+  const {
+    description,
+    fixed_priced,
+    max_unit,
+    min_unit,
+    unit,
+    package_group_id,
+    ...rest
+  } = values;
   try {
     const data = await db
       .insert(packages)
@@ -27,6 +34,7 @@ const handler = async (
         unit: fixed_priced ? null : unit,
         min_unit: fixed_priced ? null : min_unit,
         max_unit: fixed_priced ? null : max_unit,
+        package_groups_id: package_group_id ? BigInt(package_group_id) : null,
         ...rest,
         description: trimRichEditor(description),
       })
@@ -46,7 +54,7 @@ const createPackageHandler = async (
 
   if (res.success) {
     await revalidate("/business/business-profile");
-    redirect(`/business/business-profile/package/${res.data.id}`);
+    redirect(`/business/business-profile/packages/${res.data.id}`);
   }
   return res;
 };

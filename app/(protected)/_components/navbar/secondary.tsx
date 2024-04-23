@@ -16,6 +16,8 @@ import { FaRegClock } from "react-icons/fa";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
 import { profileType } from "@/actions/_utils/types.type";
 import { CgProfile } from "react-icons/cg";
+import { IoIosImage } from "react-icons/io";
+import { GoPackage } from "react-icons/go";
 
 export const StaticOptions = [
   {
@@ -61,6 +63,20 @@ export const StaticOptions = [
         title: "Market Profile",
         icon: <CgProfile />,
         path: "/business/business-profile",
+        submenu: [
+          {
+            key: "business-profile/assets",
+            title: "Assets management",
+            icon: <IoIosImage />,
+            path: "/business/business-profile/assets",
+          },
+          {
+            key: "business-profile/packages",
+            title: "Packages",
+            icon: <GoPackage />,
+            path: "/business/business-profile/packages",
+          },
+        ],
       },
     ],
   },
@@ -117,7 +133,7 @@ const Secondary = (prop: propType) => {
               title={o.title}
               icon={o.icon}
               path={o.path}
-              currentPath={path}
+              submenu={o.submenu}
             />
           );
         })}

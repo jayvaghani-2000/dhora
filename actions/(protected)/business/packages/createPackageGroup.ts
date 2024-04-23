@@ -6,8 +6,14 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
+import { createPackageGroupSchema } from "@/lib/schema";
+import { z } from "zod";
+import { revalidate } from "@/actions/(public)/revalidate";
 
-const handler = async (user: User, name: string) => {
+type paramsType = z.infer<typeof createPackageGroupSchema>;
+
+const handler = async (user: User, value: paramsType) => {
+  const { name } = value;
   try {
     const data = await db
       .insert(package_groups)
@@ -16,6 +22,8 @@ const handler = async (user: User, name: string) => {
         name: name.trim(),
       })
       .returning();
+
+    await revalidate("/business/business-profile/packages");
 
     return {
       success: true as true,
@@ -26,6 +34,7 @@ const handler = async (user: User, name: string) => {
   }
 };
 
-export const createPackageGroup: () => Promise<
-  Awaited<ReturnType<typeof handler>>
-> = validateBusinessToken(handler);
+export const createPackageGroup: (
+  value: paramsType
+) => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);
