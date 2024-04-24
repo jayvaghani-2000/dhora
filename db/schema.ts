@@ -43,6 +43,11 @@ export const packageUnitTypeEnum = pgEnum("packageUnitType", [
   "peoples",
 ]);
 
+export const depositTypeEnum = pgEnum("depositType", [
+  "fixed",
+  "percentage",
+]);
+
 export const users = pgTable("users", {
   id: text("id")
     .notNull()
@@ -345,6 +350,8 @@ export const packages = pgTable(
     min_unit: integer("min_unit"),
     max_unit: integer("max_unit"),
     unit_rate: integer("unit_rate"),
+    deposit_type: depositTypeEnum("deposit_type"),
+    deposit: doublePrecision("deposit"),
     deleted: boolean("deleted").default(false),
     created_at: timestamp("created_at").defaultNow().notNull(),
     updated_at: timestamp("updated_at").defaultNow().notNull(),

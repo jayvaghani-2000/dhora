@@ -16,6 +16,7 @@ import { getBusinessAssets } from "../(protected)/business/assets/getBusinessAss
 import { uploadBusinessAssets } from "../(protected)/business/assets/uploadBusinessAssets";
 import { getPackageGroups } from "../(protected)/business/packages/getPackageGroups";
 import { getPackages } from "../(protected)/business/packages/getPackages";
+import { getPackageDetails } from "../(protected)/business/packages/getPackageDetail";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -70,6 +71,9 @@ export type getPackageGroupsType = NonNullable<
 >;
 export type getPackagesType = NonNullable<
   Awaited<ReturnType<typeof getPackages>>
+>;
+export type getPackageDetailsType = NonNullable<
+  Awaited<ReturnType<typeof getPackageDetails>>
 >;
 
 export enum businessTypes {

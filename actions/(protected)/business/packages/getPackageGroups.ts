@@ -19,7 +19,7 @@ const handler = async (user: User) => {
 
     return {
       success: true as true,
-      data: stringifyBigint(data),
+      data: data.map(i => stringifyBigint(i)),
     };
   } catch (err) {
     return errorHandler(err);

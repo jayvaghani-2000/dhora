@@ -15,7 +15,8 @@ import {
 import RichEditor from "@/components/shared/rich-editor";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { packageUnitTypeEnum } from "@/db/schema";
+import { depositTypeEnum, packageUnitTypeEnum } from "@/db/schema";
+import { AiOutlinePercentage } from "react-icons/ai";
 import {
   SelectItem,
   Select,
@@ -55,11 +56,14 @@ const NewPackage = (
       unit_rate: undefined,
       max_unit: undefined,
       min_unit: undefined,
+      deposit_type: "fixed",
+      deposit: undefined,
     },
     reValidateMode: "onChange",
   });
 
   const unitTypeOptions = packageUnitTypeEnum.enumValues;
+  const depositTypeOptions = depositTypeEnum.enumValues;
 
   const handleCloseCreateEvent = () => {
     setOpen(false);
@@ -177,7 +181,7 @@ const NewPackage = (
             />
 
             <div>
-              <Label>Quotation</Label>
+              <Label>Pricing</Label>
 
               <FormField
                 control={form.control}
@@ -357,6 +361,82 @@ const NewPackage = (
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="deposit_type"
+              render={({ field }) => (
+                <FormItem className="">
+                  <FormLabel>Deposit</FormLabel>
+                  <div className="flex gap-2">
+                    <FormField
+                      control={form.control}
+                      name={`deposit`}
+                      render={({ field: deposit_field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <IconInput
+                              type="number"
+                              placeholder="Deposit"
+                              {...deposit_field}
+                              prefix={
+                                field.value === "fixed" ? (
+                                  <div className="h-4 w-4">
+                                    <CgDollar className="h-full w-full" />
+                                  </div>
+                                ) : null
+                              }
+                              suffix={
+                                field.value === "percentage" ? (
+                                  <div className="h-4 w-4">
+                                    <AiOutlinePercentage className="h-full w-full" />
+                                  </div>
+                                ) : null
+                              }
+                              onChange={e => {
+                                const value = parseFloat(e.target.value);
+                                if (isNaN(value)) {
+                                  deposit_field.onChange(undefined);
+                                } else {
+                                  deposit_field.onChange(value);
+                                }
+                              }}
+                              value={stringCasting(
+                                form.getValues(`deposit`) as unknown as number
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-fit">
+                          <SelectValue
+                            placeholder={
+                              <span className="text-muted-foreground ">
+                                Select deposit unit
+                              </span>
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {depositTypeOptions.map(i => (
+                          <SelectItem key={i} value={i}>
+                            {capitalize(i)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </FormItem>
+              )}
+            />
           </div>
         </Form>
       </div>

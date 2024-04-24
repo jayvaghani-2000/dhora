@@ -2,6 +2,7 @@ import {
   createInvoiceSchema,
   businessTypeEnum,
   packageUnitTypeEnum,
+  depositTypeEnum,
 } from "@/db/schema";
 import { z } from "zod";
 import { trimRichEditor } from "./common";
@@ -176,6 +177,8 @@ export const createPackageSchema = z
     unit_rate: z.number().positive().optional(),
     min_unit: z.number().int().optional(),
     max_unit: z.number().int().optional(),
+    deposit_type: z.enum(depositTypeEnum.enumValues).optional(),
+    deposit: z.number().positive().optional(),
   })
   .refine(
     data => {
@@ -226,7 +229,7 @@ export const createPackageSchema = z
     data => {
       if (data.fixed_priced) {
         return true;
-      } else if (data.max_unit === undefined) {
+      } else if (data.max_unit === undefined || data.min_unit === undefined) {
         return true;
       } else if (
         isNumber(data.min_unit) &&
@@ -240,6 +243,25 @@ export const createPackageSchema = z
     {
       message: "Max unit is invalid",
       path: ["max_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (
+        !data.deposit ||
+        (data.deposit_type === "percentage" &&
+          data.deposit &&
+          data.deposit <= 100)
+      ) {
+        return true;
+      } else if (data.deposit_type === "fixed") {
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Deposit must be less than 100%",
+      path: ["deposit"],
     }
   );
 
