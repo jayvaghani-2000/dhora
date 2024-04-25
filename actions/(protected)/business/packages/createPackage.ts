@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
-import { createPackageSchema } from "@/lib/schema";
+import { createPackageSchema } from "@/db/schema";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
 import { trimRichEditor } from "@/lib/common";
@@ -37,7 +37,7 @@ const handler = async (
         unit: fixed_priced ? null : unit,
         min_unit: fixed_priced ? null : min_unit,
         max_unit: fixed_priced ? null : max_unit,
-        package_groups_id: package_group_id ? BigInt(package_group_id) : null,
+        package_group_id: package_group_id ? BigInt(package_group_id) : null,
         deposit: deposit,
         deposit_type: deposit ? deposit_type : null,
         name: name.trim(),

@@ -8,7 +8,7 @@ import { and, desc, eq } from "drizzle-orm";
 import { assets } from "@/db/schema";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
-const handler = async (user: User, packageId: bigint) => {
+const handler = async (user: User, packageId: string) => {
   try {
     const data = await db.query.assets.findMany({
       where: and(
@@ -24,6 +24,6 @@ const handler = async (user: User, packageId: bigint) => {
   }
 };
 
-export const getBusinessAssets: (
-  packageId: bigint
+export const getPackageAssets: (
+  packageId: string
 ) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);

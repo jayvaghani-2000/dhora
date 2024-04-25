@@ -10,7 +10,7 @@ import {
 import { db } from "@/lib/db";
 import { assets } from "@/db/schema";
 
-type paramsType = { file: FormData; metadata?: unknown; packageId: bigint };
+type paramsType = { file: FormData; metadata?: unknown; packageId: string };
 
 const handler = async (
   user: User,
@@ -63,7 +63,7 @@ const handler = async (
           type: video.type,
           business_id: user.business_id,
           user_id: user.id,
-          asset_type: "business_assets",
+          asset_type: "package_assets",
           package_id: BigInt(packageId),
           ...videoMetaData,
         })

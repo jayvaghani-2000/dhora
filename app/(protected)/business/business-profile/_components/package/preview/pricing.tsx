@@ -1,6 +1,7 @@
 import React from "react";
 import SelectedPackage from "./selected-package";
 import { formatAmount } from "@/lib/common";
+import { packageSingleUnitTypes } from "@/actions/_utils/types.type";
 
 const Pricing = (props: React.ComponentProps<typeof SelectedPackage>) => {
   const { selectedPackage } = props;
@@ -30,7 +31,7 @@ const Pricing = (props: React.ComponentProps<typeof SelectedPackage>) => {
               {unit_rate ? (
                 <li>
                   {formatAmount(unit_rate)}
-                  {`/${unit}`}
+                  {`/${packageSingleUnitTypes[unit]}`}
                 </li>
               ) : null}
               {min_unit ? (

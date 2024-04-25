@@ -1,3 +1,4 @@
+import { trimRichEditor } from "@/lib/common";
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
@@ -13,6 +14,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { isNumber } from "lodash";
 import { z } from "zod";
 
 export const businessTypeEnum = pgEnum("businessType", [
@@ -43,10 +45,7 @@ export const packageUnitTypeEnum = pgEnum("packageUnitType", [
   "peoples",
 ]);
 
-export const depositTypeEnum = pgEnum("depositType", [
-  "fixed",
-  "percentage",
-]);
+export const depositTypeEnum = pgEnum("depositType", ["fixed", "percentage"]);
 
 export const users = pgTable("users", {
   id: text("id")
@@ -340,7 +339,7 @@ export const packages = pgTable(
     business_id: bigint("business_id", { mode: "bigint" }).references(
       () => businesses.id
     ),
-    package_groups_id: bigint("package_group_id", {
+    package_group_id: bigint("package_group_id", {
       mode: "bigint",
     }).references(() => package_groups.id),
     name: text("name"),
@@ -501,3 +500,226 @@ export const editInvoiceSchema = createInvoiceSchema.merge(
     id: z.string(),
   })
 );
+
+const packageSchema = createInsertSchema(packages)
+  .omit({
+    id: true,
+    name: true,
+    description: true,
+    updated_at: true,
+    created_at: true,
+    fixed_priced: true,
+    unit: true,
+    unit_rate: true,
+    min_unit: true,
+    max_unit: true,
+    deposit_type: true,
+    deposit: true,
+    deleted: true,
+    package_group_id: true,
+    business_id: true,
+  })
+  .merge(
+    z.object({
+      name: z.string().refine(data => data.trim().length > 0, {
+        message: "Name is required",
+      }),
+      description: z.string().refine(
+        data => {
+          if (
+            data.trim() === "" ||
+            trimRichEditor(data ?? "") === "<p><br></p>"
+          ) {
+            return false;
+          }
+          return true;
+        },
+        { message: "Description is required" }
+      ),
+      fixed_priced: z.boolean(),
+      unit: z.enum(packageUnitTypeEnum.enumValues).optional().nullable(),
+      unit_rate: z.number().positive().optional().nullable(),
+      min_unit: z.number().int().optional().nullable(),
+      max_unit: z.number().int().optional().nullable(),
+      deposit_type: z.enum(depositTypeEnum.enumValues).optional().nullable(),
+      deposit: z.number().positive().optional().nullable(),
+      package_group_id: z.string().optional(),
+    })
+  );
+
+export const createPackageSchema = packageSchema
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (!data.unit) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Unit is required",
+      path: ["unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.min_unit && data.min_unit < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Should be a positive",
+      path: ["min_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.max_unit && data.max_unit < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Should be a positive",
+      path: ["max_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.max_unit === undefined || data.min_unit === undefined) {
+        return true;
+      } else if (
+        isNumber(data.min_unit) &&
+        isNumber(data.max_unit) &&
+        data.max_unit > data.min_unit
+      ) {
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Max unit is invalid",
+      path: ["max_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (
+        !data.deposit ||
+        (data.deposit_type === "percentage" &&
+          data.deposit &&
+          data.deposit <= 100)
+      ) {
+        return true;
+      } else if (data.deposit_type === "fixed") {
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Deposit must be less than 100%",
+      path: ["deposit"],
+    }
+  );
+
+export const editPackageSchema = packageSchema
+  .merge(
+    z.object({
+      id: z.string(),
+    })
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (!data.unit) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Unit is required",
+      path: ["unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.min_unit && data.min_unit < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Should be a positive",
+      path: ["min_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.max_unit && data.max_unit < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Should be a positive",
+      path: ["max_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.max_unit === undefined || data.min_unit === undefined) {
+        return true;
+      } else if (
+        isNumber(data.min_unit) &&
+        isNumber(data.max_unit) &&
+        data.max_unit > data.min_unit
+      ) {
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Max unit is invalid",
+      path: ["max_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (
+        !data.deposit ||
+        (data.deposit_type === "percentage" &&
+          data.deposit &&
+          data.deposit <= 100)
+      ) {
+        return true;
+      } else if (data.deposit_type === "fixed") {
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Deposit must be less than 100%",
+      path: ["deposit"],
+    }
+  );

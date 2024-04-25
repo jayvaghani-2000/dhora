@@ -42,7 +42,7 @@ const deletePackageHandler = async (user: User, packageId: string) => {
   return res;
 };
 
-export const deleteBookingType: (
+export const deletePackage: (
   packageId: string
 ) => Promise<Awaited<ReturnType<typeof deletePackageHandler>>> =
   validateBusinessToken(deletePackageHandler);

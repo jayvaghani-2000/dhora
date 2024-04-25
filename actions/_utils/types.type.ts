@@ -17,6 +17,7 @@ import { uploadBusinessAssets } from "../(protected)/business/assets/uploadBusin
 import { getPackageGroups } from "../(protected)/business/packages/getPackageGroups";
 import { getPackages } from "../(protected)/business/packages/getPackages";
 import { getPackageDetails } from "../(protected)/business/packages/getPackageDetail";
+import { getPackageAssets } from "../(protected)/business/assets/packages/getPackageAssets";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -75,6 +76,9 @@ export type getPackagesType = NonNullable<
 export type getPackageDetailsType = NonNullable<
   Awaited<ReturnType<typeof getPackageDetails>>
 >;
+export type getPackageAssetsType = NonNullable<
+  Awaited<ReturnType<typeof getPackageAssets>>
+>;
 
 export enum businessTypes {
   "Event Planner",
@@ -92,4 +96,9 @@ export enum invoiceStatusTypes {
   "pending",
   "draft",
   "overdue",
+}
+export enum packageSingleUnitTypes {
+  "days" = "day",
+  "hours" = "hour",
+  "peoples" = "person",
 }

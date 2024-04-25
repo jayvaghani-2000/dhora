@@ -15,7 +15,7 @@ export function generatePublicAccess(business_id: bigint) {
     Principal: {
       AWS: ["*"],
     },
-    Action: ["s3:GetObject"],
+    Action: ["s3:GetObject", "s3:DeleteObject"],
     Resource: [`arn:aws:s3:::${config.env.NODE_ENV}/${business_id}/public/**`],
   };
 }
@@ -41,14 +41,6 @@ export async function createPublicBusinessImgUrl(
   await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
-}
-
-export async function removeBusinessImage(url: string) {
-  const domain = `https://cdn.dhora.app/${config.env.NODE_ENV}/`;
-
-  const imageObject = url.replace(domain, "");
-
-  await mc.removeObjects(config.env.NODE_ENV, [imageObject]);
 }
 
 export async function createPublicInvoicePdfUrl(
@@ -148,4 +140,12 @@ export async function createPublicPackageAssetsVideoUrl(
   await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
+}
+
+export async function removeAsset(urls: string[]) {
+  const domain = `https://cdn.dhora.app/${config.env.NODE_ENV}`;
+  await mc.removeObjects(
+    config.env.NODE_ENV,
+    urls.map(url => url.replace(domain, ""))
+  );
 }

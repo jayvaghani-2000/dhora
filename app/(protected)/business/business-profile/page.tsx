@@ -34,6 +34,7 @@ export default async function BusinessProfile() {
         <Preview
           packagesGroups={packagesGroups.data}
           groupedPackages={groupedPackages}
+          readOnly
         />
       </div>
     </div>

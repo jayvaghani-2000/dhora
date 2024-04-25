@@ -1,5 +1,5 @@
 import CustomDialog from "@/components/shared/custom-dialog";
-import { createPackageSchema } from "@/lib/schema";
+import { createPackageSchema } from "@/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -208,7 +208,7 @@ const NewPackage = (
                             <FormItem className="">
                               <Select
                                 onValueChange={field.onChange}
-                                defaultValue={field.value}
+                                defaultValue={field.value!}
                               >
                                 <FormControl>
                                   <SelectTrigger>
@@ -280,6 +280,7 @@ const NewPackage = (
                                   placeholder="Minimum units"
                                   type="number"
                                   {...field}
+                                  value={field.value!}
                                   onChange={e => {
                                     const value = parseFloat(e.target.value);
                                     if (isNaN(value)) {
@@ -304,6 +305,7 @@ const NewPackage = (
                                   placeholder="Maximum units"
                                   type="number"
                                   {...field}
+                                  value={field.value!}
                                   onChange={e => {
                                     const value = parseFloat(e.target.value);
                                     if (isNaN(value)) {
@@ -412,7 +414,7 @@ const NewPackage = (
                     />
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value!}
                     >
                       <FormControl>
                         <SelectTrigger className="w-fit">

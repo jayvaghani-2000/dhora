@@ -13,7 +13,7 @@ import Preview from "./preview";
 type propType = {
   packagesGroups: getPackageGroupsType["data"];
   groupedPackages: {
-    package_groups_id: string | null;
+    package_group_id: string | null;
     package: getPackagesType["data"];
   }[];
 };
