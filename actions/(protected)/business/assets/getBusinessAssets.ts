@@ -10,13 +10,7 @@ import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (user: User) => {
   try {
-    const data = await db.query.assets.findMany({
-      where: and(
-        eq(assets.business_id, user.business_id!),
-        inArray(assets.asset_type, ["business_assets", "package_assets"])
-      ),
-      orderBy: [desc(assets.created_at)],
-    });
+    const data = await getAssets(user);
 
     return { success: true as true, data: data.map(i => stringifyBigint(i)) };
   } catch (err) {
@@ -24,5 +18,17 @@ const handler = async (user: User) => {
   }
 };
 
-export const getBusinessAssets: () => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateToken(handler);
+export const getAssets = async (user: User) => {
+  const data = await db.query.assets.findMany({
+    where: and(
+      eq(assets.business_id, user.business_id!),
+      inArray(assets.asset_type, ["business_assets", "package_assets"])
+    ),
+    orderBy: [desc(assets.created_at)],
+  });
+  return data;
+};
+
+export const getBusinessAssets: () => Promise<
+  Awaited<ReturnType<typeof handler>>
+> = validateToken(handler);

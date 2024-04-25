@@ -12,7 +12,10 @@ import { getAvailabilityDetail } from "../(protected)/business/availability/getA
 import { getAvailability } from "../(protected)/business/availability/getAvailability";
 import { getBookingTypes } from "../(protected)/business/booking-types/getBookingTypes";
 import { getBookingTypeDetails } from "../(protected)/business/booking-types/getBookingTypeDetails";
-import { getBusinessAssets } from "../(protected)/business/assets/getBusinessAssets";
+import {
+  getAssets,
+  getBusinessAssets,
+} from "../(protected)/business/assets/getBusinessAssets";
 import { uploadBusinessAssets } from "../(protected)/business/assets/uploadBusinessAssets";
 import { getPackageGroups } from "../(protected)/business/packages/getPackageGroups";
 import { getPackages } from "../(protected)/business/packages/getPackages";
@@ -22,6 +25,8 @@ import { getPackageAssets } from "../(protected)/business/assets/packages/getPac
 export type errorType = { success: false; error: string; data?: never };
 
 export type profileType = Awaited<ReturnType<typeof getUser>>;
+export type assetsType = NonNullable<Awaited<ReturnType<typeof getAssets>>>;
+
 export type getProfileType = Awaited<ReturnType<typeof me>>;
 
 export type getContractType = Awaited<ReturnType<typeof getContracts>>;

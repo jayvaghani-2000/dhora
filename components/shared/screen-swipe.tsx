@@ -24,7 +24,7 @@ function ScreenSwipe(prop: propType) {
     <Drawer>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent className="h-screen">
-        <DrawerFooter className="z-20 absolute right-16 top-6 text-secondary-light-gray">
+        <DrawerFooter className="z-20 absolute right-4 top-4 lg:right-16  text-secondary-light-gray px-0">
           <DrawerClose asChild>
             <button>
               <RxCross2 className="h-6 lg:h-8 w-6 lg:w-8" />
@@ -33,7 +33,7 @@ function ScreenSwipe(prop: propType) {
         </DrawerFooter>
         <ScrollArea>
           <div className="mx-auto w-full max-w-[800px]">
-            <DrawerHeader className="sticky top-0 z-10">
+            <DrawerHeader className="sticky top-0 z-10 bg-background">
               <DrawerTitle>{title}</DrawerTitle>
             </DrawerHeader>
             {children}
