@@ -27,11 +27,14 @@
 .readOnly-quillWrapper > .quill > .ql-disabled > .ql-editor {
   padding: 0px;
   font-size: 16px;
+  -webkit-box-orient: vertical;
+}
+
+.readOnly-quillWrapper-truncate > .quill > .ql-disabled > .ql-editor {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
 }
 
 @media only screen and (max-width: 768px) {

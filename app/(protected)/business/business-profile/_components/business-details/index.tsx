@@ -24,7 +24,11 @@ const BusinessDetails = (props: propTypes) => {
       <Separator className="mt-2 mb-4" />
 
       <div className="flex flex-col  text-white ">
-        <RichEditor value={user?.business?.description ?? ""} readOnly />
+        <RichEditor
+          value={user?.business?.description ?? ""}
+          readOnly
+          readOnlyClass=""
+        />
       </div>
     </div>
   );
