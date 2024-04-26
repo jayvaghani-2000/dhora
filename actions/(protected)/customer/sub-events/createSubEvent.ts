@@ -1,0 +1,43 @@
+"use server";
+
+import { User } from "lucia";
+import { createSubEventSchema, subEvents } from "@/db/schema";
+import { db } from "@/lib/db";
+import { validateToken } from "@/actions/_utils/validateToken";
+import { errorHandler } from "@/actions/_utils/errorHandler";
+import { trimRichEditor } from "@/lib/common";
+import { z } from "zod";
+
+type parmaTypes = {
+  eventDetail: z.infer<typeof createSubEventSchema>;
+  eventId: string;
+};
+
+const handler = async (user: User, params: parmaTypes) => {
+  const { eventDetail, eventId } = params;
+
+  const { description, ...rest } = eventDetail;
+
+  try {
+    await db
+      .insert(subEvents)
+      .values({
+        description: trimRichEditor(description),
+        event_id: BigInt(eventId),
+        ...rest,
+      })
+      .returning();
+
+    return {
+      success: true as true,
+      data: "Event created successfully.",
+    };
+  } catch (err) {
+    console.log("err", err);
+    return errorHandler(err);
+  }
+};
+
+export const createSubEvent: (
+  params: parmaTypes
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);

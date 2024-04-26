@@ -268,7 +268,7 @@ export const subEvents = pgTable("sub_events", {
     .default(sql`public.id_generator()`),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  event_date: timestamp("event_date"),
+  event_date: timestamp("event_date").notNull(),
   start_time: text("start_time").notNull(),
   end_time: text("end_time").notNull(),
   location: text("location"),
@@ -746,3 +746,36 @@ export const editPackageSchema = packageSchema
       path: ["deposit"],
     }
   );
+
+export const subEventSchema = createInsertSchema(subEvents)
+  .omit({
+    id: true,
+    created_at: true,
+    updated_at: true,
+    title: true,
+    description: true,
+    event_id: true,
+    event_date: true,
+  })
+  .merge(
+    z.object({
+      title: z.string().refine(data => data.trim().length > 0, {
+        message: "Title is required",
+      }),
+      description: z.string().refine(
+        data => {
+          if (
+            data.trim() === "" ||
+            trimRichEditor(data ?? "") === "<p><br></p>"
+          ) {
+            return false;
+          }
+          return true;
+        },
+        { message: "Description is required" }
+      ),
+      event_date: z.date(),
+    })
+  );
+
+export const createSubEventSchema = subEventSchema;
