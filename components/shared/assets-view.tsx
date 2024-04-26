@@ -15,7 +15,7 @@ const AssetsView = (props: propTypes) => {
   const { assets } = props;
 
   return (
-    <div className="relative max-h-[60dvh] aspect-video lg:aspect-auto rounded-md  overflow-hidden">
+    <div className="relative max-h-[60dvh] aspect-video lg:aspect-auto rounded-lg  overflow-hidden">
       <div className="columns-2 lg:columns-3 gap-x-2  lg:gap-x-3">
         {assets.map(i =>
           allowedImageType.includes(i.type ?? "") ? (
@@ -60,7 +60,6 @@ const AssetsView = (props: propTypes) => {
           )
         )}
       </div>
-
       <ScreenSwipe
         title="Photo Gallery"
         trigger={

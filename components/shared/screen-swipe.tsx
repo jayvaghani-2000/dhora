@@ -34,7 +34,9 @@ function ScreenSwipe(prop: propType) {
         <ScrollArea>
           <div className="mx-auto w-full max-w-[800px]">
             <DrawerHeader className="sticky top-0 z-10">
-              <DrawerTitle>{title}</DrawerTitle>
+              <DrawerTitle className="mix-blend-difference">
+                {title}
+              </DrawerTitle>
             </DrawerHeader>
             {children}
           </div>

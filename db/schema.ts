@@ -259,6 +259,29 @@ export const eventsRelations = relations(events, ({ many, one }) => ({
     references: [users.id],
   }),
   invoices: many(invoices),
+  sub_events: many(subEvents),
+}));
+
+export const subEvents = pgTable("sub_events", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  event_date: timestamp("event_date"),
+  start_time: text("start_time").notNull(),
+  end_time: text("end_time").notNull(),
+  location: text("location"),
+  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const subEventsRelations = relations(subEvents, ({ one }) => ({
+  event: one(events, {
+    fields: [subEvents.event_id],
+    references: [events.id],
+  }),
 }));
 
 export const assets = pgTable("assets", {

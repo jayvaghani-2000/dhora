@@ -1,6 +1,6 @@
 import { GoBell } from "react-icons/go";
 import { MobileToggle } from "../navbar/mobileToggle";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { StaticOptions } from "../navbar/secondary";
 import { profileType } from "@/actions/_utils/types.type";
 
@@ -10,10 +10,17 @@ type propType = {
 
 export default function Toolbar(props: propType) {
   const { user } = props;
+  const params = useParams();
   const path = usePathname();
+
   const key = StaticOptions.map(o => o.options)
     .reduce((e1, e2) => e1.concat(e2))
-    .find(o => path.startsWith(o.path));
+    .find(o => {
+      if (path.startsWith(`/event/${params.slug}`)) {
+        return path.startsWith(`/event/${params.slug}/${o.path}`);
+      }
+      return path.startsWith(o.path);
+    });
 
   return (
     <div className="text-md bg-primary-light-gray font-semibold px-3 flex items-center h-12 border-neutral-200 dark:border-neutral-800 border-b-2">
