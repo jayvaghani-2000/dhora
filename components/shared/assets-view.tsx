@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { FaEye } from "react-icons/fa";
 import { allowedImageType } from "@/lib/constant";
 import { MotionImage } from "./MotionImage";
+import { IoMdPlayCircle } from "react-icons/io";
 
 type propTypes = {
   assets: assetsType;
@@ -14,7 +15,7 @@ const AssetsView = (props: propTypes) => {
   const { assets } = props;
 
   return (
-    <div className="relative max-h-[50dvh] aspect-video lg:aspect-auto rounded-md  overflow-hidden">
+    <div className="relative max-h-[60dvh] aspect-video lg:aspect-auto rounded-md  overflow-hidden">
       <div className="columns-2 lg:columns-3 gap-x-2  lg:gap-x-3">
         {assets.map(i =>
           allowedImageType.includes(i.type ?? "") ? (
@@ -44,10 +45,13 @@ const AssetsView = (props: propTypes) => {
                 aspectRatio: i.width && i.height ? i.width / i.height : 1,
               }}
             >
+              <div className="absolute inset-0 flex justify-center items-center">
+                <IoMdPlayCircle className="h-16 w-16" />
+              </div>
               <video
                 src={i.url ?? ""}
                 className="object-cover rounded-sm w-full h-full"
-                controls
+                controls={false}
                 onPlay={e => e.stopPropagation()}
                 onPause={e => e.stopPropagation()}
                 onMouseDown={e => e.stopPropagation()}

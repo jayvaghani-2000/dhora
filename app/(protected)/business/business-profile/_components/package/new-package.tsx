@@ -111,7 +111,10 @@ const NewPackage = (
                 <FormItem>
                   <FormLabel>Group in</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value as string}
+                    >
                       <div className="flex gap-1 items-center">
                         <FormControl className="flex-1">
                           <SelectTrigger>

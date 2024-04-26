@@ -28,7 +28,7 @@ type propType = {
 } & React.ComponentProps<typeof EditPackage>;
 
 const Description = (prop: propType) => {
-  const { form, packagesGroups, packageDetail } = prop;
+  const { form, packagesGroups } = prop;
 
   return (
     <Form {...form}>
@@ -40,7 +40,10 @@ const Description = (prop: propType) => {
             <FormItem>
               <FormLabel>Group in</FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value as string}
+                >
                   <div className="flex gap-1 items-center">
                     <FormControl className="flex-1">
                       <SelectTrigger>

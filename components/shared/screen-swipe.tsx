@@ -33,7 +33,7 @@ function ScreenSwipe(prop: propType) {
         </DrawerFooter>
         <ScrollArea>
           <div className="mx-auto w-full max-w-[800px]">
-            <DrawerHeader className="sticky top-0 z-10 bg-background">
+            <DrawerHeader className="sticky top-0 z-10">
               <DrawerTitle>{title}</DrawerTitle>
             </DrawerHeader>
             {children}

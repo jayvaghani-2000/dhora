@@ -543,7 +543,7 @@ const packageSchema = createInsertSchema(packages)
       max_unit: z.number().int().optional().nullable(),
       deposit_type: z.enum(depositTypeEnum.enumValues).optional().nullable(),
       deposit: z.number().positive().optional().nullable(),
-      package_group_id: z.string().optional(),
+      package_group_id: z.string().optional().nullable(),
     })
   );
 

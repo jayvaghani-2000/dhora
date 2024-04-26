@@ -23,11 +23,10 @@ type propType = {
 };
 
 const Preview = (prop: propType) => {
+  const { groupedPackages, packagesGroups, readOnly = false } = prop;
   const [selectedPackage, setSelectedPackage] = useState<
     null | getPackagesType["data"]
-  >(null);
-
-  const { groupedPackages, packagesGroups, readOnly = false } = prop;
+  >(groupedPackages.length > 0 ? [groupedPackages[0].package![0]] : null);
 
   const clearSelection = () => {
     setSelectedPackage(null);
@@ -37,7 +36,13 @@ const Preview = (prop: propType) => {
     <div className="mt-4 flex border border-input rounded-sm">
       <div className="w-[250px] py-2 px-2 border-r border-input">
         {groupedPackages.length > 0 ? (
-          <Accordion type="multiple" className="w-full">
+          <Accordion
+            type="multiple"
+            defaultValue={[
+              groupedPackages[0].package_group_id as unknown as string,
+            ]}
+            className="w-full"
+          >
             {groupedPackages.map(i =>
               i.package_group_id ? (
                 <AccordionItem
