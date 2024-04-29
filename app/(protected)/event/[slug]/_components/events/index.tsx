@@ -7,6 +7,7 @@ import {
   getEventDetailsType,
   getSubEventsType,
 } from "@/actions/_utils/types.type";
+import EventSchedule from "../event-schedule";
 
 type propType = {
   event: getEventDetailsType["data"];
@@ -14,8 +15,9 @@ type propType = {
 };
 
 const Events = (props: propType) => {
-  const { event, subEvents } = props;
+  const { event } = props;
   const [createSubEvent, setCreateSubEvent] = useState(false);
+
   return (
     <div>
       <div className="flex justify-between gap-5 items-center">
@@ -26,11 +28,14 @@ const Events = (props: propType) => {
           onClick={() => {
             setCreateSubEvent(true);
           }}
-          className="text-xs lg:text-sm p-2 h-fit lg:px-4 "
+          className="text-xs lg:text-sm p-2 h-fit lg:px-4"
         >
           <PiPlus size={16} className="mr-2" />
           Create Event
         </Button>
+      </div>
+      <div className="mt-4 lg:mt-6">
+        <EventSchedule {...props} />
       </div>
       <CreateSubEvent
         open={createSubEvent}

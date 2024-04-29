@@ -27,7 +27,6 @@ import { createSubEvent } from "@/actions/(protected)/customer/sub-events/create
 import { useParams } from "next/navigation";
 import { getEventDetailsType } from "@/actions/_utils/types.type";
 import { isSameDay, subDays } from "date-fns";
-import { dateWithoutTime } from "@/lib/common";
 
 const CreateSubEvent = (
   props: Partial<React.ComponentProps<typeof CustomDialog>> & {

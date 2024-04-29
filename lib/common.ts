@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { getTimeZones } from "@vvo/tzdb";
 import { invoiceStatusTypeEnum } from "@/db/schema";
 import { getPackagesType } from "@/actions/_utils/types.type";
+import dayjs from "dayjs";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -17,9 +18,29 @@ export function getInitial(name: string) {
 export function formatDate(date: Date) {
   return format(new Date(date), "MMM dd,yyyy");
 }
-export function dateWithoutTime(date: Date) {
+export function dateWithoutTime(date: Date | string) {
   return format(new Date(date), "yyyy-MM-dd");
 }
+
+export const getDateFromTime = (time: string) => {
+  let date = dayjs(time, "h:mm a");
+  const minutes = date.get("minutes");
+  if (minutes === 59) {
+    date = date.add(59, "seconds").add(999, "milliseconds");
+  }
+
+  return date.format("YYYY-MM-DDTHH:mm:ss[Z]");
+};
+
+export const getDateTimeFormatted = (date: Date | string, time: string) => {
+  let dateTime = dayjs(`${date} ${time}`, "YYYY-MM-DD h:mm a");
+  const minutes = dateTime.get("minutes");
+  if (minutes === 59) {
+    dateTime = dateTime.add(59, "seconds").add(999, "milliseconds");
+  }
+
+  return dateTime.format("YYYY-MM-DDTHH:mm:ss[Z]");
+};
 
 export function formatAmount(amount: number) {
   return new Intl.NumberFormat("en-US", {

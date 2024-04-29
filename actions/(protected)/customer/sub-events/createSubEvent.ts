@@ -7,6 +7,7 @@ import { validateToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { dateWithoutTime, trimRichEditor } from "@/lib/common";
 import { z } from "zod";
+import { revalidate } from "@/actions/(public)/revalidate";
 
 type parmaTypes = {
   eventDetail: z.infer<typeof createSubEventSchema>;
@@ -39,6 +40,17 @@ const handler = async (user: User, params: parmaTypes) => {
   }
 };
 
+const createSubEventHandler = async (user: User, values: parmaTypes) => {
+  const res = await handler(user, values);
+
+  if (res.success) {
+    await revalidate(`/event/${values.eventId}/event-setup`);
+  }
+  return res;
+};
+
 export const createSubEvent: (
   params: parmaTypes
-) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);
+) => Promise<Awaited<ReturnType<typeof createSubEventHandler>>> = validateToken(
+  createSubEventHandler
+);

@@ -1,0 +1,87 @@
+.fc-view-harness {
+  height: calc(100dvh - 220px) !important;
+}
+.fc-col-header-cell-cushion {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+.fc-timegrid-slot-label-cushion {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  text-transform: uppercase !important;
+}
+
+.fc-toolbar-title {
+  font-size: 1.25rem !important;
+  line-height: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.fc-button-primary {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  background-color: hsl(var(--primary) / 0.9) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  border-radius: calc(var(--radius) - 2px) !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.fc-button-active {
+  background-color: hsl(var(--primary) / 0.8) !important;
+}
+
+.fc-timegrid-slot-minor {
+  border: none !important;
+}
+
+.fc-next-button,
+.fc-timeGridDay-button {
+  margin-left: 4px !important;
+}
+
+.fc-day-today {
+  background-color: transparent !important;
+}
+
+.fc-header-toolbar {
+  margin-bottom: 0.5rem !important;
+}
+
+.fc-v-event {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 5px !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .fc-col-header-cell-cushion {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+  }
+  .fc-timegrid-slot-label-cushion {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+    text-transform: uppercase !important;
+  }
+  .fc-toolbar-title {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
+
+  .fc-button-primary {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+    padding: 0.5rem !important;
+  }
+
+  .fc-button-active {
+  }
+
+  .fc-view-harness {
+    height: calc(100dvh - 200px) !important;
+  }
+}

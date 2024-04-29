@@ -12,7 +12,9 @@ export default function AuthLayout({
         <div className="flex flex-col text-center justify-center items-center mb-8">
           <a
             href="/"
-            className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white"
+            className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white
+            bg-primary text-primary-foreground hover:bg-primary/90
+            "
           >
             <div
               className="mr-4"
