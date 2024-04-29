@@ -9,10 +9,17 @@ type propType = {
   min?: ConfigType;
   max?: ConfigType;
   onChange: (value: number) => void;
+  optionIncrement?: number;
 };
 
-const TimePicker = ({ value, max, min, onChange }: propType) => {
-  const { filter, options } = useOptions(12);
+const TimePicker = ({
+  value,
+  max,
+  min,
+  onChange,
+  optionIncrement = 15,
+}: propType) => {
+  const { filter, options } = useOptions(12, optionIncrement);
 
   useEffect(() => {
     filter({ current: value });

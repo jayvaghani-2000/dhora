@@ -274,6 +274,7 @@ export const subEvents = pgTable("sub_events", {
   end_time: text("end_time").notNull(),
   location: text("location"),
   event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -780,3 +781,4 @@ export const subEventSchema = createInsertSchema(subEvents)
   );
 
 export const createSubEventSchema = subEventSchema;
+export const updateSubEventSchema = subEventSchema;

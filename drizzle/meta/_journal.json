@@ -218,6 +218,13 @@
       "when": 1714372386061,
       "tag": "0030_sudden_lady_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1714395499751,
+      "tag": "0031_dizzy_karnak",
+      "breakpoints": true
     }
   ]
 }

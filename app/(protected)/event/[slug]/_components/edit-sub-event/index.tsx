@@ -1,5 +1,5 @@
 import CustomDialog from "@/components/shared/custom-dialog";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,65 +15,75 @@ import { Input } from "@/components/ui/input";
 import RichEditor from "@/components/shared/rich-editor";
 import { DatePicker } from "@/components/shared/date-picker";
 import { useToast } from "@/components/ui/use-toast";
-import { createSubEventSchema } from "@/db/schema";
+import { updateSubEventSchema } from "@/db/schema";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import TimePicker from "@/app/(protected)/business/availability/_components/time-slot/time-picker";
 import {
   getTimeFromDate,
   localTime,
+  localTimeValue,
 } from "@/app/(protected)/business/availability/_utils/initializeAvailability";
 import dayjs from "dayjs";
-import { createSubEvent } from "@/actions/(protected)/customer/sub-events/createSubEvent";
 import { useParams } from "next/navigation";
-import { getEventDetailsType } from "@/actions/_utils/types.type";
+import {
+  getEventDetailsType,
+  getSubEventsType,
+} from "@/actions/_utils/types.type";
 import { isSameDay, subDays } from "date-fns";
+import { updateSubEvent } from "@/actions/(protected)/customer/sub-events/updateSubEvent";
 
-const CreateSubEvent = (
+const EditSubEvent = (
   props: Partial<React.ComponentProps<typeof CustomDialog>> & {
-    setOpen: Dispatch<SetStateAction<boolean>>;
+    handleClose: () => void;
     event: getEventDetailsType["data"];
+    subEvent: getSubEventsType["data"];
   }
 ) => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState("");
-  const { open = false, setOpen, event } = props;
+  const { open = false, handleClose, event, subEvent } = props;
   const { toast } = useToast();
+
+  const { description, title, end_time, start_time, id, location, event_date } =
+    subEvent?.[0] ?? {};
 
   const { single_day_event, to_date, from_date } = event!;
 
-  const form = useForm<z.infer<typeof createSubEventSchema>>({
-    resolver: zodResolver(createSubEventSchema),
+  const form = useForm<z.infer<typeof updateSubEventSchema>>({
+    resolver: zodResolver(updateSubEventSchema),
     defaultValues: {
-      description: "",
-      title: "",
-      location: undefined,
-      event_date: single_day_event ? new Date(from_date!) : undefined,
+      description: description,
+      title: title,
+      location: location,
+      event_date: new Date(event_date!),
+      end_time: localTimeValue(end_time),
+      start_time: localTimeValue(start_time),
     },
     reValidateMode: "onChange",
   });
 
-  const handleCloseCreateEvent = () => {
-    setOpen(false);
+  const handleCloseUpdateEvent = () => {
+    handleClose();
     form.reset();
   };
 
-  const handleSubmit = async (value: z.infer<typeof createSubEventSchema>) => {
+  const handleSubmit = async (value: z.infer<typeof updateSubEventSchema>) => {
     setLoading(true);
-    const res = await createSubEvent({
+    const res = await updateSubEvent({
       eventDetail: {
         ...value,
         start_time: getTimeFromDate(value.start_time),
         end_time: getTimeFromDate(value.end_time),
       },
-      eventId: params.slug! as string,
+      subEventId: id as unknown as string,
     });
     if (res.success) {
       toast({
-        title: res.data,
+        title: "Event updated successfully!",
       });
 
-      handleCloseCreateEvent();
+      handleCloseUpdateEvent();
     } else {
       toast({
         title: res.error,
@@ -85,10 +95,10 @@ const CreateSubEvent = (
   return (
     <CustomDialog
       open={open}
-      title="Create Event"
+      title="Update Event"
       className="w-[800px]"
-      saveText="Create"
-      onClose={handleCloseCreateEvent}
+      saveText="Save"
+      onClose={handleCloseUpdateEvent}
       onSubmit={async () => {
         await form.trigger();
         if (form.formState.isValid) {
@@ -238,4 +248,4 @@ const CreateSubEvent = (
   );
 };
 
-export default CreateSubEvent;
+export default EditSubEvent;
