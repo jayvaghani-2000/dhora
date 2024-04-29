@@ -17,6 +17,9 @@ export function getInitial(name: string) {
 export function formatDate(date: Date) {
   return format(new Date(date), "MMM dd,yyyy");
 }
+export function dateWithoutTime(date: Date) {
+  return format(new Date(date), "yyyy-MM-dd");
+}
 
 export function formatAmount(amount: number) {
   return new Intl.NumberFormat("en-US", {

@@ -5,7 +5,7 @@ import { createSubEventSchema, subEvents } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { trimRichEditor } from "@/lib/common";
+import { dateWithoutTime, trimRichEditor } from "@/lib/common";
 import { z } from "zod";
 
 type parmaTypes = {
@@ -16,13 +16,14 @@ type parmaTypes = {
 const handler = async (user: User, params: parmaTypes) => {
   const { eventDetail, eventId } = params;
 
-  const { description, ...rest } = eventDetail;
+  const { description, event_date, ...rest } = eventDetail;
 
   try {
     await db
       .insert(subEvents)
       .values({
         description: trimRichEditor(description),
+        event_date: dateWithoutTime(event_date),
         event_id: BigInt(eventId),
         ...rest,
       })

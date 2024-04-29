@@ -3,8 +3,18 @@ import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { PiPlus } from "react-icons/pi";
 import CreateSubEvent from "../create-sub-event";
+import {
+  getEventDetailsType,
+  getSubEventsType,
+} from "@/actions/_utils/types.type";
 
-const Events = () => {
+type propType = {
+  event: getEventDetailsType["data"];
+  subEvents: getSubEventsType["data"];
+};
+
+const Events = (props: propType) => {
+  const { event, subEvents } = props;
   const [createSubEvent, setCreateSubEvent] = useState(false);
   return (
     <div>
@@ -22,7 +32,11 @@ const Events = () => {
           Create Event
         </Button>
       </div>
-      <CreateSubEvent open={createSubEvent} setOpen={setCreateSubEvent} />
+      <CreateSubEvent
+        open={createSubEvent}
+        setOpen={setCreateSubEvent}
+        event={event}
+      />
     </div>
   );
 };

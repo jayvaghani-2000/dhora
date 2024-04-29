@@ -7,7 +7,7 @@ import { validateToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { createEventSchemaType } from "@/lib/schema";
 import { createPublicEventImgUrl } from "@/lib/minio";
-import { trimRichEditor } from "@/lib/common";
+import { dateWithoutTime, trimRichEditor } from "@/lib/common";
 
 type parmaTypes = {
   eventDetail: createEventSchemaType;
@@ -37,8 +37,8 @@ const handler = async (user: User, params: parmaTypes) => {
     await db
       .insert(events)
       .values({
-        to_date: single_day_event ? null : to,
-        from_date: from,
+        to_date: single_day_event ? null : dateWithoutTime(to!),
+        from_date: dateWithoutTime(from),
         user_id: user.id,
         single_day_event: single_day_event,
         description: trimRichEditor(description),

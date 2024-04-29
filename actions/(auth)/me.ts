@@ -23,7 +23,7 @@ export const me: (clientSide?: boolean) => Promise<
     const { session, user } = await lucia.validateSession(token.value);
 
     if (session) {
-      const userInfo = await getUser(user.email);
+      const userInfo = await getUser(user.id);
 
       if (userInfo) {
         return { success: true, data: stringifyBigint(userInfo) };
@@ -56,16 +56,18 @@ export const me: (clientSide?: boolean) => Promise<
   }
 };
 
-export const getUser = async (email: string) => {
-  return db.query.users.findFirst({
-    where: and(eq(users.email, email), eq(users.deleted, false)),
-    with: {
-      business: true,
-      events: {
-        columns: { id: true, title: true, logo: true },
-        where: eq(events.deleted, false),
-        orderBy: [asc(events.updated_at)],
+export const getUser = async (id: string) => {
+  const [userEvents, user] = await Promise.all([
+    await db.query.events.findMany({
+      where: and(eq(events.deleted, false), eq(events.user_id, id)),
+    }),
+    await db.query.users.findFirst({
+      where: and(eq(users.id, id)),
+      with: {
+        business: true,
       },
-    },
-  });
+    }),
+  ]);
+
+  return user ? { ...user, events: userEvents } : undefined;
 };

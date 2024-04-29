@@ -211,6 +211,13 @@
       "when": 1714122342697,
       "tag": "0029_high_morg",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1714372386061,
+      "tag": "0030_sudden_lady_mastermind",
+      "breakpoints": true
     }
   ]
 }

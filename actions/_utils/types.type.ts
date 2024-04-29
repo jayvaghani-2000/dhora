@@ -21,6 +21,8 @@ import { getPackageGroups } from "../(protected)/business/packages/getPackageGro
 import { getPackages } from "../(protected)/business/packages/getPackages";
 import { getPackageDetails } from "../(protected)/business/packages/getPackageDetail";
 import { getPackageAssets } from "../(protected)/business/assets/packages/getPackageAssets";
+import { getEventDetails } from "../(protected)/customer/events/getEventDetails";
+import { getSubEvents } from "../(protected)/customer/sub-events/getSubEvents";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -83,6 +85,13 @@ export type getPackageDetailsType = NonNullable<
 >;
 export type getPackageAssetsType = NonNullable<
   Awaited<ReturnType<typeof getPackageAssets>>
+>;
+
+export type getEventDetailsType = NonNullable<
+  Awaited<ReturnType<typeof getEventDetails>>
+>;
+export type getSubEventsType = NonNullable<
+  Awaited<ReturnType<typeof getSubEvents>>
 >;
 
 export enum businessTypes {

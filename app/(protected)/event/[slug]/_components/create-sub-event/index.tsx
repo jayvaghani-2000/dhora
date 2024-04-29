@@ -25,17 +25,23 @@ import {
 import dayjs from "dayjs";
 import { createSubEvent } from "@/actions/(protected)/customer/sub-events/createSubEvent";
 import { useParams } from "next/navigation";
+import { getEventDetailsType } from "@/actions/_utils/types.type";
+import { isSameDay, subDays } from "date-fns";
+import { dateWithoutTime } from "@/lib/common";
 
 const CreateSubEvent = (
   props: Partial<React.ComponentProps<typeof CustomDialog>> & {
     setOpen: Dispatch<SetStateAction<boolean>>;
+    event: getEventDetailsType["data"];
   }
 ) => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState("");
-  const { open = false, setOpen } = props;
+  const { open = false, setOpen, event } = props;
   const { toast } = useToast();
+
+  const { single_day_event, to_date, from_date } = event!;
 
   const form = useForm<z.infer<typeof createSubEventSchema>>({
     resolver: zodResolver(createSubEventSchema),
@@ -131,7 +137,16 @@ const CreateSubEvent = (
                       placeholder="Select event date"
                       value={field.value ?? undefined}
                       onChange={field.onChange}
-                      disabled={date => date < new Date()}
+                      disabled={date => {
+                        if (single_day_event) {
+                          return !isSameDay(date, new Date(from_date!));
+                        } else {
+                          return (
+                            date < new Date(subDays(from_date!, 1)) ||
+                            date > new Date(to_date!)
+                          );
+                        }
+                      }}
                     />
                   </FormControl>
                   <FormMessage />

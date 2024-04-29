@@ -3,6 +3,7 @@ import { relations, sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
+  date,
   doublePrecision,
   integer,
   jsonb,
@@ -244,8 +245,8 @@ export const events = pgTable("events", {
   deleted: boolean("deleted").default(false),
   completed: boolean("completed").default(false),
   single_day_event: boolean("single_day_event").default(false),
-  from_date: timestamp("from_date"),
-  to_date: timestamp("to_date"),
+  from_date: date("from_date"),
+  to_date: date("to_date"),
   user_id: text("user_id")
     .notNull()
     .references(() => users.id),
@@ -268,7 +269,7 @@ export const subEvents = pgTable("sub_events", {
     .default(sql`public.id_generator()`),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  event_date: timestamp("event_date").notNull(),
+  event_date: date("event_date").notNull(),
   start_time: text("start_time").notNull(),
   end_time: text("end_time").notNull(),
   location: text("location"),
