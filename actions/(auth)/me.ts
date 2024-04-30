@@ -1,8 +1,8 @@
 "use server";
 
-import { events, users } from "@/db/schema";
+import { events, subEvents, users } from "@/db/schema";
 import { db } from "@/lib/db";
-import { and, asc, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { stringifyBigint } from "../_utils/stringifyBigint";

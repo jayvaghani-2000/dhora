@@ -165,3 +165,14 @@ export const createAddOnGroupSchema = z.object({
     .string()
     .refine(data => data.trim().length > 0, { message: "Name is required" }),
 });
+
+export const createCallSchema = z.object({
+  event_id: z.string(),
+  sub_event_id: z.string(),
+  package_id: z.string(),
+  add_on_id: z.string(),
+});
+
+export const scheduleCallSchema = z.object({
+  booking_type_id: z.string(),
+});

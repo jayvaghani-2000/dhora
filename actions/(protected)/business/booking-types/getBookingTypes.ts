@@ -3,16 +3,19 @@
 import { bookingTypes } from "@/db/schema";
 import { db } from "@/lib/db";
 import { and, eq, ne } from "drizzle-orm";
-import { validateBusinessToken } from "@/actions/_utils/validateToken";
+import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
-const handler = async (user: User) => {
+const handler = async (user: User, businessId?: string) => {
   try {
     const data = await db.query.bookingTypes.findMany({
       where: and(
-        eq(bookingTypes.business_id, user.business_id!),
+        eq(
+          bookingTypes.business_id,
+          businessId ? BigInt(businessId) : user.business_id!
+        ),
         ne(bookingTypes.deleted, true)
       ),
     });
@@ -23,6 +26,6 @@ const handler = async (user: User) => {
   }
 };
 
-export const getBookingTypes: () => Promise<
-  Awaited<ReturnType<typeof handler>>
-> = validateBusinessToken(handler);
+export const getBookingTypes: (
+  businessId?: string
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);

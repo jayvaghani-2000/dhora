@@ -3,7 +3,7 @@
 import { availability } from "@/db/schema";
 import { db } from "@/lib/db";
 import { and, eq, ne } from "drizzle-orm";
-import { validateBusinessToken } from "@/actions/_utils/validateToken";
+import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
@@ -13,7 +13,6 @@ const handler = async (user: User, availabilityId: string) => {
   try {
     const data = await db.query.availability.findFirst({
       where: and(
-        eq(availability.business_id, user.business_id!),
         eq(availability.id, BigInt(availabilityId)),
         ne(availability.deleted, true)
       ),
@@ -36,5 +35,4 @@ const handler = async (user: User, availabilityId: string) => {
 
 export const getAvailabilityDetail: (
   availabilityId: string
-) => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateBusinessToken(handler);
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);
