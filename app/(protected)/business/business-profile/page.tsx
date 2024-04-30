@@ -4,19 +4,27 @@ import { getBusinessAssets } from "@/actions/(protected)/business/assets/getBusi
 import Assets from "./_components/assets";
 import BusinessDetails from "./_components/business-details";
 import Preview from "./_components/package/preview";
-import { groupPackagesByGroupId } from "@/lib/common";
+import { groupPackagesByGroupId, groupAddOnsByGroupId } from "@/lib/common";
 import { getPackageGroups } from "@/actions/(protected)/business/packages/getPackageGroups";
 import { getPackages } from "@/actions/(protected)/business/packages/getPackages";
+import { getAddOnGroups } from "@/actions/(protected)/business/add-ons/getAddOnGroups";
+import { getAddOns } from "@/actions/(protected)/business/add-ons/getAddOns";
+import AddOnPreview from "./_components/add-ons/preview";
 
 export default async function BusinessProfile() {
-  const [user, assets, packagesGroups, packages] = await Promise.all([
-    await me(),
-    await getBusinessAssets(),
-    await getPackageGroups(),
-    await getPackages(),
-  ]);
+  const [user, assets, packagesGroups, packages, addOnGroups, addOns] =
+    await Promise.all([
+      await me(),
+      await getBusinessAssets(),
+      await getPackageGroups(),
+      await getPackages(),
+      await getAddOnGroups(),
+      await getAddOns(),
+    ]);
 
   const groupedPackages = groupPackagesByGroupId(packages.data);
+
+  const groupedAddOns = groupAddOnsByGroupId(addOns.data);
 
   if (!user.success) {
     return <div className="text-center">Unable to fetch user details</div>;
@@ -34,6 +42,16 @@ export default async function BusinessProfile() {
         <Preview
           packagesGroups={packagesGroups.data}
           groupedPackages={groupedPackages}
+          readOnly
+        />
+      </div>
+      <div>
+        <div className="text-secondary-light-gray font-semibold text-base">
+          Add Ons
+        </div>
+        <AddOnPreview
+          addOnGroups={addOnGroups.data}
+          groupedAddOns={groupedAddOns}
           readOnly
         />
       </div>

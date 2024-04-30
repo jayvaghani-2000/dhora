@@ -18,6 +18,7 @@ import { profileType } from "@/actions/_utils/types.type";
 import { CgProfile } from "react-icons/cg";
 import { IoIosImage } from "react-icons/io";
 import { GoPackage } from "react-icons/go";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 export const StaticOptions = [
   {
@@ -75,6 +76,12 @@ export const StaticOptions = [
             title: "Packages",
             icon: <GoPackage />,
             path: "/business/business-profile/packages",
+          },
+          {
+            key: "business-profile/add-ons",
+            title: "Add on",
+            icon: <IoMdAddCircleOutline />,
+            path: "/business/business-profile/add-ons",
           },
         ],
       },

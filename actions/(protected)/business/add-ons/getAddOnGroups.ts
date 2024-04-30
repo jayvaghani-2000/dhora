@@ -1,6 +1,6 @@
 "use server";
 
-import { packageGroups } from "@/db/schema";
+import { addOnsGroups } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
@@ -10,10 +10,10 @@ import { and, eq } from "drizzle-orm";
 
 const handler = async (user: User) => {
   try {
-    const data = await db.query.packageGroups.findMany({
+    const data = await db.query.addOnsGroups.findMany({
       where: and(
-        eq(packageGroups.business_id, user.business_id!),
-        eq(packageGroups.deleted, false)
+        eq(addOnsGroups.business_id, user.business_id!),
+        eq(addOnsGroups.deleted, false)
       ),
     });
 
@@ -26,6 +26,6 @@ const handler = async (user: User) => {
   }
 };
 
-export const getPackageGroups: () => Promise<
+export const getAddOnGroups: () => Promise<
   Awaited<ReturnType<typeof handler>>
 > = validateBusinessToken(handler);

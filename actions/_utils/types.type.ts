@@ -23,6 +23,9 @@ import { getPackageDetails } from "../(protected)/business/packages/getPackageDe
 import { getPackageAssets } from "../(protected)/business/assets/packages/getPackageAssets";
 import { getEventDetails } from "../(protected)/customer/events/getEventDetails";
 import { getSubEvents } from "../(protected)/customer/sub-events/getSubEvents";
+import { getAddOnGroups } from "../(protected)/business/add-ons/getAddOnGroups";
+import { getAddOns } from "../(protected)/business/add-ons/getAddOns";
+import { getAddOnDetails } from "../(protected)/business/add-ons/getAddOnDetails";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -92,6 +95,15 @@ export type getEventDetailsType = NonNullable<
 >;
 export type getSubEventsType = NonNullable<
   Awaited<ReturnType<typeof getSubEvents>>
+>;
+
+export type getAddOnGroupsType = NonNullable<
+  Awaited<ReturnType<typeof getAddOnGroups>>
+>;
+export type getAddOnsType = NonNullable<Awaited<ReturnType<typeof getAddOns>>>;
+
+export type getAddOnsDetailsType = NonNullable<
+  Awaited<ReturnType<typeof getAddOnDetails>>
 >;
 
 export enum businessTypes {

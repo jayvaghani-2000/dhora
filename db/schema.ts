@@ -117,7 +117,8 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   booking_types: many(bookingTypes),
   assets: many(assets),
   packages: many(packages),
-  package_groups: many(package_groups),
+  package_groups: many(packageGroups),
+  add_on_groups: many(addOnsGroups),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -322,7 +323,7 @@ export const assetsRelations = relations(assets, ({ one }) => ({
   }),
 }));
 
-export const package_groups = pgTable(
+export const packageGroups = pgTable(
   "package_groups",
   {
     id: bigint("id", { mode: "bigint" })
@@ -345,10 +346,10 @@ export const package_groups = pgTable(
 );
 
 export const packageGroupsRelations = relations(
-  package_groups,
+  packageGroups,
   ({ one, many }) => ({
     business: one(businesses, {
-      fields: [package_groups.business_id],
+      fields: [packageGroups.business_id],
       references: [businesses.id],
     }),
     packages: many(packages),
@@ -366,7 +367,7 @@ export const packages = pgTable(
     ),
     package_group_id: bigint("package_group_id", {
       mode: "bigint",
-    }).references(() => package_groups.id),
+    }).references(() => packageGroups.id),
     name: text("name"),
     description: text("description"),
     fixed_priced: boolean("fixed_priced").default(false),
@@ -394,6 +395,71 @@ export const packagesRelations = relations(packages, ({ one, many }) => ({
     references: [businesses.id],
   }),
   assets: many(assets),
+}));
+
+export const addOnsGroups = pgTable(
+  "add_ons_groups",
+  {
+    id: bigint("id", { mode: "bigint" })
+      .primaryKey()
+      .default(sql`public.id_generator()`),
+    business_id: bigint("business_id", { mode: "bigint" }).references(
+      () => businesses.id
+    ),
+    name: text("name"),
+    deleted: boolean("deleted").default(false),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+  },
+  t => ({
+    unique_add_on_grouped_name: unique("unique_add_on_grouped_name").on(
+      t.business_id,
+      t.name
+    ),
+  })
+);
+
+export const addOnsGroupsRelations = relations(
+  addOnsGroups,
+  ({ one, many }) => ({
+    business: one(businesses, {
+      fields: [addOnsGroups.business_id],
+      references: [businesses.id],
+    }),
+    packages: many(addOns),
+  })
+);
+
+export const addOns = pgTable(
+  "add_ons",
+  {
+    id: bigint("id", { mode: "bigint" })
+      .primaryKey()
+      .default(sql`public.id_generator()`),
+    business_id: bigint("business_id", { mode: "bigint" }).references(
+      () => businesses.id
+    ),
+    add_on_group_id: bigint("add_on_group_id", {
+      mode: "bigint",
+    }).references(() => addOnsGroups.id),
+    name: text("name"),
+    description: text("description"),
+    max_unit: integer("max_unit"),
+    unit_rate: integer("unit_rate"),
+    deleted: boolean("deleted").default(false),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+  },
+  t => ({
+    unique_add_on_name: unique("unique_add_on_name").on(t.business_id, t.name),
+  })
+);
+
+export const addOnsRelations = relations(addOns, ({ one, many }) => ({
+  business: one(businesses, {
+    fields: [addOns.business_id],
+    references: [businesses.id],
+  }),
 }));
 
 export const registerSchema = createInsertSchema(users)
@@ -782,3 +848,48 @@ export const subEventSchema = createInsertSchema(subEvents)
 
 export const createSubEventSchema = subEventSchema;
 export const updateSubEventSchema = subEventSchema;
+
+const addOnSchema = createInsertSchema(addOns)
+  .omit({
+    id: true,
+    name: true,
+    description: true,
+    updated_at: true,
+    created_at: true,
+    unit_rate: true,
+    max_unit: true,
+    deposit_type: true,
+    deleted: true,
+    add_on_group_id: true,
+    business_id: true,
+  })
+  .merge(
+    z.object({
+      name: z.string().refine(data => data.trim().length > 0, {
+        message: "Name is required",
+      }),
+      description: z.string().refine(
+        data => {
+          if (
+            data.trim() === "" ||
+            trimRichEditor(data ?? "") === "<p><br></p>"
+          ) {
+            return false;
+          }
+          return true;
+        },
+        { message: "Description is required" }
+      ),
+      unit_rate: z.number().positive(),
+      max_unit: z.number().int().positive(),
+      add_on_group_id: z.string().optional().nullable(),
+    })
+  );
+
+export const createAddOnSchema = addOnSchema;
+
+export const updateAddOnSchema = addOnSchema.merge(
+  z.object({
+    id: z.string(),
+  })
+);

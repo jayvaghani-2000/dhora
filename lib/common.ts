@@ -4,7 +4,11 @@ import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
 import { getTimeZones } from "@vvo/tzdb";
 import { invoiceStatusTypeEnum } from "@/db/schema";
-import { getPackagesType } from "@/actions/_utils/types.type";
+import {
+  getAddOnsDetailsType,
+  getAddOnsType,
+  getPackagesType,
+} from "@/actions/_utils/types.type";
 import dayjs from "dayjs";
 
 export function getInitial(name: string) {
@@ -193,6 +197,40 @@ export function groupPackagesByGroupId(packages: getPackagesType["data"]) {
       nonGroupedPackages.push({
         package_group_id: null,
         package: [pack],
+      });
+    }
+  });
+
+  return Object.values(groupedPackages).concat(nonGroupedPackages);
+}
+
+export function groupAddOnsByGroupId(addOns: getAddOnsType["data"]) {
+  const groupedPackages = {} as {
+    [key: string]: {
+      add_on_group_id: string | null;
+      addOn: getAddOnsType["data"];
+    };
+  };
+  const nonGroupedPackages: {
+    add_on_group_id: string | null;
+    addOn: getAddOnsType["data"];
+  }[] = [];
+
+  addOns?.forEach(i => {
+    const groupId = i.add_on_group_id as unknown as string;
+
+    if (groupId !== null) {
+      if (!groupedPackages[groupId]) {
+        groupedPackages[groupId] = {
+          add_on_group_id: groupId,
+          addOn: [],
+        };
+      }
+      groupedPackages[groupId].addOn!.push(i);
+    } else {
+      nonGroupedPackages.push({
+        add_on_group_id: null,
+        addOn: [i],
       });
     }
   });

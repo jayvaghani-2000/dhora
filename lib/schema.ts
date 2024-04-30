@@ -159,3 +159,9 @@ export const createPackageGroupSchema = z.object({
     .string()
     .refine(data => data.trim().length > 0, { message: "Name is required" }),
 });
+
+export const createAddOnGroupSchema = z.object({
+  name: z
+    .string()
+    .refine(data => data.trim().length > 0, { message: "Name is required" }),
+});
