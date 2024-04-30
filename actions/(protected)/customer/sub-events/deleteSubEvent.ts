@@ -1,8 +1,7 @@
 "use server";
 
-import { z } from "zod";
 import { User } from "lucia";
-import { subEvents, updateSubEventSchema } from "@/db/schema";
+import { subEvents } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";

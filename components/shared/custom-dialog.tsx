@@ -16,6 +16,7 @@ type propType = {
   closable?: boolean;
   className?: HTMLProps<HTMLElement>["className"];
   children?: React.ReactNode;
+  prefixButton?: React.ReactNode;
   open: boolean;
   saveText?: string;
   disableAction?: boolean;
@@ -42,6 +43,7 @@ const CustomDialog = (prop: propType) => {
     saveVariant = "default",
     disableAction = false,
     onSubmit = async () => {},
+    prefixButton = <div></div>,
   } = prop;
   const [loading, setLoading] = useState(false);
 
@@ -86,30 +88,33 @@ const CustomDialog = (prop: propType) => {
         ) : null}
 
         {children ? <div className="px-3 md:px-6 py-2">{children}</div> : null}
-        <DialogFooter className="flex-row relative bg-gradient px-3 md:px-6 py-3 flex justify-end items-center rounded-b-sm before:content-[''] before:absolute before:inset-0 before:bg-background before:opacity-75 gap-2">
-          {closable ? (
+        <DialogFooter className="flex-row relative bg-gradient px-3 md:px-6 py-3 flex justify-between sm:justify-between items-center rounded-b-sm before:content-[''] before:absolute before:inset-0 before:bg-background before:opacity-75 gap-2">
+          {prefixButton}
+          <div className="flex flex-row gap-2">
+            {closable ? (
+              <Button
+                variant="outline"
+                disabled={loading || disableAction}
+                className="relative z-10"
+                onClick={onClose}
+              >
+                Cancel
+              </Button>
+            ) : null}
             <Button
-              variant="outline"
+              variant={saveVariant}
               disabled={loading || disableAction}
+              onClick={async () => {
+                setLoading(true);
+                await onSubmit();
+                setLoading(false);
+              }}
               className="relative z-10"
-              onClick={onClose}
             >
-              Cancel
+              {saveText}{" "}
+              {loading || disableAction ? <Spinner type="inline" /> : null}
             </Button>
-          ) : null}
-          <Button
-            variant={saveVariant}
-            disabled={loading || disableAction}
-            onClick={async () => {
-              setLoading(true);
-              await onSubmit();
-              setLoading(false);
-            }}
-            className="relative z-10"
-          >
-            {saveText}{" "}
-            {loading || disableAction ? <Spinner type="inline" /> : null}
-          </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

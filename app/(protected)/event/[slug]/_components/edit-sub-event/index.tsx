@@ -21,16 +21,18 @@ import TimePicker from "@/app/(protected)/business/availability/_components/time
 import {
   getTimeFromDate,
   localTime,
-  localTimeValue,
 } from "@/app/(protected)/business/availability/_utils/initializeAvailability";
 import dayjs from "dayjs";
-import { useParams } from "next/navigation";
 import {
   getEventDetailsType,
   getSubEventsType,
 } from "@/actions/_utils/types.type";
 import { isSameDay, subDays } from "date-fns";
 import { updateSubEvent } from "@/actions/(protected)/customer/sub-events/updateSubEvent";
+import { getDateFromTime } from "@/lib/common";
+import { Button } from "@/components/ui/button";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { deleteSubEvent } from "@/actions/(protected)/customer/sub-events/deleteSubEvent";
 
 const EditSubEvent = (
   props: Partial<React.ComponentProps<typeof CustomDialog>> & {
@@ -39,7 +41,6 @@ const EditSubEvent = (
     subEvent: getSubEventsType["data"];
   }
 ) => {
-  const params = useParams();
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState("");
   const { open = false, handleClose, event, subEvent } = props;
@@ -57,8 +58,8 @@ const EditSubEvent = (
       title: title,
       location: location,
       event_date: new Date(event_date!),
-      end_time: localTimeValue(end_time),
-      start_time: localTimeValue(start_time),
+      end_time: getDateFromTime(end_time as string),
+      start_time: getDateFromTime(start_time as string),
     },
     reValidateMode: "onChange",
   });
@@ -92,6 +93,25 @@ const EditSubEvent = (
     setLoading(false);
   };
 
+  const handleDeleteEvent = async () => {
+    setLoading(true);
+    const res = await deleteSubEvent({
+      subEventId: id as unknown as string,
+    });
+    if (res.success) {
+      toast({
+        title: "Event deleted successfully!",
+      });
+
+      handleCloseUpdateEvent();
+    } else {
+      toast({
+        title: res.error,
+      });
+    }
+    setLoading(false);
+  };
+
   return (
     <CustomDialog
       open={open}
@@ -105,6 +125,18 @@ const EditSubEvent = (
           await handleSubmit(form.getValues());
         }
       }}
+      prefixButton={
+        <Button
+          variant="destructive"
+          disabled={loading}
+          className="relative z-10"
+          onClick={() => {
+            handleDeleteEvent();
+          }}
+        >
+          <RiDeleteBin6Line size={18} /> Event
+        </Button>
+      }
       disableAction={loading}
     >
       <div className="flex gap-5 flex-col md:flex-row items-center md:items-start">
