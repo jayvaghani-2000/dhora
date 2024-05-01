@@ -44,7 +44,7 @@ const createSubEventHandler = async (user: User, values: parmaTypes) => {
   const res = await handler(user, values);
 
   if (res.success) {
-    await revalidate(`/event/${values.eventId}/event-setup`);
+    await revalidate(`/event/${values.eventId}/itinerary`);
   }
   return res;
 };

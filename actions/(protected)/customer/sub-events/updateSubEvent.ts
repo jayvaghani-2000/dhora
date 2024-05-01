@@ -41,7 +41,7 @@ const updateSubEventHandler = async (user: User, values: parmaTypes) => {
   const res = await handler(user, values);
 
   if (res.success) {
-    await revalidate(`/event/${res.data.event_id}/event-setup`);
+    await revalidate(`/event/${res.data.event_id}/itinerary`);
   }
   return res;
 };

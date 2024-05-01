@@ -103,10 +103,10 @@ export const StaticOptions = [
         path: "invoices",
       },
       {
-        key: "event-setup",
-        title: "Event Setup",
+        key: "itinerary",
+        title: "Itinerary",
         icon: <IoIosArrowDropdown />,
-        path: "event-setup",
+        path: "itinerary",
       },
     ],
   },

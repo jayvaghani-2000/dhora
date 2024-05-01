@@ -85,7 +85,7 @@ const CreateSubEvent = (
   return (
     <CustomDialog
       open={open}
-      title="Create Event"
+      title="Create Itinerary"
       className="w-[800px]"
       saveText="Create"
       onClose={handleCloseCreateEvent}

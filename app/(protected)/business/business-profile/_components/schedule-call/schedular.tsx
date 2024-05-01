@@ -182,6 +182,7 @@ const Schedular = (props: propType) => {
                       <Skeleton className="h-4 w-[250px]" />
                     )}
                   </div>
+                  <Separator orientation="vertical" className="h-auto" />
                   <Calendar
                     mode="single"
                     disabled={date => {
@@ -195,8 +196,9 @@ const Schedular = (props: propType) => {
                       setMeetDate(date);
                     }}
                     selected={meetDate}
-                    className="flex-1"
+                    className="flex-1 flex justify-center"
                   />
+                  <Separator orientation="vertical" className="h-auto" />
                   <div className="flex-1"></div>
                 </div>
               </div>
