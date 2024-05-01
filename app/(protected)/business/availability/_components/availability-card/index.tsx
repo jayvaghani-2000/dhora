@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { deleteAvailability } from "@/actions/(protected)/business/availability/deleteAvailability";
 import { availabilityAsString } from "../../_utils/initializeAvailability";
 import { useToast } from "@/components/ui/use-toast";
+import { graySubtitleFonts } from "@/lib/typography";
 
 type propType = {
   data: NonNullable<getAvailabilityType["data"]>[0];
@@ -48,7 +49,7 @@ const AvailabilityCard = (props: propType) => {
             locale: "en",
             hour12: true,
           }).map(i => (
-            <span className="text-xs text-secondary-light-gray" key={i}>
+            <span className={graySubtitleFonts} key={i}>
               {i}
             </span>
           ))}

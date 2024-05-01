@@ -96,7 +96,7 @@ const ScheduleCall = (props: propTypes) => {
                     <FormItem>
                       <Select
                         onValueChange={sub_event_field.onChange}
-                        defaultValue={sub_event_field.value!}
+                        value={sub_event_field.value!}
                       >
                         <FormControl>
                           <SelectTrigger>

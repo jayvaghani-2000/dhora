@@ -4,11 +4,7 @@ import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
 import { getTimeZones } from "@vvo/tzdb";
 import { invoiceStatusTypeEnum } from "@/db/schema";
-import {
-  getAddOnsDetailsType,
-  getAddOnsType,
-  getPackagesType,
-} from "@/actions/_utils/types.type";
+import { getAddOnsType, getPackagesType } from "@/actions/_utils/types.type";
 import dayjs from "dayjs";
 
 export function getInitial(name: string) {
@@ -135,7 +131,9 @@ export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 export const parseTimezone = (timeZone: string) => {
   const timeZonesWithUtc = getTimeZones({ includeUtc: true });
 
-  return timeZonesWithUtc.find(i => i.group.includes(timeZone))?.name;
+  const timezone = timeZonesWithUtc.find(i => i.group.includes(timeZone));
+
+  return timezone?.name;
 };
 
 export const trimRichEditor = (value: string) => {
