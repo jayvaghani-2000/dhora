@@ -201,11 +201,13 @@ const ScheduleCall = (props: propTypes) => {
         </div>
       </Form>
 
-      <Schedular
-        open={scheduleCall}
-        setOpen={setScheduleCall}
-        bookingTypes={bookingTypes}
-      />
+      {scheduleCall ? (
+        <Schedular
+          open={scheduleCall}
+          setOpen={setScheduleCall}
+          bookingTypes={bookingTypes}
+        />
+      ) : null}
     </div>
   );
 };

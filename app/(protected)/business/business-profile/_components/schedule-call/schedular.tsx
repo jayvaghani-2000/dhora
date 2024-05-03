@@ -36,11 +36,14 @@ import TimezoneSelect from "@/components/shared/timezone-select";
 import { Label } from "@/components/ui/label";
 import { getActiveDays } from "@/actions/(protected)/customer/booking/getActiveDays";
 import { utcToHhMm } from "@/lib/schedule";
-import { formatDate } from "@/lib/common";
+import { formatDate, timeZone } from "@/lib/common";
 import { getTimeSlots } from "@/actions/(protected)/customer/booking/getTimeSlot";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
+import clsx from "clsx";
+import { useToast } from "@/components/ui/use-toast";
+import { createBooking } from "@/actions/(protected)/customer/booking/createBooking";
+import { useAuthStore } from "@/provider/store/authentication";
 
 type propType = Partial<React.ComponentProps<typeof CustomDialog>> & {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -53,17 +56,29 @@ type valueType = {
   activeDays: number[];
   availability: getAvailabilityDetailType["data"] | null;
   dayAvailableSlot: string[];
+  selectedSlot: string | null;
+  loading: boolean;
 };
+
+const defaultValue = {
+  timezone: timeZone,
+  meetDate: undefined,
+  activeDays: [],
+  availability: null,
+  dayAvailableSlot: [],
+  selectedSlot: null,
+  loading: false,
+} as valueType;
 
 const Schedular = (props: propType) => {
   const { open = false, setOpen, bookingTypes } = props;
-  const [values, setValues] = useState({
-    timezone: null,
-    meetDate: undefined,
-    activeDays: [],
-    availability: null,
-    dayAvailableSlot: [],
-  } as valueType);
+  const { toast } = useToast();
+  const [values, setValues] = useState(defaultValue);
+  const { profile } = useAuthStore();
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
 
   const form = useForm<z.infer<typeof scheduleCallSchema>>({
     resolver: zodResolver(scheduleCallSchema),
@@ -81,10 +96,13 @@ const Schedular = (props: propType) => {
     );
 
     if (res.success) {
+      const activeDays = await getActiveDays({
+        timezone: values.timezone!,
+        availabilityId: res.data.id as unknown as string,
+      });
       setValues(prev => ({
         ...prev,
-        timezone: res.data.timezone,
-        activeDays: res.data.days ?? [],
+        activeDays: activeDays.data ?? [],
         availability: res.data,
       }));
     }
@@ -94,6 +112,8 @@ const Schedular = (props: propType) => {
     setValues(prev => ({
       ...prev,
       timezone: value,
+      selectedSlot: null,
+      loading: true,
     }));
     if (values.meetDate) {
       await handleGetAvailabilitySlot(value, bookingId, values.meetDate);
@@ -107,11 +127,13 @@ const Schedular = (props: propType) => {
       setValues(prev => ({
         ...prev,
         activeDays: res.data!,
+        loading: false,
       }));
     } else {
       setValues(prev => ({
         ...prev,
         activeDays: [],
+        loading: false,
       }));
     }
   };
@@ -133,15 +155,90 @@ const Schedular = (props: propType) => {
     }
   };
 
+  const handleCreateBookingType = async () => {
+    if (!values.selectedSlot) {
+      return toast({
+        title: "Please select time slot",
+      });
+    } else {
+      await form.trigger();
+      const value = form.getValues();
+
+      const selectedBookingType = bookingTypes!.find(
+        i => (i.id as unknown as string) === value.booking_type_id
+      );
+
+      const res = await createBooking({
+        businessId: profile!.business_id as unknown as string,
+        time: values.selectedSlot,
+        duration: selectedBookingType!.duration as number,
+      });
+
+      if (res.success) {
+        handleCloseModal();
+        return toast({
+          title: "Booking created successfully",
+        });
+      } else {
+        return toast({
+          title: res.error,
+        });
+      }
+    }
+  };
+
+  const getSlots = () => {
+    if (values.meetDate && values.loading) {
+      return (
+        <>
+          <Skeleton className="h-[34px] lg:h-[38px] w-full" />
+          <Skeleton className="h-[34px] lg:h-[38px] w-full" />
+          <Skeleton className="h-[34px] lg:h-[38px] w-full" />
+        </>
+      );
+    } else if (!values.meetDate) {
+      return (
+        <div className="text-secondary-light-gray font-medium text-base">
+          Select date
+        </div>
+      );
+    } else if (values.meetDate && values.dayAvailableSlot.length === 0) {
+      return (
+        <div className="text-secondary-light-gray font-medium text-base">
+          No slots available
+        </div>
+      );
+    }
+    return values.dayAvailableSlot.map(i => {
+      return (
+        <Button
+          key={i}
+          variant={"outline"}
+          className={clsx({
+            "flex items-center  space-x-2": true,
+            "bg-accent": i === values.selectedSlot,
+          })}
+          onClick={() => {
+            setValues(prev => ({ ...prev, selectedSlot: i }));
+          }}
+        >
+          {utcToHhMm(i, values.timezone!)}
+        </Button>
+      );
+    });
+  };
+
   return (
     <CustomDialog
       open={open}
       title="Schedule A Call"
       className="w-[1200px]"
       onClose={() => {
-        setOpen(false);
+        handleCloseModal();
       }}
-      onSubmit={async () => {}}
+      onSubmit={async () => {
+        await handleCreateBookingType();
+      }}
     >
       <Form {...form}>
         <FormField
@@ -231,7 +328,7 @@ const Schedular = (props: propType) => {
                         ) : null}
                       </div>
                     ) : (
-                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-[34px] lg:h-[38px] w-full" />
                     )}
                   </div>
                   <Separator orientation="vertical" className="h-auto" />
@@ -246,12 +343,21 @@ const Schedular = (props: propType) => {
                     }}
                     onSelect={async date => {
                       if (date) {
-                        setValues(prev => ({ ...prev, meetDate: date }));
+                        setValues(prev => ({
+                          ...prev,
+                          meetDate: date,
+                          selectedSlot: null,
+                          loading: true,
+                        }));
                         await handleGetAvailabilitySlot(
                           values.timezone as string,
                           selectedBookingType!.id as unknown as string,
                           date
                         );
+                        setValues(prev => ({
+                          ...prev,
+                          loading: false,
+                        }));
                       } else {
                         setValues(prev => ({
                           ...prev,
@@ -268,17 +374,7 @@ const Schedular = (props: propType) => {
                     <div className="sticky top-0 bg-background text-sm md:text-base font-semibold ">
                       {formatDate(values.meetDate ?? new Date())}
                     </div>
-                    {values.dayAvailableSlot.map(i => {
-                      return (
-                        <Button
-                          key={i}
-                          variant={"outline"}
-                          className="flex items-center py-0.5 space-x-2"
-                        >
-                          {utcToHhMm(i, values.timezone!)}
-                        </Button>
-                      );
-                    })}
+                    <div className="flex flex-col gap-1 mt-2">{getSlots()}</div>
                   </ScrollArea>
                 </div>
               </div>

@@ -7,12 +7,9 @@ import { db } from "@/lib/db";
 import dayjs from "@/lib/dayjs";
 import { and, eq } from "drizzle-orm";
 import { bookingTypes } from "@/db/schema";
-import { dateWithoutTime, timeZone } from "@/lib/common";
+import { dateWithoutTime } from "@/lib/common";
 import { timeSlotsUtc } from "@/lib/schedule";
-import {
-  createAvailabilitySchemaType,
-  errorType,
-} from "@/actions/_utils/types.type";
+import { createAvailabilitySchemaType } from "@/actions/_utils/types.type";
 
 type parmaTypes = {
   timezone: string;
@@ -50,8 +47,6 @@ const handler = async (user: User, params: parmaTypes) => {
     daysTimeSlot,
     bookingTypeDetail.availability.timezone!
   );
-
-  console.log(availableDaySlots);
 
   try {
     return {

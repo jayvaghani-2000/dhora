@@ -76,6 +76,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   }),
   events: many(events),
   assets: many(assets),
+  bookings: many(bookings),
 }));
 
 export const sessions = pgTable("session", {
@@ -119,6 +120,7 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   packages: many(packages),
   package_groups: many(packageGroups),
   add_on_groups: many(addOnsGroups),
+  bookings: many(bookings),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -459,6 +461,35 @@ export const addOnsRelations = relations(addOns, ({ one, many }) => ({
   business: one(businesses, {
     fields: [addOns.business_id],
     references: [businesses.id],
+  }),
+}));
+
+export const bookings = pgTable("bookings", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  business_id: bigint("business_id", { mode: "bigint" }).references(
+    () => businesses.id
+  ),
+  customer_id: text("customer_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  time: text("time"),
+  end: text("end"),
+  duration: integer("duration"),
+  deleted: boolean("deleted").default(false),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const bookingsRelations = relations(bookings, ({ one, many }) => ({
+  business: one(businesses, {
+    fields: [bookings.business_id],
+    references: [businesses.id],
+  }),
+  customer: one(users, {
+    fields: [bookings.customer_id],
+    references: [users.id],
   }),
 }));
 
