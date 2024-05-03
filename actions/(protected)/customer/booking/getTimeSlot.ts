@@ -45,15 +45,6 @@ const handler = async (user: User, params: parmaTypes) => {
     i => dayjs(i).utc().format()
   );
 
-  // const slotsInBusinessRange = daysTimeSlot.map(i => {
-  //   const businessDayIndex = dayjs(i)
-  //     .utc()
-  //     .tz(bookingTypeDetail.availability.timezone!)
-  //     .day();
-
-  //   return i;
-  // });
-
   const availableDaySlots = isFallInGivenTimeSlot(
     availability,
     daysTimeSlot,
@@ -63,7 +54,7 @@ const handler = async (user: User, params: parmaTypes) => {
   try {
     return {
       success: true,
-      data: daysTimeSlot,
+      data: availableDaySlots,
     };
   } catch (err) {
     return errorHandler(err);
@@ -75,7 +66,30 @@ export const getTimeSlots: (
 ) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);
 
 const isFallInGivenTimeSlot = (
-  availability: createAvailabilitySchemaType["availability"],
-  daysTimeSlot: string[],
-  availabilityTimezone: string
-) => {};
+  weeklyAvailability: createAvailabilitySchemaType["availability"],
+  slots: string[],
+  timezone: string
+) => {
+  return slots.filter(slot => {
+    const localTime = dayjs.tz(slot, timezone);
+    const dayOfWeek = localTime.day();
+
+    const dailyAvailability = weeklyAvailability[dayOfWeek];
+    if (dailyAvailability.length === 0) {
+      return false;
+    }
+
+    return dailyAvailability.some(period => {
+      const startOfDay = localTime.startOf("day").format("YYYY-MM-DD");
+      const startTime = dayjs.tz(
+        `${startOfDay} ${period.start_time}`,
+        timezone
+      );
+      const endTime = dayjs.tz(`${startOfDay} ${period.end_time}`, timezone);
+      return (
+        (localTime.isSame(startTime) || localTime.isAfter(startTime)) &&
+        localTime.isBefore(endTime)
+      );
+    });
+  });
+};
