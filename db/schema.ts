@@ -858,8 +858,6 @@ const addOnSchema = createInsertSchema(addOns)
     created_at: true,
     unit_rate: true,
     max_unit: true,
-    deposit_type: true,
-    deleted: true,
     add_on_group_id: true,
     business_id: true,
   })

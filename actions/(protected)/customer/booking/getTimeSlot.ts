@@ -51,6 +51,8 @@ const handler = async (user: User, params: parmaTypes) => {
     bookingTypeDetail.availability.timezone!
   );
 
+  console.log(availableDaySlots);
+
   try {
     return {
       success: true,

@@ -40,6 +40,7 @@ import { formatDate } from "@/lib/common";
 import { getTimeSlots } from "@/actions/(protected)/customer/booking/getTimeSlot";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
 
 type propType = Partial<React.ComponentProps<typeof CustomDialog>> & {
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -263,25 +264,21 @@ const Schedular = (props: propType) => {
                     className="flex-1 flex justify-center"
                   />
                   <Separator orientation="vertical" className="h-auto" />
-                  <ScrollArea className="flex-1 max-h-[300px]">
-                    <RadioGroup className="px-5 relative">
-                      <div className="sticky top-0 bg-background text-sm md:text-base font-semibold ">
-                        {formatDate(values.meetDate ?? new Date())}
-                      </div>
-                      {values.dayAvailableSlot.map(i => {
-                        return (
-                          <div
-                            key={i}
-                            className="flex items-center py-0.5 space-x-2"
-                          >
-                            <RadioGroupItem value={i} id={i} />
-                            <Label htmlFor={i}>
-                              {utcToHhMm(i, values.timezone!)}
-                            </Label>
-                          </div>
-                        );
-                      })}
-                    </RadioGroup>
+                  <ScrollArea className="flex-1 max-h-[300px] px-5">
+                    <div className="sticky top-0 bg-background text-sm md:text-base font-semibold ">
+                      {formatDate(values.meetDate ?? new Date())}
+                    </div>
+                    {values.dayAvailableSlot.map(i => {
+                      return (
+                        <Button
+                          key={i}
+                          variant={"outline"}
+                          className="flex items-center py-0.5 space-x-2"
+                        >
+                          {utcToHhMm(i, values.timezone!)}
+                        </Button>
+                      );
+                    })}
                   </ScrollArea>
                 </div>
               </div>
