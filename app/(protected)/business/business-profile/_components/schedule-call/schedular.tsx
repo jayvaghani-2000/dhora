@@ -35,20 +35,34 @@ import { availabilityAsString } from "../../../availability/_utils/initializeAva
 import TimezoneSelect from "@/components/shared/timezone-select";
 import { Label } from "@/components/ui/label";
 import { getActiveDays } from "@/actions/(protected)/customer/booking/getActiveDays";
+import { utcToHhMm } from "@/lib/schedule";
+import { formatDate } from "@/lib/common";
+import { getTimeSlots } from "@/actions/(protected)/customer/booking/getTimeSlot";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type propType = Partial<React.ComponentProps<typeof CustomDialog>> & {
   setOpen: Dispatch<SetStateAction<boolean>>;
   bookingTypes: getBookingTypesType["data"];
 };
 
+type valueType = {
+  timezone: string | null;
+  meetDate: Date | undefined;
+  activeDays: number[];
+  availability: getAvailabilityDetailType["data"] | null;
+  dayAvailableSlot: string[];
+};
+
 const Schedular = (props: propType) => {
   const { open = false, setOpen, bookingTypes } = props;
-  const [timezone, setTimeZone] = useState<string | null>(null);
-  const [meetDate, setMeetDate] = useState<Date | undefined>(undefined);
-  const [activeDays, setActiveDays] = useState<number[]>([]);
-  const [availability, setAvailability] = useState<
-    getAvailabilityDetailType["data"] | null
-  >(null);
+  const [values, setValues] = useState({
+    timezone: null,
+    meetDate: undefined,
+    activeDays: [],
+    availability: null,
+    dayAvailableSlot: [],
+  } as valueType);
 
   const form = useForm<z.infer<typeof scheduleCallSchema>>({
     resolver: zodResolver(scheduleCallSchema),
@@ -66,23 +80,55 @@ const Schedular = (props: propType) => {
     );
 
     if (res.success) {
-      setAvailability(res.data);
-      setTimeZone(res.data.timezone);
-      setActiveDays(res.data.days ?? []);
+      setValues(prev => ({
+        ...prev,
+        timezone: res.data.timezone,
+        activeDays: res.data.days ?? [],
+        availability: res.data,
+      }));
     }
   };
 
-  const handleChangeTimezone = async (value: string) => {
-    setTimeZone(value);
+  const handleChangeTimezone = async (value: string, bookingId: string) => {
+    setValues(prev => ({
+      ...prev,
+      timezone: value,
+    }));
+    if (values.meetDate) {
+      await handleGetAvailabilitySlot(value, bookingId, values.meetDate);
+    }
     const res = await getActiveDays({
       timezone: value,
-      availabilityId: availability!.id as unknown as string,
+      availabilityId: values.availability!.id as unknown as string,
     });
 
     if (res.success) {
-      setActiveDays(res.data!);
+      setValues(prev => ({
+        ...prev,
+        activeDays: res.data!,
+      }));
     } else {
-      setActiveDays([]);
+      setValues(prev => ({
+        ...prev,
+        activeDays: [],
+      }));
+    }
+  };
+
+  const handleGetAvailabilitySlot = async (
+    timezone: string,
+    bookingId: string,
+    date: Date
+  ) => {
+    const res = await getTimeSlots({
+      date: date as Date,
+      timezone: timezone,
+      bookingTypeId: bookingId,
+    });
+    if (res.success) {
+      setValues(prev => ({ ...prev, dayAvailableSlot: res.data ?? [] }));
+    } else {
+      setValues(prev => ({ ...prev, dayAvailableSlot: [] }));
     }
   };
 
@@ -158,9 +204,9 @@ const Schedular = (props: propType) => {
                           <span>{selectedBookingType.duration} mins</span>
                         </div>
 
-                        {availability ? (
+                        {values.availability ? (
                           <div className="flex flex-col  text-secondary-light-gray mt-3">
-                            {availabilityAsString(availability, {
+                            {availabilityAsString(values.availability, {
                               locale: "en",
                               hour12: true,
                             }).map(i => (
@@ -171,8 +217,13 @@ const Schedular = (props: propType) => {
                             <div className="max-w-full lg:max-w-[300px] mr-auto mt-4">
                               <Label>Timezone</Label>
                               <TimezoneSelect
-                                value={timezone!}
-                                onChange={handleChangeTimezone}
+                                value={values.timezone!}
+                                onChange={value => {
+                                  handleChangeTimezone(
+                                    value,
+                                    selectedBookingType!.id as unknown as string
+                                  );
+                                }}
                               />
                             </div>
                           </div>
@@ -189,17 +240,49 @@ const Schedular = (props: propType) => {
                       if (date < subDays(new Date(), 1)) {
                         return true;
                       } else {
-                        return !activeDays.includes(getDay(date));
+                        return !values.activeDays.includes(getDay(date));
                       }
                     }}
-                    onSelect={date => {
-                      setMeetDate(date);
+                    onSelect={async date => {
+                      if (date) {
+                        setValues(prev => ({ ...prev, meetDate: date }));
+                        await handleGetAvailabilitySlot(
+                          values.timezone as string,
+                          selectedBookingType!.id as unknown as string,
+                          date
+                        );
+                      } else {
+                        setValues(prev => ({
+                          ...prev,
+                          meetDate: date,
+                          dayAvailableSlot: [],
+                        }));
+                      }
                     }}
-                    selected={meetDate}
+                    selected={values.meetDate}
                     className="flex-1 flex justify-center"
                   />
                   <Separator orientation="vertical" className="h-auto" />
-                  <div className="flex-1"></div>
+                  <ScrollArea className="flex-1 max-h-[300px]">
+                    <RadioGroup className="px-5 relative">
+                      <div className="sticky top-0 bg-background text-sm md:text-base font-semibold ">
+                        {formatDate(values.meetDate ?? new Date())}
+                      </div>
+                      {values.dayAvailableSlot.map(i => {
+                        return (
+                          <div
+                            key={i}
+                            className="flex items-center py-0.5 space-x-2"
+                          >
+                            <RadioGroupItem value={i} id={i} />
+                            <Label htmlFor={i}>
+                              {utcToHhMm(i, values.timezone!)}
+                            </Label>
+                          </div>
+                        );
+                      })}
+                    </RadioGroup>
+                  </ScrollArea>
                 </div>
               </div>
             );

@@ -1,10 +1,5 @@
 import dayjs from "./dayjs";
 
-interface IOption {
-  readonly label: string;
-  readonly value: number;
-}
-
 export const getTimezoneDate = ({
   time,
   current,
@@ -21,32 +16,37 @@ export const getTimezoneDate = ({
   return date.tz(current).tz(output).day();
 };
 
-const timeSlots = (timeFormat: number | null, INCREMENT: number) => {
-  const end = dayjs().utc().endOf("day");
+export const timeSlotsUtc = (
+  INCREMENT: number,
+  date: string,
+  timezone: string
+) => {
+  const dayStart = dayjs.tz(date, timezone).startOf("day");
+  const dayEnd = dayjs.tz(date, timezone).endOf("day");
 
-  const options: IOption[] = [];
-  for (
-    let t = dayjs().utc().startOf("day");
-    t.isBefore(end);
-    t = t.add(
-      INCREMENT + (!t.add(INCREMENT).isSame(t, "day") ? -1 : 0),
-      "minutes"
-    )
-  ) {
-    options.push({
-      value: t.toDate().valueOf(),
-      label: dayjs(t)
-        .utc()
-        .format(timeFormat === 12 ? "h:mm a" : "HH:mm"),
-    });
+  const nowLocal = dayjs().tz(timezone);
+
+  const options = [];
+  let currentTime = nowLocal.isAfter(dayStart)
+    ? nowLocal
+        .startOf("minute")
+        .add(INCREMENT - (nowLocal.minute() % INCREMENT), "minutes")
+    : dayStart;
+
+  while (currentTime.isBefore(dayEnd)) {
+    if (currentTime.isAfter(nowLocal)) {
+      options.push(currentTime.utc().format());
+    }
+    currentTime = currentTime.add(INCREMENT, "minutes");
   }
-  // allow 23:59
-  options.push({
-    value: end.toDate().valueOf(),
-    label: dayjs(end)
-      .utc()
-      .format(timeFormat === 12 ? "h:mm a" : "HH:mm"),
-  });
+
+  if (!options.includes(dayEnd.utc().format()) && dayEnd.isAfter(nowLocal)) {
+    options.push(dayEnd.utc().format());
+  }
 
   return options;
+};
+
+export const utcToHhMm = (time: string, timezone: string) => {
+  return dayjs(time).utc().tz(timezone).format("h:mm A");
 };
