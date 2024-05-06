@@ -264,6 +264,7 @@ export const eventsRelations = relations(events, ({ many, one }) => ({
   }),
   invoices: many(invoices),
   sub_events: many(subEvents),
+  bookings: many(bookings),
 }));
 
 export const subEvents = pgTable("sub_events", {
@@ -282,11 +283,12 @@ export const subEvents = pgTable("sub_events", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const subEventsRelations = relations(subEvents, ({ one }) => ({
+export const subEventsRelations = relations(subEvents, ({ one, many }) => ({
   event: one(events, {
     fields: [subEvents.event_id],
     references: [events.id],
   }),
+  bookings: many(bookings),
 }));
 
 export const assets = pgTable("assets", {
@@ -397,6 +399,7 @@ export const packagesRelations = relations(packages, ({ one, many }) => ({
     references: [businesses.id],
   }),
   assets: many(assets),
+  bookings: many(bookings),
 }));
 
 export const addOnsGroups = pgTable(
@@ -462,6 +465,7 @@ export const addOnsRelations = relations(addOns, ({ one, many }) => ({
     fields: [addOns.business_id],
     references: [businesses.id],
   }),
+  bookings: many(bookings),
 }));
 
 export const bookings = pgTable("bookings", {
@@ -476,6 +480,16 @@ export const bookings = pgTable("bookings", {
     .references(() => users.id, { onDelete: "cascade" }),
   time: text("time"),
   end: text("end"),
+  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  sub_event_id: bigint("sub_event_id", { mode: "bigint" }).references(
+    () => subEvents.id
+  ),
+  add_on_id: bigint("add_on_id", { mode: "bigint" }).references(
+    () => addOns.id
+  ),
+  package_id: bigint("package_id", { mode: "bigint" }).references(
+    () => packages.id
+  ),
   duration: integer("duration"),
   deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
@@ -490,6 +504,22 @@ export const bookingsRelations = relations(bookings, ({ one, many }) => ({
   customer: one(users, {
     fields: [bookings.customer_id],
     references: [users.id],
+  }),
+  event: one(events, {
+    fields: [bookings.event_id],
+    references: [events.id],
+  }),
+  sub_event: one(subEvents, {
+    fields: [bookings.sub_event_id],
+    references: [subEvents.id],
+  }),
+  add_on: one(addOns, {
+    fields: [bookings.add_on_id],
+    references: [addOns.id],
+  }),
+  package: one(packages, {
+    fields: [bookings.package_id],
+    references: [packages.id],
   }),
 }));
 

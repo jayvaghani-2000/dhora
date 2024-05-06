@@ -16,6 +16,9 @@
   line-height: 1.5rem !important;
   font-weight: 600 !important;
 }
+.fc-scrollgrid-sync-inner {
+  position: relative;
+}
 
 .fc-button-primary {
   background-color: hsl(var(--primary)) !important;

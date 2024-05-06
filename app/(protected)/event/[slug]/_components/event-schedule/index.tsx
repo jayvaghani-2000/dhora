@@ -6,7 +6,13 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import "./event-schedule.css";
 import Events from "../events";
 import { dateWithoutTime, getDateTimeFormatted, timeZone } from "@/lib/common";
-import { addDays, getDay, isWithinInterval } from "date-fns";
+import {
+  addDays,
+  differenceInDays,
+  format,
+  getDay,
+  isWithinInterval,
+} from "date-fns";
 import { DatesSetArg, EventInput } from "@fullcalendar/core/index.js";
 import EditSubEvent from "../edit-sub-event";
 import { getSubEventsType } from "@/actions/_utils/types.type";
@@ -85,7 +91,7 @@ const EventSchedule = (props: React.ComponentProps<typeof Events>) => {
       });
 
       if (inRange) {
-        return getDay(selectedDates.current.startStr);
+        return getDay(i.start as Date);
       } else {
         return false;
       }
@@ -99,7 +105,7 @@ const EventSchedule = (props: React.ComponentProps<typeof Events>) => {
         initialView={single_day_event ? "timeGridDay" : "timeGridWeek"}
         weekends={true}
         headerToolbar={{
-          left: single_day_event ? "" : "prev,next today",
+          left: single_day_event ? "" : "prev,next",
           center: "title",
           right: single_day_event ? "" : "timeGridWeek,timeGridDay",
         }}
@@ -123,7 +129,20 @@ const EventSchedule = (props: React.ComponentProps<typeof Events>) => {
               ? addDays(from_date!, 1)
               : dateWithoutTime(addDays(to_date!, 1)),
         }}
-        // hiddenDays={uniq(enableDays.filter(i => i !== false).sort())}
+        dayHeaderContent={args => {
+          console.log(args, differenceInDays(args.date, from_date!));
+          const day = differenceInDays(args.date, from_date!) + 1;
+
+          const haveAnyEventOnTheDay = calendarEvents.find(
+            i => getDay(new Date(i.start as string)) === getDay(args.date)
+          );
+
+          return {
+            html: `<div><div style="position: absolute; inset: 0; background-color: ${haveAnyEventOnTheDay ? "#3f3f46" : "transparent"};z-index: 0;"></div><div style="position: relative;"><p style="font-size: 12px;">Day ${day}<p>
+          <div  style="font-size: 12px;color: #a1a1aa">${format(args.date, "eee, d MMM")}<div>
+          </div><div>`,
+          };
+        }}
         timeZone={timeZone}
         firstDay={getDay(from_date!)}
       />
