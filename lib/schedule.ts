@@ -18,31 +18,35 @@ export const getTimezoneDate = ({
 
 export const timeSlotsUtc = (
   INCREMENT: number,
+  availability: Array<{ start_time: string; end_time: string }>,
   date: string,
   timezone: string
 ) => {
-  const dayStart = dayjs.tz(date, timezone).startOf("day");
-  const dayEnd = dayjs.tz(date, timezone).endOf("day");
+  const options: string[] = [];
+  const nowUtc = dayjs.utc();
+  const targetDate = dayjs.tz(date, timezone).startOf("day").format();
 
-  const nowLocal = dayjs().tz(timezone);
+  availability.forEach(period => {
+    let currentTime = dayjs.utc(period.start_time);
+    const endTime = dayjs.utc(period.end_time);
 
-  const options = [];
-  let currentTime = nowLocal.isAfter(dayStart)
-    ? nowLocal
-        .startOf("minute")
-        .add(INCREMENT - (nowLocal.minute() % INCREMENT), "minutes")
-    : dayStart;
-
-  while (currentTime.isBefore(dayEnd)) {
-    if (currentTime.isAfter(nowLocal)) {
-      options.push(currentTime.utc().format());
+    while (currentTime.isBefore(endTime)) {
+      if (
+        currentTime.isAfter(nowUtc) &&
+        dayjs(currentTime).tz(timezone).isSame(targetDate, "day")
+      ) {
+        options.push(currentTime.format());
+      }
+      currentTime = currentTime.add(INCREMENT, "minutes");
     }
-    currentTime = currentTime.add(INCREMENT, "minutes");
-  }
 
-  if (!options.includes(dayEnd.utc().format()) && dayEnd.isAfter(nowLocal)) {
-    options.push(dayEnd.utc().format());
-  }
+    if (
+      !options.includes(endTime.format()) &&
+      currentTime.isSame(endTime, "day")
+    ) {
+      options.push(endTime.format());
+    }
+  });
 
   return options;
 };

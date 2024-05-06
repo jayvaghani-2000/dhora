@@ -36,11 +36,16 @@ const handler = async (user: User, params: parmaTypes) => {
     .availability as createAvailabilitySchemaType["availability"];
 
   const duration = bookingTypeDetail.duration;
-  const yyyymmddUtcStart = dateWithoutTime(date);
+  const yyyymmdd = dateWithoutTime(date);
 
-  const daysTimeSlot = timeSlotsUtc(duration, yyyymmddUtcStart, timezone).map(
-    i => dayjs(i).utc().format()
+  const range = getTheBookingAvailabilitySlot(
+    yyyymmdd,
+    timezone,
+    availability,
+    bookingTypeDetail.availability.timezone!
   );
+
+  const daysTimeSlot = timeSlotsUtc(duration, range, yyyymmdd, timezone);
 
   const availableDaySlots = isFallInGivenTimeSlot(
     availability,
@@ -89,4 +94,56 @@ const isFallInGivenTimeSlot = (
       );
     });
   });
+};
+
+const getTheBookingAvailabilitySlot = (
+  date: string,
+  timezone: string,
+  availability: createAvailabilitySchemaType["availability"],
+  bookingTimezone: string
+) => {
+  const dayStart = dayjs.tz(date, timezone).startOf("day");
+  const dayEnd = dayjs.tz(date, timezone).endOf("day");
+
+  const dateStartBookingTimezone = dayStart.tz(bookingTimezone).day();
+  const dateEndBookingTimezone = dayEnd.tz(bookingTimezone).day();
+
+  const dayAvailability = availability[dateStartBookingTimezone];
+
+  const startOfDay = dayStart.tz(bookingTimezone).format("YYYY-MM-DD");
+
+  let timeSlots = dayAvailability.map(i => {
+    const startTime = dayjs(`${startOfDay} ${i.start_time}`).tz(
+      bookingTimezone
+    );
+    const endTime = dayjs(`${startOfDay} ${i.end_time}`).tz(bookingTimezone);
+    return {
+      start_time: startTime.utc().format(),
+      end_time: endTime.utc().format(),
+    };
+  });
+
+  if (dateStartBookingTimezone !== dateEndBookingTimezone) {
+    const nextDayAvailability = availability[dateEndBookingTimezone];
+    const nextDayStart = dayStart
+      .add(1, "day")
+      .tz(bookingTimezone)
+      .format("YYYY-MM-DD");
+    nextDayAvailability.forEach(i => {
+      const startTime = dayjs(`${nextDayStart} ${i.start_time}`).tz(
+        bookingTimezone
+      );
+
+      const endTime = dayjs(`${nextDayStart} ${i.end_time}`).tz(
+        bookingTimezone
+      );
+
+      timeSlots.push({
+        start_time: startTime.utc().format(),
+        end_time: endTime.utc().format(),
+      });
+    });
+  }
+
+  return timeSlots;
 };
