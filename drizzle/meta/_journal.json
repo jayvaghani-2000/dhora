@@ -253,6 +253,13 @@
       "when": 1715579459046,
       "tag": "0035_misty_nick_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1715581839922,
+      "tag": "0036_public_red_skull",
+      "breakpoints": true
     }
   ]
 }

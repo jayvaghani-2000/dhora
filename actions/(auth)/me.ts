@@ -70,7 +70,7 @@ export const getUser = async (id: string) => {
     }),
   ]);
 
-  console.log(stringifyBigint(userEvents), stringifyBigint(user));
+  console.log(stringifyBigint(userEvents), user);
 
   return user ? { ...user, events: userEvents } : undefined;
 };

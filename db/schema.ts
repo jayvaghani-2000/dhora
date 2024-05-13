@@ -134,7 +134,7 @@ export const contracts = pgTable("contracts", {
   business_id: bigint("business_id", { mode: "bigint" })
     .references(() => businesses.id)
     .notNull(),
-  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  event_id: text("event_id").references(() => events.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -241,7 +241,8 @@ export const bookingTypesRelations = relations(bookingTypes, ({ one }) => ({
 }));
 
 export const events = pgTable("events", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   title: text("title").notNull(),
@@ -280,7 +281,7 @@ export const subEvents = pgTable("sub_events", {
   start_time: text("start_time").notNull(),
   end_time: text("end_time").notNull(),
   location: text("location"),
-  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  event_id: text("event_id").references(() => events.id),
   deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
@@ -483,7 +484,7 @@ export const bookings = pgTable("bookings", {
     .references(() => users.id, { onDelete: "cascade" }),
   time: text("time"),
   end: text("end"),
-  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  event_id: text("event_id").references(() => events.id),
   sub_event_id: bigint("sub_event_id", { mode: "bigint" }).references(
     () => subEvents.id
   ),
@@ -537,7 +538,7 @@ export const ratings = pgTable("ratings", {
     () => businesses.id
   ),
   customer_id: text("customer_id").references(() => users.id),
-  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  event_id: text("event_id").references(() => events.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
