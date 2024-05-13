@@ -267,6 +267,13 @@
       "when": 1715586232490,
       "tag": "0037_right_maddog",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1715586831418,
+      "tag": "0038_small_shockwave",
+      "breakpoints": true
     }
   ]
 }

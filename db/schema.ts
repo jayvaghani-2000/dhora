@@ -184,7 +184,8 @@ export const invoicesRelations = relations(invoices, ({ one }) => ({
 }));
 
 export const availability = pgTable("availability", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   business_id: text("business_id")
@@ -212,7 +213,8 @@ export const availabilityRelations = relations(
 );
 
 export const bookingTypes = pgTable("booking_types", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   title: text("title").notNull(),
@@ -221,7 +223,7 @@ export const bookingTypes = pgTable("booking_types", {
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted: boolean("deleted").default(false),
-  availability_id: bigint("availability_id", { mode: "bigint" })
+  availability_id: text("availability_id")
     .references(() => availability.id)
     .notNull(),
   business_id: text("business_id")
@@ -273,7 +275,8 @@ export const eventsRelations = relations(events, ({ many, one }) => ({
 }));
 
 export const subEvents = pgTable("sub_events", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   title: text("title").notNull(),
@@ -474,9 +477,7 @@ export const bookings = pgTable("bookings", {
   time: text("time"),
   end: text("end"),
   event_id: text("event_id").references(() => events.id),
-  sub_event_id: bigint("sub_event_id", { mode: "bigint" }).references(
-    () => subEvents.id
-  ),
+  sub_event_id: text("sub_event_id").references(() => subEvents.id),
   add_on_id: bigint("add_on_id", { mode: "bigint" }).references(
     () => addOns.id
   ),
