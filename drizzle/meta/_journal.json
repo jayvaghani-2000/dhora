@@ -260,6 +260,13 @@
       "when": 1715581839922,
       "tag": "0036_public_red_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "5",
+      "when": 1715586232490,
+      "tag": "0037_right_maddog",
+      "breakpoints": true
     }
   ]
 }

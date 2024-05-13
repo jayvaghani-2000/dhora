@@ -1,6 +1,6 @@
 "use server";
 
-import { events, subEvents, users } from "@/db/schema";
+import { events, users } from "@/db/schema";
 import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { lucia } from "@/lib/auth";
@@ -57,20 +57,15 @@ export const me: (clientSide?: boolean) => Promise<
 };
 
 export const getUser = async (id: string) => {
-  const [userEvents, user] = await Promise.all([
-    await db.query.events.findMany({
-      where: and(eq(events.deleted, false), eq(events.user_id, id)),
-    }),
-    await db.query.users.findFirst({
-      where: and(eq(users.id, id)),
-      with: {
-        business: true,
-        events: true,
+  const user = await db.query.users.findFirst({
+    where: and(eq(users.id, id)),
+    with: {
+      business: true,
+      events: {
+        where: and(eq(events.deleted, false), eq(events.user_id, id)),
       },
-    }),
-  ]);
+    },
+  });
 
-  console.log(stringifyBigint(userEvents), user);
-
-  return user ? { ...user, events: userEvents } : undefined;
+  return user;
 };

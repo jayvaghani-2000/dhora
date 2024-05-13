@@ -60,9 +60,7 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   verification_code: text("verification_code"),
   stripe_id: text("stripe_id").notNull(),
-  business_id: bigint("business_id", { mode: "bigint" }).references(
-    () => businesses.id
-  ),
+  business_id: text("business_id").references(() => businesses.id),
   deleted: boolean("deleted").default(false),
   disabled: boolean("disabled").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
@@ -92,7 +90,8 @@ export const sessions = pgTable("session", {
 });
 
 export const businesses = pgTable("business", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   type: businessTypeEnum("type").notNull(),
@@ -126,12 +125,13 @@ export const businessRelations = relations(businesses, ({ many }) => ({
 }));
 
 export const contracts = pgTable("contracts", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   template_id: integer("template_id").notNull().unique(),
   name: text("name").default("New Contract"),
-  business_id: bigint("business_id", { mode: "bigint" })
+  business_id: text("business_id")
     .references(() => businesses.id)
     .notNull(),
   event_id: text("event_id").references(() => events.id),
@@ -151,7 +151,8 @@ export const contractsRelations = relations(contracts, ({ one }) => ({
 }));
 
 export const invoices = pgTable("invoices", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   customer_name: text("customer_name").notNull(),
@@ -162,7 +163,7 @@ export const invoices = pgTable("invoices", {
   tax: integer("tax").notNull(),
   total: doublePrecision("total").notNull(),
   subtotal: doublePrecision("subtotal").notNull(),
-  business_id: bigint("business_id", { mode: "bigint" })
+  business_id: text("business_id")
     .references(() => businesses.id)
     .notNull(),
   platform_fee: integer("platform_fee").default(2).notNull(),
@@ -186,7 +187,7 @@ export const availability = pgTable("availability", {
   id: bigint("id", { mode: "bigint" })
     .primaryKey()
     .default(sql`public.id_generator()`),
-  business_id: bigint("business_id", { mode: "bigint" })
+  business_id: text("business_id")
     .references(() => businesses.id)
     .notNull(),
   name: text("name"),
@@ -223,7 +224,7 @@ export const bookingTypes = pgTable("booking_types", {
   availability_id: bigint("availability_id", { mode: "bigint" })
     .references(() => availability.id)
     .notNull(),
-  business_id: bigint("business_id", { mode: "bigint" })
+  business_id: text("business_id")
     .references(() => businesses.id)
     .notNull(),
   booking_frequency: jsonb("booking_frequency"),
@@ -305,9 +306,7 @@ export const assets = pgTable("assets", {
   url: text("url"),
   asset_type: assetsTypeEnum("asset_type").notNull(),
   type: text("type"),
-  business_id: bigint("business_id", { mode: "bigint" }).references(
-    () => businesses.id
-  ),
+  business_id: text("business_id").references(() => businesses.id),
   user_id: text("user_id").references(() => users.id),
   package_id: bigint("package_id", { mode: "bigint" }).references(
     () => packages.id
@@ -337,9 +336,7 @@ export const packageGroups = pgTable(
     id: bigint("id", { mode: "bigint" })
       .primaryKey()
       .default(sql`public.id_generator()`),
-    business_id: bigint("business_id", { mode: "bigint" }).references(
-      () => businesses.id
-    ),
+    business_id: text("business_id").references(() => businesses.id),
     name: text("name"),
     deleted: boolean("deleted").default(false),
     created_at: timestamp("created_at").defaultNow().notNull(),
@@ -370,9 +367,7 @@ export const packages = pgTable(
     id: bigint("id", { mode: "bigint" })
       .primaryKey()
       .default(sql`public.id_generator()`),
-    business_id: bigint("business_id", { mode: "bigint" }).references(
-      () => businesses.id
-    ),
+    business_id: text("business_id").references(() => businesses.id),
     package_group_id: bigint("package_group_id", {
       mode: "bigint",
     }).references(() => packageGroups.id),
@@ -412,9 +407,7 @@ export const addOnsGroups = pgTable(
     id: bigint("id", { mode: "bigint" })
       .primaryKey()
       .default(sql`public.id_generator()`),
-    business_id: bigint("business_id", { mode: "bigint" }).references(
-      () => businesses.id
-    ),
+    business_id: text("business_id").references(() => businesses.id),
     name: text("name"),
     deleted: boolean("deleted").default(false),
     created_at: timestamp("created_at").defaultNow().notNull(),
@@ -445,9 +438,7 @@ export const addOns = pgTable(
     id: bigint("id", { mode: "bigint" })
       .primaryKey()
       .default(sql`public.id_generator()`),
-    business_id: bigint("business_id", { mode: "bigint" }).references(
-      () => businesses.id
-    ),
+    business_id: text("business_id").references(() => businesses.id),
     add_on_group_id: bigint("add_on_group_id", {
       mode: "bigint",
     }).references(() => addOnsGroups.id),
@@ -476,9 +467,7 @@ export const bookings = pgTable("bookings", {
   id: bigint("id", { mode: "bigint" })
     .primaryKey()
     .default(sql`public.id_generator()`),
-  business_id: bigint("business_id", { mode: "bigint" }).references(
-    () => businesses.id
-  ),
+  business_id: text("business_id").references(() => businesses.id),
   customer_id: text("customer_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -534,9 +523,7 @@ export const ratings = pgTable("ratings", {
   description: text("description"),
   title: text("title"),
   rating: doublePrecision("rating").notNull(),
-  business_id: bigint("business_id", { mode: "bigint" }).references(
-    () => businesses.id
-  ),
+  business_id: text("business_id").references(() => businesses.id),
   customer_id: text("customer_id").references(() => users.id),
   event_id: text("event_id").references(() => events.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
