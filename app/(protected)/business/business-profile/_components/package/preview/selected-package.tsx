@@ -27,7 +27,7 @@ const SelectedPackage = (prop: propType) => {
 
   const handleDeletePackage = async () => {
     setDeleting(true);
-    const res = await deletePackage(packageDetail.id as unknown as string);
+    const res = await deletePackage(packageDetail.id);
     if (res && !res.success) {
       toast({ title: res.error });
     } else {

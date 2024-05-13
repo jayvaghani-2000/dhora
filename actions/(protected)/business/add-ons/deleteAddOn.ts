@@ -17,10 +17,7 @@ const handler = async (user: User, packageId: string) => {
         deleted: true,
       })
       .where(
-        and(
-          eq(addOns.id, BigInt(packageId)),
-          eq(addOns.business_id, user.business_id!)
-        )
+        and(eq(addOns.id, packageId), eq(addOns.business_id, user.business_id!))
       );
 
     return {

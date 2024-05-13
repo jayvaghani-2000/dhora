@@ -181,7 +181,7 @@ export function groupPackagesByGroupId(packages: getPackagesType["data"]) {
   }[] = [];
 
   packages?.forEach(pack => {
-    const groupId = pack.package_group_id as unknown as string;
+    const groupId = pack.package_group_id;
 
     if (groupId !== null) {
       if (!groupedPackages[groupId]) {
@@ -215,7 +215,7 @@ export function groupAddOnsByGroupId(addOns: getAddOnsType["data"]) {
   }[] = [];
 
   addOns?.forEach(i => {
-    const groupId = i.add_on_group_id as unknown as string;
+    const groupId = i.add_on_group_id;
 
     if (groupId !== null) {
       if (!groupedPackages[groupId]) {

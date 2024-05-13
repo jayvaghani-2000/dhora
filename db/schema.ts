@@ -1,7 +1,6 @@
 import { trimRichEditor } from "@/lib/common";
 import { relations, sql } from "drizzle-orm";
 import {
-  bigint,
   boolean,
   date,
   doublePrecision,
@@ -300,7 +299,8 @@ export const subEventsRelations = relations(subEvents, ({ one, many }) => ({
 }));
 
 export const assets = pgTable("assets", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   height: integer("height"),
@@ -311,9 +311,7 @@ export const assets = pgTable("assets", {
   type: text("type"),
   business_id: text("business_id").references(() => businesses.id),
   user_id: text("user_id").references(() => users.id),
-  package_id: bigint("package_id", { mode: "bigint" }).references(
-    () => packages.id
-  ),
+  package_id: text("package_id").references(() => packages.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -336,7 +334,8 @@ export const assetsRelations = relations(assets, ({ one }) => ({
 export const packageGroups = pgTable(
   "package_groups",
   {
-    id: bigint("id", { mode: "bigint" })
+    id: text("id")
+      .notNull()
       .primaryKey()
       .default(sql`public.id_generator()`),
     business_id: text("business_id").references(() => businesses.id),
@@ -367,13 +366,14 @@ export const packageGroupsRelations = relations(
 export const packages = pgTable(
   "packages",
   {
-    id: bigint("id", { mode: "bigint" })
+    id: text("id")
+      .notNull()
       .primaryKey()
       .default(sql`public.id_generator()`),
     business_id: text("business_id").references(() => businesses.id),
-    package_group_id: bigint("package_group_id", {
-      mode: "bigint",
-    }).references(() => packageGroups.id),
+    package_group_id: text("package_group_id").references(
+      () => packageGroups.id
+    ),
     name: text("name"),
     description: text("description"),
     fixed_priced: boolean("fixed_priced").default(false),
@@ -407,7 +407,8 @@ export const packagesRelations = relations(packages, ({ one, many }) => ({
 export const addOnsGroups = pgTable(
   "add_ons_groups",
   {
-    id: bigint("id", { mode: "bigint" })
+    id: text("id")
+      .notNull()
       .primaryKey()
       .default(sql`public.id_generator()`),
     business_id: text("business_id").references(() => businesses.id),
@@ -438,13 +439,12 @@ export const addOnsGroupsRelations = relations(
 export const addOns = pgTable(
   "add_ons",
   {
-    id: bigint("id", { mode: "bigint" })
+    id: text("id")
+      .notNull()
       .primaryKey()
       .default(sql`public.id_generator()`),
     business_id: text("business_id").references(() => businesses.id),
-    add_on_group_id: bigint("add_on_group_id", {
-      mode: "bigint",
-    }).references(() => addOnsGroups.id),
+    add_on_group_id: text("add_on_group_id").references(() => addOnsGroups.id),
     name: text("name"),
     description: text("description"),
     max_unit: integer("max_unit"),
@@ -467,7 +467,8 @@ export const addOnsRelations = relations(addOns, ({ one, many }) => ({
 }));
 
 export const bookings = pgTable("bookings", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   business_id: text("business_id").references(() => businesses.id),
@@ -478,12 +479,8 @@ export const bookings = pgTable("bookings", {
   end: text("end"),
   event_id: text("event_id").references(() => events.id),
   sub_event_id: text("sub_event_id").references(() => subEvents.id),
-  add_on_id: bigint("add_on_id", { mode: "bigint" }).references(
-    () => addOns.id
-  ),
-  package_id: bigint("package_id", { mode: "bigint" }).references(
-    () => packages.id
-  ),
+  add_on_id: text("add_on_id").references(() => addOns.id),
+  package_id: text("package_id").references(() => packages.id),
   duration: integer("duration"),
   deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
@@ -518,7 +515,8 @@ export const bookingsRelations = relations(bookings, ({ one, many }) => ({
 }));
 
 export const ratings = pgTable("ratings", {
-  id: bigint("id", { mode: "bigint" })
+  id: text("id")
+    .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
   description: text("description"),

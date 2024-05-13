@@ -22,10 +22,7 @@ const handler = async (user: User, params: parmaTypes) => {
   const image = logo.get("image") as File;
 
   if (image) {
-    const uploadedImageUrl = await createPublicProfileImgUrl(
-      BigInt(user.id),
-      image
-    );
+    const uploadedImageUrl = await createPublicProfileImgUrl(user.id, image);
 
     logoUrl.image = uploadedImageUrl;
   }

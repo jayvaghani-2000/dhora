@@ -40,11 +40,11 @@ const EditPackage = (props: propType) => {
     resolver: zodResolver(editPackageSchema),
     defaultValues: {
       ...packageInfo,
-      id: id as unknown as string,
+      id: id,
       name: packageInfo.name as string,
       description: packageInfo.description as string,
       fixed_priced: packageInfo.fixed_priced as boolean,
-      package_group_id: packageInfo.package_group_id as unknown as string,
+      package_group_id: packageInfo.package_group_id,
       deposit_type: packageInfo.deposit_type ?? "fixed",
     },
   });

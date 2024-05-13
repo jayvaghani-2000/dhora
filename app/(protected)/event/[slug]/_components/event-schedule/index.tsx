@@ -31,7 +31,7 @@ const EventSchedule = (props: React.ComponentProps<typeof Events>) => {
   const calendarEvents: EventInput[] =
     subEvents?.map(i => {
       return {
-        id: i.id as unknown as string,
+        id: i.id,
         title: i.title,
         start: getDateTimeFormatted(
           dateWithoutTime(i.event_date),
@@ -114,9 +114,7 @@ const EventSchedule = (props: React.ComponentProps<typeof Events>) => {
         eventClick={event => {
           setSelectedEvent({
             open: true,
-            data: subEvents?.filter(
-              i => (i.id as unknown as string) === event.event._def.publicId
-            ),
+            data: subEvents?.filter(i => i.id === event.event._def.publicId),
           });
         }}
         datesSet={dates => {

@@ -24,7 +24,7 @@ const AvailabilityCard = (props: propType) => {
 
   const handleDeleteAvailability = async () => {
     setLoading(true);
-    const res = await deleteAvailability(availability.id as unknown as string);
+    const res = await deleteAvailability(availability.id);
     if (res && !res.success) {
       toast({ title: res.error });
     } else {

@@ -25,7 +25,7 @@ const handler = async (user: User, params: parmaTypes) => {
       .values({
         description: trimRichEditor(description),
         event_date: dateWithoutTime(event_date),
-        event_id: BigInt(eventId),
+        event_id: eventId,
         ...rest,
       })
       .returning();

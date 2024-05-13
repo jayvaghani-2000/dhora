@@ -23,7 +23,7 @@ const handler = async (user: User, params: parmaTypes) => {
   const bookingType = await db.query.bookingTypes.findFirst({
     where: and(
       eq(bookingTypes.deleted, false),
-      eq(bookingTypes.id, BigInt(bookingTypeId))
+      eq(bookingTypes.id, bookingTypeId)
     ),
     with: {
       availability: true,

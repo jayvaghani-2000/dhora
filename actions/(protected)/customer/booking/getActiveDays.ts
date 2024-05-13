@@ -21,7 +21,7 @@ const handler = async (user: User, params: parmaTypes) => {
   const availabilityDetail = await db.query.availability.findFirst({
     where: and(
       eq(availability.deleted, false),
-      eq(availability.id, BigInt(availabilityId))
+      eq(availability.id, availabilityId)
     ),
   });
 

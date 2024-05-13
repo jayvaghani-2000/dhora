@@ -12,10 +12,7 @@ import { errorType } from "@/actions/_utils/types.type";
 const handler = async (user: User, packageId: string) => {
   try {
     const data = await db.query.packages.findFirst({
-      where: and(
-        eq(packages.id, BigInt(packageId)),
-        eq(packages.deleted, false)
-      ),
+      where: and(eq(packages.id, packageId), eq(packages.deleted, false)),
       with: {
         assets: true,
       },

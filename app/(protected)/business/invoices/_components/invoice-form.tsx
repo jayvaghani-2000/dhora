@@ -138,7 +138,7 @@ const InvoiceForm = (props: propType) => {
 
         if (handleCheckout) {
           setSavePdf({
-            invoiceId: data.data.id as unknown as string,
+            invoiceId: data.data.id,
             trigger: true,
           });
         } else {
@@ -159,7 +159,7 @@ const InvoiceForm = (props: propType) => {
       if (data.success) {
         if (handleCheckout) {
           setSavePdf({
-            invoiceId: data.data.id as unknown as string,
+            invoiceId: data.data.id,
             trigger: true,
           });
         } else {

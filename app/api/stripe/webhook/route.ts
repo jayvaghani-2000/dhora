@@ -68,7 +68,7 @@ async function handler(req: Request) {
                 .set({
                   status: "paid",
                 })
-                .where(eq(invoices.id, BigInt(metaData.invoice_id)));
+                .where(eq(invoices.id, metaData.invoice_id));
               await stripe.paymentLinks.update(data.payment_link as string, {
                 active: false,
               });

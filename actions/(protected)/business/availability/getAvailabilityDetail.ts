@@ -13,7 +13,7 @@ const handler = async (user: User, availabilityId: string) => {
   try {
     const data = await db.query.availability.findFirst({
       where: and(
-        eq(availability.id, BigInt(availabilityId)),
+        eq(availability.id, availabilityId),
         ne(availability.deleted, true)
       ),
     });

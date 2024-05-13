@@ -274,6 +274,13 @@
       "when": 1715586831418,
       "tag": "0038_small_shockwave",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1715592830964,
+      "tag": "0039_freezing_marten_broadcloak",
+      "breakpoints": true
     }
   ]
 }

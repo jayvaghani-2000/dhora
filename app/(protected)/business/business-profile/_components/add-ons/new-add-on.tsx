@@ -133,10 +133,7 @@ const NewAddOn = (
                       </div>
                       <SelectContent>
                         {addOnGroups?.map(i => (
-                          <SelectItem
-                            key={i.id}
-                            value={i.id as unknown as string}
-                          >
+                          <SelectItem key={i.id} value={i.id}>
                             {i.name}
                           </SelectItem>
                         ))}

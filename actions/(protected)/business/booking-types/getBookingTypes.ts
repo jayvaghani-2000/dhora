@@ -14,7 +14,7 @@ const handler = async (user: User, businessId?: string) => {
       where: and(
         eq(
           bookingTypes.business_id,
-          businessId ? BigInt(businessId) : user.business_id!
+          businessId ? businessId : user.business_id!
         ),
         ne(bookingTypes.deleted, true)
       ),

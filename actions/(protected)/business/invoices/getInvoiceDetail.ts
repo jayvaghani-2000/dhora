@@ -19,7 +19,7 @@ const handler = async (user: User, { id, mode = "view" }: paramsType) => {
   try {
     const data = await db.query.invoices.findFirst({
       where: and(
-        eq(invoices.id, BigInt(id)),
+        eq(invoices.id, id),
         eq(invoices.business_id, user.business_id!)
       ),
       with: {

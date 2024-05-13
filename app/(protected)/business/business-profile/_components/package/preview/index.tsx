@@ -38,34 +38,29 @@ const Preview = (prop: propType) => {
         {groupedPackages.length > 0 ? (
           <Accordion
             type="multiple"
-            defaultValue={[
-              groupedPackages[0].package_group_id as unknown as string,
-            ]}
+            defaultValue={[groupedPackages[0].package_group_id as string]}
             className="w-full"
           >
             {groupedPackages.map(i =>
               i.package_group_id ? (
                 <AccordionItem
-                  value={i.package_group_id as unknown as string}
+                  value={i.package_group_id}
                   key={i.package_group_id}
                 >
                   <AccordionTrigger className="whitespace-nowrap truncate	">
                     {
-                      packagesGroups?.find(
-                        j => (j.id as unknown as string) === i.package_group_id
-                      )?.name
+                      packagesGroups?.find(j => j.id === i.package_group_id)
+                        ?.name
                     }
                   </AccordionTrigger>
                   <AccordionContent>
                     {i.package?.map(pack => (
-                      <div key={pack.id as unknown as string} className="py-1">
+                      <div key={pack.id} className="py-1">
                         <button
                           className={clsx({
                             "text-base underline-offset-1 hover:underline whitespace-nowrap truncate	w-full text-left	":
                               true,
-                            "underline ":
-                              (selectedPackage?.[0].id as unknown as string) ===
-                              (pack.id as unknown as string),
+                            "underline ": selectedPackage?.[0].id === pack.id,
                           })}
                           onClick={() => {
                             setSelectedPackage([pack]);
@@ -78,17 +73,13 @@ const Preview = (prop: propType) => {
                   </AccordionContent>
                 </AccordionItem>
               ) : (
-                <div
-                  key={i.package?.[0].id as unknown as string}
-                  className="py-1"
-                >
+                <div key={i.package?.[0].id} className="py-1">
                   <button
                     className={clsx({
                       "text-base hover:underline hover:underline-offset-1 whitespace-nowrap truncate	w-full text-left":
                         true,
                       "underline ":
-                        (selectedPackage?.[0].id as unknown as string) ===
-                        (i.package?.[0].id as unknown as string),
+                        selectedPackage?.[0].id === i.package?.[0].id,
                     })}
                     onClick={() => {
                       setSelectedPackage(i.package);

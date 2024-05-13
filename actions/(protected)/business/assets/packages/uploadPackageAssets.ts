@@ -22,9 +22,9 @@ const handler = async (
     if (image) {
       const uploadedImage = await createPublicPackageAssetsImageUrl(
         {
-          business_id: user.business_id as bigint,
-          user_id: BigInt(user.id),
-          package_id: BigInt(packageId),
+          business_id: user.business_id as string,
+          user_id: user.id,
+          package_id: packageId,
         },
         image
       );
@@ -37,7 +37,7 @@ const handler = async (
           business_id: user.business_id,
           user_id: user.id,
           asset_type: "package_assets",
-          package_id: BigInt(packageId),
+          package_id: packageId,
         })
         .returning();
     }
@@ -47,9 +47,9 @@ const handler = async (
     if (video) {
       const uploadedVideo = await createPublicPackageAssetsVideoUrl(
         {
-          business_id: user.business_id as bigint,
-          user_id: BigInt(user.id),
-          package_id: BigInt(packageId),
+          business_id: user.business_id as string,
+          user_id: user.id,
+          package_id: packageId,
         },
         video
       );
@@ -64,7 +64,7 @@ const handler = async (
           business_id: user.business_id,
           user_id: user.id,
           asset_type: "package_assets",
-          package_id: BigInt(packageId),
+          package_id: packageId,
           ...videoMetaData,
         })
         .returning();

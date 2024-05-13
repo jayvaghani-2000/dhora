@@ -30,7 +30,7 @@ const handler = async (user: User, params: paramsType) => {
         and(
           eq(availability.business_id, user.business_id!),
           eq(availability.default, true),
-          ne(availability.id, BigInt(availabilityId))
+          ne(availability.id, availabilityId)
         )
       );
   } else {
@@ -49,7 +49,7 @@ const handler = async (user: User, params: paramsType) => {
           eq(availability.business_id, user.business_id!),
           eq(availability.default, false),
           ne(availability.deleted, true),
-          ne(availability.id, BigInt(availabilityId))
+          ne(availability.id, availabilityId)
         ),
         orderBy: [asc(availability.created_at)],
         limit: 1,
@@ -85,7 +85,7 @@ const handler = async (user: User, params: paramsType) => {
       .where(
         and(
           eq(availability.business_id, user.business_id!),
-          eq(availability.id, BigInt(availabilityId)),
+          eq(availability.id, availabilityId),
           ne(availability.deleted, true)
         )
       );

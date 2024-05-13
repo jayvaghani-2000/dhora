@@ -36,34 +36,26 @@ const Preview = (prop: propType) => {
         {groupedAddOns.length > 0 ? (
           <Accordion
             type="multiple"
-            defaultValue={[
-              groupedAddOns[0].add_on_group_id as unknown as string,
-            ]}
+            defaultValue={[groupedAddOns[0].add_on_group_id as string]}
             className="w-full"
           >
             {groupedAddOns.map(i =>
               i.add_on_group_id ? (
                 <AccordionItem
-                  value={i.add_on_group_id as unknown as string}
+                  value={i.add_on_group_id as string}
                   key={i.add_on_group_id}
                 >
                   <AccordionTrigger className="whitespace-nowrap truncate	">
-                    {
-                      addOnGroups?.find(
-                        j => (j.id as unknown as string) === i.add_on_group_id
-                      )?.name
-                    }
+                    {addOnGroups?.find(j => j.id === i.add_on_group_id)?.name}
                   </AccordionTrigger>
                   <AccordionContent>
                     {i.addOn?.map(j => (
-                      <div key={j.id as unknown as string} className="py-1">
+                      <div key={j.id} className="py-1">
                         <button
                           className={clsx({
                             "text-base underline-offset-1 hover:underline whitespace-nowrap truncate	w-full text-left	":
                               true,
-                            "underline ":
-                              (selectedAddOn?.[0].id as unknown as string) ===
-                              (j.id as unknown as string),
+                            "underline ": selectedAddOn?.[0].id === j.id,
                           })}
                           onClick={() => {
                             setSelectedAddOn([j]);
@@ -76,17 +68,12 @@ const Preview = (prop: propType) => {
                   </AccordionContent>
                 </AccordionItem>
               ) : (
-                <div
-                  key={i.addOn?.[0].id as unknown as string}
-                  className="py-1"
-                >
+                <div key={i.addOn?.[0].id} className="py-1">
                   <button
                     className={clsx({
                       "text-base hover:underline hover:underline-offset-1 whitespace-nowrap truncate	w-full text-left":
                         true,
-                      "underline ":
-                        (selectedAddOn?.[0].id as unknown as string) ===
-                        (i.addOn?.[0].id as unknown as string),
+                      "underline ": selectedAddOn?.[0].id === i.addOn?.[0].id,
                     })}
                     onClick={() => {
                       setSelectedAddOn(i.addOn);

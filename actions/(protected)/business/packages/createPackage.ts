@@ -37,7 +37,7 @@ const handler = async (
         unit: fixed_priced ? null : unit,
         min_unit: fixed_priced ? null : min_unit,
         max_unit: fixed_priced ? null : max_unit,
-        package_group_id: package_group_id ? BigInt(package_group_id) : null,
+        package_group_id: package_group_id ? package_group_id : null,
         deposit: deposit,
         deposit_type: deposit ? deposit_type : null,
         name: name.trim(),

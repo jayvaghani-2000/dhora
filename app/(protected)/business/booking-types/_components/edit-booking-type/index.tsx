@@ -40,7 +40,7 @@ const EditBookingType = (props: propType) => {
       title: bookingType?.title,
       description: bookingType?.description,
       duration: bookingType?.duration,
-      availability_id: bookingType?.availability_id as unknown as string,
+      availability_id: bookingType?.availability_id,
       booking_frequency: bookingType?.booking_frequency as z.infer<
         typeof editBookingTypeSchema
       >["booking_frequency"],

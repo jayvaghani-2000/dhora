@@ -87,18 +87,14 @@ const Schedular = (props: propType) => {
   });
 
   const getAvailability = async (bookingId: string) => {
-    const bookingType = bookingTypes!.find(
-      i => (i.id as unknown as string) === bookingId
-    );
+    const bookingType = bookingTypes!.find(i => i.id === bookingId);
 
-    const res = await getAvailabilityDetail(
-      bookingType!.availability_id as unknown as string
-    );
+    const res = await getAvailabilityDetail(bookingType!.availability_id);
 
     if (res.success) {
       const activeDays = await getActiveDays({
         timezone: values.timezone!,
-        availabilityId: res.data.id as unknown as string,
+        availabilityId: res.data.id,
       });
       setValues(prev => ({
         ...prev,
@@ -120,7 +116,7 @@ const Schedular = (props: propType) => {
     }
     const res = await getActiveDays({
       timezone: value,
-      availabilityId: values.availability!.id as unknown as string,
+      availabilityId: values.availability!.id,
     });
 
     if (res.success) {
@@ -165,11 +161,11 @@ const Schedular = (props: propType) => {
       const value = form.getValues();
 
       const selectedBookingType = bookingTypes!.find(
-        i => (i.id as unknown as string) === value.booking_type_id
+        i => i.id === value.booking_type_id
       );
 
       const res = await createBooking({
-        businessId: profile!.business_id as unknown as string,
+        businessId: profile!.business_id as string,
         time: values.selectedSlot,
         duration: selectedBookingType!.duration as number,
       });
@@ -246,7 +242,7 @@ const Schedular = (props: propType) => {
           name="booking_type_id"
           render={({ field }) => {
             const selectedBookingType = bookingTypes!.find(
-              i => (i.id as unknown as string) === field.value
+              i => i.id === field.value
             );
 
             return (
@@ -273,10 +269,7 @@ const Schedular = (props: propType) => {
                     </FormControl>
                     <SelectContent>
                       {bookingTypes!.map(i => (
-                        <SelectItem
-                          key={i.id}
-                          value={i.id as unknown as string}
-                        >
+                        <SelectItem key={i.id} value={i.id}>
                           {capitalize(i.title)} ({i.duration} mins)
                         </SelectItem>
                       ))}
@@ -319,7 +312,7 @@ const Schedular = (props: propType) => {
                                 onChange={value => {
                                   handleChangeTimezone(
                                     value,
-                                    selectedBookingType!.id as unknown as string
+                                    selectedBookingType!.id
                                   );
                                 }}
                               />
@@ -351,7 +344,7 @@ const Schedular = (props: propType) => {
                         }));
                         await handleGetAvailabilitySlot(
                           values.timezone as string,
-                          selectedBookingType!.id as unknown as string,
+                          selectedBookingType!.id,
                           date
                         );
                         setValues(prev => ({

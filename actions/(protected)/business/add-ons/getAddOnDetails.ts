@@ -12,7 +12,7 @@ import { errorType } from "@/actions/_utils/types.type";
 const handler = async (user: User, addOnId: string) => {
   try {
     const data = await db.query.addOns.findFirst({
-      where: and(eq(addOns.id, BigInt(addOnId)), eq(addOns.deleted, false)),
+      where: and(eq(addOns.id, addOnId), eq(addOns.deleted, false)),
     });
 
     if (!data) {

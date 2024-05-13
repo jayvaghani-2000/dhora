@@ -27,7 +27,7 @@ const handler = async (user: User, params: paramsType) => {
   try {
     const uploadedPdfImage = await createPublicInvoicePdfUrl(
       user.business_id!,
-      BigInt(user.id),
+      user.id,
       pdf
     );
 
@@ -42,7 +42,7 @@ const handler = async (user: User, params: paramsType) => {
       .set({
         invoice: uploadedPdfImage,
       })
-      .where(and(eq(invoices.id, BigInt(invoice.id))));
+      .where(and(eq(invoices.id, invoice.id)));
 
     revalidatePath("/business/invoices");
 

@@ -28,7 +28,7 @@ const AssetsView = (props: propTypes) => {
             >
               <MotionImage
                 src={i.url ?? ""}
-                alt={i.id as unknown as string}
+                alt={i.id}
                 fill
                 style={{ objectFit: "contain" }}
                 blurDataURL={i.blur_url ?? ""}
@@ -83,7 +83,7 @@ const AssetsView = (props: propTypes) => {
               >
                 <MotionImage
                   src={i.url ?? ""}
-                  alt={i.id as unknown as string}
+                  alt={i.id}
                   fill
                   style={{ objectFit: "contain" }}
                   blurDataURL={i.blur_url ?? ""}

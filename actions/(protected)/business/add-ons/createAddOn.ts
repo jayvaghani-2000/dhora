@@ -22,7 +22,7 @@ const handler = async (
       .values({
         business_id: user.business_id!,
         max_unit: max_unit,
-        add_on_group_id: add_on_group_id ? BigInt(add_on_group_id) : null,
+        add_on_group_id: add_on_group_id ? add_on_group_id : null,
         name: name.trim(),
         description: trimRichEditor(description),
         ...rest,

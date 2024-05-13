@@ -32,7 +32,7 @@ const Availability = (props: propType) => {
   const { form, availability } = props;
 
   const selectedAvailability = availability?.find(
-    i => (i.id as unknown as string) === form.getValues("availability_id")
+    i => i.id === form.getValues("availability_id")
   );
 
   const availableSlots =

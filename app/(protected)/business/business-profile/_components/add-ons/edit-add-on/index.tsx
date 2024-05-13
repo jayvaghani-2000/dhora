@@ -57,7 +57,7 @@ const EditAddOn = (props: propType) => {
     resolver: zodResolver(updateAddOnSchema),
     defaultValues: {
       ...addOnInfo,
-      id: id as unknown as string,
+      id: id,
       name: addOnInfo.name as string,
       description: addOnInfo.description as string,
       add_on_group_id: addOnInfo.add_on_group_id as unknown as string,
@@ -177,10 +177,7 @@ const EditAddOn = (props: propType) => {
                     </div>
                     <SelectContent>
                       {addOnGroups?.map(i => (
-                        <SelectItem
-                          key={i.id}
-                          value={i.id as unknown as string}
-                        >
+                        <SelectItem key={i.id} value={i.id}>
                           {i.name}
                         </SelectItem>
                       ))}

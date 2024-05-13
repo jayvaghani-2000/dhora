@@ -11,10 +11,7 @@ import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 const handler = async (user: User, eventId: string) => {
   try {
     const eventsList = await db.query.subEvents.findMany({
-      where: and(
-        eq(subEvents.event_id, BigInt(eventId)),
-        eq(subEvents.deleted, false)
-      ),
+      where: and(eq(subEvents.event_id, eventId), eq(subEvents.deleted, false)),
     });
 
     return {

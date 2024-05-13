@@ -30,12 +30,12 @@ const handler = async (user: User, params: paramsType) => {
       .set({
         ...rest,
         description: trimRichEditor(description),
-        availability_id: BigInt(availability_id),
+        availability_id: availability_id,
       })
       .where(
         and(
           eq(bookingTypes.business_id, user.business_id!),
-          eq(bookingTypes.id, BigInt(bookingTypeId)),
+          eq(bookingTypes.id, bookingTypeId),
           ne(bookingTypes.deleted, true)
         )
       );

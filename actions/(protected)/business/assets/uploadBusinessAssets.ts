@@ -18,8 +18,8 @@ const handler = async (user: User, { file, metadata = {} }: paramsType) => {
 
     if (image) {
       const uploadedImage = await createPublicBusinessAssetsImageUrl(
-        user.business_id as bigint,
-        BigInt(user.id),
+        user.business_id!,
+        user.id,
         image
       );
 
@@ -39,8 +39,8 @@ const handler = async (user: User, { file, metadata = {} }: paramsType) => {
 
     if (video) {
       const uploadedVideo = await createPublicBusinessAssetsVideoUrl(
-        user.business_id as bigint,
-        BigInt(user.id),
+        user.business_id!,
+        user.id,
         video
       );
       const videoMetaData = metadata as { height: number; width: number };

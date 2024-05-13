@@ -19,7 +19,7 @@ const handler = async (user: User, params: parmaTypes) => {
     await db
       .insert(bookings)
       .values({
-        business_id: BigInt(businessId),
+        business_id: businessId,
         time: time,
         duration: duration,
         end: dayjs(time).utc().add(duration, "minutes").utc().format(),

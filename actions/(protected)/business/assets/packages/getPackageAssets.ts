@@ -12,7 +12,7 @@ const handler = async (user: User, packageId: string) => {
   try {
     const data = await db.query.assets.findMany({
       where: and(
-        eq(assets.package_id, BigInt(packageId)),
+        eq(assets.package_id, packageId),
         eq(assets.asset_type, "package_assets")
       ),
       orderBy: [desc(assets.created_at)],

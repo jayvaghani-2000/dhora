@@ -26,7 +26,7 @@ const SelectedAddOn = (prop: propType) => {
 
   const handleDeleteAddOn = async () => {
     setDeleting(true);
-    const res = await deleteAddOn(addOnDetail.id as unknown as string);
+    const res = await deleteAddOn(addOnDetail.id);
     if (res && !res.success) {
       toast({ title: res.error });
     } else {

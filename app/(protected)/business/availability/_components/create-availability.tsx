@@ -62,9 +62,7 @@ const CreateAvailability = (props: propType) => {
     });
     if (res.success) {
       await revalidate("/business/availability");
-      navigate.push(
-        `/business/availability/${res.data.id as unknown as string}`
-      );
+      navigate.push(`/business/availability/${res.data.id}`);
     } else {
       setError(res.error);
     }

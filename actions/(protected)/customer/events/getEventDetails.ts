@@ -12,7 +12,7 @@ import { errorType } from "@/actions/_utils/types.type";
 const handler = async (user: User, eventId: string) => {
   try {
     const eventDetail = await db.query.events.findFirst({
-      where: and(eq(events.deleted, false), eq(events.id, BigInt(eventId))),
+      where: and(eq(events.deleted, false), eq(events.id, eventId)),
     });
 
     if (!eventDetail) {

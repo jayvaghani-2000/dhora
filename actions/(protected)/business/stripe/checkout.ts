@@ -18,10 +18,10 @@ import {
   itemRateWithFeeAndTaxes,
 } from "@/lib/common";
 
-export const getInvoiceInfo = async (invoiceId: string, businessId: bigint) => {
+export const getInvoiceInfo = async (invoiceId: string, businessId: string) => {
   return await db.query.invoices.findFirst({
     where: and(
-      eq(invoices.id, BigInt(invoiceId)),
+      eq(invoices.id, invoiceId),
       eq(invoices.business_id, businessId)
     ),
     with: {
@@ -114,7 +114,7 @@ const handler = async (user: User, params: paramsType) => {
       })
       .where(
         and(
-          eq(invoices.id, BigInt(invoiceId)),
+          eq(invoices.id, invoiceId),
           eq(invoices.business_id, user.business_id!)
         )
       );

@@ -18,7 +18,7 @@ type parmaTypes = {
 const handler = async (user: User, params: parmaTypes) => {
   const { businessDetail, logo } = params;
 
-  const id = (await getBigIntId)[0].id_generator as bigint;
+  const id = String((await getBigIntId)[0].id_generator);
 
   const logoUrl: { logo?: string } = {};
 
@@ -27,7 +27,7 @@ const handler = async (user: User, params: parmaTypes) => {
   if (image) {
     const uploadedImageUrl = await createPublicBusinessImgUrl(
       id,
-      BigInt(user.id),
+      user.id,
       image
     );
 

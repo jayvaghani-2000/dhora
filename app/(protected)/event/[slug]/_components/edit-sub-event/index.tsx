@@ -77,7 +77,7 @@ const EditSubEvent = (
         start_time: getTimeFromDate(value.start_time),
         end_time: getTimeFromDate(value.end_time),
       },
-      subEventId: id as unknown as string,
+      subEventId: id as string,
     });
     if (res.success) {
       toast({
@@ -96,7 +96,7 @@ const EditSubEvent = (
   const handleDeleteEvent = async () => {
     setLoading(true);
     const res = await deleteSubEvent({
-      subEventId: id as unknown as string,
+      subEventId: id as string,
     });
     if (res.success) {
       toast({

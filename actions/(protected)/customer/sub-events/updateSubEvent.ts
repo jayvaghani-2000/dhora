@@ -27,9 +27,7 @@ const handler = async (user: User, params: parmaTypes) => {
         event_date: dateWithoutTime(event_date),
         ...rest,
       })
-      .where(
-        and(eq(subEvents.id, BigInt(subEventId)), eq(subEvents.deleted, false))
-      )
+      .where(and(eq(subEvents.id, subEventId), eq(subEvents.deleted, false)))
       .returning();
     return { success: true as true, data: stringifyBigint(subEventsDetail[0]) };
   } catch (err) {

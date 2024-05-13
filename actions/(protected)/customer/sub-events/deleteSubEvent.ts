@@ -23,9 +23,7 @@ const handler = async (user: User, params: parmaTypes) => {
       .set({
         deleted: true,
       })
-      .where(
-        and(eq(subEvents.id, BigInt(subEventId)), eq(subEvents.deleted, false))
-      )
+      .where(and(eq(subEvents.id, subEventId), eq(subEvents.deleted, false)))
       .returning();
 
     return { success: true as true, data: stringifyBigint(subEventsDetail[0]) };

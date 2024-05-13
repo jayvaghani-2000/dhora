@@ -18,7 +18,7 @@ const handler = async (user: User, bookingTypeId: string) => {
       })
       .where(
         and(
-          eq(bookingTypes.id, BigInt(bookingTypeId)),
+          eq(bookingTypes.id, bookingTypeId),
           eq(bookingTypes.business_id, user.business_id!)
         )
       );

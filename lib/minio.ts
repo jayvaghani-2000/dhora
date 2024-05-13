@@ -9,7 +9,7 @@ const mc = new Minio.Client({
   secretKey: config.env.S3_SECRET_KEY,
 });
 
-export function generatePublicAccess(business_id: bigint) {
+export function generatePublicAccess(business_id: string) {
   return {
     Effect: "Allow",
     Principal: {
@@ -20,7 +20,7 @@ export function generatePublicAccess(business_id: bigint) {
   };
 }
 
-export async function setPublicPolicy(business_id: bigint) {
+export async function setPublicPolicy(business_id: string) {
   const policyString = await mc.getBucketPolicy(
     config.env.NODE_ENV.toLowerCase()
   );
@@ -30,8 +30,8 @@ export async function setPublicPolicy(business_id: bigint) {
 }
 
 export async function createPublicBusinessImgUrl(
-  business_id: bigint,
-  user_id: bigint,
+  business_id: string,
+  user_id: string,
   img: File
 ) {
   const buffer = Buffer.from(await img.arrayBuffer());
@@ -44,8 +44,8 @@ export async function createPublicBusinessImgUrl(
 }
 
 export async function createPublicInvoicePdfUrl(
-  business_id: bigint,
-  user_id: bigint,
+  business_id: string,
+  user_id: string,
   file: File
 ) {
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -56,7 +56,7 @@ export async function createPublicInvoicePdfUrl(
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
-export async function createPublicProfileImgUrl(user_id: bigint, img: File) {
+export async function createPublicProfileImgUrl(user_id: string, img: File) {
   const buffer = Buffer.from(await img.arrayBuffer());
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
@@ -66,7 +66,7 @@ export async function createPublicProfileImgUrl(user_id: bigint, img: File) {
   return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
-export async function createPublicEventImgUrl(user_id: bigint, img: File) {
+export async function createPublicEventImgUrl(user_id: string, img: File) {
   const buffer = Buffer.from(await img.arrayBuffer());
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
@@ -77,8 +77,8 @@ export async function createPublicEventImgUrl(user_id: bigint, img: File) {
 }
 
 export async function createPublicBusinessAssetsImageUrl(
-  business_id: bigint,
-  user_id: bigint,
+  business_id: string,
+  user_id: string,
   img: File
 ) {
   const buffer = Buffer.from(await img.arrayBuffer());
@@ -94,8 +94,8 @@ export async function createPublicBusinessAssetsImageUrl(
 }
 
 export async function createPublicBusinessAssetsVideoUrl(
-  business_id: bigint,
-  user_id: bigint,
+  business_id: string,
+  user_id: string,
   video: File
 ) {
   const buffer = Buffer.from(await video.arrayBuffer());
@@ -111,7 +111,7 @@ export async function createPublicPackageAssetsImageUrl(
     business_id,
     package_id,
     user_id,
-  }: { business_id: bigint; user_id: bigint; package_id: bigint },
+  }: { business_id: string; user_id: string; package_id: string },
   img: File
 ) {
   const buffer = Buffer.from(await img.arrayBuffer());
@@ -131,7 +131,7 @@ export async function createPublicPackageAssetsVideoUrl(
     business_id,
     package_id,
     user_id,
-  }: { business_id: bigint; user_id: bigint; package_id: bigint },
+  }: { business_id: string; user_id: string; package_id: string },
   video: File
 ) {
   const buffer = Buffer.from(await video.arrayBuffer());

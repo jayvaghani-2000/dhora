@@ -83,10 +83,7 @@ const ScheduleCall = (props: propTypes) => {
                         </FormControl>
                         <SelectContent>
                           {events.map(i => (
-                            <SelectItem
-                              key={i.id}
-                              value={i.id as unknown as string}
-                            >
+                            <SelectItem key={i.id} value={i.id}>
                               {capitalize(i.title)}
                             </SelectItem>
                           ))}
@@ -111,10 +108,7 @@ const ScheduleCall = (props: propTypes) => {
                         </FormControl>
                         <SelectContent>
                           {subEvents!.map(i => (
-                            <SelectItem
-                              key={i.id}
-                              value={i.id as unknown as string}
-                            >
+                            <SelectItem key={i.id} value={i.id}>
                               {capitalize(i.title)}
                             </SelectItem>
                           ))}
@@ -149,7 +143,7 @@ const ScheduleCall = (props: propTypes) => {
                   </FormControl>
                   <SelectContent>
                     {packages!.map(i => (
-                      <SelectItem key={i.id} value={i.id as unknown as string}>
+                      <SelectItem key={i.id} value={i.id}>
                         {capitalize(i.name!)}
                       </SelectItem>
                     ))}
@@ -180,7 +174,7 @@ const ScheduleCall = (props: propTypes) => {
                   </FormControl>
                   <SelectContent>
                     {addOns!.map(i => (
-                      <SelectItem key={i.id} value={i.id as unknown as string}>
+                      <SelectItem key={i.id} value={i.id}>
                         {capitalize(i.name!)}
                       </SelectItem>
                     ))}

@@ -22,7 +22,7 @@ const BookingTypeCard = (props: propType) => {
 
   const handleDeleteBookingType = async () => {
     setLoading(true);
-    const res = await deleteBookingType(id as unknown as string);
+    const res = await deleteBookingType(id);
     if (res && !res.success) {
       toast({ title: res.error });
     } else {

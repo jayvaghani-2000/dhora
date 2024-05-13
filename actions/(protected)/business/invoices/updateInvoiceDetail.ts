@@ -31,7 +31,7 @@ const handler = async (
       })
       .where(
         and(
-          eq(invoices.id, BigInt(id)),
+          eq(invoices.id, id),
           eq(invoices.business_id, user.business_id!),
           eq(invoices.status, "draft")
         )

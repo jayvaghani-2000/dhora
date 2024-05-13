@@ -15,7 +15,7 @@ const handler = async (user: User, availabilityId: string) => {
     const [currentAvailability, firstAvailability] = await Promise.all([
       await db.query.availability.findFirst({
         where: and(
-          eq(availability.id, BigInt(availabilityId)),
+          eq(availability.id, availabilityId),
           eq(availability.business_id, user.business_id!)
         ),
       }),
@@ -23,7 +23,7 @@ const handler = async (user: User, availabilityId: string) => {
         where: and(
           eq(availability.business_id, user.business_id!),
           ne(availability.deleted, true),
-          ne(availability.id, BigInt(availabilityId))
+          ne(availability.id, availabilityId)
         ),
         orderBy: [asc(availability.created_at)],
         limit: 1,
@@ -50,7 +50,7 @@ const handler = async (user: User, availabilityId: string) => {
           .set({
             availability_id: firstAvailability[0].id,
           })
-          .where(and(eq(bookingTypes.availability_id, BigInt(availabilityId)))),
+          .where(and(eq(bookingTypes.availability_id, availabilityId))),
       ]);
     }
 
@@ -62,7 +62,7 @@ const handler = async (user: User, availabilityId: string) => {
       })
       .where(
         and(
-          eq(availability.id, BigInt(availabilityId)),
+          eq(availability.id, availabilityId),
           eq(availability.business_id, user.business_id!)
         )
       );

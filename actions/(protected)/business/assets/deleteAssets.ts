@@ -12,12 +12,7 @@ const handler = async (user: User, assetId: string[]) => {
   try {
     const deletedAssets = await db
       .delete(assets)
-      .where(
-        inArray(
-          assets.id,
-          assetId.map(i => BigInt(i))
-        )
-      )
+      .where(inArray(assets.id, assetId))
       .returning();
 
     await removeAsset(deletedAssets.map(i => i.url as string));

@@ -20,8 +20,8 @@ const handler = async (user: User, file: FormData) => {
 
     const image = file.get("image") as File;
     const uploadedImageUrl = await createPublicBusinessImgUrl(
-      user.business_id as bigint,
-      BigInt(user.id),
+      user.business_id as string,
+      user.id,
       image
     );
 
