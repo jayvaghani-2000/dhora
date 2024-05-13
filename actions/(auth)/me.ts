@@ -65,9 +65,12 @@ export const getUser = async (id: string) => {
       where: and(eq(users.id, id)),
       with: {
         business: true,
+        events: true,
       },
     }),
   ]);
+
+  console.log(stringifyBigint(userEvents), stringifyBigint(user));
 
   return user ? { ...user, events: userEvents } : undefined;
 };

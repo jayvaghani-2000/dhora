@@ -77,6 +77,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   events: many(events),
   assets: many(assets),
   bookings: many(bookings),
+  ratings: many(ratings),
 }));
 
 export const sessions = pgTable("session", {
@@ -121,6 +122,7 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   package_groups: many(packageGroups),
   add_on_groups: many(addOnsGroups),
   bookings: many(bookings),
+  ratings: many(ratings),
 }));
 
 export const contracts = pgTable("contracts", {
@@ -265,6 +267,7 @@ export const eventsRelations = relations(events, ({ many, one }) => ({
   invoices: many(invoices),
   sub_events: many(subEvents),
   bookings: many(bookings),
+  ratings: many(ratings),
 }));
 
 export const subEvents = pgTable("sub_events", {
@@ -520,6 +523,37 @@ export const bookingsRelations = relations(bookings, ({ one, many }) => ({
   package: one(packages, {
     fields: [bookings.package_id],
     references: [packages.id],
+  }),
+}));
+
+export const ratings = pgTable("ratings", {
+  id: bigint("id", { mode: "bigint" })
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  description: text("description"),
+  title: text("title"),
+  rating: doublePrecision("rating").notNull(),
+  business_id: bigint("business_id", { mode: "bigint" }).references(
+    () => businesses.id
+  ),
+  customer_id: text("customer_id").references(() => users.id),
+  event_id: bigint("event_id", { mode: "bigint" }).references(() => events.id),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const ratingsRelations = relations(ratings, ({ one, many }) => ({
+  business: one(businesses, {
+    fields: [ratings.business_id],
+    references: [businesses.id],
+  }),
+  customer: one(users, {
+    fields: [ratings.customer_id],
+    references: [users.id],
+  }),
+  event: one(events, {
+    fields: [ratings.event_id],
+    references: [events.id],
   }),
 }));
 
