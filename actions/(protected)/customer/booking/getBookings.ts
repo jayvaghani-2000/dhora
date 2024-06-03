@@ -8,11 +8,10 @@ import { eq, or } from "drizzle-orm";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 
-const getBooking = async (user: User) => {
-  if (user.business_id) {
+const getBooking = async (user: User, businessBooking: boolean) => {
+  if (businessBooking && user.business_id) {
     return await db.query.bookings.findMany({
       where: or(
-        eq(bookings.customer_id, user.id),
         eq(bookings.business_id, user.business_id)
       ),
       with: {
@@ -30,9 +29,9 @@ const getBooking = async (user: User) => {
   });
 };
 
-const handler = async (user: User) => {
+const handler = async (user: User, businessBooking: boolean) => {
   try {
-    const allBookings = await getBooking(user);
+    const allBookings = await getBooking(user, businessBooking);
 
     const pastBookings = allBookings.filter(booking => {
       const nowUtc = dayjs.utc();
@@ -63,5 +62,5 @@ const handler = async (user: User) => {
   }
 };
 
-export const getBookings: () => Promise<Awaited<ReturnType<typeof handler>>> =
+export const getBookings: (businessBooking: boolean) => Promise<Awaited<ReturnType<typeof handler>>> =
   validateToken(handler);

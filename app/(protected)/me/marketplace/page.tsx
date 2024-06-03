@@ -1,7 +1,13 @@
+import { getBusinesses } from "@/actions/(protected)/customer/businesses/getBusinesses";
 import React from "react";
+import MarketPlace from "./_components";
 
-const Marketplace = () => {
-  return <div>Marketplace</div>;
-};
+export default async function MarketplacePage() {
+  const businesses = await getBusinesses();
 
-export default Marketplace;
+  return businesses.success && businesses.data ? (
+    <MarketPlace businesses={businesses.data} />
+  ) : (
+    "No found"
+  );
+}

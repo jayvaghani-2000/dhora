@@ -26,6 +26,8 @@ const handler = async (user: User, params: parmaTypes) => {
   }
   const { businessId, time, duration, event } = params;
 
+  console.log(params)
+
   const { add_on_id, event_id, package_id, sub_event_id } = event;
 
   try {
@@ -43,7 +45,7 @@ const handler = async (user: User, params: parmaTypes) => {
         .returning();
 
       await Promise.all([
-        await tx
+        sub_event_id.length > 0 ? await tx
           .insert(bookingsSubEvents)
           .values(
             sub_event_id.map(i => ({
@@ -51,8 +53,8 @@ const handler = async (user: User, params: parmaTypes) => {
               sub_event_id: i,
             }))
           )
-          .returning(),
-        await tx
+          .returning() : () =>{},
+        package_id.length > 0 ? await tx
           .insert(bookingsPackages)
           .values(
             package_id.map(i => ({
@@ -60,8 +62,8 @@ const handler = async (user: User, params: parmaTypes) => {
               package_id: i,
             }))
           )
-          .returning(),
-        await tx
+          .returning(): () =>{},
+         add_on_id.length > 0 ? await tx
           .insert(bookingsAddOns)
           .values(
             add_on_id.map(i => ({
@@ -69,7 +71,7 @@ const handler = async (user: User, params: parmaTypes) => {
               add_on_id: i,
             }))
           )
-          .returning(),
+          .returning():() =>{},
       ]);
     });
 

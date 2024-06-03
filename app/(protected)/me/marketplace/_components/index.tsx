@@ -11,8 +11,6 @@ type propsType = {
 const MarketPlace = (props: propsType) => {
   const { businesses } = props;
 
-  console.log(businesses);
-
   return (
     <div className="flex gap-5 flex-col">
       <Filters />

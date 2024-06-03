@@ -174,7 +174,7 @@ const Schedular = (props: propType) => {
   };
 
   const handleCreateBookingType = async () => {
-    if (params.slug) {
+    if (!params.slug) {
       return toast({
         title: "You can't create booking with yourself",
       });
