@@ -9,7 +9,6 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { and, eq } from "drizzle-orm";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { dateWithoutTime, trimRichEditor } from "@/lib/common";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 type parmaTypes = {
   eventDetail: z.infer<typeof updateSubEventSchema>;
@@ -29,7 +28,7 @@ const handler = async (user: User, params: parmaTypes) => {
       })
       .where(and(eq(subEvents.id, subEventId), eq(subEvents.deleted, false)))
       .returning();
-    return { success: true as true, data: stringifyBigint(subEventsDetail[0]) };
+    return { success: true as true, data: subEventsDetail[0] };
   } catch (err) {
     return errorHandler(err);
   }

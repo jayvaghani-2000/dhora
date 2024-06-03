@@ -5,7 +5,6 @@ import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
-import { stringifyBigint } from "../_utils/stringifyBigint";
 import { TOKEN } from "@/cookie";
 import { errorType } from "@/actions/_utils/types.type";
 
@@ -26,7 +25,7 @@ export const me: (clientSide?: boolean) => Promise<
       const userInfo = await getUser(user.id);
 
       if (userInfo) {
-        return { success: true, data: stringifyBigint(userInfo) };
+        return { success: true, data: userInfo };
       } else {
         return { success: false, error: "Something went wrong!" };
       }

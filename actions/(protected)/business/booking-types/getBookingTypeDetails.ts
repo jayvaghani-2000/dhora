@@ -6,7 +6,6 @@ import { and, eq, ne } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { errorType } from "@/actions/_utils/types.type";
 
 const handler = async (user: User, bookingTypeId: string) => {
@@ -27,7 +26,7 @@ const handler = async (user: User, bookingTypeId: string) => {
     }
     return {
       success: true as true,
-      data: stringifyBigint(data),
+      data: data,
     };
   } catch (err) {
     return errorHandler(err);

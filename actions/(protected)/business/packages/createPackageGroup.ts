@@ -5,7 +5,6 @@ import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { createPackageGroupSchema } from "@/lib/schema";
 import { z } from "zod";
 import { revalidate } from "@/actions/(public)/revalidate";
@@ -27,7 +26,7 @@ const handler = async (user: User, value: paramsType) => {
 
     return {
       success: true as true,
-      data: stringifyBigint(data[0]),
+      data: data[0],
     };
   } catch (err) {
     return errorHandler(err);

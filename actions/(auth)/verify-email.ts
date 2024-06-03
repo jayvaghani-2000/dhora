@@ -7,7 +7,6 @@ import { Argon2id } from "oslo/password";
 import { lucia } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { stringifyBigint } from "../_utils/stringifyBigint";
 import { TOKEN } from "@/cookie";
 
 export const verifyEmail = async (
@@ -45,7 +44,7 @@ export const verifyEmail = async (
             .where(and(eq(users.email, user.email), eq(users.deleted, false)))
             .returning();
 
-          return { success: true, data: stringifyBigint(userInfo[0]) };
+          return { success: true, data: userInfo[0] };
         }
       } else {
         return { success: false, error: "Something went wrong!" };

@@ -17,29 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
+import { ScrollArea } from "../ui/scroll-area";
 
 type propType = {
   options: {
@@ -68,7 +46,7 @@ export function SearchableSelect(props: propType) {
           className="w-full justify-between"
         >
           <div className="flex w-full">
-            <div className="text-ellipsis overflow-hidden w-[calc(100%-24px)]">
+            <div className="text-ellipsis overflow-hidden w-[calc(100%-24px)] text-left">
               {value
                 ? options.find(option => option.value === value)?.label
                 : `Select ${placeholder}...`}
@@ -78,30 +56,32 @@ export function SearchableSelect(props: propType) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="max-w-[90dvw] w-full p-0">
-        <Command className="overflow-auto max-h-[300px]">
+        <Command className="max-h-[300px]">
           <CommandInput placeholder={`Search ${placeholder}...`} />
           <CommandEmpty>No {placeholder} found.</CommandEmpty>
-          <CommandGroup className="overflow-auto">
-            {options.map(option => {
-              return (
-                <CommandItem
-                  key={option.value}
-                  value={option.value}
-                  onSelect={() => {
-                    onChange(option.value);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {option.label}
-                </CommandItem>
-              );
-            })}
+          <CommandGroup>
+            <ScrollArea className="h-[246px]">
+              {options.map(option => {
+                return (
+                  <CommandItem
+                    key={option.value}
+                    value={option.value}
+                    onSelect={() => {
+                      onChange(option.value);
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === option.value ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {option.label}
+                  </CommandItem>
+                );
+              })}
+            </ScrollArea>
           </CommandGroup>
         </Command>
       </PopoverContent>

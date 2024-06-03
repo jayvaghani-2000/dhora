@@ -6,7 +6,6 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { db } from "@/lib/db";
 import { and, desc, eq } from "drizzle-orm";
 import { assets } from "@/db/schema";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (user: User, packageId: string) => {
   try {
@@ -18,7 +17,7 @@ const handler = async (user: User, packageId: string) => {
       orderBy: [desc(assets.created_at)],
     });
 
-    return { success: true as true, data: data.map(i => stringifyBigint(i)) };
+    return { success: true as true, data: data };
   } catch (err) {
     return errorHandler(err);
   }

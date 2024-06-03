@@ -20,6 +20,7 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         "primary-black": "hsl(var(--primary-black))",
+        "primary-gray": "hsl(var(--primary-gray))",
         "secondary-black": "hsl(var(--secondary-black))",
         "primary-light-gray": "hsl(var(--primary-light-gray))",
         "secondary-light-gray": "hsl(var(--secondary-light-gray))",

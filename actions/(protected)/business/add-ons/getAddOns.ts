@@ -2,17 +2,19 @@
 
 import { addOns } from "@/db/schema";
 import { db } from "@/lib/db";
-import { validateBusinessToken } from "@/actions/_utils/validateToken";
+import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { and, desc, eq } from "drizzle-orm";
 
-const handler = async (user: User) => {
+const handler = async (user: User, businessId?: string) => {
   try {
     const data = await db.query.addOns.findMany({
       where: and(
-        eq(addOns.business_id, user.business_id!),
+        eq(
+          addOns.business_id,
+          businessId ? businessId : (user.business_id as string)
+        ),
         eq(addOns.deleted, false)
       ),
       orderBy: [desc(addOns.updated_at)],
@@ -20,12 +22,13 @@ const handler = async (user: User) => {
 
     return {
       success: true as true,
-      data: data.map(i => stringifyBigint(i)),
+      data: data,
     };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getAddOns: () => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateBusinessToken(handler);
+export const getAddOns: (
+  businessId?: string
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);

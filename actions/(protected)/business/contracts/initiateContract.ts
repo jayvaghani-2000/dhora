@@ -8,7 +8,6 @@ import { config } from "@/config";
 import { db } from "@/lib/db";
 import { contracts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (user: User, templateId?: string) => {
   try {
@@ -33,7 +32,7 @@ const handler = async (user: User, templateId?: string) => {
 
         return {
           success: true as true,
-          data: { token, contract: stringifyBigint(contract) },
+          data: { token, contract: contract },
         };
       }
     }

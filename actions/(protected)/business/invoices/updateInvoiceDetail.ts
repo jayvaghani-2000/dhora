@@ -8,7 +8,6 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { and, eq } from "drizzle-orm";
 import { errorType } from "@/actions/_utils/types.type";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (
   user: User,
@@ -41,7 +40,7 @@ const handler = async (
     if (invoice && invoice[0]) {
       return {
         success: true as true,
-        data: stringifyBigint(invoice[0]),
+        data: invoice[0],
       };
     } else {
       return {

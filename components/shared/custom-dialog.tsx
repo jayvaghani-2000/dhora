@@ -81,7 +81,7 @@ const CustomDialog = (prop: propType) => {
       >
         {title ? (
           <DialogHeader>
-            <DialogTitle className="text-2xl border-b border-divider px-3 md:px-6 py-3">
+            <DialogTitle className="text-lg lg:text-2xl border-b border-divider px-3 md:px-6 py-3">
               {title}
             </DialogTitle>
           </DialogHeader>

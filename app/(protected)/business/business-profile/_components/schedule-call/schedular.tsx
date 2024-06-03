@@ -1,7 +1,7 @@
 import { getAvailabilityDetail } from "@/actions/(protected)/business/availability/getAvailabilityDetail";
 import {
   getAvailabilityDetailType,
-  getBookingTypesType,
+  getSubEventsType,
 } from "@/actions/_utils/types.type";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,6 +11,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import {
   Select,
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { scheduleCallSchema } from "@/lib/schema";
+import { createCallSchema, scheduleCallSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getDay, subDays } from "date-fns";
 import { capitalize } from "lodash";
@@ -40,15 +41,19 @@ import { formatDate, timeZone } from "@/lib/common";
 import { getTimeSlots } from "@/actions/(protected)/customer/booking/getTimeSlot";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { getSubEvents } from "@/actions/(protected)/customer/sub-events/getSubEvents";
 import clsx from "clsx";
 import { useToast } from "@/components/ui/use-toast";
 import { createBooking } from "@/actions/(protected)/customer/booking/createBooking";
 import { useAuthStore } from "@/provider/store/authentication";
+import ScheduleCall from ".";
+import MultiSelect from "@/components/shared/multi-select";
+import { useParams } from "next/navigation";
 
-type propType = Partial<React.ComponentProps<typeof CustomDialog>> & {
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  bookingTypes: getBookingTypesType["data"];
-};
+type propType = Partial<React.ComponentProps<typeof CustomDialog>> &
+  React.ComponentProps<typeof ScheduleCall> & {
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  };
 
 type valueType = {
   timezone: string | null;
@@ -71,14 +76,30 @@ const defaultValue = {
 } as valueType;
 
 const Schedular = (props: propType) => {
-  const { open = false, setOpen, bookingTypes } = props;
+  const { open = false, setOpen, user, addOns, packages, bookingTypes } = props;
   const { toast } = useToast();
-  const [values, setValues] = useState(defaultValue);
   const { profile } = useAuthStore();
+  const params = useParams();
+  const [activeStep, setActiveStep] = useState(1);
+  const [subEvents, setSubEvents] = useState([] as getSubEventsType["data"]);
+  const [values, setValues] = useState(defaultValue);
 
   const handleCloseModal = () => {
     setOpen(false);
   };
+
+  const events = user?.events || [];
+
+  const collectPackageInfo = useForm<z.infer<typeof createCallSchema>>({
+    resolver: zodResolver(createCallSchema),
+    defaultValues: {
+      package_id: [],
+      event_id: undefined,
+      add_on_id: [],
+      sub_event_id: [],
+    },
+    reValidateMode: "onChange",
+  });
 
   const form = useForm<z.infer<typeof scheduleCallSchema>>({
     resolver: zodResolver(scheduleCallSchema),
@@ -140,9 +161,10 @@ const Schedular = (props: propType) => {
     date: Date
   ) => {
     const res = await getTimeSlots({
-      date: date as Date,
+      date: date,
       timezone: timezone,
       bookingTypeId: bookingId,
+      businessId: (params.slug as string) ?? (profile!.business_id as string),
     });
     if (res.success) {
       setValues(prev => ({ ...prev, dayAvailableSlot: res.data ?? [] }));
@@ -152,6 +174,11 @@ const Schedular = (props: propType) => {
   };
 
   const handleCreateBookingType = async () => {
+    if (params.slug) {
+      return toast({
+        title: "You can't create booking with yourself",
+      });
+    }
     if (!values.selectedSlot) {
       return toast({
         title: "Please select time slot",
@@ -159,15 +186,17 @@ const Schedular = (props: propType) => {
     } else {
       await form.trigger();
       const value = form.getValues();
+      const event = collectPackageInfo.getValues();
 
       const selectedBookingType = bookingTypes!.find(
         i => i.id === value.booking_type_id
       );
 
       const res = await createBooking({
-        businessId: profile!.business_id as string,
+        businessId: params.slug as string,
         time: values.selectedSlot,
         duration: selectedBookingType!.duration as number,
+        event: event,
       });
 
       if (res.success) {
@@ -227,154 +256,295 @@ const Schedular = (props: propType) => {
   return (
     <CustomDialog
       open={open}
-      title="Schedule A Call"
+      title={activeStep === 1 ? "Select Event and Packages" : "Schedule A Call"}
       className="w-[1200px]"
       onClose={() => {
         handleCloseModal();
       }}
       onSubmit={async () => {
-        await handleCreateBookingType();
+        if (activeStep === 1) {
+          await collectPackageInfo.trigger();
+          if (collectPackageInfo.formState.isValid) {
+            setActiveStep(2);
+          }
+        } else {
+          await handleCreateBookingType();
+        }
       }}
+      saveText={activeStep === 1 ? "Next" : "Save"}
     >
-      <Form {...form}>
-        <FormField
-          control={form.control}
-          name="booking_type_id"
-          render={({ field }) => {
-            const selectedBookingType = bookingTypes!.find(
-              i => i.id === field.value
-            );
-
-            return (
-              <div>
-                <FormItem className="max-w-[300px]">
-                  <FormLabel>Booking type</FormLabel>
-                  <Select
-                    onValueChange={e => {
-                      field.onChange(e);
-                      getAvailability(e);
-                    }}
-                    defaultValue={field.value!}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            <span className="text-muted-foreground ">
-                              Select booking type
-                            </span>
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {bookingTypes!.map(i => (
-                        <SelectItem key={i.id} value={i.id}>
-                          {capitalize(i.title)} ({i.duration} mins)
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-                <Separator className="my-2" />
-                <div className="flex-1 justify-between flex gap-2 flex-row w-full">
-                  <div className="flex-1">
-                    {selectedBookingType ? (
-                      <div className="flex flex-col gap-1">
-                        <div className={titlesFonts}>
-                          {selectedBookingType.title}
-                        </div>
-
-                        <RichEditor
-                          value={selectedBookingType.description}
-                          readOnly
-                        />
-
-                        <div className="flex items-center gap-1 md:text-xs text-white bg-primary-light-gray w-fit px-1 font-semibold py-0.5 rounded-sm">
-                          <FaRegClock className="h-3 w-3" />
-                          <span>{selectedBookingType.duration} mins</span>
-                        </div>
-
-                        {values.availability ? (
-                          <div className="flex flex-col  text-secondary-light-gray mt-3">
-                            {availabilityAsString(values.availability, {
-                              locale: "en",
-                              hour12: true,
-                            }).map(i => (
-                              <span className={graySubtitleFonts} key={i}>
-                                {i}
-                              </span>
-                            ))}
-                            <div className="max-w-full lg:max-w-[300px] mr-auto mt-4">
-                              <Label>Timezone</Label>
-                              <TimezoneSelect
-                                value={values.timezone!}
-                                onChange={value => {
-                                  handleChangeTimezone(
-                                    value,
-                                    selectedBookingType!.id
-                                  );
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ) : null}
+      <ScrollArea>
+        {activeStep === 1 ? (
+          <Form {...collectPackageInfo}>
+            <div className="flex-1 flex gap-2 flex-col w-full max-w-[600px] m-auto">
+              <FormLabel>Events Detail</FormLabel>
+              <FormField
+                control={collectPackageInfo.control}
+                name="event_id"
+                render={({ field }) => (
+                  <FormField
+                    control={collectPackageInfo.control}
+                    name="sub_event_id"
+                    render={({ field: sub_event_field }) => (
+                      <div className=" flex gap-2 flex-col lg:flex-row ">
+                        <FormItem className="flex-1">
+                          <Select
+                            onValueChange={async value => {
+                              field.onChange(value);
+                              sub_event_field.onChange([]);
+                              const res = await getSubEvents(value);
+                              if (res.success) {
+                                setSubEvents(res.data!);
+                              }
+                            }}
+                            defaultValue={field.value!}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue
+                                  placeholder={
+                                    <span className="text-muted-foreground ">
+                                      Select event
+                                    </span>
+                                  }
+                                />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {events.map(i => (
+                                <SelectItem key={i.id} value={i.id}>
+                                  {capitalize(i.title)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                        <FormItem className="flex-1">
+                          {subEvents!.length > 0 ? (
+                            <MultiSelect
+                              options={subEvents!.map(i => ({
+                                label: capitalize(i.title!),
+                                value: i.id,
+                              }))}
+                              onChange={values => {
+                                sub_event_field.onChange(values);
+                              }}
+                              value={sub_event_field.value}
+                              placeholder="sub events"
+                            />
+                          ) : null}
+                        </FormItem>
                       </div>
-                    ) : (
-                      <Skeleton className="h-[34px] lg:h-[38px] w-full" />
                     )}
-                  </div>
-                  <Separator orientation="vertical" className="h-auto" />
-                  <Calendar
-                    mode="single"
-                    disabled={date => {
-                      if (date < subDays(new Date(), 1)) {
-                        return true;
-                      } else {
-                        return !values.activeDays.includes(getDay(date));
-                      }
-                    }}
-                    onSelect={async date => {
-                      if (date) {
-                        setValues(prev => ({
-                          ...prev,
-                          meetDate: date,
-                          selectedSlot: null,
-                          loading: true,
-                        }));
-                        await handleGetAvailabilitySlot(
-                          values.timezone as string,
-                          selectedBookingType!.id,
-                          date
-                        );
-                        setValues(prev => ({
-                          ...prev,
-                          loading: false,
-                        }));
-                      } else {
-                        setValues(prev => ({
-                          ...prev,
-                          meetDate: date,
-                          dayAvailableSlot: [],
-                        }));
-                      }
-                    }}
-                    selected={values.meetDate}
-                    className="flex-1 flex justify-center"
                   />
-                  <Separator orientation="vertical" className="h-auto" />
-                  <ScrollArea className="flex-1 max-h-[300px] px-5">
-                    <div className="sticky top-0 bg-background text-sm md:text-base font-semibold ">
-                      {formatDate(values.meetDate ?? new Date())}
-                    </div>
-                    <div className="flex flex-col gap-1 mt-2">{getSlots()}</div>
-                  </ScrollArea>
-                </div>
+                )}
+              />
+              <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-full mx-auto my-5" />
+              <FormLabel>Packages and Add-ons</FormLabel>
+              <div className=" flex gap-x-2 flex-col lg:flex-row ">
+                <FormField
+                  control={collectPackageInfo.control}
+                  name="package_id"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 h-fit">
+                      <MultiSelect
+                        options={packages!.map(i => ({
+                          label: capitalize(i.name!),
+                          value: i.id,
+                        }))}
+                        onChange={values => {
+                          field.onChange(values);
+                        }}
+                        value={field.value}
+                        placeholder="packages"
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={collectPackageInfo.control}
+                  name="add_on_id"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 h-fit">
+                      <MultiSelect
+                        options={addOns!.map(i => ({
+                          label: capitalize(i.name!),
+                          value: i.id,
+                        }))}
+                        onChange={values => {
+                          field.onChange(values);
+                        }}
+                        value={field.value}
+                        placeholder="add-ons"
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-            );
-          }}
-        />
-      </Form>
+            </div>
+          </Form>
+        ) : null}
+      </ScrollArea>
+      {activeStep === 2 ? (
+        <Form {...form}>
+          <FormField
+            control={form.control}
+            name="booking_type_id"
+            render={({ field }) => {
+              const selectedBookingType = bookingTypes!.find(
+                i => i.id === field.value
+              );
+
+              return (
+                <div>
+                  <FormItem className="max-w-[300px]">
+                    <FormLabel>Booking type</FormLabel>
+                    <Select
+                      onValueChange={e => {
+                        field.onChange(e);
+                        getAvailability(e);
+                      }}
+                      defaultValue={field.value!}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={
+                              <span className="text-muted-foreground ">
+                                Select booking type
+                              </span>
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {bookingTypes!.map(i => (
+                          <SelectItem key={i.id} value={i.id}>
+                            {capitalize(i.title)} ({i.duration} mins)
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                  <Separator className="my-2" />
+                  <div className="flex-1 justify-between flex gap-2 flex-col lg:flex-row w-full">
+                    <div className="flex-1">
+                      {selectedBookingType ? (
+                        <div className="flex flex-col gap-1">
+                          <div className={titlesFonts}>
+                            {selectedBookingType.title}
+                          </div>
+
+                          <RichEditor
+                            value={selectedBookingType.description}
+                            readOnly
+                          />
+
+                          <div className="flex items-center gap-1 md:text-xs text-white bg-primary-light-gray w-fit px-1 font-semibold py-0.5 rounded-sm">
+                            <FaRegClock className="h-3 w-3" />
+                            <span>{selectedBookingType.duration} mins</span>
+                          </div>
+
+                          {values.availability ? (
+                            <div className="flex flex-col  text-secondary-light-gray mt-3">
+                              {availabilityAsString(values.availability, {
+                                locale: "en",
+                                hour12: true,
+                              }).map(i => (
+                                <span className={graySubtitleFonts} key={i}>
+                                  {i}
+                                </span>
+                              ))}
+                              <div className="max-w-full lg:max-w-[300px] mr-auto mt-4">
+                                <Label>Timezone</Label>
+                                <TimezoneSelect
+                                  value={values.timezone!}
+                                  onChange={value => {
+                                    handleChangeTimezone(
+                                      value,
+                                      selectedBookingType!.id
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : (
+                        <Skeleton className="h-[34px] lg:h-[38px] w-full" />
+                      )}
+                    </div>
+                    <Separator
+                      orientation="vertical"
+                      className="h-auto hidden lg:block"
+                    />
+                    <Separator
+                      orientation="horizontal"
+                      className="w-auto block lg:hidden"
+                    />
+                    <Calendar
+                      mode="single"
+                      disabled={date => {
+                        if (date < subDays(new Date(), 1)) {
+                          return true;
+                        } else {
+                          return !values.activeDays.includes(getDay(date));
+                        }
+                      }}
+                      onSelect={async date => {
+                        if (date) {
+                          setValues(prev => ({
+                            ...prev,
+                            meetDate: date,
+                            selectedSlot: null,
+                            loading: true,
+                          }));
+                          await handleGetAvailabilitySlot(
+                            values.timezone as string,
+                            selectedBookingType!.id,
+                            date
+                          );
+                          setValues(prev => ({
+                            ...prev,
+                            loading: false,
+                          }));
+                        } else {
+                          setValues(prev => ({
+                            ...prev,
+                            meetDate: date,
+                            dayAvailableSlot: [],
+                          }));
+                        }
+                      }}
+                      selected={values.meetDate}
+                      className="flex-1 flex justify-center"
+                    />
+                    <Separator
+                      orientation="vertical"
+                      className="h-auto hidden lg:block"
+                    />
+                    <Separator
+                      orientation="horizontal"
+                      className="w-auto block lg:hidden"
+                    />
+                    <ScrollArea className="flex-1 max-h-[360px] px-5">
+                      <div className="sticky top-0 bg-background text-sm md:text-base font-semibold ">
+                        {formatDate(values.meetDate ?? new Date())}
+                      </div>
+                      <div className="flex flex-col gap-1 mt-2">
+                        {getSlots()}
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </div>
+              );
+            }}
+          />
+        </Form>
+      ) : null}
     </CustomDialog>
   );
 };

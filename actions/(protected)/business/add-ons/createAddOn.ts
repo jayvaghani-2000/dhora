@@ -6,7 +6,6 @@ import { addOns, createAddOnSchema } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
 import { trimRichEditor } from "@/lib/common";
@@ -29,7 +28,7 @@ const handler = async (
       })
       .returning();
 
-    return { success: true as true, data: stringifyBigint(data[0]) };
+    return { success: true as true, data: data[0] };
   } catch (err) {
     return errorHandler(err);
   }

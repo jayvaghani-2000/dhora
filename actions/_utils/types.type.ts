@@ -26,6 +26,9 @@ import { getSubEvents } from "../(protected)/customer/sub-events/getSubEvents";
 import { getAddOnGroups } from "../(protected)/business/add-ons/getAddOnGroups";
 import { getAddOns } from "../(protected)/business/add-ons/getAddOns";
 import { getAddOnDetails } from "../(protected)/business/add-ons/getAddOnDetails";
+import { getBusinesses } from "../(protected)/customer/businesses/getBusinesses";
+import { getBookings } from "../(protected)/customer/booking/getBookings";
+import { getBusinessDetails } from "../(protected)/business/getBusinessDetails";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -106,6 +109,12 @@ export type getAddOnsDetailsType = NonNullable<
   Awaited<ReturnType<typeof getAddOnDetails>>
 >;
 
+export type getBusinessesType = NonNullable<Awaited<ReturnType<typeof getBusinesses>>>;
+export type getBookingsType = NonNullable<Awaited<ReturnType<typeof getBookings>>>;
+
+export type getBusinessDetailsType = NonNullable<
+  Awaited<ReturnType<typeof getBusinessDetails>>
+>;
 export enum businessTypes {
   "Event Planner",
   "Venue",
@@ -127,4 +136,9 @@ export enum packageSingleUnitTypes {
   "days" = "day",
   "hours" = "hour",
   "peoples" = "person",
+}
+export enum businessFilter {
+  "a-z" = "a-z",
+  "z-a" = "z-a",
+  "rating" = "rating",
 }

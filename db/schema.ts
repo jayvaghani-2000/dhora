@@ -119,6 +119,7 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   packages: many(packages),
   package_groups: many(packageGroups),
   add_on_groups: many(addOnsGroups),
+  add_ons: many(addOns),
   bookings: many(bookings),
   ratings: many(ratings),
 }));
@@ -173,12 +174,17 @@ export const invoices = pgTable("invoices", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   invoice: text("invoice"),
   notes: text("notes"),
+  event_id: text("event_id").references(() => events.id),
 });
 
 export const invoicesRelations = relations(invoices, ({ one }) => ({
   business: one(businesses, {
     fields: [invoices.business_id],
     references: [businesses.id],
+  }),
+  event: one(events, {
+    fields: [invoices.event_id],
+    references: [events.id],
   }),
 }));
 
@@ -268,6 +274,7 @@ export const eventsRelations = relations(events, ({ many, one }) => ({
     references: [users.id],
   }),
   invoices: many(invoices),
+  contracts: many(contracts),
   sub_events: many(subEvents),
   bookings: many(bookings),
   ratings: many(ratings),
@@ -322,7 +329,7 @@ export const assetsRelations = relations(assets, ({ one }) => ({
     references: [users.id],
   }),
   business: one(businesses, {
-    fields: [assets.user_id],
+    fields: [assets.business_id],
     references: [businesses.id],
   }),
   package: one(packages, {
@@ -478,9 +485,6 @@ export const bookings = pgTable("bookings", {
   time: text("time"),
   end: text("end"),
   event_id: text("event_id").references(() => events.id),
-  sub_event_id: text("sub_event_id").references(() => subEvents.id),
-  add_on_id: text("add_on_id").references(() => addOns.id),
-  package_id: text("package_id").references(() => packages.id),
   duration: integer("duration"),
   deleted: boolean("deleted").default(false),
   created_at: timestamp("created_at").defaultNow().notNull(),
@@ -500,18 +504,9 @@ export const bookingsRelations = relations(bookings, ({ one, many }) => ({
     fields: [bookings.event_id],
     references: [events.id],
   }),
-  sub_event: one(subEvents, {
-    fields: [bookings.sub_event_id],
-    references: [subEvents.id],
-  }),
-  add_on: one(addOns, {
-    fields: [bookings.add_on_id],
-    references: [addOns.id],
-  }),
-  package: one(packages, {
-    fields: [bookings.package_id],
-    references: [packages.id],
-  }),
+  bookings_sub_events: many(bookingsSubEvents),
+  bookings_packages: many(bookingsPackages),
+  bookings_add_ons: many(bookingsAddOns),
 }));
 
 export const ratings = pgTable("ratings", {
@@ -541,6 +536,66 @@ export const ratingsRelations = relations(ratings, ({ one, many }) => ({
   event: one(events, {
     fields: [ratings.event_id],
     references: [events.id],
+  }),
+}));
+
+export const bookingsSubEvents = pgTable("bookings_sub_events", {
+  booking_id: text("booking_id").references(() => bookings.id, {
+    onDelete: "cascade",
+  }),
+  sub_event_id: text("sub_event_id").references(() => subEvents.id, {
+    onDelete: "cascade",
+  }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const bookingsSubEventsRelations = relations(
+  bookingsSubEvents,
+  ({ one, many }) => ({
+    booking: one(bookings, {
+      fields: [bookingsSubEvents.booking_id],
+      references: [bookings.id],
+    }),
+  })
+);
+
+export const bookingsPackages = pgTable("bookings_packages", {
+  booking_id: text("booking_id").references(() => bookings.id, {
+    onDelete: "cascade",
+  }),
+  package_id: text("package_id").references(() => packages.id, {
+    onDelete: "cascade",
+  }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const bookingsPackagesRelations = relations(
+  bookingsPackages,
+  ({ one }) => ({
+    booking: one(bookings, {
+      fields: [bookingsPackages.booking_id],
+      references: [bookings.id],
+    }),
+  })
+);
+
+export const bookingsAddOns = pgTable("bookings_add_ons", {
+  booking_id: text("booking_id").references(() => bookings.id, {
+    onDelete: "cascade",
+  }),
+  add_on_id: text("add_on_id").references(() => addOns.id, {
+    onDelete: "cascade",
+  }),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const bookingsAddOnsRelations = relations(bookingsAddOns, ({ one }) => ({
+  booking: one(bookings, {
+    fields: [bookingsAddOns.booking_id],
+    references: [bookings.id],
   }),
 }));
 

@@ -10,6 +10,7 @@ const routesWithoutNavbar = [
   "/settings/details",
   "/settings/business",
   "/settings",
+  "/room",
 ];
 
 type propType = {

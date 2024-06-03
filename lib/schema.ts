@@ -167,10 +167,10 @@ export const createAddOnGroupSchema = z.object({
 });
 
 export const createCallSchema = z.object({
-  event_id: z.string(),
-  sub_event_id: z.string(),
-  package_id: z.string(),
-  add_on_id: z.string(),
+  event_id: z.string().min(6, { message: "Select an event" }),
+  sub_event_id: z.string().array(),
+  package_id: z.string().array().min(1, { message: "Select and packages" }),
+  add_on_id: z.string().array(),
 });
 
 export const scheduleCallSchema = z.object({

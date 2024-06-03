@@ -10,7 +10,7 @@ ALTER TABLE "contracts" DROP CONSTRAINT "contracts_business_id_business_id_fk";
 ALTER TABLE "invoices" DROP CONSTRAINT "invoices_business_id_business_id_fk";
 ALTER TABLE "package_groups" DROP CONSTRAINT "package_groups_business_id_business_id_fk";
 ALTER TABLE "ratings" DROP CONSTRAINT "ratings_business_id_business_id_fk";
-
+ALTER TABLE "users" DROP CONSTRAINT "users_business_id_business_id_fk";
 
 
 ALTER TABLE "add_ons" ALTER COLUMN "business_id" SET DATA TYPE text;--> statement-breakpoint
@@ -100,5 +100,10 @@ ALTER TABLE "package_groups"
 
 ALTER TABLE "ratings"
   ADD CONSTRAINT "ratings_business_id_business_id_fk"
+  FOREIGN KEY ("business_id")
+  REFERENCES "business" ("id");
+
+ALTER TABLE "users"
+  ADD CONSTRAINT "users_business_id_business_id_fk"
   FOREIGN KEY ("business_id")
   REFERENCES "business" ("id");

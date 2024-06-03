@@ -6,7 +6,6 @@ import { and, desc, eq, ne } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { z } from "zod";
 
 type paramsType = {
@@ -35,11 +34,11 @@ const handler = async (user: User, params: paramsType) => {
 
       return {
         success: true as true,
-        data: data.map(i => stringifyBigint(i)),
+        data: data,
       };
     }
 
-    return { success: true as true, data: data.map(i => stringifyBigint(i)) };
+    return { success: true as true, data: data };
   } catch (err) {
     return errorHandler(err);
   }

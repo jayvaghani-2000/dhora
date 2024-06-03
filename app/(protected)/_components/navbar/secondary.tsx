@@ -19,6 +19,7 @@ import { CgProfile } from "react-icons/cg";
 import { IoIosImage } from "react-icons/io";
 import { GoPackage } from "react-icons/go";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { LuCalendar } from "react-icons/lu";
 
 export const StaticOptions = [
   {
@@ -29,6 +30,12 @@ export const StaticOptions = [
         title: "Marketplace",
         icon: <BsShop />,
         path: "/@me/marketplace",
+      },
+      {
+        key: "bookings",
+        title: "Bookings",
+        icon: <LuCalendar />,
+        path: "/@me/bookings",
       },
     ],
   },
@@ -46,6 +53,12 @@ export const StaticOptions = [
         title: "Invoices",
         icon: <LiaFileInvoiceDollarSolid />,
         path: "/business/invoices",
+      },
+      {
+        key: "bookings",
+        title: "Bookings",
+        icon: <LuCalendar />,
+        path: "/business/bookings",
       },
       {
         key: "availability",
@@ -120,7 +133,7 @@ const Secondary = (prop: propType) => {
   const path = usePathname();
   const key = StaticOptions.findIndex(o => path.startsWith(`/${o.key}`));
   const route = StaticOptions[key];
-  const options = route.options;
+  const options = route?.options;
 
   if (!options) return null;
 

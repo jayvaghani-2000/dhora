@@ -39,17 +39,17 @@ const SelectedPackage = (prop: propType) => {
 
   return (
     <Tabs defaultValue="description" className="relative flex flex-col h-full">
-      <div className="flex relative justify-between items-center gap-5 bg-muted">
-        <div className="pl-3 pr-1 text-white font-medium text-base">
+      <div className="p-1 flex flex-col lg:flex-row relative justify-between items-center gap-1 lg:gap-5 bg-muted min-h-10">
+        <div className="pl-3 pr-1 text-white font-medium text-sm">
           {packageDetail.name}
         </div>
-        <TabsList className="absolute overflow-auto flex items-start justify-start max-w-full w-fit scrollbar-hide   top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <TabsList className="lg:absolute overflow-auto flex items-start justify-start max-w-full w-fit scrollbar-hide   top-1/2 left-1/2 transform lg:-translate-x-1/2 lg:-translate-y-1/2">
           <TabsTrigger value="description">Description</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
           <TabsTrigger value="pricing">Pricing</TabsTrigger>
         </TabsList>
-        <div className="h-10">
-          {!readOnly ? (
+        {!readOnly ? (
+          <div className="absolute lg:relative right-0">
             <>
               <Button
                 variant="ghost"
@@ -57,9 +57,12 @@ const SelectedPackage = (prop: propType) => {
                   handleDeletePackage();
                 }}
                 disabled={deleting}
-                className="px-2"
+                className="p-1"
               >
-                <RiDeleteBin6Line color="#fff" className="h-6 w-6" />
+                <RiDeleteBin6Line
+                  color="#fff"
+                  className="h-4 lg:h-6 w-4 lg:w-6"
+                />
               </Button>
               <Button
                 variant="ghost"
@@ -67,13 +70,16 @@ const SelectedPackage = (prop: propType) => {
                   router.push(`packages/${packageDetail.id}`);
                 }}
                 disabled={deleting}
-                className="px-2"
+                className="p-1"
               >
-                <MdOutlineModeEdit color="#fff" className="h-6 w-6" />
+                <MdOutlineModeEdit
+                  color="#fff"
+                  className="h-4 lg:h-6 w-4 lg:w-6"
+                />
               </Button>
             </>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
       </div>
       <TabsContent value="description" className="flex-1">
         <Description {...prop} />

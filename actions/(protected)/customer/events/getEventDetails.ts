@@ -6,7 +6,6 @@ import { db } from "@/lib/db";
 import { validateToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { and, eq } from "drizzle-orm";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { errorType } from "@/actions/_utils/types.type";
 
 const handler = async (user: User, eventId: string) => {
@@ -20,7 +19,7 @@ const handler = async (user: User, eventId: string) => {
     }
     return {
       success: true as true,
-      data: stringifyBigint(eventDetail),
+      data: eventDetail,
     };
   } catch (err) {
     return errorHandler(err);

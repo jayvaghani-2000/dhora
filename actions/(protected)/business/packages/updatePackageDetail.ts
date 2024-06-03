@@ -8,7 +8,6 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { and, eq } from "drizzle-orm";
 import { errorType } from "@/actions/_utils/types.type";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { editPackageSchema } from "@/db/schema";
 import { trimRichEditor } from "@/lib/common";
 import { revalidate } from "@/actions/(public)/revalidate";
@@ -65,7 +64,7 @@ const handler = async (user: User, values: paramType) => {
     if (updatedPackage && updatedPackage[0]) {
       return {
         success: true as true,
-        data: stringifyBigint(updatedPackage[0]),
+        data: updatedPackage[0],
       };
     } else {
       return {

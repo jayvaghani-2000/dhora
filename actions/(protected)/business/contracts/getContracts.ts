@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 
 const handler = async (user: User) => {
   try {
@@ -14,7 +13,7 @@ const handler = async (user: User) => {
       where: eq(contracts.business_id, user.business_id!),
     });
 
-    return { success: true as true, data: data.map(i => stringifyBigint(i)) };
+    return { success: true as true, data: data };
   } catch (err) {
     return errorHandler(err);
   }

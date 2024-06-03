@@ -5,8 +5,8 @@ import { validateToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { db } from "@/lib/db";
 import dayjs from "@/lib/dayjs";
-import { and, eq } from "drizzle-orm";
-import { bookingTypes } from "@/db/schema";
+import { and, eq, or } from "drizzle-orm";
+import { bookings, bookingTypes, users } from "@/db/schema";
 import { dateWithoutTime } from "@/lib/common";
 import { timeSlotsUtc } from "@/lib/schedule";
 import { createAvailabilitySchemaType } from "@/actions/_utils/types.type";
@@ -15,10 +15,27 @@ type parmaTypes = {
   timezone: string;
   bookingTypeId: string;
   date: Date;
+  businessId: string;
 };
 
 const handler = async (user: User, params: parmaTypes) => {
-  const { timezone, bookingTypeId, date } = params;
+  const { timezone, bookingTypeId, date, businessId } = params;
+
+  const getBusinessUser = await db.query.users.findFirst({
+    where: eq(users.business_id, businessId),
+  });
+
+  if (!getBusinessUser) {
+    throw new Error("Error fetching available slots");
+  }
+  const usersBookings = await db.query.bookings.findMany({
+    where: or(
+      eq(bookings.customer_id, user.id),
+      eq(bookings.business_id, user.business_id ?? businessId),
+      eq(bookings.business_id, businessId),
+      eq(bookings.customer_id, getBusinessUser.id)
+    ),
+  });
 
   const bookingType = await db.query.bookingTypes.findFirst({
     where: and(
@@ -53,10 +70,16 @@ const handler = async (user: User, params: parmaTypes) => {
     bookingTypeDetail.availability.timezone!
   );
 
+  const filteredAvailableSlots = filterOutOccupiedSlots(
+    availableDaySlots,
+    usersBookings.map(i => ({ end_time: i.end!, start_time: i.time! })),
+    duration
+  );
+
   try {
     return {
       success: true,
-      data: availableDaySlots,
+      data: filteredAvailableSlots,
     };
   } catch (err) {
     return errorHandler(err);
@@ -91,6 +114,29 @@ const isFallInGivenTimeSlot = (
       return (
         (localTime.isSame(startTime) || localTime.isAfter(startTime)) &&
         localTime.isBefore(endTime)
+      );
+    });
+  });
+};
+
+const filterOutOccupiedSlots = (
+  slots: string[],
+  bookings: { start_time: string; end_time: string }[],
+  duration: number
+) => {
+  return slots.filter(slot => {
+    const slotStart = dayjs.utc(slot);
+    const slotEnd = slotStart.add(duration, "minutes");
+
+    return !bookings.some(period => {
+      const startTime = dayjs.utc(period.start_time);
+      const endTime = dayjs.utc(period.end_time);
+
+      return (
+        ((slotStart.isSame(startTime) || slotStart.isAfter(startTime)) &&
+          slotStart.isBefore(endTime)) ||
+        ((slotEnd.isSame(startTime) || slotEnd.isAfter(startTime)) &&
+          slotEnd.isBefore(endTime))
       );
     });
   });

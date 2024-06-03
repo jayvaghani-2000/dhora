@@ -35,7 +35,7 @@ const Primary = (props: propType) => {
 
   return (
     <>
-      <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
+      <div className="space-y-2 flex flex-col items-center h-full text-primary w-full dark:bg-primary-gray bg-[#E3E5E8] py-3">
         <PrimaryNavbarItem
           path="/@me"
           key="/@me"

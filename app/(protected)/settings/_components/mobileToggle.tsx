@@ -15,7 +15,7 @@ export const MobileToggle = () => {
         <RiMenu5Fill />
       </SheetTrigger>
       <SheetContent side="left" className="p-0 flex gap-0">
-        <div className="space-y-2 flex flex-col h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-5  px-3">
+        <div className="space-y-2 flex flex-col h-full text-primary w-full dark:bg-primary-gray bg-[#E3E5E8] py-5  px-3">
           {staticOptions.map(i => (
             <Link key={i.key} href={i.path}>
               <button

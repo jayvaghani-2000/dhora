@@ -6,7 +6,6 @@ import { and, eq } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { redirect } from "next/navigation";
 import { DEFAULT_BUSINESS_LOGIN_REDIRECT } from "@/routes";
 import { errorType } from "@/actions/_utils/types.type";
@@ -30,7 +29,7 @@ const handler = async (user: User, { id, mode = "view" }: paramsType) => {
     if (mode === "edit" && data?.status !== "draft") {
       return { success: false, error: "Unable to update invoice" } as errorType;
     } else {
-      return { success: true as true, data: stringifyBigint(data) };
+      return { success: true as true, data: data };
     }
   } catch (err) {
     return errorHandler(err);

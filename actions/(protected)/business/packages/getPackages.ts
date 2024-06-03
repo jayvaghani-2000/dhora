@@ -2,17 +2,19 @@
 
 import { packages } from "@/db/schema";
 import { db } from "@/lib/db";
-import { validateBusinessToken } from "@/actions/_utils/validateToken";
+import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-import { stringifyBigint } from "@/actions/_utils/stringifyBigint";
 import { and, desc, eq } from "drizzle-orm";
 
-const handler = async (user: User) => {
+const handler = async (user: User, businessId?: string) => {
   try {
     const data = await db.query.packages.findMany({
       where: and(
-        eq(packages.business_id, user.business_id!),
+        eq(
+          packages.business_id,
+          businessId ? businessId : (user.business_id as string)
+        ),
         eq(packages.deleted, false)
       ),
       with: {
@@ -23,12 +25,13 @@ const handler = async (user: User) => {
 
     return {
       success: true as true,
-      data: data.map(i => stringifyBigint(i)),
+      data: data,
     };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getPackages: () => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateBusinessToken(handler);
+export const getPackages: (
+  businessId?: string
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);

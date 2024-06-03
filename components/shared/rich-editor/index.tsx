@@ -30,7 +30,7 @@ const RichEditor = (props: propType) => {
       className={clsx({
         quillWrapper: !readOnly,
         "readOnly-quillWrapper text-base": readOnly,
-        readOnlyClass: !!readOnlyClass,
+        [readOnlyClass]: !!readOnlyClass,
       })}
     >
       <ReactQuill

@@ -21,6 +21,7 @@ export const assetsMetadata = async (buffer: Buffer) => {
 
   const preview = await img
     .resize(resizeWidth, resizeHeight, { fit: "cover" })
+    .blur(3)
     .toBuffer();
   const dataUrl = `data:image/${meta.format};base64,${preview.toString("base64")}`;
 

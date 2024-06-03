@@ -1,23 +1,21 @@
 "use client";
-import { profileType } from "@/actions/_utils/types.type";
+import { getBusinessDetailsType } from "@/actions/_utils/types.type";
 import RichEditor from "@/components/shared/rich-editor";
 import { Separator } from "@/components/ui/separator";
 import { CiLocationOn } from "react-icons/ci";
 
-type propTypes = { user: profileType };
+type propTypes = { business: getBusinessDetailsType["data"] };
 
 const BusinessDetails = (props: propTypes) => {
-  const { user } = props;
+  const { business } = props;
   return (
     <div>
-      <span className="font-bold text-2xl lg:text-4xl">
-        {user?.business?.name}
-      </span>
+      <span className="font-bold text-2xl lg:text-4xl">{business?.name}</span>
 
-      {user?.business?.address ? (
+      {business?.address ? (
         <div className="flex gap-1 items-center mt-1">
           <CiLocationOn className="h-4 w-4" />
-          <span className="font-normal text-xs">{user?.business?.address}</span>
+          <span className="font-normal text-xs">{business?.address}</span>
         </div>
       ) : null}
 
@@ -25,7 +23,7 @@ const BusinessDetails = (props: propTypes) => {
 
       <div className="flex flex-col  text-white ">
         <RichEditor
-          value={user?.business?.description ?? ""}
+          value={business?.description ?? ""}
           readOnly
           readOnlyClass=""
         />
