@@ -14,11 +14,11 @@ const MarketPlace = (props: propsType) => {
   return (
     <div className="flex gap-5 flex-col">
       <Filters />
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
-        {businesses!.data.map(business => (
+      {businesses!.data? <div className="grid gap-4 grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
+        {businesses!.data?.map(business => (
           <BusinessCard key={business.id} business={business} />
         ))}
-      </div>
+      </div>: <div className="text-center">No businesses found</div>}
     </div>
   );
 };

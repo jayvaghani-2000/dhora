@@ -103,7 +103,7 @@ function MultiSelect(prop: propType) {
       </div>
       <div className="relative mt-0.5 z-50">
         {open && selectables.length > 0 ? (
-          <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+          <div className="relative w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
             <CommandGroup className="h-full overflow-auto">
               <ScrollArea className="h-[200px]">
                 {selectables.map(option => {

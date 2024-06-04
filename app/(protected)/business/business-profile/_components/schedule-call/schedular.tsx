@@ -342,7 +342,7 @@ const Schedular = (props: propType) => {
               />
               <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-full mx-auto my-5" />
               <FormLabel>Packages and Add-ons</FormLabel>
-              <div className=" flex gap-x-2 flex-col lg:flex-row ">
+              <div className=" flex gap-x-2 gap-y-2 flex-col lg:flex-row ">
                 <FormField
                   control={collectPackageInfo.control}
                   name="package_id"

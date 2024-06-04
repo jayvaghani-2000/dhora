@@ -107,6 +107,7 @@ const Filters = () => {
               form={methods}
               fieldName="city"
               placeholder="City"
+              popover
             />
           </div>
         </div>
