@@ -5,7 +5,7 @@ export default async function BookingsPage() {
   const res = await getBookings(false);
 
   return res.success ? (
-    <UserBookings bookings={res.data} />
+    <UserBookings bookings={res.data} isButtonVisible={false} />
   ) : (
     <span>{res.error}</span>
   );

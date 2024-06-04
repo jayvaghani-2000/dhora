@@ -17,6 +17,7 @@ const getBooking = async (user: User, businessBooking: boolean) => {
       with: {
         business: true,
         event: true,
+        customer: true
       },
     });
   }
@@ -25,6 +26,7 @@ const getBooking = async (user: User, businessBooking: boolean) => {
     with: {
       business: true,
       event: true,
+      customer: true
     },
   });
 };

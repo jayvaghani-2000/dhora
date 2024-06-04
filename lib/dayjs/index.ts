@@ -9,6 +9,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timeZone from "dayjs/plugin/timezone";
 import toArray from "dayjs/plugin/toArray";
 import utc from "dayjs/plugin/utc";
+import advanced from "dayjs/plugin/advancedFormat"
+
 
 dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
@@ -20,6 +22,7 @@ dayjs.extend(toArray);
 dayjs.extend(utc);
 dayjs.extend(minmax);
 dayjs.extend(duration);
+dayjs.extend(advanced);
 
 export type Dayjs = dayjs.Dayjs;
 

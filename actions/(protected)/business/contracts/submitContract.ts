@@ -6,7 +6,7 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
 
-type paramsType = { templateId: string; email: string };
+type paramsType = { templateId: string; email: string; event_id?: string };
 
 const handler = async (user: User, data: paramsType) => {
   let options = {
@@ -22,7 +22,7 @@ const handler = async (user: User, data: paramsType) => {
       submitters: [
         {
           email: data.email,
-          external_id: user.business_id?.toString(), // event_id
+          external_id: data.event_id!.toString() ?? "", // event_id
         },
       ],
     },

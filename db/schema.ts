@@ -700,6 +700,7 @@ export const createInvoiceSchema = createInsertSchema(invoices)
         },
         { message: "Tax is invalid" }
       ),
+      event_id:z.string(),
     })
   );
 

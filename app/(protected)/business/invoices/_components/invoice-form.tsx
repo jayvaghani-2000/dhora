@@ -28,7 +28,7 @@ import {
   generateBreakdownPrice,
   stringCasting,
 } from "@/lib/common";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { profileType } from "@/actions/_utils/types.type";
 import { updateInvoiceDetail } from "@/actions/(protected)/business/invoices/updateInvoiceDetail";
@@ -36,6 +36,7 @@ import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { revalidate } from "@/actions/(public)/revalidate";
 import InvoicePdf from "./../_components/invoice-pdf/index";
 import { DatePicker } from "@/components/shared/date-picker";
+import { getBookingCustomer } from "@/actions/(protected)/customer/booking/getBookingCustomer";
 
 type propType =
   | {
@@ -53,6 +54,8 @@ const InvoiceForm = (props: propType) => {
   const { user, mode = "CREATE", invoiceData } = props;
   const [loading, setLoading] = useState(false);
   const params = useParams();
+  const searchParams = useSearchParams();
+  const bookingId = searchParams.get("bookingId");
   const { toast } = useToast();
   const [file, setFile] = useState(user?.business?.logo ?? "");
   const [updatedItem, setUpdatedItem] = useState(0);
@@ -71,6 +74,7 @@ const InvoiceForm = (props: propType) => {
             address: user?.business?.address ?? "",
             email: user?.email ?? "",
             contact: user?.business?.contact ?? "",
+            event_id: "",
             customer_name: "",
             customer_email: "",
             customer_contact: "",
@@ -112,6 +116,20 @@ const InvoiceForm = (props: propType) => {
     setValue("total", total);
     setValue("subtotal", subtotal);
   }, [updatedItem, items, tax, setValue, form]);
+
+  useEffect(() => {
+    async function customerGet() {
+      const data = await getBookingCustomer(bookingId!);
+      if (data?.data?.customer) {
+        form.setValue("customer_name", data.data.customer.name);
+        form.setValue("customer_email", data.data.customer.email);
+        form.setValue("event_id", data?.data?.event?.id!);
+      }
+    }
+    if (bookingId) {
+      customerGet();
+    }
+  }, [bookingId, form]);
 
   async function onSubmit(
     values: z.infer<typeof invoiceSchema>,
