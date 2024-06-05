@@ -2,7 +2,7 @@
 import { getInvoicesResponseType } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { formatAmount, formatDate } from "@/lib/common";
-import React from "react";
+import React, { useState } from "react";
 import { CustomTable } from "@/components/shared/custom-table";
 import { ArrowUpDown } from "lucide-react";
 import { isWithinInterval } from "date-fns";
@@ -16,6 +16,7 @@ import { invoiceStatusTypeEnum } from "@/db/schema";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
+  showAction: boolean
 };
 
 const statusMode = invoiceStatusTypeEnum.enumValues;
@@ -53,13 +54,13 @@ const ExtraFilters = (props: extraFilterPropType) => {
         value={
           table.getColumn("created_on")?.getFilterValue()
             ? JSON.parse(
-                (table.getColumn("created_on")?.getFilterValue() as string) ??
-                  ""
-              )
+              (table.getColumn("created_on")?.getFilterValue() as string) ??
+              ""
+            )
             : {
-                from: undefined,
-                to: undefined,
-              }
+              from: undefined,
+              to: undefined,
+            }
         }
         placeholder="Pick a created on date"
       />
@@ -76,12 +77,12 @@ const ExtraFilters = (props: extraFilterPropType) => {
         value={
           table.getColumn("due_date")?.getFilterValue()
             ? JSON.parse(
-                (table.getColumn("due_date")?.getFilterValue() as string) ?? ""
-              )
+              (table.getColumn("due_date")?.getFilterValue() as string) ?? ""
+            )
             : {
-                from: undefined,
-                to: undefined,
-              }
+              from: undefined,
+              to: undefined,
+            }
         }
         placeholder="Pick a due date"
       />
@@ -163,7 +164,7 @@ const ExtraFilters = (props: extraFilterPropType) => {
 };
 
 const Invoices = (props: propType) => {
-  const { invoices } = props;
+  const { invoices, showAction } = props;
 
   const parsedInvoices: recordType[] = invoices!.map(i => ({
     id: String(i.id),
@@ -306,15 +307,17 @@ const Invoices = (props: propType) => {
         );
       },
     },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        return <Actions row={row} />;
-      },
-    },
+
   ];
 
+  const actionColumn = {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }: any) => {
+      return <Actions row={row} />;
+    },
+  }
+  {showAction && columns.push(actionColumn)}
   return parsedInvoices.length > 0 ? (
     <CustomTable
       data={[...parsedInvoices]}

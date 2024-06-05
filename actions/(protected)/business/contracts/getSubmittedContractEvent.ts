@@ -6,16 +6,17 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
 import { SubmittedTemplateType } from "./_utils/submittedContract.type";
+import { SubmittedEventTemplateType } from "./_utils/submittedContractEvent.type";
 
 type paramsType = { event_id: string };
 
 const handler = async (user: User, data: paramsType) => {
   const { event_id } = data;
 
-  console.log("event id::",event_id)
+  console.log("event id::", event_id)
   try {
-    const data = [] as SubmittedTemplateType["data"];
-    let dataThisTime = [] as SubmittedTemplateType["data"];
+    const data = [] as SubmittedEventTemplateType["data"];
+    let dataThisTime = [] as SubmittedEventTemplateType["data"];
     let next = 0;
     do {
       const options = {
@@ -26,16 +27,25 @@ const handler = async (user: User, data: paramsType) => {
         headers: { "X-Auth-Token": config.env.DOCU_SEAL },
       };
 
-      const res: { data: SubmittedTemplateType } = await axios.request(options);
+      const res: { data: SubmittedEventTemplateType } = await axios.request(options);
 
       next = res.data.pagination.next;
       data.push(...res.data.data);
       dataThisTime = res.data.data;
-      console.log("data :: ",dataThisTime[0].submitters)
     } while (dataThisTime.length > 0);
 
-    return { success: true as true, data: data.filter(i => !i.archived_at) };
+
+    const filteredData = data.filter((item) => {
+      return item.submitters.some((submitter) => {
+        return submitter.external_id === event_id;
+      });
+    });
+
+    return {
+      success: true as true, data: filteredData
+    };
   } catch (err) {
+    console.log("error ::", err);
     return errorHandler(err);
   }
 };

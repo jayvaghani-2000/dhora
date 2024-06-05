@@ -12,7 +12,7 @@ export default async function ContractsPage() {
       <Templates template={data} />
 
       {submittedContract.success ? (
-        <SubmittedContract templates={submittedContract.data} />
+        <SubmittedContract templates={submittedContract.data} showAction={true}/>
       ) : null}
     </div>
   );

@@ -17,7 +17,7 @@ export default async function InvoicesPage() {
         </Link>
       </div>
 
-      {result.success ? <Invoices invoices={result.data} /> : null}
+      {result.success ? <Invoices invoices={result.data} showAction={true}/> : null}
     </div>
   );
 }

@@ -29,6 +29,7 @@ import { getAddOnDetails } from "../(protected)/business/add-ons/getAddOnDetails
 import { getBusinesses } from "../(protected)/customer/businesses/getBusinesses";
 import { getBookings } from "../(protected)/customer/booking/getBookings";
 import { getBusinessDetails } from "../(protected)/business/getBusinessDetails";
+import { getSubmittedContractsEvent } from "../(protected)/business/contracts/getSubmittedContractEvent";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -50,6 +51,11 @@ export type submitContractResponseType = Awaited<
 export type getSubmittedContractResponseType = Awaited<
   ReturnType<typeof getSubmittedContracts>
 >;
+
+export type getSubmittedContractEventResponseType = Awaited<
+  ReturnType<typeof getSubmittedContractsEvent>
+>;
+
 export type getInvoicesResponseType = Awaited<ReturnType<typeof getInvoices>>;
 export type getInvoicesDetailResponseType = Awaited<
   ReturnType<typeof getInvoiceDetail>
