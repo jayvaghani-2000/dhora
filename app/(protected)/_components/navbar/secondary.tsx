@@ -20,6 +20,7 @@ import { IoIosImage } from "react-icons/io";
 import { GoPackage } from "react-icons/go";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { LuCalendar } from "react-icons/lu";
+import { MdOutlineReviews } from "react-icons/md";
 
 export const StaticOptions = [
   {
@@ -120,6 +121,12 @@ export const StaticOptions = [
         title: "Itinerary",
         icon: <IoIosArrowDropdown />,
         path: "itinerary",
+      },
+      {
+        key: "Reviews",
+        title: "Reviews",
+        icon: <MdOutlineReviews />,
+        path: "reviews",
       },
     ],
   },

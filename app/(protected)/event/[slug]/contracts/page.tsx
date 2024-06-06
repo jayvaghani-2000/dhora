@@ -8,9 +8,6 @@ type propType = { params: { slug: string }; };
 const Contracts = async (prop: propType) => {
 
   const data = await getSubmittedContractsEvent({ event_id: prop.params.slug })
-
-  console.log("data ::", data.data);
-
   return data.success ? <SubmittedContract templates={data.data!} showAction={false}/> : null
 }
 

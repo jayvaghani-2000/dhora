@@ -30,6 +30,8 @@ import { getBusinesses } from "../(protected)/customer/businesses/getBusinesses"
 import { getBookings } from "../(protected)/customer/booking/getBookings";
 import { getBusinessDetails } from "../(protected)/business/getBusinessDetails";
 import { getSubmittedContractsEvent } from "../(protected)/business/contracts/getSubmittedContractEvent";
+import { getEmailAndEvent } from "../(protected)/business/contracts/getEmailAndEvent";
+import { getBookingCustomer } from "../(protected)/customer/booking/getBookingCustomer";
 
 export type errorType = { success: false; error: string; data?: never };
 
@@ -120,6 +122,14 @@ export type getBookingsType = NonNullable<Awaited<ReturnType<typeof getBookings>
 
 export type getBusinessDetailsType = NonNullable<
   Awaited<ReturnType<typeof getBusinessDetails>>
+>;
+
+export type getEmailAndEventType = NonNullable<
+  Awaited<ReturnType<typeof getEmailAndEvent>>
+>;
+
+export type getUserDetailsType = NonNullable<
+  Awaited<ReturnType<typeof getBookingCustomer>>
 >;
 export enum businessTypes {
   "Event Planner",

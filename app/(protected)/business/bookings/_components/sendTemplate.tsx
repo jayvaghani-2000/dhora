@@ -48,18 +48,19 @@ type Contract = {
 };
 
 const SendTemplate = (prop: propType) => {
-  const { onClose, open, customer_data , event_data } = prop;
+  const { onClose, open, customer_data, event_data } = prop;
   const navigate = useRouter();
   // const params = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [contract, setContract] = useState<Contract[]>([]);
   const [error, setError] = useState("");
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getContracts();
         const data = response.data;
+
         setContract(data!)
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -79,7 +80,7 @@ const SendTemplate = (prop: propType) => {
     form.reset();
     onClose();
   };
-  
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const selectedContract = contract.find(item => item.id === values.contract);
@@ -87,10 +88,10 @@ const SendTemplate = (prop: propType) => {
       setError("Invalid contract selected.");
       return;
     }
-    
+
     setLoading(true);
     const res: submitContractResponseType = await submitContract({
-      email:customer_data.email!.toString(),
+      email: customer_data.email!.toString(),
       templateId: selectedContract.template_id!.toString(),
       event_id: event_data.id!.toString()
     });
