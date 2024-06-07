@@ -1,24 +1,17 @@
-import { Button } from '@/components/ui/button'
-import React from 'react'
+'use server'
+import { getReviews } from "@/actions/(protected)/business/reviews/getReviews";
+import Reviews from "../_components/reviews/reviews"
+import { getEventBusiness } from "@/actions/(protected)/customer/events/getEventBusiness";
 
-const Reviews = () => {
+type propType = { params: { slug: string }; };
+
+const ReviewPage = async (prop: propType) => {
+  const response = await getReviews();
+  const data = response.data;
+  const eventBusinessData = await getEventBusiness({ event_id: prop.params.slug })
   return (
-    <div>
-      <div className="flex items-center justify-between space-x-4 px-4">
-        <h4 className="text-sm font-semibold">Reviews</h4>
-        <div>
-          <Button variant="ghost" size="sm" className="p-4">
-            <span className="mr-2 text-sm text-muted text-zinc-400">
-              Add Reviews
-            </span>
-          </Button>
-        </div>
-      </div>
-
-      
-
-    </div>
+    <Reviews reviews={data!} businessData={eventBusinessData!}/>
   )
 }
 
-export default Reviews
+export default ReviewPage

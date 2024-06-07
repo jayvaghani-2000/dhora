@@ -5,15 +5,12 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
-import { SubmittedTemplateType } from "./_utils/submittedContract.type";
 import { SubmittedEventTemplateType } from "./_utils/submittedContractEvent.type";
 
 type paramsType = { event_id: string };
 
 const handler = async (user: User, data: paramsType) => {
   const { event_id } = data;
-
-  console.log("event id::", event_id)
   try {
     const data = [] as SubmittedEventTemplateType["data"];
     let dataThisTime = [] as SubmittedEventTemplateType["data"];
@@ -40,7 +37,6 @@ const handler = async (user: User, data: paramsType) => {
         return submitter.external_id === event_id;
       });
     });
-
     return {
       success: true as true, data: filteredData
     };

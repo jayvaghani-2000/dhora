@@ -56,6 +56,7 @@ export interface Template {
   name: string;
   created_at: Date;
   updated_at: Date;
+  folder_name: string;
 }
 
 export interface Pagination {

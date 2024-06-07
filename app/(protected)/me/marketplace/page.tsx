@@ -5,7 +5,6 @@ import MarketPlace from "./_components";
 export default async function MarketplacePage() {
   const businesses = await getBusinesses();
 
-
   return businesses.success ? (
     <MarketPlace businesses={businesses.data} />
   ) : (

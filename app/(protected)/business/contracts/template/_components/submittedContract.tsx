@@ -89,9 +89,6 @@ const ExtraFilters = (props: extraFilterPropType) => {
 
 const SubmittedContract = (props: propType) => {
   const { templates, showAction } = props;
-
-  console.log(templates)
-
   const parsedTemplate: recordType[] = templates!.map(i => ({
     name: i.template.name,
     submitter_email: i.submitters[0].email,
