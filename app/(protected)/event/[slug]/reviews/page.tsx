@@ -6,19 +6,17 @@ import { getEventBusiness } from "@/actions/(protected)/customer/events/getEvent
 type propType = { params: { slug: string } };
 
 const ReviewPage = async (prop: propType) => {
-  const response = await getReviews(prop.params.slug as string);
+  const [response, eventBusinessData] = await Promise.all([await getReviews(prop.params.slug as string), await getEventBusiness({ event_id: prop.params.slug }) ])
   const data = response.data;
-  let eventBusinessData = await getEventBusiness({
-    event_id: prop.params.slug,
-  });
-
   const businessIdsInReviews = new Set(data!.map(review => review.business_id));
 
-  const filteredEventBusinessData = eventBusinessData!.filter(
+  const filteredEventBusinessData = eventBusinessData.data!.filter(
     business => !businessIdsInReviews.has(business.id)
   );
 
-  return <Reviews reviews={data!} businessData={filteredEventBusinessData!} />;
-};
+  return (
+    <Reviews reviews={data!} businessData={filteredEventBusinessData!}/>
+  )
+}
 
 export default ReviewPage;

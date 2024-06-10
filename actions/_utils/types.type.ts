@@ -138,6 +138,9 @@ export type getEmailAndEventType = NonNullable<
 export type getUserDetailsType = NonNullable<
   Awaited<ReturnType<typeof getBookingCustomer>>
 >;
+export type getReviewsType = NonNullable<
+  Awaited<ReturnType<typeof getReviews>>
+>;
 export enum businessTypes {
   "Event Planner",
   "Venue",

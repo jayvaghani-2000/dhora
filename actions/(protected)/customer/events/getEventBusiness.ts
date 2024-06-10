@@ -5,6 +5,7 @@ import { getSubmittedContractsEvent } from "../../business/contracts/getSubmitte
 import { getInvoicesByEvent } from "../../business/invoices/getInvoiceByEvent";
 import { businesses } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
+import { errorHandler } from "@/actions/_utils/errorHandler";
 
 type paramType = { event_id: string };
 
@@ -27,15 +28,28 @@ export const getEventBusiness = async (params: paramType) => {
       new Set([...uniqueFolderNames, ...uniqueBusinessId])
     );
 
-    const businessDetails = await db.query.businesses.findMany({
-      where: inArray(businesses.id, mergedUniqueValues),
-      columns: {
-        name: true,
-        id: true,
-      },
-    });
-    return businessDetails;
+    if (mergedUniqueValues.length > 0) {
+      const businessDetails = await db.query.businesses.findMany({
+        where: inArray(businesses.id, mergedUniqueValues),
+        columns: {
+          name: true,
+          id: true,
+        },
+      });
+      return {
+        success: true as true,
+        data: businessDetails,
+      };
+    }
+
+    return {
+      success: true as true,
+      data: [] as {
+        name: string;
+        id: string;
+      }[],
+    };
   } catch (error) {
-    console.log(error);
+    return errorHandler(error)
   }
 };

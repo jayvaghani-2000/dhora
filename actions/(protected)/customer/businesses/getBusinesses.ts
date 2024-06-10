@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { SQL, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
@@ -120,14 +120,10 @@ const handler = async (user: User, params: paramsType) => {
 
     const totalPage = Math.ceil(data.length / BusinessInPage);
 
-    console.log("totalPage::", totalPage);
-    console.log("filteredData::", filteredData);
-
     const currentPageData = filteredData.splice(
       BusinessInPage * (current_page - 1),
       BusinessInPage
     );
-    console.log("currentPageData::", currentPageData, current_page);
 
     return {
       success: true as true,

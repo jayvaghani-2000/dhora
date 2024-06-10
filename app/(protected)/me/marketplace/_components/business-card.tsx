@@ -8,12 +8,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import React from "react";
-import StarRating from "./star-rating";
 import RichEditor from "@/components/shared/rich-editor";
 import { CiLocationOn } from "react-icons/ci";
 import Link from "next/link";
 import { allowedImageType } from "@/lib/constant";
 import { IoMdPlayCircle } from "react-icons/io";
+import RatingWrapper from "@/components/shared/rating";
 
 type propsType = {
   business: getBusinessesType["data"]["data"][0];
@@ -98,9 +98,11 @@ const BusinessCard = (props: propsType) => {
         </div>
         <div className="flex items-center justify-between w-full flex-wrap">
           <div className="flex gap-1 items-center">
-            <StarRating
-              rating={business.rating_info.average_rating}
-              maxRating={5}
+            <RatingWrapper
+              fractions={10}
+              initialRating={business.rating_info.average_rating.toFixed(1)}
+              readonly={true}
+              onClick={() => {}}
             />
             <p>({business.rating_info.total_ratings})</p>
           </div>

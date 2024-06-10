@@ -11,7 +11,7 @@ const handler = async (user: User, eventId: string) => {
   try {
     const data = await db.query.ratings.findMany({
       where: eq(ratings.event_id, eventId!),
-      orderBy: [desc(ratings.updated_at)],
+      orderBy: [desc(ratings.created_at)],
       with: {
         customer: {
           columns: {
@@ -24,7 +24,7 @@ const handler = async (user: User, eventId: string) => {
 
     return { success: true as true, data: data };
   } catch (err) {
-    return errorHandler(err);
+    return {data: [] ,...errorHandler(err)};
   }
 };
 

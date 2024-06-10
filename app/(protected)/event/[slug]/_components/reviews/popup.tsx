@@ -20,13 +20,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
 import CustomDialog from "@/components/shared/custom-dialog";
-import { CiStar } from "react-icons/ci";
 import { Input } from "@/components/ui/input";
 import RichEditor from "@/components/shared/rich-editor";
-import Rating from "react-rating";
-import { FaStar } from "react-icons/fa6";
+import { FaStar, FaRegStar } from "react-icons/fa6";
 import { createReviews } from "@/actions/(protected)/business/reviews/createReviews";
 import { revalidate } from "@/actions/(public)/revalidate";
+import RatingWrapper from "@/components/shared/rating";
 
 const formSchema = z.object({
   business: z.string().nonempty({ message: "Business is required." }),
@@ -144,14 +143,14 @@ const SubmitReviewTamplate = (prop: propType) => {
           control={form.control}
           name="rating"
           render={({ field }) => (
-            <FormItem className="mt-3 flex flex-col justify-center text-3xl">
+            <FormItem className="mt-3 flex flex-col gap-0 justify-center text-3xl space-y-0">
               <FormLabel>Your Ratings</FormLabel>
               <FormControl>
-                <Rating
-                  emptySymbol={<CiStar />}
-                  fullSymbol={<FaStar />}
-                  fractions={2}
-                  onChange={rate => field.onChange(rate)}
+                <RatingWrapper
+                  initialRating={field.value}
+                  onClick={(value: number) => field.onChange(value)}
+                  readonly={false}
+                  fractions={1}
                 />
               </FormControl>
               <FormMessage />
@@ -165,7 +164,7 @@ const SubmitReviewTamplate = (prop: propType) => {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input type="text" {...field} />
+                <Input placeholder="Title" type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
