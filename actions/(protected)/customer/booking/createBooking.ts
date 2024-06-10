@@ -24,15 +24,21 @@ type paramTypes = {
   duration: number;
   event: z.infer<typeof createCallSchema>;
   availability_id: string;
-  customer_timezone: string
+  customer_timezone: string;
 };
-
 
 const handler = async (user: User, params: paramTypes) => {
   if (params.businessId === user.business_id) {
     throw new Error("You can't create booking with yourself");
   }
-  const { businessId, time, duration, event, availability_id, customer_timezone } = params;
+  const {
+    businessId,
+    time,
+    duration,
+    event,
+    availability_id,
+    customer_timezone,
+  } = params;
 
   const { add_on_id, event_id, package_id, sub_event_id } = event;
 
@@ -50,62 +56,68 @@ const handler = async (user: User, params: paramTypes) => {
         })
         .returning();
 
-        console.log(booking, sub_event_id,package_id,add_on_id  )
+      console.log(booking, sub_event_id, package_id, add_on_id);
 
       await Promise.all([
-        sub_event_id.length > 0 ? await tx
-          .insert(bookingsSubEvents)
-          .values(
-            sub_event_id.map(i => ({
-              booking_id: booking.id,
-              sub_event_id: i,
-            }))
-          )
-          .returning() : () => { },
-        package_id.length > 0 ? await tx
-          .insert(bookingsPackages)
-          .values(
-            package_id.map(i => ({
-              booking_id: booking.id,
-              package_id: i,
-            }))
-          )
-          .returning() : () => { },
-        add_on_id.length > 0 ? await tx
-          .insert(bookingsAddOns)
-          .values(
-            add_on_id.map(i => ({
-              booking_id: booking.id,
-              add_on_id: i,
-            }))
-          )
-          .returning() : () => { },
+        sub_event_id.length > 0
+          ? await tx
+              .insert(bookingsSubEvents)
+              .values(
+                sub_event_id.map(i => ({
+                  booking_id: booking.id,
+                  sub_event_id: i,
+                }))
+              )
+              .returning()
+          : () => {},
+        package_id.length > 0
+          ? await tx
+              .insert(bookingsPackages)
+              .values(
+                package_id.map(i => ({
+                  booking_id: booking.id,
+                  package_id: i,
+                }))
+              )
+              .returning()
+          : () => {},
+        add_on_id.length > 0
+          ? await tx
+              .insert(bookingsAddOns)
+              .values(
+                add_on_id.map(i => ({
+                  booking_id: booking.id,
+                  add_on_id: i,
+                }))
+              )
+              .returning()
+          : () => {},
       ]);
 
       const businessUser = await db.query.users.findFirst({
-        where: eq(users.business_id, businessId)
-      })
+        where: eq(users.business_id, businessId),
+      });
 
       const getEvent = await db.query.events.findFirst({
         columns: {
-          title: true
+          title: true,
         },
-        where: eq(events.id, event_id)
-      })
+        where: eq(events.id, event_id),
+      });
 
       const getPakages = await db.query.packages.findMany({
         columns: {
-          name: true
+          name: true,
         },
-        where: (fields, operators) => operators.inArray(fields.id, package_id)
-      })
+        where: (fields, operators) => operators.inArray(fields.id, package_id),
+      });
 
       const getBusinessTimeZone = await db.query.availability.findFirst({
         columns: {
-          timezone: true
+          timezone: true,
         },
-        where: eq(availability.id, availability_id)
-      })
+        where: eq(availability.id, availability_id),
+      });
 
       meetingMail(
         booking.id,
@@ -115,7 +127,7 @@ const handler = async (user: User, params: paramTypes) => {
         businessUser?.email!,
         getPakages,
         getEvent?.title!
-      )
+      );
 
       meetingMail(
         booking.id,
@@ -125,8 +137,7 @@ const handler = async (user: User, params: paramTypes) => {
         user.email,
         getPakages,
         getEvent?.title!
-      )
-
+      );
     });
 
     return {
@@ -134,7 +145,7 @@ const handler = async (user: User, params: paramTypes) => {
       data: "Booking created successfully.",
     };
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return errorHandler(err);
   }
 };

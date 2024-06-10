@@ -7,7 +7,7 @@ import { LuCalendar } from "react-icons/lu";
 
 type propType = {
   bookings: getBookingsType["data"];
-  isButtonVisible:boolean
+  isButtonVisible: boolean;
 };
 
 const UserBookings = (prop: propType) => {
@@ -25,7 +25,11 @@ const UserBookings = (prop: propType) => {
       <TabsContent value="upcoming" className="flex mt-0 flex-col gap-2">
         {upcomingBookings.length > 0 ? (
           upcomingBookings.map(booking => (
-            <BookingCard data={booking} key={booking.id} isButtonVisible={prop.isButtonVisible}  />
+            <BookingCard
+              data={booking}
+              key={booking.id}
+              isButtonVisible={prop.isButtonVisible}
+            />
           ))
         ) : (
           <div className="flex h-full">
@@ -43,7 +47,11 @@ const UserBookings = (prop: propType) => {
       <TabsContent value="past" className="flex mt-0 flex-col gap-2">
         {pastBookings.length > 0 ? (
           pastBookings.map(booking => (
-            <BookingCard data={booking} key={booking.id} isButtonVisible={prop.isButtonVisible} />
+            <BookingCard
+              data={booking}
+              key={booking.id}
+              isButtonVisible={prop.isButtonVisible}
+            />
           ))
         ) : (
           <div className="flex h-full">

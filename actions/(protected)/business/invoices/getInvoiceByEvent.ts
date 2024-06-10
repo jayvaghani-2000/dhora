@@ -7,7 +7,6 @@ import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 
-
 type paramTypes = {
   event_id: string;
 };
@@ -19,7 +18,7 @@ const handler = async (user: User, params: paramTypes) => {
       where: eq(invoices.event_id, event_id),
       orderBy: [desc(invoices.updated_at)],
     });
-    
+
     return { success: true as true, data: data };
   } catch (err) {
     return errorHandler(err);

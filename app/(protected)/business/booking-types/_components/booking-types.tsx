@@ -18,9 +18,7 @@ const BookingTypes = (props: propType) => {
         <BookingTypeCard key={i.id} data={i} />
       ))}
     </div>
-  ) : (
-    null
-  );
+  ) : null;
 };
 
 export default BookingTypes;

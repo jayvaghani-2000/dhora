@@ -7,18 +7,27 @@ import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 
-const handler = async (user: User) => {
+const handler = async (user: User, eventId: string) => {
   try {
     const data = await db.query.ratings.findMany({
-      where: eq(ratings.event_id, user.business_id!),
+      where: eq(ratings.event_id, eventId!),
       orderBy: [desc(ratings.updated_at)],
+      with: {
+        customer: {
+          columns: {
+            name: true,
+            image: true,
+          },
+        },
+      },
     });
-    
+
     return { success: true as true, data: data };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getReviews: () => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateToken(handler);
+export const getReviews: (
+  eventId?: string
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);

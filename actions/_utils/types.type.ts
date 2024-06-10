@@ -59,9 +59,7 @@ export type getSubmittedContractEventResponseType = Awaited<
   ReturnType<typeof getSubmittedContractsEvent>
 >;
 
-export type getReviewType = Awaited<
-  ReturnType<typeof getReviews>
->;
+export type getReviewType = Awaited<ReturnType<typeof getReviews>>;
 
 export type getInvoicesResponseType = Awaited<ReturnType<typeof getInvoices>>;
 export type getInvoicesDetailResponseType = Awaited<
@@ -122,8 +120,12 @@ export type getAddOnsDetailsType = NonNullable<
   Awaited<ReturnType<typeof getAddOnDetails>>
 >;
 
-export type getBusinessesType = NonNullable<Awaited<ReturnType<typeof getBusinesses>>>;
-export type getBookingsType = NonNullable<Awaited<ReturnType<typeof getBookings>>>;
+export type getBusinessesType = NonNullable<
+  Awaited<ReturnType<typeof getBusinesses>>
+>;
+export type getBookingsType = NonNullable<
+  Awaited<ReturnType<typeof getBookings>>
+>;
 
 export type getBusinessDetailsType = NonNullable<
   Awaited<ReturnType<typeof getBusinessDetails>>

@@ -11,26 +11,26 @@ const handler = async (user: User) => {
   try {
     const data = await db.query.bookings.findMany({
       where: eq(bookings.business_id, user.business_id!),
-      with:{
-        event:{
-          columns:{
-            title:true,
-            id:true
+      with: {
+        event: {
+          columns: {
+            title: true,
+            id: true,
           },
-         
         },
         customer: {
-            columns:{
-                email:true
-            }
-        }
-      }
-    }); 
+          columns: {
+            email: true,
+          },
+        },
+      },
+    });
     return { success: true as true, data: data };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getEmailAndEvent: () => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateBusinessToken(handler);
+export const getEmailAndEvent: () => Promise<
+  Awaited<ReturnType<typeof handler>>
+> = validateBusinessToken(handler);

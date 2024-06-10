@@ -12,7 +12,7 @@ type propType = {
   defaultValue?: string;
   fieldName: string;
   placeholder?: string;
-  popover?: boolean
+  popover?: boolean;
 };
 
 function PlacesAutocompleteInput({
@@ -22,7 +22,7 @@ function PlacesAutocompleteInput({
   defaultValue,
   fieldName,
   placeholder = "Address",
-  popover=false
+  popover = false,
 }: propType): React.ReactNode {
   const [isTouched, setIsTouched] = useState(false);
   const { mapScriptLoaded } = useGlobalStore();

@@ -79,12 +79,8 @@
           "name": "add_ons_business_id_business_id_fk",
           "tableFrom": "add_ons",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -92,12 +88,8 @@
           "name": "add_ons_add_on_group_id_add_ons_groups_id_fk",
           "tableFrom": "add_ons",
           "tableTo": "add_ons_groups",
-          "columnsFrom": [
-            "add_on_group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["add_on_group_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -107,10 +99,7 @@
         "unique_add_on_name": {
           "name": "unique_add_on_name",
           "nullsNotDistinct": false,
-          "columns": [
-            "business_id",
-            "name"
-          ]
+          "columns": ["business_id", "name"]
         }
       }
     },
@@ -165,12 +154,8 @@
           "name": "add_ons_groups_business_id_business_id_fk",
           "tableFrom": "add_ons_groups",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -180,10 +165,7 @@
         "unique_add_on_grouped_name": {
           "name": "unique_add_on_grouped_name",
           "nullsNotDistinct": false,
-          "columns": [
-            "business_id",
-            "name"
-          ]
+          "columns": ["business_id", "name"]
         }
       }
     },
@@ -273,12 +255,8 @@
           "name": "assets_business_id_business_id_fk",
           "tableFrom": "assets",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -286,12 +264,8 @@
           "name": "assets_user_id_users_id_fk",
           "tableFrom": "assets",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -299,12 +273,8 @@
           "name": "assets_package_id_packages_id_fk",
           "tableFrom": "assets",
           "tableTo": "packages",
-          "columnsFrom": [
-            "package_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["package_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -387,12 +357,8 @@
           "name": "availability_business_id_business_id_fk",
           "tableFrom": "availability",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -475,12 +441,8 @@
           "name": "booking_types_availability_id_availability_id_fk",
           "tableFrom": "booking_types",
           "tableTo": "availability",
-          "columnsFrom": [
-            "availability_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["availability_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -488,12 +450,8 @@
           "name": "booking_types_business_id_business_id_fk",
           "tableFrom": "booking_types",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -594,12 +552,8 @@
           "name": "bookings_business_id_business_id_fk",
           "tableFrom": "bookings",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -607,12 +561,8 @@
           "name": "bookings_customer_id_users_id_fk",
           "tableFrom": "bookings",
           "tableTo": "users",
-          "columnsFrom": [
-            "customer_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["customer_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -620,12 +570,8 @@
           "name": "bookings_event_id_events_id_fk",
           "tableFrom": "bookings",
           "tableTo": "events",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["event_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -633,12 +579,8 @@
           "name": "bookings_sub_event_id_sub_events_id_fk",
           "tableFrom": "bookings",
           "tableTo": "sub_events",
-          "columnsFrom": [
-            "sub_event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sub_event_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -646,12 +588,8 @@
           "name": "bookings_add_on_id_add_ons_id_fk",
           "tableFrom": "bookings",
           "tableTo": "add_ons",
-          "columnsFrom": [
-            "add_on_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["add_on_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -659,12 +597,8 @@
           "name": "bookings_package_id_packages_id_fk",
           "tableFrom": "bookings",
           "tableTo": "packages",
-          "columnsFrom": [
-            "package_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["package_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -821,12 +755,8 @@
           "name": "contracts_business_id_business_id_fk",
           "tableFrom": "contracts",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -834,12 +764,8 @@
           "name": "contracts_event_id_events_id_fk",
           "tableFrom": "contracts",
           "tableTo": "events",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["event_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -849,9 +775,7 @@
         "contracts_template_id_unique": {
           "name": "contracts_template_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "template_id"
-          ]
+          "columns": ["template_id"]
         }
       }
     },
@@ -944,12 +868,8 @@
           "name": "events_user_id_users_id_fk",
           "tableFrom": "events",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1080,12 +1000,8 @@
           "name": "invoices_business_id_business_id_fk",
           "tableFrom": "invoices",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1144,12 +1060,8 @@
           "name": "package_groups_business_id_business_id_fk",
           "tableFrom": "package_groups",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1159,10 +1071,7 @@
         "unique_grouped_name": {
           "name": "unique_grouped_name",
           "nullsNotDistinct": false,
-          "columns": [
-            "business_id",
-            "name"
-          ]
+          "columns": ["business_id", "name"]
         }
       }
     },
@@ -1272,12 +1181,8 @@
           "name": "packages_business_id_business_id_fk",
           "tableFrom": "packages",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1285,12 +1190,8 @@
           "name": "packages_package_group_id_package_groups_id_fk",
           "tableFrom": "packages",
           "tableTo": "package_groups",
-          "columnsFrom": [
-            "package_group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["package_group_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1300,10 +1201,7 @@
         "unique_package_name": {
           "name": "unique_package_name",
           "nullsNotDistinct": false,
-          "columns": [
-            "business_id",
-            "name"
-          ]
+          "columns": ["business_id", "name"]
         }
       }
     },
@@ -1336,12 +1234,8 @@
           "name": "session_user_id_users_id_fk",
           "tableFrom": "session",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1430,12 +1324,8 @@
           "name": "sub_events_event_id_events_id_fk",
           "tableFrom": "sub_events",
           "tableTo": "events",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["event_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1537,12 +1427,8 @@
           "name": "users_business_id_business_id_fk",
           "tableFrom": "users",
           "tableTo": "business",
-          "columnsFrom": [
-            "business_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["business_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

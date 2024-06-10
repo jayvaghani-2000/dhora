@@ -5,19 +5,19 @@ export type SubmittedEventTemplateType = {
 
 export interface Data {
   id: number;
-  uuid: string,
-  name: string | null,
-  email: string,
-  slug: string,
-  phone: string |null,
-  sent_at: Date | null,
-  opened_at: Date | null,
-  completed_at: null,
-  external_id: string,
+  uuid: string;
+  name: string | null;
+  email: string;
+  slug: string;
+  phone: string | null;
+  sent_at: Date | null;
+  opened_at: Date | null;
+  completed_at: null;
+  external_id: string;
   archived_at: Date;
-  metadata: {},
-  status: string,
-  application_key: string
+  metadata: {};
+  status: string;
+  application_key: string;
   created_at: Date;
   updated_at: Date;
   template: Template;
@@ -49,7 +49,7 @@ export interface Submitter {
   application_key: string;
 }
 
-export interface Metadata { }
+export interface Metadata {}
 
 export interface Template {
   id: number;

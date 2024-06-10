@@ -8,8 +8,6 @@ import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 import { ScrollArea } from "../ui/scroll-area";
 
-
-
 type optionType = {
   label: string;
   value: string;

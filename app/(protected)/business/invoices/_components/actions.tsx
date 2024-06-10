@@ -11,7 +11,10 @@ import { useToast } from "@/components/ui/use-toast";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { ActionTooltip } from "@/components/shared/action-tooltip";
 import { getInvoiceDetail } from "@/actions/(protected)/business/invoices/getInvoiceDetail";
-import { getEventDetailsType, getInvoicesDetailResponseType } from "@/actions/_utils/types.type";
+import {
+  getEventDetailsType,
+  getInvoicesDetailResponseType,
+} from "@/actions/_utils/types.type";
 import InvoicePdf from "./invoice-pdf";
 import {
   DropdownMenu,
@@ -25,7 +28,9 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
   const rowObj = row.original;
   const navigate = useRouter();
   const [loading, setLoading] = useState(false);
-  const [events, setEvents] = useState<getEventDetailsType['data'][]|null>(null);
+  const [events, setEvents] = useState<getEventDetailsType["data"][] | null>(
+    null
+  );
   const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState("");
   const [savePdf, setSavePdf] = useState({

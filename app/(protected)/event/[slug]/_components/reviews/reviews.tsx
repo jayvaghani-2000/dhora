@@ -1,87 +1,75 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import SubmitReviewTamplate from './popup';
-import { Button } from '@/components/ui/button';
-import { getEventBusiness } from '@/actions/(protected)/customer/events/getEventBusiness';
-import { CiStar } from 'react-icons/ci';
-import { FaStar } from 'react-icons/fa6';
-import Rating from 'react-rating';
+"use client";
+import React, { useEffect, useState } from "react";
+import SubmitReviewTamplate from "./popup";
+import Review from "./review";
+import { Button } from "@/components/ui/button";
 
-type Review = {
-    id: string;
-    business_id: string | null;
-    description: string | null;
-    created_at: Date;
-    updated_at: Date;
-    title: string | null;
-    customer_id: string | null;
-    event_id: string | null;
-    rating: number;
+type ReviewType = {
+  id: string;
+  description: string | null;
+  title: string | null;
+  rating: number;
+  business_id: string | null;
+  customer_id: string | null;
+  event_id: string | null;
+  created_at: Date;
+  updated_at: Date;
+  customer: { name: string; image: string } | null;
 };
 
 type BusinessData = {
-    name: string
-    id: string
-}
+  name: string;
+  id: string;
+};
 type propsTypes = {
-    reviews: Review[],
-    businessData: BusinessData[]
-}
+  reviews: ReviewType[];
+  businessData: BusinessData[];
+};
 
 const Reviews = (props: propsTypes) => {
-    const { reviews, businessData } = props
-    const [sendReview, setSendReview] = useState(false);
+  const { reviews, businessData } = props;
+  const [sendReview, setSendReview] = useState(false);
 
-    const handleToggleSendContract = () => {
-        setSendReview(false);
-    }
+  const handleToggleSendContract = () => {
+    setSendReview(false);
+  };
 
-    console.log(sendReview)
+  return (
+    <div>
+      <SubmitReviewTamplate
+        open={sendReview}
+        onClose={handleToggleSendContract}
+        businessesName={businessData}
+      />
 
-    return (
+      <div className="flex items-center justify-between space-x-4 px-4">
+        <h4 className="text-sm font-semibold">Reviews</h4>
         <div>
-            <SubmitReviewTamplate
-                open={sendReview}
-                onClose={handleToggleSendContract}
-                businessesName={businessData}
-            />
-            <div className="flex items-center justify-between space-x-4 px-4">
-                <h4 className="text-sm font-semibold">Reviews</h4>
-                <div>
-                    <Button variant="ghost" size="sm" className="p-4" onClick={() => {
-                        setSendReview(true);
-                    }}>
-                        <span className="mr-2 text-sm text-muted text-zinc-400">
-                            Add Reviews
-                        </span>
-                    </Button>
-                </div>
-            </div>
-
-            <div>
-                <div className='flex justify-between'>
-                    <div>
-                        <div className='border border-red-900 rounded-full w-[50px] h-[50px] overflow-hidden items-center justify-center flex'>image</div>
-                        <div>
-
-                        </div>
-                    </div>
-                    <div className='text-2xl'>
-                        <Rating
-                            emptySymbol={<CiStar />}
-                            fullSymbol={<FaStar />}
-                            fractions={2}
-                            readonly
-                            initialRating={2.5}
-                        />
-                    </div>
-                </div>
-                <div>
-                    description
-                </div>
-            </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-4"
+            onClick={() => {
+              setSendReview(true);
+            }}
+          >
+            <span className="mr-2 text-sm text-muted text-zinc-400">
+              Add Reviews
+            </span>
+          </Button>
         </div>
-    )
-}
+      </div>
+      {reviews.length > 0 ? (
+        reviews.map((review: ReviewType) => (
+          <div key={review.id}>
+            <Review reviewData={review!} />
+          </div>
+        ))
+      ) : (
+        <span>No Reviews</span>
+      )}
+    </div>
+  );
+};
 
-export default Reviews
+export default Reviews;

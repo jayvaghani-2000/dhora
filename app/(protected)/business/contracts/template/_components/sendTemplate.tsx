@@ -19,7 +19,10 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { submitContract } from "@/actions/(protected)/business/contracts/submitContract";
-import { getEmailAndEventType, submitContractResponseType } from "@/actions/_utils/types.type";
+import {
+  getEmailAndEventType,
+  submitContractResponseType,
+} from "@/actions/_utils/types.type";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PARAMS } from "./contractBuilder";
 import { revalidate } from "@/actions/(public)/revalidate";
@@ -72,12 +75,12 @@ const SendTemplate = (prop: propType) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const contractId = params.get(PARAMS.CONTRACT_ID);
-  
+
     setLoading(true);
     const res: submitContractResponseType = await submitContract({
       templateId: contractId!,
       email: values.email,
-      event_id: values.eventId!.toString()
+      event_id: values.eventId!.toString(),
     });
     if (!res.success) {
       setError(res.error);
@@ -90,7 +93,7 @@ const SendTemplate = (prop: propType) => {
   }
 
   const handleSelectChange = (value: string) => {
-    const selectedEvent = contract!.find((item) => item.id === value);
+    const selectedEvent = contract!.find(item => item.id === value);
     if (selectedEvent) {
       form.setValue("email", selectedEvent.customer.email);
     }
@@ -119,9 +122,7 @@ const SendTemplate = (prop: propType) => {
           </p>
         )}
 
-        <div className="text-base font-normal mb-2">
-          Email:
-        </div>
+        <div className="text-base font-normal mb-2">Email:</div>
         <FormField
           control={form.control}
           name="email"
@@ -145,7 +146,7 @@ const SendTemplate = (prop: propType) => {
             <FormItem>
               <FormControl>
                 <Select
-                  onValueChange={(value) => {
+                  onValueChange={value => {
                     field.onChange(value);
                     handleSelectChange(value);
                   }}
@@ -161,7 +162,7 @@ const SendTemplate = (prop: propType) => {
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    {contract!.map((items) => (
+                    {contract!.map(items => (
                       <SelectItem key={items.id} value={items.id}>
                         {items.customer.email}({items.event?.title})
                       </SelectItem>

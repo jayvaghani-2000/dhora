@@ -15,13 +15,26 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { filterType } from ".";
 
-const Filters = () => {
+type propType = {
+  filter: filterType;
+  setFilter: React.Dispatch<React.SetStateAction<filterType>>;
+};
+
+const Filters = (props: propType) => {
+  const { filter, setFilter } = props;
   const SortingData = ["A-Z", "Z-A", "Top Rated"];
-  const [category, setCategory] = useState("");
-  const [city, setCity] = useState("");
-  const [sort, setSort] = useState("");
+
   const businessTypeOptions = businessTypeEnum.enumValues;
+
+  const selectFilterValue = (field: keyof filterType, value: string) => {
+    setFilter(prevFilter => ({
+      ...prevFilter,
+      current_page: 1,
+      [field]: value,
+    }));
+  };
 
   const methods = useForm({
     defaultValues: {
@@ -34,7 +47,11 @@ const Filters = () => {
       <div className="flex flex-col lg:flex-row lg:justify-between items-center lg:items-start gap-4">
         <div className="flex w-full lg:w-auto gap-2">
           <div className="w-full">
-            <Command>
+            <Command
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                selectFilterValue("search", e.target.value);
+              }}
+            >
               <CommandInput placeholder="Search" className="w-full" />
             </Command>
           </div>
@@ -57,19 +74,17 @@ const Filters = () => {
                   <SelectButton
                     data={businessTypeOptions}
                     placeHolder="Category"
-                    setValue={setCategory}
+                    setValue={value => selectFilterValue("category", value)}
                   />
                   <SelectButton
                     data={SortingData}
-                    placeHolder="A-Z"
-                    setValue={setSort}
+                    placeHolder="Sort By"
+                    setValue={value => selectFilterValue("sort", value)}
                   />
                   <div>
                     <PlacesAutocompleteInput
-                      value={city}
-                      onChange={value => {
-                        setCity(value);
-                      }}
+                      value={filter.city}
+                      onChange={value => selectFilterValue("city", value)}
                       form={methods}
                       fieldName="city"
                       placeholder="City"
@@ -91,19 +106,17 @@ const Filters = () => {
           <SelectButton
             data={businessTypeOptions}
             placeHolder="Category"
-            setValue={setCategory}
+            setValue={value => selectFilterValue("category", value)}
           />
           <SelectButton
             data={SortingData}
-            placeHolder="A-Z"
-            setValue={setSort}
+            placeHolder="Sort By"
+            setValue={value => selectFilterValue("sort", value)}
           />
           <div className="max-w-[200px]">
             <PlacesAutocompleteInput
-              value={city}
-              onChange={value => {
-                setCity(value);
-              }}
+              value={filter.city}
+              onChange={value => selectFilterValue("city", value)}
               form={methods}
               fieldName="city"
               placeholder="City"

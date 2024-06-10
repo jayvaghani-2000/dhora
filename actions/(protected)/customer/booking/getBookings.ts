@@ -11,13 +11,11 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 const getBooking = async (user: User, businessBooking: boolean) => {
   if (businessBooking && user.business_id) {
     return await db.query.bookings.findMany({
-      where: or(
-        eq(bookings.business_id, user.business_id)
-      ),
+      where: or(eq(bookings.business_id, user.business_id)),
       with: {
         business: true,
         event: true,
-        customer: true
+        customer: true,
       },
     });
   }
@@ -26,7 +24,7 @@ const getBooking = async (user: User, businessBooking: boolean) => {
     with: {
       business: true,
       event: true,
-      customer: true
+      customer: true,
     },
   });
 };
@@ -64,5 +62,6 @@ const handler = async (user: User, businessBooking: boolean) => {
   }
 };
 
-export const getBookings: (businessBooking: boolean) => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateToken(handler);
+export const getBookings: (
+  businessBooking: boolean
+) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);

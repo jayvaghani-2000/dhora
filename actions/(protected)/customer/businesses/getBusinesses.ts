@@ -7,44 +7,26 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { BusinessesType } from "./_utils/getBusiness.type";
 import { businessFilter } from "@/actions/_utils/types.type";
+import { current } from "@reduxjs/toolkit";
 
 type paramsType = {
   filter: {
     search: string;
-    sort: businessFilter;
-    category: string[];
+    sort: string;
+    category: string;
+    city: string;
+    current_page: number;
   };
-  page?: number;
 };
 
+const BusinessInPage = 20;
+
 const handler = async (user: User, params: paramsType) => {
-  const { filter = {} as paramsType["filter"], page = 1 } = params ?? {};
-
-  const { search = "", category = ["Apparel"], sort = "" } = filter;
-
-  let orderClause = "";
-
-  const searchString = `%${search}%`;
-
-  switch (sort) {
-    case "a-z":
-      orderClause = "name ASC";
-      break;
-    case "z-a":
-      orderClause = "name DESC";
-      break;
-    case "rating":
-      orderClause = "(rating_info->>'average_rating')::float DESC NULLS LAST";
-
-      break;
-    default:
-      orderClause = "id";
-      break;
-  }
+  const { filter = {} as paramsType["filter"] } = params ?? {};
+  const { search, category, sort, city, current_page = 1 } = filter;
 
   try {
-    const data = await db.execute(sql`WITH filtered_data AS (
-      SELECT
+    const data = await db.execute(sql`SELECT
           b.*,
           (
               SELECT jsonb_agg(sub_assets.*)
@@ -81,14 +63,6 @@ const handler = async (user: User, params: paramsType) => {
         (
             (b.id <> ${user.business_id} OR b.id IS NULL)
         )
-      AND
-          (
-              
-                LOWER(b.name) LIKE LOWER(${searchString})
-            OR
-                b.type IN (${category}) -- Filter based on enum values array
-          )
-      
       GROUP BY
           b.id
       HAVING
@@ -105,38 +79,62 @@ const handler = async (user: User, params: paramsType) => {
           ) IS NOT NULL
           AND
           jsonb_agg(p.*) IS NOT NULL
-      ),
-      total_records AS (
-          SELECT
-              COUNT(*) AS total_records
-          FROM
-              filtered_data
-      ),
-      paginated_data AS (
-          SELECT
-              filtered_data.*,
-              CEIL(total_records.total_records::numeric / 20) AS total_pages -- Assuming 20 records per page
-          FROM
-              filtered_data
-          CROSS JOIN
-              total_records
-          ORDER BY 
-           ${orderClause}
-          OFFSET ${(page - 1) * 20}
-          LIMIT 20
-      )
-      SELECT
-          jsonb_build_object(
-              'data', jsonb_agg(paginated_data.*),
-              'pages', jsonb_build_object('total_pages', (SELECT total_pages FROM paginated_data LIMIT 1))
-          ) AS result
-      FROM
-          paginated_data;
       `);
+
+    let filteredData = data as unknown as BusinessesType[];
+
+    // Apply search filter
+    if (search) {
+      filteredData = filteredData.filter(b =>
+        b.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Apply category filter
+    if (category) {
+      filteredData = filteredData.filter(b => b.type === category);
+    }
+
+    // Apply city filter
+    if (city) {
+      filteredData = filteredData.filter(b => b.address === city);
+    }
+
+    if (sort) {
+      switch (sort) {
+        case "Top Rated":
+          filteredData.sort(
+            (a, b) =>
+              b.rating_info.average_rating - a.rating_info.average_rating
+          );
+          break;
+        case "A-Z":
+          filteredData.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case "Z-A":
+          filteredData.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        // Add other sort cases if needed
+      }
+    }
+
+    const totalPage = Math.ceil(data.length / BusinessInPage);
+
+    console.log("totalPage::", totalPage);
+    console.log("filteredData::", filteredData);
+
+    const currentPageData = filteredData.splice(
+      BusinessInPage * (current_page - 1),
+      BusinessInPage
+    );
+    console.log("currentPageData::", currentPageData, current_page);
 
     return {
       success: true as true,
-      data: data[0].result as {
+      data: {
+        data: currentPageData as unknown as BusinessesType[],
+        pages: { total_pages: totalPage },
+      } as {
         data: BusinessesType[];
         pages: { total_pages: number };
       },

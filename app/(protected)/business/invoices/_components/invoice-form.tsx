@@ -37,7 +37,11 @@ import {
 } from "@/lib/common";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { getEmailAndEventType, getUserDetailsType, profileType } from "@/actions/_utils/types.type";
+import {
+  getEmailAndEventType,
+  getUserDetailsType,
+  profileType,
+} from "@/actions/_utils/types.type";
 import { updateInvoiceDetail } from "@/actions/(protected)/business/invoices/updateInvoiceDetail";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { revalidate } from "@/actions/(public)/revalidate";
@@ -47,15 +51,15 @@ import { getBookingCustomer } from "@/actions/(protected)/customer/booking/getBo
 
 type propType =
   | {
-    user: profileType;
-    invoiceData?: never;
-    mode?: "CREATE";
-  }
+      user: profileType;
+      invoiceData?: never;
+      mode?: "CREATE";
+    }
   | {
-    user: profileType;
-    invoiceData: invoiceSchemaType;
-    mode?: "EDIT";
-  };
+      user: profileType;
+      invoiceData: invoiceSchemaType;
+      mode?: "EDIT";
+    };
 
 const InvoiceForm = (props: propType) => {
   const { user, mode = "CREATE", invoiceData } = props;
@@ -73,9 +77,9 @@ const InvoiceForm = (props: propType) => {
   });
 
   const handleSelectChange = (value: string) => {
-    console.log("booking ::", bookings)
-    const selectedEvent = bookings!.find((item) => item.id === value);
-    console.log("select event ::", selectedEvent)
+    console.log("booking ::", bookings);
+    const selectedEvent = bookings!.find(item => item.id === value);
+    console.log("select event ::", selectedEvent);
     if (selectedEvent) {
       form.setValue("customer_name", selectedEvent.customer.name);
       form.setValue("customer_email", selectedEvent.customer.email);
@@ -90,29 +94,29 @@ const InvoiceForm = (props: propType) => {
       mode === "EDIT"
         ? { ...invoiceData, due_date: new Date(invoiceData!.due_date) }
         : {
-          name: user?.business?.name ?? "",
-          address: user?.business?.address ?? "",
-          email: user?.email ?? "",
-          contact: user?.business?.contact ?? "",
-          event_id: "",
-          customer_name: "",
-          customer_email: "",
-          customer_contact: "",
-          customer_address: "",
-          items: [
-            {
-              name: "",
-              price: undefined as unknown as number,
-              quantity: undefined as unknown as number,
-              description: "",
-              id: uuid(),
-            },
-          ],
-          tax: undefined,
-          due_date: undefined,
-          subtotal: 0,
-          total: 0,
-        },
+            name: user?.business?.name ?? "",
+            address: user?.business?.address ?? "",
+            email: user?.email ?? "",
+            contact: user?.business?.contact ?? "",
+            event_id: "",
+            customer_name: "",
+            customer_email: "",
+            customer_contact: "",
+            customer_address: "",
+            items: [
+              {
+                name: "",
+                price: undefined as unknown as number,
+                quantity: undefined as unknown as number,
+                description: "",
+                id: uuid(),
+              },
+            ],
+            tax: undefined,
+            due_date: undefined,
+            subtotal: 0,
+            total: 0,
+          },
   });
 
   const [address, setAddress] = useState("");
@@ -141,10 +145,15 @@ const InvoiceForm = (props: propType) => {
     async function customerGet() {
       const data = await getBookingCustomer();
       if (data?.data) {
-        const byDefaultselectedEvent = data.data!.find((item) => item.id === bookingId);
+        const byDefaultselectedEvent = data.data!.find(
+          item => item.id === bookingId
+        );
         if (byDefaultselectedEvent) {
           form.setValue("customer_name", byDefaultselectedEvent.customer.name);
-          form.setValue("customer_email", byDefaultselectedEvent.customer.email);
+          form.setValue(
+            "customer_email",
+            byDefaultselectedEvent.customer.email
+          );
           form.setValue("event_id", byDefaultselectedEvent.event_id!);
         }
         setBookings(data.data);
@@ -326,7 +335,6 @@ const InvoiceForm = (props: propType) => {
             </div>
             <div className="border border-input px-4 py-3 rounded-md grid grid-cols-2 gap-x-4 gap-y-3">
               <div>
-
                 <div className="text-base font-normal mb-2">
                   Please select the event
                 </div>
@@ -337,7 +345,7 @@ const InvoiceForm = (props: propType) => {
                     <FormItem>
                       <FormControl>
                         <Select
-                          onValueChange={(value) => {
+                          onValueChange={value => {
                             field.onChange(value);
                             handleSelectChange(value);
                           }}
@@ -353,7 +361,7 @@ const InvoiceForm = (props: propType) => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            {bookings!.map((items) => (
+                            {bookings!.map(items => (
                               <SelectItem key={items.id} value={items.id}>
                                 {items.event?.title}
                               </SelectItem>
@@ -363,7 +371,8 @@ const InvoiceForm = (props: propType) => {
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )} />
+                  )}
+                />
               </div>
               <FormField
                 control={form.control}

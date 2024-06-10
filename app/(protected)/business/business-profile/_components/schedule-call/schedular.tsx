@@ -197,8 +197,8 @@ const Schedular = (props: propType) => {
         time: values.selectedSlot,
         duration: selectedBookingType!.duration as number,
         event: event,
-        availability_id:selectedBookingType?.availability_id!,
-        customer_timezone:values.timezone!
+        availability_id: selectedBookingType?.availability_id!,
+        customer_timezone: values.timezone!,
       });
 
       if (res.success) {

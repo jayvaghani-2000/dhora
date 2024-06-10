@@ -14,22 +14,22 @@ const handler = async (user: User) => {
         event: {
           columns: {
             title: true,
-            id: true
+            id: true,
           },
-
         },
-        customer: true
-      }
+        customer: true,
+      },
     });
-  
+
     return {
       success: true as true,
-      data:data,
+      data: data,
     };
   } catch (err) {
     return errorHandler(err);
   }
 };
 
-export const getBookingCustomer: () => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateToken(handler);
+export const getBookingCustomer: () => Promise<
+  Awaited<ReturnType<typeof handler>>
+> = validateToken(handler);

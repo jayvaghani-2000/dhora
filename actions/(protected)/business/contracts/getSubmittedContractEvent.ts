@@ -24,21 +24,22 @@ const handler = async (user: User, data: paramsType) => {
         headers: { "X-Auth-Token": config.env.DOCU_SEAL },
       };
 
-      const res: { data: SubmittedEventTemplateType } = await axios.request(options);
+      const res: { data: SubmittedEventTemplateType } =
+        await axios.request(options);
 
       next = res.data.pagination.next;
       data.push(...res.data.data);
       dataThisTime = res.data.data;
     } while (dataThisTime.length > 0);
 
-
-    const filteredData = data.filter((item) => {
-      return item.submitters.some((submitter) => {
+    const filteredData = data.filter(item => {
+      return item.submitters.some(submitter => {
         return submitter.external_id === event_id;
       });
     });
     return {
-      success: true as true, data: filteredData
+      success: true as true,
+      data: filteredData,
     };
   } catch (err) {
     console.log("error ::", err);
@@ -48,6 +49,5 @@ const handler = async (user: User, data: paramsType) => {
 
 export const getSubmittedContractsEvent: (
   params: paramsType
-) => Promise<
-  Awaited<ReturnType<typeof handler>>
-> = validateBusinessToken(handler);
+) => Promise<Awaited<ReturnType<typeof handler>>> =
+  validateBusinessToken(handler);

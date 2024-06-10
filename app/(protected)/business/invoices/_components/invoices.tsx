@@ -16,7 +16,7 @@ import { invoiceStatusTypeEnum } from "@/db/schema";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
-  showAction: boolean
+  showAction: boolean;
 };
 
 const statusMode = invoiceStatusTypeEnum.enumValues;
@@ -54,13 +54,13 @@ const ExtraFilters = (props: extraFilterPropType) => {
         value={
           table.getColumn("created_on")?.getFilterValue()
             ? JSON.parse(
-              (table.getColumn("created_on")?.getFilterValue() as string) ??
-              ""
-            )
+                (table.getColumn("created_on")?.getFilterValue() as string) ??
+                  ""
+              )
             : {
-              from: undefined,
-              to: undefined,
-            }
+                from: undefined,
+                to: undefined,
+              }
         }
         placeholder="Pick a created on date"
       />
@@ -77,12 +77,12 @@ const ExtraFilters = (props: extraFilterPropType) => {
         value={
           table.getColumn("due_date")?.getFilterValue()
             ? JSON.parse(
-              (table.getColumn("due_date")?.getFilterValue() as string) ?? ""
-            )
+                (table.getColumn("due_date")?.getFilterValue() as string) ?? ""
+              )
             : {
-              from: undefined,
-              to: undefined,
-            }
+                from: undefined,
+                to: undefined,
+              }
         }
         placeholder="Pick a due date"
       />
@@ -307,7 +307,6 @@ const Invoices = (props: propType) => {
         );
       },
     },
-
   ];
 
   const actionColumn = {
@@ -316,8 +315,10 @@ const Invoices = (props: propType) => {
     cell: ({ row }: any) => {
       return <Actions row={row} />;
     },
+  };
+  {
+    showAction && columns.push(actionColumn);
   }
-  {showAction && columns.push(actionColumn)}
   return parsedInvoices.length > 0 ? (
     <CustomTable
       data={[...parsedInvoices]}

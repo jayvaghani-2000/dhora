@@ -3,12 +3,13 @@ import SubmittedContract from "@/app/(protected)/business/contracts/template/_co
 import Invoices from "@/app/(protected)/business/invoices/_components/invoices";
 import React from "react";
 
-type propType = { params: { slug: string }; };
+type propType = { params: { slug: string } };
 
 const Contracts = async (prop: propType) => {
-
-  const data = await getSubmittedContractsEvent({ event_id: prop.params.slug })
-  return data.success ? <SubmittedContract templates={data.data!} showAction={false}/> : null
-}
+  const data = await getSubmittedContractsEvent({ event_id: prop.params.slug });
+  return data.success ? (
+    <SubmittedContract templates={data.data!} showAction={false} />
+  ) : null;
+};
 
 export default Contracts;

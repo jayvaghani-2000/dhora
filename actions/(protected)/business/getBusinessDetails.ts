@@ -48,6 +48,7 @@ const getBusinessDetailHandler = async (user: User, businessId?: string) => {
       booking_types: {
         where: eq(bookingTypes.deleted, false),
       },
+      ratings: true,
     },
   });
 

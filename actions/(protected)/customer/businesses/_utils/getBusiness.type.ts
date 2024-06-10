@@ -14,7 +14,8 @@ export interface BusinessesType {
   description: string;
   assets: Asset[];
   rating_info: RatingInfo;
-}[]
+}
+[];
 
 export interface Asset {
   id: string;

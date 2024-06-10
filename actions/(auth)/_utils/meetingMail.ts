@@ -3,19 +3,24 @@ import { mailClient } from "@/lib/sendgrid";
 import dayjs from "@/lib/dayjs";
 
 export async function meetingMail(
-    roomId: string,
-    meetingtime: { startTime: Date | string, endTime: Date | string },
-    timezone: string,
-    email: { organizationMail: string, customerMail: string },
-    sendMailTo: string,
-    packagename: Record<string, string | null>[],
-    eventname: string
+  roomId: string,
+  meetingtime: { startTime: Date | string; endTime: Date | string },
+  timezone: string,
+  email: { organizationMail: string; customerMail: string },
+  sendMailTo: string,
+  packagename: Record<string, string | null>[],
+  eventname: string
 ) {
+  const formattedStartTime = dayjs
+    .utc(meetingtime.startTime)
+    .tz(timezone)
+    .format("LLL zzz");
+  const formattedEndTime = dayjs
+    .utc(meetingtime.endTime)
+    .tz(timezone)
+    .format("LLL zzz");
 
-    const formattedStartTime = dayjs.utc(meetingtime.startTime).tz(timezone).format("LLL zzz");
-    const formattedEndTime = dayjs.utc(meetingtime.endTime).tz(timezone).format("LLL zzz");
-
-    const html = `
+  const html = `
     <!DOCTYPE html>
     <html lang="en">
 
@@ -176,14 +181,13 @@ export async function meetingMail(
                                                             </table>
                                                             <span>
                                                             <ul>
-                                                            ${packagename.map((packages) => {
-        return (
-            `<li>     
+                                                            ${packagename
+                                                              .map(packages => {
+                                                                return `<li>     
                                                                         ${packages.name}
-                                                                    </li><br/>`
-        )
-    }).join('')
-        }
+                                                                    </li><br/>`;
+                                                              })
+                                                              .join("")}
                                                             </ul>
                                                             </span>
                                                         </div>
@@ -251,18 +255,18 @@ export async function meetingMail(
 </html>
     `;
 
-    const mailOptions = {
-        to: sendMailTo,
-        from: "info@dhora.app",
-        subject: `Dhora – Meeting`,
-        html,
-    };
+  const mailOptions = {
+    to: sendMailTo,
+    from: "info@dhora.app",
+    subject: `Dhora – Meeting`,
+    html,
+  };
 
-    try {
-        await mailClient.send(mailOptions);
-        return true;
-    } catch (err) {
-        console.log(err)
-        throw new Error("Enable to send email");
-    }
+  try {
+    await mailClient.send(mailOptions);
+    return true;
+  } catch (err) {
+    console.log(err);
+    throw new Error("Enable to send email");
+  }
 }

@@ -5,7 +5,7 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import {
   Select,
@@ -27,14 +27,14 @@ import { PARAMS } from "../../contracts/template/_components/contractBuilder";
 import { getContracts } from "@/actions/(protected)/business/contracts/getContracts";
 
 const formSchema = z.object({
-  contract: z.string().nonempty({ message: "Contract is required." })
+  contract: z.string().nonempty({ message: "Contract is required." }),
 });
 
 type propType = {
   open: boolean;
   onClose: () => void;
-  customer_data: Record<string, string | number | Date | null | boolean>
-  event_data: Record<string, string | number | Date | null | boolean>
+  customer_data: Record<string, string | number | Date | null | boolean>;
+  event_data: Record<string, string | number | Date | null | boolean>;
 };
 
 type Contract = {
@@ -61,13 +61,13 @@ const SendTemplate = (prop: propType) => {
         const response = await getContracts();
         const data = response.data;
 
-        setContract(data!)
+        setContract(data!);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, [])
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,7 +81,6 @@ const SendTemplate = (prop: propType) => {
     onClose();
   };
 
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const selectedContract = contract.find(item => item.id === values.contract);
     if (!selectedContract) {
@@ -93,7 +92,7 @@ const SendTemplate = (prop: propType) => {
     const res: submitContractResponseType = await submitContract({
       email: customer_data.email!.toString(),
       templateId: selectedContract.template_id!.toString(),
-      event_id: event_data.id!.toString()
+      event_id: event_data.id!.toString(),
     });
     if (!res.success) {
       setError(res.error);

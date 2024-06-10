@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { getSubmittedContractEventResponseType, getSubmittedContractResponseType } from "@/actions/_utils/types.type";
+import {
+  getSubmittedContractEventResponseType,
+  getSubmittedContractResponseType,
+} from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { formatDate } from "@/lib/common";
 import clsx from "clsx";
@@ -14,7 +17,9 @@ import { isWithinInterval } from "date-fns";
 import Actions from "./actions";
 
 type propType = {
-  templates: getSubmittedContractResponseType["data"] | getSubmittedContractEventResponseType["data"];
+  templates:
+    | getSubmittedContractResponseType["data"]
+    | getSubmittedContractEventResponseType["data"];
   showAction: boolean;
 };
 
@@ -74,12 +79,12 @@ const ExtraFilters = (props: extraFilterPropType) => {
         value={
           table.getColumn("sent_on")?.getFilterValue()
             ? JSON.parse(
-              (table.getColumn("sent_on")?.getFilterValue() as string) ?? ""
-            )
+                (table.getColumn("sent_on")?.getFilterValue() as string) ?? ""
+              )
             : {
-              from: undefined,
-              to: undefined,
-            }
+                from: undefined,
+                to: undefined,
+              }
         }
         placeholder="Pick a sent on date"
       />
@@ -185,18 +190,19 @@ const SubmittedContract = (props: propType) => {
         );
       },
     },
-    
   ];
 
   const actionColumn = {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }:any) => {
+    cell: ({ row }: any) => {
       return <Actions row={row} />;
     },
-  }
+  };
 
-  {showAction && columns.push(actionColumn)}
+  {
+    showAction && columns.push(actionColumn);
+  }
 
   return parsedTemplate.length > 0 ? (
     <CustomTable
