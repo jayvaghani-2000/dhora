@@ -11,7 +11,6 @@ type propsType = {
 };
 const Review = (props: propsType) => {
   const { reviewData } = props;
-  console.log("review datas::",reviewData);
   
   const formattedCreatedAt = dayjs
     .utc(reviewData.created_at)

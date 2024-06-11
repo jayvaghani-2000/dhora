@@ -30,7 +30,6 @@ const MarketPlace = (props: propsType) => {
   });
   const [businessList, setBusinessList] = useState(businesses);
 
-  console.log(businessList.data);
 
   const getFilteredBusiness = debounce(async () => {
     const data = await getBusinesses({ filter: filter });

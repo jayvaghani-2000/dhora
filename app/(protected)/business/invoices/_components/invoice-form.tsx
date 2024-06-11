@@ -77,9 +77,7 @@ const InvoiceForm = (props: propType) => {
   });
 
   const handleSelectChange = (value: string) => {
-    console.log("booking ::", bookings);
     const selectedEvent = bookings!.find(item => item.id === value);
-    console.log("select event ::", selectedEvent);
     if (selectedEvent) {
       form.setValue("customer_name", selectedEvent.customer.name);
       form.setValue("customer_email", selectedEvent.customer.email);

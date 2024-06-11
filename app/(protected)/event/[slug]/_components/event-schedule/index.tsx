@@ -128,7 +128,6 @@ const EventSchedule = (props: React.ComponentProps<typeof Events>) => {
               : dateWithoutTime(addDays(to_date!, 1)),
         }}
         dayHeaderContent={args => {
-          console.log(args, differenceInDays(args.date, from_date!));
           const day = differenceInDays(args.date, from_date!) + 1;
 
           const haveAnyEventOnTheDay = calendarEvents.find(
