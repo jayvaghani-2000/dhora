@@ -9,6 +9,7 @@ import ScheduleCall from "@/app/(protected)/business/business-profile/_component
 import { getBusinessDetails } from "@/actions/(protected)/business/getBusinessDetails";
 import { Metadata } from "next";
 import Review from "@/components/review/review";
+import Reviews from "../_components/reviews";
 
 type propType = { params: { slug: string } };
 
@@ -59,9 +60,6 @@ export default async function BusinessProfile(props: propType) {
   const groupedPackages = groupPackagesByGroupId(business.data.packages);
 
   const groupedAddOns = groupAddOnsByGroupId(business.data.add_ons);
-
-  // console.log("busineess details::", businessDetails.data.ratings);
-
   return (
     <>
       <div className="flex flex-col gap-5 pb-[44px] md:pb-[52px]">
@@ -93,21 +91,7 @@ export default async function BusinessProfile(props: propType) {
                 />
               </div>
             ) : null}
-            {business.data.ratings.length > 0 ? (
-              <>
-                <div className="text-secondary-light-gray font-semibold text-base">
-                  Reviews({business.data.ratings.length})
-                </div>
-                {/* 
-                {business.data.ratings.map(review => {
-                  console.log("review", review);
-                  return (
-                    <div key={review.id}>
-                      <Review reviewData={review!} />
-                    </div>
-                  )})} */}
-              </>
-            ) : null}
+            <Reviews reviews={business.data.ratings ?? []}/>
           </div>
         </div>
       </div>

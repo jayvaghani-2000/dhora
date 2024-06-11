@@ -2,7 +2,9 @@
 import React, { useState } from "react";
 import SubmitReviewTamplate from "./popup";
 import { Button } from "@/components/ui/button";
-import { getReviewsType } from "@/actions/_utils/types.type";
+import { getEventDetailsType, getReviewsType } from "@/actions/_utils/types.type";
+import dayjs from "@/lib/dayjs";
+import { timeZone } from "@/lib/common";
 import Review from "@/components/review/review";
 
 type BusinessData = {
@@ -12,15 +14,27 @@ type BusinessData = {
 type propsTypes = {
   reviews: getReviewsType["data"];
   businessData: BusinessData[];
+  eventDetails: getEventDetailsType["data"]
 };
 
+function isEventPassedFunc(dateString: string, timezone: string) {
+  const eventDate = dayjs.tz(dateString, timezone).startOf("day");
+  const currentDate = dayjs.utc().tz(timezone);
+
+  return eventDate.isBefore(currentDate);
+}
+
 const Reviews = (props: propsTypes) => {
-  const { reviews, businessData } = props;
+  const { reviews, businessData, eventDetails } = props;
   const [sendReview, setSendReview] = useState(false);
 
   const handleToggleSendContract = () => {
     setSendReview(false);
   };
+
+  const eventEndDate = eventDetails?.single_day_event ? eventDetails?.from_date: eventDetails?.to_date
+
+  const isEventPassed = isEventPassedFunc(eventEndDate!, timeZone);
 
   return (
     <div>
@@ -39,6 +53,7 @@ const Reviews = (props: propsTypes) => {
             onClick={() => {
               setSendReview(true);
             }}
+            disabled={!isEventPassed}
           >
             Add Reviews
           </Button>

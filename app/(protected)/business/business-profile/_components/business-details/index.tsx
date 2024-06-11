@@ -8,6 +8,7 @@ type propTypes = { business: getBusinessDetailsType["data"] };
 
 const BusinessDetails = (props: propTypes) => {
   const { business } = props;
+
   return (
     <div>
       <span className="font-bold text-2xl lg:text-4xl">{business?.name}</span>
