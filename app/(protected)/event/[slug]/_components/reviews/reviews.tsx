@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import SubmitReviewTamplate from "./popup";
-import Review from "./review";
 import { Button } from "@/components/ui/button";
 import { getReviewsType } from "@/actions/_utils/types.type";
+import Review from "@/components/review/review";
 
 type BusinessData = {
   name: string;

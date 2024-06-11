@@ -8,6 +8,7 @@ import AddOnPreview from "@/app/(protected)/business/business-profile/_component
 import ScheduleCall from "@/app/(protected)/business/business-profile/_components/schedule-call";
 import { getBusinessDetails } from "@/actions/(protected)/business/getBusinessDetails";
 import { Metadata } from "next";
+import Review from "@/components/review/review";
 
 type propType = { params: { slug: string } };
 
@@ -15,6 +16,23 @@ export async function generateMetadata({
   params,
 }: propType): Promise<Metadata> {
   const businessDetails = await getBusinessDetails(params.slug);
+
+  const summary:Record<string,any> = businessDetails.data.rating_summary[0];
+  const totalRatings = summary.total_ratings;
+  const ratingPercentages:Record<string,any> = {};
+
+  for (let i = 1; i <= 5; i++) {
+    const key = `count_rating_${i}`;
+    ratingPercentages[key] = (summary[key] / totalRatings) * 100;
+  }
+
+  // Format percentages to two decimal places
+  for (let key in ratingPercentages) {
+    ratingPercentages[key] = ratingPercentages[key].toFixed(2);
+  }
+
+  console.log("ratingPercentages",ratingPercentages);
+  
 
   if (businessDetails.success) {
     return {
@@ -41,6 +59,8 @@ export default async function BusinessProfile(props: propType) {
   const groupedPackages = groupPackagesByGroupId(business.data.packages);
 
   const groupedAddOns = groupAddOnsByGroupId(business.data.add_ons);
+
+  // console.log("busineess details::", businessDetails.data.ratings);
 
   return (
     <>
@@ -72,6 +92,21 @@ export default async function BusinessProfile(props: propType) {
                   readOnly
                 />
               </div>
+            ) : null}
+            {business.data.ratings.length > 0 ? (
+              <>
+                <div className="text-secondary-light-gray font-semibold text-base">
+                  Reviews({business.data.ratings.length})
+                </div>
+                {/* 
+                {business.data.ratings.map(review => {
+                  console.log("review", review);
+                  return (
+                    <div key={review.id}>
+                      <Review reviewData={review!} />
+                    </div>
+                  )})} */}
+              </>
             ) : null}
           </div>
         </div>
