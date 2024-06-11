@@ -72,7 +72,7 @@ export default async function BusinessProfile(props: propType) {
                 />
               </div>
             ) : null}
-            <Reviews reviews={business.data.ratings ?? []} rating_summary = {business.data.rating_summary[0]}/>
+            <Reviews reviews={business.data.ratings ?? []} rating_summary={business.data.rating_summary}/>
           </div>
         </div>
       </div>

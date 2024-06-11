@@ -79,7 +79,7 @@ WHERE
   return businessDetail
     ? {
       ...businessDetail,
-      rating_summary: (businessRatings ?? {
+      rating_summary: (businessRatings[0] ?? {
         total_ratings: 0,
         average_rating: "0.0",
         count_rating_1: 0,
@@ -87,7 +87,7 @@ WHERE
         count_rating_3: 0,
         count_rating_4: 0,
         count_rating_5: 0,
-      }) as unknown as[{
+      }) as unknown as {
         total_ratings: number;
         average_rating: string;
         count_rating_1: number;
@@ -95,7 +95,7 @@ WHERE
         count_rating_3: number;
         count_rating_4: number;
         count_rating_5: number;
-      }],
+      },
     }
     : null;
 };
