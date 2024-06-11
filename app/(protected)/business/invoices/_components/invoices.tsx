@@ -325,7 +325,7 @@ const Invoices = (props: propType) => {
       columns={columns}
       extraFilters={ExtraFilters}
     />
-  ) : null;
+  ) : <p className="text-base text-center">No invoice exist</p>;
 };
 
 export default Invoices;

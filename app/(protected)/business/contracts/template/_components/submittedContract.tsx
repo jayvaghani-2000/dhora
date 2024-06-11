@@ -210,7 +210,7 @@ const SubmittedContract = (props: propType) => {
       columns={columns}
       extraFilters={ExtraFilters}
     />
-  ) : null;
+  ) : <p className="text-base text-center">No contract exist</p>;;
 };
 
 export default SubmittedContract;
