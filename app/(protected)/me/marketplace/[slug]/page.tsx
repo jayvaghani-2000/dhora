@@ -8,7 +8,6 @@ import AddOnPreview from "@/app/(protected)/business/business-profile/_component
 import ScheduleCall from "@/app/(protected)/business/business-profile/_components/schedule-call";
 import { getBusinessDetails } from "@/actions/(protected)/business/getBusinessDetails";
 import { Metadata } from "next";
-import Review from "@/components/review/review";
 import Reviews from "../_components/reviews";
 
 type propType = { params: { slug: string } };
@@ -17,23 +16,6 @@ export async function generateMetadata({
   params,
 }: propType): Promise<Metadata> {
   const businessDetails = await getBusinessDetails(params.slug);
-
-  const summary:Record<string,any> = businessDetails.data.rating_summary[0];
-  const totalRatings = summary.total_ratings;
-  const ratingPercentages:Record<string,any> = {};
-
-  for (let i = 1; i <= 5; i++) {
-    const key = `count_rating_${i}`;
-    ratingPercentages[key] = (summary[key] / totalRatings) * 100;
-  }
-
-  // Format percentages to two decimal places
-  for (let key in ratingPercentages) {
-    ratingPercentages[key] = ratingPercentages[key].toFixed(2);
-  }
-
-  console.log("ratingPercentages",ratingPercentages);
-  
 
   if (businessDetails.success) {
     return {
@@ -52,7 +34,6 @@ export default async function BusinessProfile(props: propType) {
     await me(),
     await getBusinessDetails(props.params.slug),
   ]);
-
   if (!business.success || !business.data) {
     return <div className="text-center">Unable to fetch business details</div>;
   }
@@ -91,7 +72,7 @@ export default async function BusinessProfile(props: propType) {
                 />
               </div>
             ) : null}
-            <Reviews reviews={business.data.ratings ?? []}/>
+            <Reviews reviews={business.data.ratings ?? []} rating_summary = {business.data.rating_summary[0]}/>
           </div>
         </div>
       </div>
