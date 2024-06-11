@@ -24,7 +24,7 @@ const handler = async (user: User, eventId: string) => {
 
     return { success: true as true, data: data };
   } catch (err) {
-    return {data: [] ,...errorHandler(err)};
+    return { data: [], ...errorHandler(err) };
   }
 };
 

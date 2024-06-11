@@ -49,26 +49,30 @@ export default async function BusinessProfile(props: propType) {
         <div className="grid grid-cols-10 gap-5">
           <div className="col-span-10 flex flex-col gap-5">
             <BusinessDetails business={business.data} />
-            <div>
-              <div className="text-secondary-light-gray font-semibold text-base">
-                Packages
+            {groupedPackages.length > 0 ? (
+              <div>
+                <div className="text-secondary-light-gray font-semibold text-base">
+                  Packages
+                </div>
+                <Preview
+                  packagesGroups={business.data.package_groups}
+                  groupedPackages={groupedPackages}
+                  readOnly
+                />
               </div>
-              <Preview
-                packagesGroups={business.data.package_groups}
-                groupedPackages={groupedPackages}
-                readOnly
-              />
-            </div>
-            <div>
-              <div className="text-secondary-light-gray font-semibold text-base">
-                Add Ons
+            ) : null}
+            {groupedAddOns.length > 0 ? (
+              <div>
+                <div className="text-secondary-light-gray font-semibold text-base">
+                  Add Ons
+                </div>
+                <AddOnPreview
+                  addOnGroups={business.data.add_on_groups}
+                  groupedAddOns={groupedAddOns}
+                  readOnly
+                />
               </div>
-              <AddOnPreview
-                addOnGroups={business.data.add_on_groups}
-                groupedAddOns={groupedAddOns}
-                readOnly
-              />
-            </div>
+            ) : null}
           </div>
         </div>
       </div>

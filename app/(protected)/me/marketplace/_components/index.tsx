@@ -30,17 +30,19 @@ const MarketPlace = (props: propsType) => {
   });
   const [businessList, setBusinessList] = useState(businesses);
 
-  console.log(businessList.data)
+  console.log(businessList.data);
 
-  const getFilteredBusiness = 
-    debounce(async () => {
-      const data = await getBusinesses({ filter: filter });
-      setBusinessList(prev => ({
-        ...prev,
-        data: filter.current_page === 1 ? data.data.data : [...prev.data, ...data.data.data],
-      }));
-    }, 500)
-  
+  const getFilteredBusiness = debounce(async () => {
+    const data = await getBusinesses({ filter: filter });
+    setBusinessList(prev => ({
+      ...prev,
+      data:
+        filter.current_page === 1
+          ? data.data.data
+          : [...prev.data, ...data.data.data],
+    }));
+  }, 500);
+
   useEffect(() => {
     getFilteredBusiness();
     return () => {

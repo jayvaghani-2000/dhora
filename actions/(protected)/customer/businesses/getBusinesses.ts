@@ -97,7 +97,13 @@ const handler = async (user: User, params: paramsType) => {
 
     // Apply city filter
     if (city) {
-      filteredData = filteredData.filter(b => b.address === city);
+      filteredData = filteredData.filter(b => {
+        const cityLowerCase = city.toLowerCase();
+        return (
+          b.address?.toLowerCase().includes(cityLowerCase) ||
+          cityLowerCase.includes(b.address?.toLowerCase())
+        );
+      });
     }
 
     if (sort) {

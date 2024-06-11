@@ -5,7 +5,6 @@ import Review from "./review";
 import { Button } from "@/components/ui/button";
 import { getReviewsType } from "@/actions/_utils/types.type";
 
-
 type BusinessData = {
   name: string;
   id: string;
@@ -41,12 +40,12 @@ const Reviews = (props: propsTypes) => {
               setSendReview(true);
             }}
           >
-              Add Reviews
+            Add Reviews
           </Button>
         </div>
       </div>
       {reviews.length > 0 ? (
-        reviews.map((review) => (
+        reviews.map(review => (
           <div key={review.id}>
             <Review reviewData={review!} />
           </div>

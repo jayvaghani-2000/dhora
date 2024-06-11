@@ -50,6 +50,6 @@ export const getEventBusiness = async (params: paramType) => {
       }[],
     };
   } catch (error) {
-    return errorHandler(error)
+    return errorHandler(error);
   }
 };

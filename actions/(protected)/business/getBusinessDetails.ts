@@ -92,14 +92,14 @@ const getBusinessDetailHandler = async (user: User, businessId?: string) => {
           count_rating_4: 0,
           count_rating_5: 0,
         }) as unknown as {
-          total_ratings:  number,
-          average_rating: string,
-          count_rating_1: number,
-          count_rating_2: number,
-          count_rating_3: number,
-          count_rating_4: number,
-          count_rating_5: number,
-        }
+          total_ratings: number;
+          average_rating: string;
+          count_rating_1: number;
+          count_rating_2: number;
+          count_rating_3: number;
+          count_rating_4: number;
+          count_rating_5: number;
+        },
       }
     : null;
 };
