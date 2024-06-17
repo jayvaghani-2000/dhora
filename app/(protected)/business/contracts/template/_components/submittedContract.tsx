@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { getSubmittedContractResponseType } from "@/actions/_utils/types.type";
+import {
+  getSubmittedContractEventResponseType,
+  getSubmittedContractResponseType,
+} from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { formatDate } from "@/lib/common";
 import clsx from "clsx";
@@ -13,7 +16,12 @@ import { DateRangePicker } from "@/components/shared/range-picker";
 import { isWithinInterval } from "date-fns";
 import Actions from "./actions";
 
-type propType = { templates: getSubmittedContractResponseType["data"] };
+type propType = {
+  templates:
+    | getSubmittedContractResponseType["data"]
+    | getSubmittedContractEventResponseType["data"];
+  showAction: boolean;
+};
 
 export type recordType = {
   name: string;
@@ -85,8 +93,7 @@ const ExtraFilters = (props: extraFilterPropType) => {
 };
 
 const SubmittedContract = (props: propType) => {
-  const { templates } = props;
-
+  const { templates, showAction } = props;
   const parsedTemplate: recordType[] = templates!.map(i => ({
     name: i.template.name,
     submitter_email: i.submitters[0].email,
@@ -183,14 +190,19 @@ const SubmittedContract = (props: propType) => {
         );
       },
     },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        return <Actions row={row} />;
-      },
-    },
   ];
+
+  const actionColumn = {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }: any) => {
+      return <Actions row={row} />;
+    },
+  };
+
+  {
+    showAction && columns.push(actionColumn);
+  }
 
   return parsedTemplate.length > 0 ? (
     <CustomTable
@@ -198,7 +210,7 @@ const SubmittedContract = (props: propType) => {
       columns={columns}
       extraFilters={ExtraFilters}
     />
-  ) : null;
+  ) : <p className="text-base text-center">No contract exist</p>;;
 };
 
 export default SubmittedContract;

@@ -1,0 +1,1 @@
+ALTER TABLE "sub_events" ADD COLUMN "deleted" boolean DEFAULT false;

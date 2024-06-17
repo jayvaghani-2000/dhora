@@ -54,7 +54,6 @@ async function handler(req: Request) {
                 .update(businesses)
                 .set({
                   stripe_account_verified: new Date(),
-                  updated_at: new Date(),
                 })
                 .where(eq(businesses.stripe_id, account.id));
             }
@@ -68,9 +67,8 @@ async function handler(req: Request) {
                 .update(invoices)
                 .set({
                   status: "paid",
-                  updated_at: new Date(),
                 })
-                .where(eq(invoices.id, BigInt(metaData.invoice_id)));
+                .where(eq(invoices.id, metaData.invoice_id));
               await stripe.paymentLinks.update(data.payment_link as string, {
                 active: false,
               });

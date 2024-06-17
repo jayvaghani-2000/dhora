@@ -6,9 +6,7 @@ export interface IOption {
   readonly value: number;
 }
 
-const INCREMENT = 15;
-
-export const useOptions = (timeFormat: number | null) => {
+export const useOptions = (timeFormat: number | null, INCREMENT: number) => {
   const [filteredOptions, setFilteredOptions] = useState<IOption[]>([]);
 
   const options = useMemo(() => {

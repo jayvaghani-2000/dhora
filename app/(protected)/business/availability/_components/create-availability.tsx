@@ -16,7 +16,7 @@ import {
   initializeAvailability,
 } from "../_utils/initializeAvailability";
 import { parseTimezone, timeZone } from "@/lib/common";
-import { createAvailability } from "@/actions/(protected)/availability/createAvailability";
+import { createAvailability } from "@/actions/(protected)/business/availability/createAvailability";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { useRouter } from "next/navigation";
 
@@ -62,9 +62,7 @@ const CreateAvailability = (props: propType) => {
     });
     if (res.success) {
       await revalidate("/business/availability");
-      navigate.push(
-        `/business/availability/${res.data.id as unknown as string}`
-      );
+      navigate.push(`/business/availability/${res.data.id}`);
     } else {
       setError(res.error);
     }

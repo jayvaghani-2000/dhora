@@ -1,4 +1,4 @@
-import { deleteSubmittedContracts } from "@/actions/(protected)/contracts/deleteSubmittedContract";
+import { deleteSubmittedContracts } from "@/actions/(protected)/business/contracts/deleteSubmittedContract";
 import { Button } from "@/components/ui/button";
 import { Row } from "@tanstack/react-table";
 import React, { useState } from "react";

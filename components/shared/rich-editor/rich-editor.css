@@ -1,0 +1,53 @@
+.quillWrapper > .quill > .ql-toolbar {
+  border-bottom: none;
+  border-color: rgb(30, 41, 59);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.quillWrapper > .quill > .ql-container {
+  border-color: #1e293b;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.quillWrapper > .quill > .ql-toolbar > .ql-formats {
+  path {
+    stroke: #707070;
+  }
+  line {
+    stroke: #707070;
+  }
+}
+
+.readOnly-quillWrapper > .quill > .ql-toolbar {
+  display: none;
+}
+.readOnly-quillWrapper > .quill > .ql-disabled {
+  border: none;
+}
+.readOnly-quillWrapper > .quill > .ql-disabled > .ql-editor {
+  padding: 0px;
+  font-size: 16px;
+  -webkit-box-orient: vertical;
+}
+
+.readOnly-quillWrapper-truncate > .quill > .ql-disabled > .ql-editor {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+}
+
+@media only screen and (max-width: 768px) {
+  .readOnly-quillWrapper > .quill > .ql-disabled > .ql-editor {
+    font-size: 14px;
+  }
+}
+.quillWrapper > .quill > .ql-container > .ql-editor.ql-blank::before {
+  color: hsl(215.4 16.3% 46.9%);
+  font-style: normal;
+}
+
+.quillWrapper > .quill > .ql-toolbar,
+.quillWrapper > .quill > .ql-container {
+  background: hsl(222.2 84% 4.9%);
+}

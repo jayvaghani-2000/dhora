@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { login } from "@/actions/(auth)/login";
+import Spinner from "@/components/shared/spinner";
+import { Password } from "@/components/shared/password";
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -74,14 +76,14 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" type="password" {...field} />
+                  <Password placeholder="Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <Button className="w-full mt-2" type="submit" disabled={loading}>
-            Login
+            Login {loading ? <Spinner type="inline" /> : null}
           </Button>
         </form>
       </Form>

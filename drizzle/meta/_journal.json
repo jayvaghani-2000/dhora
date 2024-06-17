@@ -92,6 +92,216 @@
       "when": 1711433221483,
       "tag": "0012_classy_next_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1711614971323,
+      "tag": "0013_spicy_fenris",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1711616071246,
+      "tag": "0014_curious_eddie_brock",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "5",
+      "when": 1711948100559,
+      "tag": "0015_striped_stingray",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "5",
+      "when": 1712037481728,
+      "tag": "0016_parched_green_goblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1712051011935,
+      "tag": "0017_red_wrecking_crew",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1712212071659,
+      "tag": "0018_wise_runaways",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1712213091087,
+      "tag": "0019_worried_hairball",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1712214837474,
+      "tag": "0020_colorful_smiling_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1712297248509,
+      "tag": "0021_great_apocalypse",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1712299817034,
+      "tag": "0022_tiresome_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1712309807430,
+      "tag": "0023_modern_lenny_balinger",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1713158689579,
+      "tag": "0024_many_the_fallen",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1713516965897,
+      "tag": "0025_rapid_nomad",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1713764507241,
+      "tag": "0026_round_the_stranger",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1713855895718,
+      "tag": "0027_neat_carnage",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1713941541794,
+      "tag": "0028_magenta_chronomancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "5",
+      "when": 1714122342697,
+      "tag": "0029_high_morg",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1714372386061,
+      "tag": "0030_sudden_lady_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1714395499751,
+      "tag": "0031_dizzy_karnak",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "5",
+      "when": 1714460005804,
+      "tag": "0032_wild_maria_hill",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "5",
+      "when": 1714727591246,
+      "tag": "0033_dear_wasp",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "5",
+      "when": 1714978384771,
+      "tag": "0034_petite_carnage",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1715579459046,
+      "tag": "0035_misty_nick_fury",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1715581839922,
+      "tag": "0036_public_red_skull",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "5",
+      "when": 1715586232490,
+      "tag": "0037_right_maddog",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1715586831418,
+      "tag": "0038_small_shockwave",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1715592830964,
+      "tag": "0039_freezing_marten_broadcloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1715842520114,
+      "tag": "0040_married_medusa",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1715932360154,
+      "tag": "0041_funny_lester",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "5",
+      "when": 1717394476826,
+      "tag": "0042_wakeful_luke_cage",
+      "breakpoints": true
     }
   ]
 }

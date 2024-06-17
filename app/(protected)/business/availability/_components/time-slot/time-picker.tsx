@@ -1,7 +1,7 @@
 import CustomSelect from "@/components/shared/custom-select";
 import { useOptions } from "@/lib/hook/useOptions";
 import React, { useEffect } from "react";
-import dayjs, { ConfigType } from "@/lib/dayjs";
+import { ConfigType } from "@/lib/dayjs";
 import { localTimeValue } from "../../_utils/initializeAvailability";
 
 type propType = {
@@ -9,10 +9,17 @@ type propType = {
   min?: ConfigType;
   max?: ConfigType;
   onChange: (value: number) => void;
+  optionIncrement?: number;
 };
 
-const TimePicker = ({ value, max, min, onChange }: propType) => {
-  const { filter, options } = useOptions(12);
+const TimePicker = ({
+  value,
+  max,
+  min,
+  onChange,
+  optionIncrement = 15,
+}: propType) => {
+  const { filter, options } = useOptions(12, optionIncrement);
 
   useEffect(() => {
     filter({ current: value });
@@ -32,8 +39,8 @@ const TimePicker = ({ value, max, min, onChange }: propType) => {
             filter({ current: value });
           }
         }}
-        className="px-1"
-        placeholder="Select time"
+        className="px-2"
+        placeholder="Select"
         value={options
           .find(option => option.value === localTimeValue(value))
           ?.value.toString()}

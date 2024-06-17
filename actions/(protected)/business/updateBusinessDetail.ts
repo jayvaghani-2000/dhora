@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { eq } from "drizzle-orm";
-import { businessDetailSchemaType } from "@/app/(protected)/business/invoices/_utils/schema";
+import { businessDetailSchemaType } from "@/lib/schema";
 
 const handler = async (
   user: User,
@@ -17,13 +17,12 @@ const handler = async (
   const { businessDetail } = params;
 
   try {
-    const { business_address, business_contact } = businessDetail;
+    const { address, contact } = businessDetail;
     await db
       .update(businesses)
       .set({
-        address: business_address,
-        contact: business_contact,
-        updated_at: new Date(),
+        address: address,
+        contact: contact,
       })
       .where(eq(businesses.id, user.business_id!))
       .returning();

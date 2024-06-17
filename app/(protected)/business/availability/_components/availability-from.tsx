@@ -11,7 +11,7 @@ import {
   createAvailabilitySchemaType,
   getAvailabilityDetailType,
 } from "@/actions/_utils/types.type";
-import { updateAvailability } from "@/actions/(protected)/availability/updateAvailability";
+import { updateAvailability } from "@/actions/(protected)/business/availability/updateAvailability";
 import { useParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
@@ -63,6 +63,10 @@ const AvailabilityForm = (props: propType) => {
     if (res && !res.success) {
       toast({
         title: res.error,
+      });
+    } else {
+      toast({
+        title: "Availability updated successfully!",
       });
     }
     setLoading(false);

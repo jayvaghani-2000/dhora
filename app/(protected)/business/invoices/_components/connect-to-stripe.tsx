@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { onBoarding } from "@/actions/(protected)/stripe/onboarding";
+import { onBoarding } from "@/actions/(protected)/business/stripe/onboarding";
 import { BsCreditCard2Front } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { profileType } from "@/actions/_utils/types.type";
@@ -11,7 +11,7 @@ import { Input, InputProps } from "@/components/ui/input";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { businessDetailSchema } from "../_utils/schema";
+import { businessDetailSchema } from "@/lib/schema";
 import { z } from "zod";
 import {
   Form,
@@ -40,10 +40,10 @@ const ConnectToStripe = (props: propType) => {
   const form = useForm<z.infer<typeof businessDetailSchema>>({
     resolver: zodResolver(businessDetailSchema),
     defaultValues: {
-      business_name: user?.business?.name ?? "",
-      business_address: user?.business?.address ?? "",
-      business_email: user?.email ?? "",
-      business_contact: user?.business?.contact ?? "",
+      name: user?.business?.name ?? "",
+      address: user?.business?.address ?? "",
+      email: user?.email ?? "",
+      contact: user?.business?.contact ?? "",
     },
     reValidateMode: "onChange",
   });
@@ -156,7 +156,7 @@ const ConnectToStripe = (props: propType) => {
 
             <FormField
               control={form.control}
-              name="business_contact"
+              name="contact"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormControl>
@@ -175,7 +175,7 @@ const ConnectToStripe = (props: propType) => {
               onChange={e => {
                 setAddress(e);
               }}
-              fieldName="business_address"
+              fieldName="address"
               form={form}
               defaultValue={user?.business?.address ?? ""}
               placeholder="Business Address"

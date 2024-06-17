@@ -29,7 +29,7 @@ const InvoicePreview = ({
     invoice?.tax ?? 0,
     invoice?.platform_fee
   );
-  const invoiceId = invoice?.id as unknown as string;
+  const invoiceId = invoice?.id;
 
   const preview = useRef<HTMLDivElement>(null!);
   const handlePrint = useReactToPrint({

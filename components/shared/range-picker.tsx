@@ -18,10 +18,12 @@ export function DateRangePicker({
   onChange,
   placeholder,
   value,
+  disabled = () => false,
 }: Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & {
   onChange: (value: DateRange | undefined) => void;
   placeholder: string;
   value: DateRange | undefined;
+  disabled?: (date: Date) => boolean;
 }) {
   const [date, setDate] = React.useState<DateRange | undefined>(value);
 
@@ -37,7 +39,7 @@ export function DateRangePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "max-w-[300px] justify-start text-left font-normal",
+              "max-w-[300px] h-8 lg:h-10 justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
@@ -64,6 +66,7 @@ export function DateRangePicker({
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+            disabled={disabled}
           />
         </PopoverContent>
       </Popover>

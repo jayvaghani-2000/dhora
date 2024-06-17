@@ -29,15 +29,14 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
-import { businessTypes } from "@/actions/_utils/types.type";
+import Spinner from "@/components/shared/spinner";
+import { Password } from "@/components/shared/password";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const businessTypeOptions = Object.values(
-    businessTypeEnum
-  )[1] as businessTypes[];
+  const businessTypeOptions = businessTypeEnum.enumValues;
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -53,7 +52,10 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setLoading(true);
-    await register(values);
+    const res = await register(values);
+    if (res && res.error) {
+      setError(res.error);
+    }
     setLoading(false);
   }
 
@@ -105,7 +107,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" type="password" {...field} />
+                  <Password placeholder="Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -118,11 +120,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Confirm Password"
-                    type="password"
-                    {...field}
-                  />
+                  <Password placeholder="Confirm Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -258,7 +256,14 @@ export function RegisterForm() {
                 </FormControl>
                 <div className="space-y-1 leading-1 sm:leading-none w-full text-sm my-2 font-semibold">
                   <FormLabel>
-                    By signing up, you agree to our Terms & Privacy Policy
+                    By signing up, you agree to our{" "}
+                    <Link href="/terms" target="_blank">
+                      Terms
+                    </Link>{" "}
+                    &{" "}
+                    <Link href="/privacy" target="_blank">
+                      Privacy Policy
+                    </Link>
                   </FormLabel>
                 </div>
               </FormItem>
@@ -270,7 +275,7 @@ export function RegisterForm() {
             type="submit"
             disabled={loading || !form.formState.isValid}
           >
-            Get Started
+            Get Started {loading ? <Spinner type="inline" /> : null}
           </Button>
         </form>
       </Form>

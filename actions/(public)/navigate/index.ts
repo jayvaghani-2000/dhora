@@ -16,7 +16,7 @@ export async function navigateToDashboard() {
     const { session, user } = await lucia.validateSession(token.value);
     if (session && !user.business_id) {
       return redirect(DEFAULT_USER_LOGIN_REDIRECT);
-    } else {
+    } else if (session) {
       return redirect(DEFAULT_BUSINESS_LOGIN_REDIRECT);
     }
   }

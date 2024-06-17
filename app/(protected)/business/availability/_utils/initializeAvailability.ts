@@ -7,8 +7,10 @@ import { weekDays } from "@/lib/constant";
 import { daysCode } from "@/lib/enum";
 import { v4 as uuid } from "uuid";
 import dayjs, { ConfigType } from "@/lib/dayjs";
-import { timeZone } from "@/lib/common";
+import { getDateFromTime, parseTimezone, timeZone } from "@/lib/common";
 import { nameOfDay } from "@/lib/weekday";
+import { createAvailabilitySchema } from "@/db/schema";
+import { z } from "zod";
 
 export const localTime = (value: string | Date | number) => {
   return dayjs(new Date(value), {
@@ -117,16 +119,6 @@ export const getTimeFromDate = (date: string) => {
   return dayjs(date).utc().format("h:mm a");
 };
 
-export const getDateFromTime = (time: string) => {
-  let date = dayjs(time, "h:mm a");
-  const minutes = date.get("minutes");
-  if (minutes === 59) {
-    date = date.add(59, "seconds").add(999, "milliseconds");
-  }
-
-  return date.format("YYYY-MM-DDTHH:mm:ss[Z]");
-};
-
 export const getTimeSlotsFromDate = (
   timeSlot: ReturnType<typeof initializeAvailability>["timeSlots"]
 ) => {
@@ -213,3 +205,16 @@ export function availabilityAsString(
     i => `${weekSpan(resultArray[i])}, ${i.toUpperCase()}`
   );
 }
+
+export const getAvailabilityData = () => {
+  const data = initializeAvailability();
+  const userTimeZone = parseTimezone(timeZone);
+
+  return {
+    availability: getTimeSlotsFromDate(data.timeSlots),
+    days: data.days,
+    timezone: userTimeZone,
+    default: true,
+    name: "Default Availability",
+  } as z.infer<typeof createAvailabilitySchema>;
+};

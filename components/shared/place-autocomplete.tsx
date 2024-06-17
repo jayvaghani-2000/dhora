@@ -12,6 +12,7 @@ type propType = {
   defaultValue?: string;
   fieldName: string;
   placeholder?: string;
+  popover?: boolean;
 };
 
 function PlacesAutocompleteInput({
@@ -21,6 +22,7 @@ function PlacesAutocompleteInput({
   defaultValue,
   fieldName,
   placeholder = "Address",
+  popover = false,
 }: propType): React.ReactNode {
   const [isTouched, setIsTouched] = useState(false);
   const { mapScriptLoaded } = useGlobalStore();
@@ -47,7 +49,7 @@ function PlacesAutocompleteInput({
           }) => {
             const inputDefaultValue = isTouched ? "" : defaultValue;
             return (
-              <div className="w-full">
+              <div className="w-full relative">
                 <FormField
                   control={form.control}
                   name={fieldName}
@@ -72,7 +74,8 @@ function PlacesAutocompleteInput({
                 />
                 <div
                   className={clsx({
-                    "bg-background rounded-md": true,
+                    "bg-background rounded-md ": true,
+                    "absolute top-10": popover,
                     "border  border-input p-1":
                       loading || suggestions.length > 0,
                   })}

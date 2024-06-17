@@ -5,27 +5,24 @@ import { usePathname } from "next/navigation";
 import SecondaryNavbarHeader from "./components/secondaryNavbarHeader";
 import SecondaryNavbarSearch from "./components/secondaryNavbarSearch";
 import { Separator } from "@/components/ui/separator";
-import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { BsShop } from "react-icons/bs";
 import {
   LiaFileContractSolid,
   LiaFileInvoiceDollarSolid,
 } from "react-icons/lia";
+import { IoIosArrowDropdown } from "react-icons/io";
+import { FaLink } from "react-icons/fa6";
 import { FaRegClock } from "react-icons/fa";
 import SecondaryNavbarItem from "./components/secondaryNavbarItem";
+import { profileType } from "@/actions/_utils/types.type";
+import { CgProfile } from "react-icons/cg";
+import { IoIosImage } from "react-icons/io";
+import { GoPackage } from "react-icons/go";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { LuCalendar } from "react-icons/lu";
+import { MdOutlineReviews } from "react-icons/md";
 
 export const StaticOptions = [
-  {
-    key: "me",
-    options: [
-      {
-        key: "marketplace",
-        title: "Marketplace",
-        icon: <BsShop />,
-        path: "/marketplace",
-      },
-    ],
-  },
   {
     key: "@me",
     options: [
@@ -33,7 +30,13 @@ export const StaticOptions = [
         key: "marketplace",
         title: "Marketplace",
         icon: <BsShop />,
-        path: "/marketplace",
+        path: "/@me/marketplace",
+      },
+      {
+        key: "bookings",
+        title: "Bookings",
+        icon: <LuCalendar />,
+        path: "/@me/bookings",
       },
     ],
   },
@@ -53,31 +56,91 @@ export const StaticOptions = [
         path: "/business/invoices",
       },
       {
+        key: "bookings",
+        title: "Bookings",
+        icon: <LuCalendar />,
+        path: "/business/bookings",
+      },
+      {
         key: "availability",
         title: "Availability",
         icon: <FaRegClock />,
         path: "/business/availability",
       },
+      {
+        key: "booking-types",
+        title: "Booking Types",
+        icon: <FaLink />,
+        path: "/business/booking-types",
+      },
+      {
+        key: "business-profile",
+        title: "Market Profile",
+        icon: <CgProfile />,
+        path: "/business/business-profile",
+        submenu: [
+          {
+            key: "business-profile/assets",
+            title: "Assets management",
+            icon: <IoIosImage />,
+            path: "/business/business-profile/assets",
+          },
+          {
+            key: "business-profile/packages",
+            title: "Packages",
+            icon: <GoPackage />,
+            path: "/business/business-profile/packages",
+          },
+          {
+            key: "business-profile/add-ons",
+            title: "Add on",
+            icon: <IoMdAddCircleOutline />,
+            path: "/business/business-profile/add-ons",
+          },
+        ],
+      },
     ],
   },
   {
-    key: "app",
+    key: "event",
     options: [
       {
-        key: "marketplace",
-        title: "Marketplace",
-        icon: <HiOutlineBuildingOffice2 />,
-        path: "/marketplace",
+        key: "contracts",
+        title: "Contracts",
+        icon: <LiaFileContractSolid />,
+        path: "contracts",
+      },
+      {
+        key: "invoices",
+        title: "Invoices",
+        icon: <LiaFileInvoiceDollarSolid />,
+        path: "invoices",
+      },
+      {
+        key: "itinerary",
+        title: "Itinerary",
+        icon: <IoIosArrowDropdown />,
+        path: "itinerary",
+      },
+      {
+        key: "Reviews",
+        title: "Reviews",
+        icon: <MdOutlineReviews />,
+        path: "reviews",
       },
     ],
   },
 ];
 
-const Secondary = () => {
+type propType = {
+  user: profileType;
+};
+
+const Secondary = (prop: propType) => {
   const path = usePathname();
   const key = StaticOptions.findIndex(o => path.startsWith(`/${o.key}`));
   const route = StaticOptions[key];
-  const options = route.options;
+  const options = route?.options;
 
   if (!options) return null;
 
@@ -97,7 +160,7 @@ const Secondary = () => {
               title={o.title}
               icon={o.icon}
               path={o.path}
-              currentPath={path}
+              submenu={o.submenu}
             />
           );
         })}

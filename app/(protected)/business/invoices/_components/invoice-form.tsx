@@ -10,6 +10,13 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CgDollar } from "react-icons/cg";
 import { AiOutlinePercentage } from "react-icons/ai";
 import { Input } from "@/components/ui/input";
@@ -19,31 +26,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { invoiceSchema, invoiceSchemaType } from "../_utils/schema";
+import { invoiceSchema, invoiceSchemaType } from "@/lib/schema";
 import { LiaPlusSolid } from "react-icons/lia";
-import { generateInvoice } from "@/actions/(protected)/invoices/generateInvoice";
+import { generateInvoice } from "@/actions/(protected)/business/invoices/generateInvoice";
 import { IconInput } from "@/components/shared/icon-input";
 import {
   formatAmount,
   generateBreakdownPrice,
   stringCasting,
 } from "@/lib/common";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { profileType } from "@/actions/_utils/types.type";
-import { updateInvoiceDetail } from "@/actions/(protected)/invoices/updateInvoiceDetail";
+import {
+  getEmailAndEventType,
+  getUserDetailsType,
+  profileType,
+} from "@/actions/_utils/types.type";
+import { updateInvoiceDetail } from "@/actions/(protected)/business/invoices/updateInvoiceDetail";
 import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { revalidate } from "@/actions/(public)/revalidate";
 import InvoicePdf from "./../_components/invoice-pdf/index";
+import { DatePicker } from "@/components/shared/date-picker";
+import { getBookingCustomer } from "@/actions/(protected)/customer/booking/getBookingCustomer";
 
 type propType =
   | {
@@ -61,6 +65,9 @@ const InvoiceForm = (props: propType) => {
   const { user, mode = "CREATE", invoiceData } = props;
   const [loading, setLoading] = useState(false);
   const params = useParams();
+  const searchParams = useSearchParams();
+  const bookingId = searchParams.get("bookingId");
+  const [bookings, setBookings] = useState<getUserDetailsType["data"]>([]);
   const { toast } = useToast();
   const [file, setFile] = useState(user?.business?.logo ?? "");
   const [updatedItem, setUpdatedItem] = useState(0);
@@ -69,16 +76,27 @@ const InvoiceForm = (props: propType) => {
     trigger: false,
   });
 
+  const handleSelectChange = (value: string) => {
+    const selectedEvent = bookings!.find(item => item.id === value);
+    if (selectedEvent) {
+      form.setValue("customer_name", selectedEvent.customer.name);
+      form.setValue("customer_email", selectedEvent.customer.email);
+      form.setValue("event_id", selectedEvent.event_id!);
+    }
+    form.setValue("event_id", value);
+  };
+
   const form = useForm<z.infer<typeof invoiceSchema>>({
     resolver: zodResolver(invoiceSchema),
     defaultValues:
       mode === "EDIT"
         ? { ...invoiceData, due_date: new Date(invoiceData!.due_date) }
         : {
-            business_name: user?.business?.name ?? "",
-            business_address: user?.business?.address ?? "",
-            business_email: user?.email ?? "",
-            business_contact: user?.business?.contact ?? "",
+            name: user?.business?.name ?? "",
+            address: user?.business?.address ?? "",
+            email: user?.email ?? "",
+            contact: user?.business?.contact ?? "",
+            event_id: "",
             customer_name: "",
             customer_email: "",
             customer_contact: "",
@@ -121,17 +139,32 @@ const InvoiceForm = (props: propType) => {
     setValue("subtotal", subtotal);
   }, [updatedItem, items, tax, setValue, form]);
 
+  useEffect(() => {
+    async function customerGet() {
+      const data = await getBookingCustomer();
+      if (data?.data) {
+        const byDefaultselectedEvent = data.data!.find(
+          item => item.id === bookingId
+        );
+        if (byDefaultselectedEvent) {
+          form.setValue("customer_name", byDefaultselectedEvent.customer.name);
+          form.setValue(
+            "customer_email",
+            byDefaultselectedEvent.customer.email
+          );
+          form.setValue("event_id", byDefaultselectedEvent.event_id!);
+        }
+        setBookings(data.data);
+      }
+    }
+    customerGet();
+  }, [bookingId]);
+
   async function onSubmit(
     values: z.infer<typeof invoiceSchema>,
     handleCheckout?: boolean
   ) {
-    const {
-      business_address,
-      business_contact,
-      business_email,
-      business_name,
-      ...rest
-    } = values;
+    const { address, contact, email, name, ...rest } = values;
 
     if (values.items.length === 0) {
       toast({
@@ -152,7 +185,7 @@ const InvoiceForm = (props: propType) => {
 
         if (handleCheckout) {
           setSavePdf({
-            invoiceId: data.data.id as unknown as string,
+            invoiceId: data.data.id,
             trigger: true,
           });
         } else {
@@ -173,7 +206,7 @@ const InvoiceForm = (props: propType) => {
       if (data.success) {
         if (handleCheckout) {
           setSavePdf({
-            invoiceId: data.data.id as unknown as string,
+            invoiceId: data.data.id,
             trigger: true,
           });
         } else {
@@ -221,7 +254,7 @@ const InvoiceForm = (props: propType) => {
               <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                 <FormField
                   control={form.control}
-                  name="business_name"
+                  name="name"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
                       <FormControl>
@@ -239,7 +272,7 @@ const InvoiceForm = (props: propType) => {
 
                 <FormField
                   control={form.control}
-                  name="business_email"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -257,7 +290,7 @@ const InvoiceForm = (props: propType) => {
 
                 <FormField
                   control={form.control}
-                  name="business_contact"
+                  name="contact"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -275,7 +308,7 @@ const InvoiceForm = (props: propType) => {
 
                 <FormField
                   control={form.control}
-                  name="business_address"
+                  name="address"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
                       <FormControl>
@@ -299,6 +332,46 @@ const InvoiceForm = (props: propType) => {
               <span>Customer Details</span>
             </div>
             <div className="border border-input px-4 py-3 rounded-md grid grid-cols-2 gap-x-4 gap-y-3">
+              <div>
+                <div className="text-base font-normal mb-2">
+                  Please select the event
+                </div>
+                <FormField
+                  control={form.control}
+                  name="event_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Select
+                          onValueChange={value => {
+                            field.onChange(value);
+                            handleSelectChange(value);
+                          }}
+                          defaultValue={bookingId!}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                <span className="text-muted-foreground">
+                                  Select Event
+                                </span>
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {bookings!.map(items => (
+                              <SelectItem key={items.id} value={items.id}>
+                                {items.event?.title}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="customer_name"
@@ -453,7 +526,6 @@ const InvoiceForm = (props: propType) => {
                         <FormControl>
                           <Input
                             type="number"
-                            className="h-9"
                             placeholder="Item Quantity"
                             {...field}
                             onChange={e => {
@@ -547,41 +619,21 @@ const InvoiceForm = (props: propType) => {
             <FormField
               control={form.control}
               name="due_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full h-9 justify-start text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a due date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={date => {
-                            field.onChange(date);
-                          }}
-                          disabled={date => date < new Date()}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <DatePicker
+                        placeholder="Select due date"
+                        value={field.value}
+                        onChange={field.onChange}
+                        disabled={date => date < new Date()}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           </div>
 

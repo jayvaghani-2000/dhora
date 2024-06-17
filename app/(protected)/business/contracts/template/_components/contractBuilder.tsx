@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { DocusealBuilder } from "@docuseal/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createContract } from "@/actions/(protected)/contracts/createContract";
+import { createContract } from "@/actions/(protected)/business/contracts/createContract";
 import { initiateContractResponseType } from "@/actions/_utils/types.type";
-import { updateContract } from "@/actions/(protected)/contracts/updateContract";
+import { updateContract } from "@/actions/(protected)/business/contracts/updateContract";
 import { Button } from "@/components/ui/button";
 import SendTemplate from "./sendTemplate";
 import { IoIosSend } from "react-icons/io";

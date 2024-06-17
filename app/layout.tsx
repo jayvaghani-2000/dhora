@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/provider";
 import WithAuth from "@/components/hoc/with-auth";
+import { me } from "@/actions/(auth)/me";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,13 +18,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await me();
   return (
     <html lang="en" className="dark">
       <body
         className={`${inter.className} bg-fixed min-h-screen overscroll-none`}
       >
         <StoreProvider>
-          <WithAuth>
+          <WithAuth user={user}>
             <>{children}</>
           </WithAuth>
         </StoreProvider>

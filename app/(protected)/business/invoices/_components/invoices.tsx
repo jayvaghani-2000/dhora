@@ -1,11 +1,8 @@
 "use client";
-import {
-  getInvoicesResponseType,
-  invoiceStatusTypes,
-} from "@/actions/_utils/types.type";
+import { getInvoicesResponseType } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { formatAmount, formatDate } from "@/lib/common";
-import React from "react";
+import React, { useState } from "react";
 import { CustomTable } from "@/components/shared/custom-table";
 import { ArrowUpDown } from "lucide-react";
 import { isWithinInterval } from "date-fns";
@@ -15,10 +12,14 @@ import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import Actions from "./actions";
 import clsx from "clsx";
+import { invoiceStatusTypeEnum } from "@/db/schema";
 
 type propType = {
   invoices: getInvoicesResponseType["data"];
+  showAction: boolean;
 };
+
+const statusMode = invoiceStatusTypeEnum.enumValues;
 
 export type recordType = {
   email: string;
@@ -26,7 +27,7 @@ export type recordType = {
   due_date: string;
   amount: number;
   id: string;
-  status: invoiceStatusTypes;
+  status: (typeof statusMode)[number];
 };
 
 type extraFilterPropType = {
@@ -163,7 +164,7 @@ const ExtraFilters = (props: extraFilterPropType) => {
 };
 
 const Invoices = (props: propType) => {
-  const { invoices } = props;
+  const { invoices, showAction } = props;
 
   const parsedInvoices: recordType[] = invoices!.map(i => ({
     id: String(i.id),
@@ -171,7 +172,7 @@ const Invoices = (props: propType) => {
     created_on: formatDate(i.created_at),
     amount: Number(i.total),
     due_date: formatDate(i.due_date),
-    status: i.status as invoiceStatusTypes,
+    status: i.status,
   }));
 
   const columns: ColumnDef<recordType>[] = [
@@ -306,22 +307,25 @@ const Invoices = (props: propType) => {
         );
       },
     },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        return <Actions row={row} />;
-      },
-    },
   ];
 
+  const actionColumn = {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }: any) => {
+      return <Actions row={row} />;
+    },
+  };
+  {
+    showAction && columns.push(actionColumn);
+  }
   return parsedInvoices.length > 0 ? (
     <CustomTable
       data={[...parsedInvoices]}
       columns={columns}
       extraFilters={ExtraFilters}
     />
-  ) : null;
+  ) : <p className="text-base text-center">No invoice exist</p>;
 };
 
 export default Invoices;

@@ -7,10 +7,11 @@ import { MdEdit } from "react-icons/md";
 import { useRef, useState } from "react";
 import Spinner from "@/components/shared/spinner";
 import { useParams } from "next/navigation";
-import { deleteAvailability } from "@/actions/(protected)/availability/deleteAvailability";
+import { deleteAvailability } from "@/actions/(protected)/business/availability/deleteAvailability";
 import { getAvailabilityDetailType } from "@/actions/_utils/types.type";
 import { availabilityAsString } from "../_utils/initializeAvailability";
 import BackButton from "@/components/shared/back-button";
+import { useToast } from "@/components/ui/use-toast";
 
 type propType = {
   handleUpdateAvailability: () => void;
@@ -38,10 +39,16 @@ const AvailabilityHeader = (props: propType) => {
   const inputRef = useRef<HTMLInputElement>(null!);
   const [hideEditIcon, setHideEditIcon] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const { toast } = useToast();
 
   const handleDeleteAvailability = async () => {
     setDeleting(true);
-    await deleteAvailability(params.availability_id as string);
+    const res = await deleteAvailability(params.availability_id as string);
+    if (res && !res.success) {
+      toast({ title: res.error });
+    } else {
+      toast({ title: "Availability deleted successfully!" });
+    }
     setDeleting(false);
   };
 
@@ -101,7 +108,6 @@ const AvailabilityHeader = (props: propType) => {
             </Label>
             <Switch
               id={`set_as_default`}
-              disabled={alreadyDefault}
               checked={isDefault}
               onCheckedChange={checked => {
                 setIsDefault(checked);

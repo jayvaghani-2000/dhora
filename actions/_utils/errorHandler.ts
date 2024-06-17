@@ -1,59 +1,57 @@
 import { AxiosError } from "axios";
-import { DatabaseError } from "pg";
 import { ZodError } from "zod";
 import { errorType } from "./types.type";
 
-const handleErrorMsg = (error: unknown) => {
-  if (error instanceof ZodError) {
-    const errorMessage = error.errors
-      .map(e => `${e.path[0]}: ${e.message}`)
-      .join("\n");
-    return { success: false, message: errorMessage };
-  } else if (error instanceof DatabaseError) {
-    if (error.routine === "_bt_check_unique") {
-      return {
-        success: false,
-        message: error.routine,
-        constraint: error.constraint,
-      };
-    } else {
-      return {
-        success: false,
-        message: "An error occurred while interacting with DB.",
-      };
-    }
-  } else {
-    return { success: false, message: "An unexpected error occurred." };
-  }
-};
+class PostgresError extends Error {
+  severity_local: string | undefined;
+  severity: string | undefined;
+  code: string | undefined;
+  detail: string | undefined;
+  schema_name: string | undefined;
+  table_name: string | undefined;
+  constraint_name: string | undefined;
+  file: string | undefined;
+  line: string | undefined;
+  routine: string | undefined;
+}
 
 export const errorHandler: (err: unknown) => errorType = (err: unknown) => {
   if (err instanceof ZodError) {
-    const errorObj = handleErrorMsg(err);
-    return { error: errorObj.message, success: false };
-  } else if (err instanceof DatabaseError) {
-    const errorObj = handleErrorMsg(err);
-
+    console.log(err, Object.keys(err));
+    const errorMessage = err.errors
+      .map(e => `${e.path[0]}: ${e.message}`)
+      .join("\n");
+    return { error: errorMessage, success: false };
+  } else if (err instanceof Error) {
+    const error = err as PostgresError;
     if (
-      errorObj.message === "_bt_check_unique" &&
-      errorObj.constraint === "users_email_unique"
+      error.routine === "_bt_check_unique" &&
+      error.constraint_name === "unique_package_name"
     ) {
-      return { error: "The email is already registered", success: false };
-    } else if (
-      errorObj.message === "_bt_check_unique" &&
-      errorObj.constraint === "users_username_unique"
-    ) {
-      return { error: "Username already taken", success: false };
-    } else {
-      return { error: errorObj.message, success: false };
+      return { error: "Package with same name already exist", success: false };
     }
+    if (
+      error.routine === "_bt_check_unique" &&
+      error.constraint_name === "unique_grouped_name"
+    ) {
+      return {
+        error: "Package group with same name already exist",
+        success: false,
+      };
+    }
+    if (
+      error.routine === "_bt_check_unique" &&
+      error.constraint_name === "users_email_unique"
+    ) {
+      return {
+        error: "Email is already registered",
+        success: false,
+      };
+    }
+
+    return { error: err.message, success: false };
   } else if (err instanceof AxiosError) {
     return { error: err.response?.data?.error ?? "", success: false };
-  } else if (err instanceof Error) {
-    if (err.message === "User not found") {
-      return { error: "User not found", success: false };
-    }
-    return { error: err.message, success: false };
   }
   return { error: "Something went wrong", success: false };
 };

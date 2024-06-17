@@ -1,7 +1,7 @@
-import { getInvoiceDetail } from "@/actions/(protected)/invoices/getInvoiceDetail";
+import { getInvoiceDetail } from "@/actions/(protected)/business/invoices/getInvoiceDetail";
 import InvoiceForm from "../_components/invoice-form";
 import { me } from "@/actions/(auth)/me";
-import { invoiceSchemaType } from "../_utils/schema";
+import { invoiceSchemaType } from "@/lib/schema";
 
 type propType = {
   params: {
@@ -17,10 +17,10 @@ export default async function InvoicesPage(props: propType) {
   const user = await me();
 
   const invoiceDetail = {
-    business_name: user?.data?.business?.name ?? "",
-    business_address: user?.data?.business?.address ?? "",
-    business_email: user?.data?.email ?? "",
-    business_contact: user?.data?.business?.contact ?? "",
+    name: user?.data?.business?.name ?? "",
+    address: user?.data?.business?.address ?? "",
+    email: user?.data?.email ?? "",
+    contact: user?.data?.business?.contact ?? "",
     ...result.data,
   };
 
@@ -28,6 +28,10 @@ export default async function InvoicesPage(props: propType) {
   delete invoiceDetail.business_id;
   delete invoiceDetail.created_at;
   delete invoiceDetail.updated_at;
+
+  if (!user.success) {
+    return <div className="text-center">Unable to fetch user details</div>;
+  }
 
   return result.success ? (
     <InvoiceForm

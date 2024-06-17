@@ -1,4 +1,4 @@
-import { getInvoiceDetail } from "@/actions/(protected)/invoices/getInvoiceDetail";
+import { getInvoiceDetail } from "@/actions/(protected)/business/invoices/getInvoiceDetail";
 import React from "react";
 import InvoicePreview from "../../_components/invoice-preview";
 

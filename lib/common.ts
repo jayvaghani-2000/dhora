@@ -1,13 +1,15 @@
-import { invoiceSchemaType } from "@/app/(protected)/business/invoices/_utils/schema";
+import { invoiceSchemaType } from "@/lib/schema";
 import { format } from "date-fns";
 import { PLATFORM_FEE } from "./constant";
 import clsx from "clsx";
-import { invoiceStatusTypes } from "@/actions/_utils/types.type";
 import { getTimeZones } from "@vvo/tzdb";
+import { invoiceStatusTypeEnum } from "@/db/schema";
+import { getAddOnsType, getPackagesType } from "@/actions/_utils/types.type";
+import dayjs from "dayjs";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
-  const initials = words.map(word => word[0].toUpperCase());
+  const initials = words.map(word => word[0]?.toUpperCase());
   const result = initials.join("");
 
   return result;
@@ -16,6 +18,29 @@ export function getInitial(name: string) {
 export function formatDate(date: Date) {
   return format(new Date(date), "MMM dd,yyyy");
 }
+export function dateWithoutTime(date: Date | string) {
+  return format(new Date(date), "yyyy-MM-dd");
+}
+
+export const getDateFromTime = (time: string) => {
+  let date = dayjs(time, "h:mm a");
+  const minutes = date.get("minutes");
+  if (minutes === 59) {
+    date = date.add(59, "seconds").add(999, "milliseconds");
+  }
+
+  return date.format("YYYY-MM-DDTHH:mm:ss[Z]");
+};
+
+export const getDateTimeFormatted = (date: Date | string, time: string) => {
+  let dateTime = dayjs(`${date} ${time}`, "YYYY-MM-DD h:mm a");
+  const minutes = dateTime.get("minutes");
+  if (minutes === 59) {
+    dateTime = dateTime.add(59, "seconds").add(999, "milliseconds");
+  }
+
+  return dateTime.format("YYYY-MM-DDTHH:mm:ss[Z]");
+};
 
 export function formatAmount(amount: number) {
   return new Intl.NumberFormat("en-US", {
@@ -90,7 +115,9 @@ export const itemRateWithFeeAndTaxes = (
   };
 };
 
-export const invoiceStatusColor = (status: invoiceStatusTypes) =>
+export const invoiceStatusColor = (
+  status: (typeof invoiceStatusTypeEnum.enumValues)[number]
+) =>
   clsx({
     "relative capitalize flex gap-1 items-center": true,
     "text-green-600 hover:text-green-600": status === "paid",
@@ -104,5 +131,107 @@ export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 export const parseTimezone = (timeZone: string) => {
   const timeZonesWithUtc = getTimeZones({ includeUtc: true });
 
-  return timeZonesWithUtc.find(i => i.group.includes(timeZone))?.name;
+  const timezone = timeZonesWithUtc.find(i => i.group.includes(timeZone));
+
+  return timezone?.name;
 };
+
+export const trimRichEditor = (value: string) => {
+  return (value ?? "").replace(/(<p><br><\/p>)+/g, "$1");
+};
+
+export function extractVideoMetadata(file: File) {
+  return new Promise((resolve, reject) => {
+    let mime = file.type;
+    let rd = new FileReader();
+
+    rd.onload = function (e) {
+      let blob = new Blob([e.target!.result as string], {
+        type: mime,
+      });
+      let url = (URL || webkitURL).createObjectURL(blob);
+      let video = document.createElement("video");
+      video.preload = "metadata";
+      video.addEventListener("loadedmetadata", function () {
+        const metadata = {
+          height: video.videoHeight,
+          width: video.videoWidth,
+        };
+
+        (URL || webkitURL).revokeObjectURL(url);
+        resolve(metadata);
+      });
+      video.src = url;
+    };
+    let chunk = file.slice(0, 500000);
+    rd.readAsArrayBuffer(chunk);
+  });
+}
+
+export function groupPackagesByGroupId(packages: getPackagesType["data"]) {
+  const groupedPackages = {} as {
+    [key: string]: {
+      package_group_id: string | null;
+      package: getPackagesType["data"];
+    };
+  };
+  const nonGroupedPackages: {
+    package_group_id: string | null;
+    package: getPackagesType["data"];
+  }[] = [];
+
+  packages?.forEach(pack => {
+    const groupId = pack.package_group_id;
+
+    if (groupId !== null) {
+      if (!groupedPackages[groupId]) {
+        groupedPackages[groupId] = {
+          package_group_id: groupId,
+          package: [],
+        };
+      }
+      groupedPackages[groupId].package!.push(pack);
+    } else {
+      nonGroupedPackages.push({
+        package_group_id: null,
+        package: [pack],
+      });
+    }
+  });
+
+  return Object.values(groupedPackages).concat(nonGroupedPackages);
+}
+
+export function groupAddOnsByGroupId(addOns: getAddOnsType["data"]) {
+  const groupedPackages = {} as {
+    [key: string]: {
+      add_on_group_id: string | null;
+      addOn: getAddOnsType["data"];
+    };
+  };
+  const nonGroupedPackages: {
+    add_on_group_id: string | null;
+    addOn: getAddOnsType["data"];
+  }[] = [];
+
+  addOns?.forEach(i => {
+    const groupId = i.add_on_group_id;
+
+    if (groupId !== null) {
+      if (!groupedPackages[groupId]) {
+        groupedPackages[groupId] = {
+          add_on_group_id: groupId,
+          addOn: [],
+        };
+      }
+      groupedPackages[groupId].addOn!.push(i);
+    } else {
+      nonGroupedPackages.push({
+        add_on_group_id: null,
+        addOn: [i],
+      });
+    }
+  });
+
+  return Object.values(groupedPackages).concat(nonGroupedPackages);
+}

@@ -6,8 +6,10 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { deleteAvailability } from "@/actions/(protected)/availability/deleteAvailability";
+import { deleteAvailability } from "@/actions/(protected)/business/availability/deleteAvailability";
 import { availabilityAsString } from "../../_utils/initializeAvailability";
+import { useToast } from "@/components/ui/use-toast";
+import { graySubtitleFonts } from "@/lib/typography";
 
 type propType = {
   data: NonNullable<getAvailabilityType["data"]>[0];
@@ -18,20 +20,26 @@ const AvailabilityCard = (props: propType) => {
   const navigate = useRouter();
   const [loading, setLoading] = useState(false);
   const { name, timezone, default: isDefault } = availability!;
+  const { toast } = useToast();
 
   const handleDeleteAvailability = async () => {
     setLoading(true);
-    await deleteAvailability(availability.id as unknown as string);
+    const res = await deleteAvailability(availability.id);
+    if (res && !res.success) {
+      toast({ title: res.error });
+    } else {
+      toast({ title: "Availability deleted successfully!" });
+    }
     setLoading(false);
   };
 
   return (
     <div className="flex gap-2 border border-gray1 first:rounded-t-md last:rounded-b-md p-2 lg:p-4 items-center">
       <div className="flex-1 flex flex-col gap-0.5">
-        <div className="text-sm md:text-base font-semibold flex gap-1">
+        <div className="text-sm md:text-base font-semibold flex gap-3">
           {name}{" "}
           {isDefault && (
-            <Badge className="bg-green-800 hover:bg-green-900 text-white">
+            <Badge className="bg-green-800 hover:bg-green-900 text-white text-xs rounded-sm px-1">
               Default
             </Badge>
           )}
@@ -41,7 +49,7 @@ const AvailabilityCard = (props: propType) => {
             locale: "en",
             hour12: true,
           }).map(i => (
-            <span className="text-xs text-secondary-light-gray" key={i}>
+            <span className={graySubtitleFonts} key={i}>
               {i}
             </span>
           ))}
