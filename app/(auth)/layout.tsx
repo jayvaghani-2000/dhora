@@ -13,7 +13,7 @@ export default function AuthLayout({
           <a
             href="/"
             className="flex items-center text-2xl font-semibold text-gray-900 dark:text-white
-            bg-primary text-primary-foreground hover:bg-primary/90
+            bg-transparent text-primary-foreground
             "
           >
             <div
