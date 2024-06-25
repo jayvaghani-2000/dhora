@@ -145,7 +145,7 @@ const Pricing = (prop: propType) => {
                               onChange={e => {
                                 const value = parseFloat(e.target.value);
                                 if (isNaN(value)) {
-                                  field.onChange(undefined);
+                                  field.onChange(null);
                                 } else {
                                   field.onChange(value);
                                 }
@@ -170,7 +170,7 @@ const Pricing = (prop: propType) => {
                               onChange={e => {
                                 const value = parseFloat(e.target.value);
                                 if (isNaN(value)) {
-                                  field.onChange(undefined);
+                                  field.onChange(null);
                                 } else {
                                   field.onChange(value);
                                 }
@@ -202,7 +202,7 @@ const Pricing = (prop: propType) => {
                               onChange={e => {
                                 const value = parseFloat(e.target.value);
                                 if (isNaN(value)) {
-                                  field.onChange(0);
+                                  field.onChange(null);
                                 } else {
                                   field.onChange(value);
                                 }

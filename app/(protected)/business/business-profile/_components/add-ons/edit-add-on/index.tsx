@@ -263,7 +263,7 @@ const EditAddOn = (props: propType) => {
                         onChange={e => {
                           const value = parseFloat(e.target.value);
                           if (isNaN(value)) {
-                            field.onChange(undefined);
+                            field.onChange(null);
                           } else {
                             field.onChange(value);
                           }
