@@ -14,6 +14,7 @@ const Pricing = (props: React.ComponentProps<typeof SelectedPackage>) => {
     max_unit,
     min_unit,
     unit,
+    unit_qty,
     unit_rate,
   } = packageDetail;
 
@@ -28,10 +29,12 @@ const Pricing = (props: React.ComponentProps<typeof SelectedPackage>) => {
         <>
           {unit ? (
             <ul className="list-disc pl-5">
-              {unit_rate ? (
+              {unit_rate && unit_qty ? (
                 <li>
                   {formatAmount(unit_rate)}
-                  {`/${packageSingleUnitTypes[unit]}`}
+                  {unit_qty === 1
+                    ? `/${packageSingleUnitTypes[unit!]}`
+                    : `/${unit_qty} ${unit}`}
                 </li>
               ) : null}
               {min_unit ? (

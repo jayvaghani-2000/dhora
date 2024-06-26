@@ -26,10 +26,7 @@ import { IconInput } from "@/components/shared/icon-input";
 import { stringCasting } from "@/lib/common";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  getAddOnGroupsType,
-  getPackageGroupsType,
-} from "@/actions/_utils/types.type";
+import { getAddOnGroupsType } from "@/actions/_utils/types.type";
 import { CiCircleRemove } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import { createAddOn } from "@/actions/(protected)/business/add-ons/createAddOn";
@@ -52,6 +49,7 @@ const NewAddOn = (
       add_on_group_id: undefined,
       unit_rate: undefined,
       max_unit: undefined,
+      unit_qty: 1,
     },
     reValidateMode: "onChange",
   });
@@ -174,38 +172,67 @@ const NewAddOn = (
             <div>
               <Label>Pricing</Label>
               <div className="grid  grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 mt-2">
-                <FormField
-                  control={form.control}
-                  name={`unit_rate`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <IconInput
-                          type="number"
-                          placeholder="Unit Rate"
-                          {...field}
-                          prefix={
-                            <div className="h-4 w-4">
-                              <CgDollar className="h-full w-full" />
-                            </div>
-                          }
-                          onChange={e => {
-                            const value = parseFloat(e.target.value);
-                            if (isNaN(value)) {
-                              field.onChange(undefined);
-                            } else {
-                              field.onChange(value);
+                <div className="md:col-span-2 flex gap-2 items-center">
+                  <FormField
+                    control={form.control}
+                    name={`unit_rate`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <IconInput
+                            type="number"
+                            placeholder="Unit Rate"
+                            {...field}
+                            prefix={
+                              <div className="h-4 w-4">
+                                <CgDollar className="h-full w-full" />
+                              </div>
                             }
-                          }}
-                          value={stringCasting(
-                            form.getValues(`unit_rate`) as unknown as number
-                          )}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                            onChange={e => {
+                              const value = parseFloat(e.target.value);
+                              if (isNaN(value)) {
+                                field.onChange(null);
+                              } else {
+                                field.onChange(value);
+                              }
+                            }}
+                            value={stringCasting(
+                              form.getValues(`unit_rate`) as unknown as number
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <p>/</p>
+                  <FormField
+                    control={form.control}
+                    name={`unit_qty`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <IconInput
+                            placeholder="Unit Quantity"
+                            type="number"
+                            {...field}
+                            value={field.value!}
+                            suffix={<div className="mr-1">Unit</div>}
+                            onChange={e => {
+                              const value = parseFloat(e.target.value);
+                              if (isNaN(value)) {
+                                field.onChange(null);
+                              } else {
+                                field.onChange(value);
+                              }
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="max_unit"
@@ -220,7 +247,7 @@ const NewAddOn = (
                           onChange={e => {
                             const value = parseFloat(e.target.value);
                             if (isNaN(value)) {
-                              field.onChange(undefined);
+                              field.onChange(null);
                             } else {
                               field.onChange(value);
                             }

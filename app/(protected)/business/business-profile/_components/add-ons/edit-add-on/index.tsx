@@ -61,6 +61,7 @@ const EditAddOn = (props: propType) => {
       name: addOnInfo.name as string,
       description: addOnInfo.description as string,
       add_on_group_id: addOnInfo.add_on_group_id as unknown as string,
+      unit_qty: 1,
       max_unit: addOnInfo.max_unit as number,
       unit_rate: addOnInfo.unit_rate as number,
     },
@@ -110,13 +111,13 @@ const EditAddOn = (props: propType) => {
   return (
     <div>
       <BackButton to="/business/business-profile/packages" />
-      <div className="flex justify-between">
-        <div className="flex relative gap-4 items-center mt-2">
+      <div className="flex justify-between flex-col gap-2 md:flex-row ">
+        <div className="flex relative gap-4 items-center mt-2 flex-col md:flex-row">
           <div className="text-white font-medium text-base">
             {addOnInfo.name}
           </div>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 justify-center items-center">
           <Button
             variant="outline"
             className="p-1 h-[28px]"
@@ -217,38 +218,67 @@ const EditAddOn = (props: propType) => {
           <div>
             <Label>Pricing</Label>
             <div className="grid  grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 mt-2">
-              <FormField
-                control={form.control}
-                name={`unit_rate`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <IconInput
-                        type="number"
-                        placeholder="Unit Rate"
-                        {...field}
-                        prefix={
-                          <div className="h-4 w-4">
-                            <CgDollar className="h-full w-full" />
-                          </div>
-                        }
-                        onChange={e => {
-                          const value = parseFloat(e.target.value);
-                          if (isNaN(value)) {
-                            field.onChange(undefined);
-                          } else {
-                            field.onChange(value);
+              <div className="md:col-span-2 flex gap-2 items-center">
+                <FormField
+                  control={form.control}
+                  name={`unit_rate`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <IconInput
+                          type="number"
+                          placeholder="Unit Rate"
+                          {...field}
+                          prefix={
+                            <div className="h-4 w-4">
+                              <CgDollar className="h-full w-full" />
+                            </div>
                           }
-                        }}
-                        value={stringCasting(
-                          form.getValues(`unit_rate`) as unknown as number
-                        )}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          onChange={e => {
+                            const value = parseFloat(e.target.value);
+                            if (isNaN(value)) {
+                              field.onChange(null);
+                            } else {
+                              field.onChange(value);
+                            }
+                          }}
+                          value={stringCasting(
+                            form.getValues(`unit_rate`) as unknown as number
+                          )}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <p>/</p>
+                <FormField
+                  control={form.control}
+                  name={`unit_qty`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <IconInput
+                          placeholder="Unit Quantity"
+                          type="number"
+                          {...field}
+                          value={field.value!}
+                          suffix={<div className="mr-1">Unit</div>}
+                          onChange={e => {
+                            const value = parseFloat(e.target.value);
+                            if (isNaN(value)) {
+                              field.onChange(null);
+                            } else {
+                              field.onChange(value);
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="max_unit"
@@ -263,7 +293,7 @@ const EditAddOn = (props: propType) => {
                         onChange={e => {
                           const value = parseFloat(e.target.value);
                           if (isNaN(value)) {
-                            field.onChange(undefined);
+                            field.onChange(null);
                           } else {
                             field.onChange(value);
                           }

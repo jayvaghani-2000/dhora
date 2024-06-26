@@ -36,7 +36,7 @@ type propType = {
 } & React.ComponentProps<typeof EditPackage>;
 
 const Pricing = (prop: propType) => {
-  const { form, packagesGroups, packageDetail } = prop;
+  const { form } = prop;
   const unitTypeOptions = packageUnitTypeEnum.enumValues;
   const depositTypeOptions = depositTypeEnum.enumValues;
 
@@ -64,72 +64,103 @@ const Pricing = (prop: propType) => {
 
                 {!field.value ? (
                   <div className="grid  grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 ">
-                    <FormField
-                      control={form.control}
-                      name="unit"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value!}
-                          >
+                    <div className="md:col-span-2 flex gap-2 items-center">
+                      <FormField
+                        control={form.control}
+                        name={`unit_rate`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue
-                                  placeholder={
-                                    <span className="text-muted-foreground ">
-                                      Select Unit
-                                    </span>
-                                  }
-                                />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {unitTypeOptions.map(i => (
-                                <SelectItem key={i} value={i}>
-                                  {capitalize(i)}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name={`unit_rate`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <IconInput
-                              type="number"
-                              placeholder="Unit Rate"
-                              {...field}
-                              prefix={
-                                <div className="h-4 w-4">
-                                  <CgDollar className="h-full w-full" />
-                                </div>
-                              }
-                              onChange={e => {
-                                const value = parseFloat(e.target.value);
-                                if (isNaN(value)) {
-                                  field.onChange(undefined);
-                                } else {
-                                  field.onChange(value);
+                              <IconInput
+                                type="number"
+                                placeholder="Unit Rate"
+                                {...field}
+                                prefix={
+                                  <div className="h-4 w-4">
+                                    <CgDollar className="h-full w-full" />
+                                  </div>
                                 }
-                              }}
-                              value={stringCasting(
-                                form.getValues(`unit_rate`) as unknown as number
-                              )}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                                onChange={e => {
+                                  const value = parseFloat(e.target.value);
+                                  console.log("value",value, isNaN(value))
+                                  if (isNaN(value)) {
+                                    field.onChange(null);
+                                  } else {
+                                    field.onChange(value);
+                                  }
+                                }}
+                                value={stringCasting(
+                                  form.getValues(
+                                    `unit_rate`
+                                  ) as unknown as number
+                                )}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <p>/</p>
+                      <FormField
+                        control={form.control}
+                        name={`unit_qty`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormControl>
+                              <Input
+                                placeholder="Unit Quantity"
+                                type="number"
+                                {...field}
+                                value={field.value!}
+                                onChange={e => {
+                                  const value = parseFloat(e.target.value);
+                                  console.log("value", value)
+                                  if (isNaN(value)) {
+                                    field.onChange(null);
+                                  } else {
+                                    field.onChange(value);
+                                  }
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="unit"
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value!}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={
+                                      <span className="text-muted-foreground ">
+                                        Select Unit
+                                      </span>
+                                    }
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {unitTypeOptions.map(i => (
+                                  <SelectItem key={i} value={i}>
+                                    {i}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
                     <FormField
                       control={form.control}
@@ -145,7 +176,7 @@ const Pricing = (prop: propType) => {
                               onChange={e => {
                                 const value = parseFloat(e.target.value);
                                 if (isNaN(value)) {
-                                  field.onChange(undefined);
+                                  field.onChange(null);
                                 } else {
                                   field.onChange(value);
                                 }
@@ -170,7 +201,7 @@ const Pricing = (prop: propType) => {
                               onChange={e => {
                                 const value = parseFloat(e.target.value);
                                 if (isNaN(value)) {
-                                  field.onChange(undefined);
+                                  field.onChange(null);
                                 } else {
                                   field.onChange(value);
                                 }
@@ -202,7 +233,7 @@ const Pricing = (prop: propType) => {
                               onChange={e => {
                                 const value = parseFloat(e.target.value);
                                 if (isNaN(value)) {
-                                  field.onChange(0);
+                                  field.onChange(null);
                                 } else {
                                   field.onChange(value);
                                 }
@@ -257,7 +288,7 @@ const Pricing = (prop: propType) => {
                           onChange={e => {
                             const value = parseFloat(e.target.value);
                             if (isNaN(value)) {
-                              deposit_field.onChange(undefined);
+                              deposit_field.onChange(null);
                             } else {
                               deposit_field.onChange(value);
                             }

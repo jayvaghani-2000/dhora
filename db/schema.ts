@@ -385,6 +385,7 @@ export const packages = pgTable(
     description: text("description"),
     fixed_priced: boolean("fixed_priced").default(false),
     unit: packageUnitTypeEnum("unit"),
+    unit_qty: integer("unit_qty").default(1),
     min_unit: integer("min_unit"),
     max_unit: integer("max_unit"),
     unit_rate: integer("unit_rate"),
@@ -455,6 +456,7 @@ export const addOns = pgTable(
     name: text("name"),
     description: text("description"),
     max_unit: integer("max_unit"),
+    unit_qty: integer("unit_qty").default(1),
     unit_rate: integer("unit_rate"),
     deleted: boolean("deleted").default(false),
     created_at: timestamp("created_at").defaultNow().notNull(),
@@ -747,6 +749,7 @@ const packageSchema = createInsertSchema(packages)
     deleted: true,
     package_group_id: true,
     business_id: true,
+    unit_qty: true,
   })
   .merge(
     z.object({
@@ -768,6 +771,7 @@ const packageSchema = createInsertSchema(packages)
       fixed_priced: z.boolean(),
       unit: z.enum(packageUnitTypeEnum.enumValues).optional().nullable(),
       unit_rate: z.number().positive().optional().nullable(),
+      unit_qty: z.number().int().optional().nullable(),
       min_unit: z.number().int().optional().nullable(),
       max_unit: z.number().int().optional().nullable(),
       deposit_type: z.enum(depositTypeEnum.enumValues).optional().nullable(),
@@ -805,6 +809,21 @@ export const createPackageSchema = packageSchema
     {
       message: "Should be a positive",
       path: ["min_unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.unit_qty && data.unit_qty < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Quantity be a positive",
+      path: ["unit_qty"],
     }
   )
   .refine(
@@ -881,6 +900,21 @@ export const editPackageSchema = packageSchema
     {
       message: "Unit is required",
       path: ["unit"],
+    }
+  )
+  .refine(
+    data => {
+      if (data.fixed_priced) {
+        return true;
+      } else if (data.unit_qty && data.unit_qty < 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    {
+      message: "Quantity be a positive",
+      path: ["unit_qty"],
     }
   )
   .refine(
@@ -997,6 +1031,7 @@ const addOnSchema = createInsertSchema(addOns)
     unit_rate: true,
     max_unit: true,
     add_on_group_id: true,
+    unit_qty: true,
     business_id: true,
   })
   .merge(
@@ -1018,6 +1053,7 @@ const addOnSchema = createInsertSchema(addOns)
       ),
       unit_rate: z.number().positive(),
       max_unit: z.number().int().positive(),
+      unit_qty: z.number().int().positive(),
       add_on_group_id: z.string().optional().nullable(),
     })
   );
