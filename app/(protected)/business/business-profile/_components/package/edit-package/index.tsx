@@ -93,8 +93,8 @@ const EditPackage = (props: propType) => {
   return (
     <Tabs defaultValue="description">
       <BackButton to="/business/business-profile/packages" />
-      <div className="flex justify-between">
-        <div className="flex relative gap-4 items-center mt-2">
+      <div className="flex justify-between gap-2 flex-col md:flex-row">
+        <div className="flex relative gap-4 items-center mt-2 flex-col md:flex-row">
           <div className="text-white font-medium text-base">
             {packageInfo.name}
           </div>
@@ -104,7 +104,7 @@ const EditPackage = (props: propType) => {
             <TabsTrigger value="pricing">Pricing</TabsTrigger>
           </TabsList>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 justify-center items-center">
           <Button
             variant="outline"
             className="p-1 h-[28px]"

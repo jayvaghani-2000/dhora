@@ -302,6 +302,13 @@
       "when": 1717394476826,
       "tag": "0042_wakeful_luke_cage",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "5",
+      "when": 1719394104274,
+      "tag": "0043_flashy_lightspeed",
+      "breakpoints": true
     }
   ]
 }

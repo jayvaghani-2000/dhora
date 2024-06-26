@@ -7,7 +7,7 @@ const Description = (props: React.ComponentProps<typeof SelectedAddOn>) => {
   const { selectedAddOn } = props;
   const addOnDetail = selectedAddOn?.[0]!;
 
-  const { description, unit_rate } = addOnDetail;
+  const { description, unit_rate, unit_qty } = addOnDetail;
 
   return (
     <div className={"px-3  h-full pb-14"}>
@@ -16,7 +16,7 @@ const Description = (props: React.ComponentProps<typeof SelectedAddOn>) => {
       <div className="bg-muted h-10 absolute left-0 right-0 bottom-0 pt-2 pr-3 text-right">
         <div className=" text-white font-medium text-base">
           Starting from {formatAmount(unit_rate!)}
-          {`/unit`}
+          {unit_qty === 1 ? `/unit` : `/${unit_qty} unit`}
         </div>
       </div>
     </div>

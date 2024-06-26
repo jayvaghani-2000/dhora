@@ -6,7 +6,7 @@ const Pricing = (props: React.ComponentProps<typeof SelectedAddOn>) => {
   const { selectedAddOn } = props;
   const addOnDetail = selectedAddOn?.[0]!;
 
-  const { unit_rate, max_unit } = addOnDetail;
+  const { unit_rate, max_unit, unit_qty } = addOnDetail;
 
   return (
     <div className="px-3 pb-3">
@@ -15,7 +15,7 @@ const Pricing = (props: React.ComponentProps<typeof SelectedAddOn>) => {
       <ul className="list-disc pl-5">
         <li>
           {formatAmount(unit_rate as number)}
-          {`/unit`}
+          {unit_qty === 1 ? `/unit` : `/${unit_qty} unit`}
         </li>
 
         <li>Maximum {max_unit} unit</li>

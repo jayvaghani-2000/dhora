@@ -9,13 +9,13 @@ const Description = (props: React.ComponentProps<typeof SelectedPackage>) => {
   const { selectedPackage } = props;
   const packageDetail = selectedPackage?.[0]!;
 
-  const { fixed_priced, unit, unit_rate } = packageDetail;
+  const { fixed_priced, unit, unit_rate, unit_qty } = packageDetail;
 
   return (
     <div
       className={clsx({
         "px-3  h-full": true,
-        "pb-14": fixed_priced || (unit && unit_rate),
+        "pb-14": fixed_priced || (unit && unit_rate && unit_qty),
       })}
     >
       <RichEditor
@@ -24,7 +24,7 @@ const Description = (props: React.ComponentProps<typeof SelectedPackage>) => {
         readOnlyClass=""
       />
 
-      {fixed_priced || (unit && unit_rate) ? (
+      {fixed_priced || (unit && unit_rate && unit_qty) ? (
         <div className="bg-muted h-10 absolute left-0 right-0 bottom-0 pt-2 pr-3 text-right">
           {fixed_priced ? (
             <div className=" text-white font-medium text-base">
@@ -33,7 +33,9 @@ const Description = (props: React.ComponentProps<typeof SelectedPackage>) => {
           ) : (
             <div className=" text-white font-medium text-base">
               Starting from {formatAmount(unit_rate!)}
-              {`/${packageSingleUnitTypes[unit!]}`}
+              {unit_qty === 1
+                ? `/${packageSingleUnitTypes[unit!]}`
+                : `/${unit_qty} ${unit}`}
             </div>
           )}
         </div>
