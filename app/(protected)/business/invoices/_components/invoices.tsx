@@ -28,6 +28,7 @@ export type recordType = {
   amount: number;
   id: string;
   status: (typeof statusMode)[number];
+  event: string;
 };
 
 type extraFilterPropType = {
@@ -173,6 +174,7 @@ const Invoices = (props: propType) => {
     amount: Number(i.total),
     due_date: formatDate(i.due_date),
     status: i.status,
+    event: i.event?.title ?? "-",
   }));
 
   const columns: ColumnDef<recordType>[] = [
@@ -239,6 +241,24 @@ const Invoices = (props: propType) => {
         });
 
         return inRange;
+      },
+    },
+    {
+      accessorKey: "event",
+      header: ({ column }) => {
+        return (
+          <button
+            className="flex items-center gap-1"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Event
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </button>
+        );
+      },
+      cell: ({ row }) => {
+        console.log("row.getValue", row.getValue("event"));
+        return <div>{row.getValue("event")}</div>;
       },
     },
     {
@@ -316,16 +336,20 @@ const Invoices = (props: propType) => {
       return <Actions row={row} />;
     },
   };
+
   {
     showAction && columns.push(actionColumn);
   }
+  
   return parsedInvoices.length > 0 ? (
     <CustomTable
       data={[...parsedInvoices]}
       columns={columns}
       extraFilters={ExtraFilters}
     />
-  ) : <p className="text-base text-center">No invoice exist</p>;
+  ) : (
+    <p className="text-base text-center">No invoice exist</p>
+  );
 };
 
 export default Invoices;

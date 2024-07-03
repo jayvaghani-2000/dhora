@@ -5,9 +5,7 @@ import { recordType } from "./invoices";
 import { RiShareForwardFill } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { checkout } from "@/actions/(protected)/business/stripe/checkout";
 import { IoEyeOutline } from "react-icons/io5";
-import { useToast } from "@/components/ui/use-toast";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { ActionTooltip } from "@/components/shared/action-tooltip";
 import { getInvoiceDetail } from "@/actions/(protected)/business/invoices/getInvoiceDetail";
@@ -16,12 +14,6 @@ import {
   getInvoicesDetailResponseType,
 } from "@/actions/_utils/types.type";
 import InvoicePdf from "./invoice-pdf";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { getEvents } from "@/actions/(protected)/customer/events/getEvents";
 
 const Actions = ({ row }: { row: Row<recordType> }) => {
@@ -118,26 +110,9 @@ const Actions = ({ row }: { row: Row<recordType> }) => {
           setSavePdf(prev => ({ ...prev, trigger: true }));
         }}
       >
-        Send invoice to {rowObj.email}?
         <div className="flex flex-col items-start gap-2">
-          Send invoice to {rowObj.email}?
-          <DropdownMenu>
-            <DropdownMenuTrigger className="focus:outline-none">
-              <Button variant="outline">
-                {selectedEvent || "Select event"}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {events?.map((event: any) => (
-                <DropdownMenuItem
-                  key={event.id}
-                  onClick={() => setSelectedEvent(event.title)}
-                >
-                  {event.title}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div>Send invoice to {rowObj.email}?</div>
+          <div>Event: {rowObj.event}</div>
         </div>
         <InvoicePdf
           invoice={invoice.data}

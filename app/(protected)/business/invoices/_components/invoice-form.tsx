@@ -38,7 +38,6 @@ import {
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  getEmailAndEventType,
   getUserDetailsType,
   profileType,
 } from "@/actions/_utils/types.type";
@@ -47,27 +46,27 @@ import PlacesAutocompleteInput from "@/components/shared/place-autocomplete";
 import { revalidate } from "@/actions/(public)/revalidate";
 import InvoicePdf from "./../_components/invoice-pdf/index";
 import { DatePicker } from "@/components/shared/date-picker";
-import { getBookingCustomer } from "@/actions/(protected)/customer/booking/getBookingCustomer";
 
 type propType =
   | {
       user: profileType;
       invoiceData?: never;
       mode?: "CREATE";
+      bookings: getUserDetailsType["data"];
     }
   | {
       user: profileType;
       invoiceData: invoiceSchemaType;
+      bookings: getUserDetailsType["data"];
       mode?: "EDIT";
     };
 
 const InvoiceForm = (props: propType) => {
-  const { user, mode = "CREATE", invoiceData } = props;
+  const { user, mode = "CREATE", invoiceData, bookings } = props;
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("bookingId");
-  const [bookings, setBookings] = useState<getUserDetailsType["data"]>([]);
   const { toast } = useToast();
   const [file, setFile] = useState(user?.business?.logo ?? "");
   const [updatedItem, setUpdatedItem] = useState(0);
@@ -76,14 +75,15 @@ const InvoiceForm = (props: propType) => {
     trigger: false,
   });
 
+  const defaultSelectedEvent = bookings!.find(item => item.id === bookingId);
+
   const handleSelectChange = (value: string) => {
     const selectedEvent = bookings!.find(item => item.id === value);
     if (selectedEvent) {
-      form.setValue("customer_name", selectedEvent.customer.name);
-      form.setValue("customer_email", selectedEvent.customer.email);
-      form.setValue("event_id", selectedEvent.event_id!);
+      form.setValue("customer_name", selectedEvent.customer!.name);
+      form.setValue("customer_email", selectedEvent.customer!.email);
+      form.setValue("event_id", selectedEvent.event.id!);
     }
-    form.setValue("event_id", value);
   };
 
   const form = useForm<z.infer<typeof invoiceSchema>>({
@@ -96,9 +96,9 @@ const InvoiceForm = (props: propType) => {
             address: user?.business?.address ?? "",
             email: user?.email ?? "",
             contact: user?.business?.contact ?? "",
-            event_id: "",
-            customer_name: "",
-            customer_email: "",
+            event_id: defaultSelectedEvent?.event.id! || "",
+            customer_name: defaultSelectedEvent?.customer!.name || "",
+            customer_email: defaultSelectedEvent?.customer!.email || "",
             customer_contact: "",
             customer_address: "",
             items: [
@@ -138,27 +138,6 @@ const InvoiceForm = (props: propType) => {
     setValue("total", total);
     setValue("subtotal", subtotal);
   }, [updatedItem, items, tax, setValue, form]);
-
-  useEffect(() => {
-    async function customerGet() {
-      const data = await getBookingCustomer();
-      if (data?.data) {
-        const byDefaultselectedEvent = data.data!.find(
-          item => item.id === bookingId
-        );
-        if (byDefaultselectedEvent) {
-          form.setValue("customer_name", byDefaultselectedEvent.customer.name);
-          form.setValue(
-            "customer_email",
-            byDefaultselectedEvent.customer.email
-          );
-          form.setValue("event_id", byDefaultselectedEvent.event_id!);
-        }
-        setBookings(data.data);
-      }
-    }
-    customerGet();
-  }, [bookingId]);
 
   async function onSubmit(
     values: z.infer<typeof invoiceSchema>,
@@ -339,37 +318,45 @@ const InvoiceForm = (props: propType) => {
                 <FormField
                   control={form.control}
                   name="event_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Select
-                          onValueChange={value => {
-                            field.onChange(value);
-                            handleSelectChange(value);
-                          }}
-                          defaultValue={bookingId!}
-                        >
-                          <SelectTrigger>
-                            <SelectValue
-                              placeholder={
-                                <span className="text-muted-foreground">
-                                  Select Event
-                                </span>
-                              }
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {bookings!.map(items => (
-                              <SelectItem key={items.id} value={items.id}>
-                                {items.event?.title}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    const booking = bookings!.find(
+                      i => i.event.id === field.value
+                    );
+                    return (
+                      <FormItem>
+                        <FormControl>
+                          <Select
+                            onValueChange={value => {
+                              field.onChange(value);
+                              handleSelectChange(value);
+                            }}
+                            value={booking?.id ?? undefined}
+                          >
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  <span className="text-muted-foreground">
+                                    Select Event
+                                  </span>
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {bookings!.map(items => (
+                                <SelectItem
+                                  key={items.id}
+                                  value={items!.id as string}
+                                >
+                                  {items.customer?.email}({items.event?.title})
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
               </div>
               <FormField
