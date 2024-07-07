@@ -5,4 +5,5 @@ export type GlobalState = {
   successMessage: string;
   maintenance: boolean;
   mapScriptLoaded: boolean;
+  createEvent: boolean
 };

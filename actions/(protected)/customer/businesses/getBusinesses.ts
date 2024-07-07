@@ -59,10 +59,7 @@ const handler = async (user: User, params: paramsType) => {
           bt.id IS NOT NULL
       AND
             b.deleted = false
-      AND
-        (
-            (b.id <> ${user.business_id} OR b.id IS NULL)
-        )
+      
       GROUP BY
           b.id
       HAVING
@@ -82,6 +79,13 @@ const handler = async (user: User, params: paramsType) => {
       `);
 
     let filteredData = data as unknown as BusinessesType[];
+
+    // filter out login user
+    if(user.business_id) {
+      filteredData = filteredData.filter(b =>
+        b.id !== user.business_id
+      );
+    }
 
     // Apply search filter
     if (search) {

@@ -49,6 +49,8 @@ import { useAuthStore } from "@/provider/store/authentication";
 import ScheduleCall from ".";
 import MultiSelect from "@/components/shared/multi-select";
 import { useParams } from "next/navigation";
+import { useAppDispatch } from "@/provider/store";
+import { setGlobalData } from "@/provider/store/global";
 
 type propType = Partial<React.ComponentProps<typeof CustomDialog>> &
   React.ComponentProps<typeof ScheduleCall> & {
@@ -83,18 +85,20 @@ const Schedular = (props: propType) => {
   const [activeStep, setActiveStep] = useState(1);
   const [subEvents, setSubEvents] = useState([] as getSubEventsType["data"]);
   const [values, setValues] = useState(defaultValue);
+  const dispatch = useAppDispatch();
 
   const handleCloseModal = () => {
     setOpen(false);
   };
 
-  const events = user?.events || [];
+  const createEventOption = { id: "create", title: "+ Create new event" }
+  const events = user?.events ? [...user.events, createEventOption] : [createEventOption];
 
   const collectPackageInfo = useForm<z.infer<typeof createCallSchema>>({
     resolver: zodResolver(createCallSchema),
     defaultValues: {
       package_id: [],
-      event_id: undefined,
+      event_id: "",
       add_on_id: [],
       sub_event_id: [],
     },
@@ -288,18 +292,29 @@ const Schedular = (props: propType) => {
                     control={collectPackageInfo.control}
                     name="sub_event_id"
                     render={({ field: sub_event_field }) => (
-                      <div className=" flex gap-2 flex-col lg:flex-row ">
+                      <div className="flex gap-2 flex-col lg:flex-row ">
                         <FormItem className="flex-1">
                           <Select
                             onValueChange={async value => {
-                              field.onChange(value);
-                              sub_event_field.onChange([]);
-                              const res = await getSubEvents(value);
-                              if (res.success) {
-                                setSubEvents(res.data!);
+                              if (value === "create") {
+                                field.onChange(undefined);
+                                sub_event_field.onChange([]);
+                                dispatch(
+                                  setGlobalData({
+                                    createEvent: true,
+                                  })
+                                )
+
+                              } else {
+                                field.onChange(value);
+                                sub_event_field.onChange([]);
+                                const res = await getSubEvents(value);
+                                if (res.success) {
+                                  setSubEvents(res.data!);
+                                }
                               }
                             }}
-                            defaultValue={field.value!}
+                            value={field.value! ?? null}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -320,7 +335,11 @@ const Schedular = (props: propType) => {
                               ))}
                             </SelectContent>
                           </Select>
-                          <FormMessage />
+                          {collectPackageInfo.formState.errors.event_id ? <p
+                            className={"text-sm font-medium text-destructive"}
+                          >
+                            {collectPackageInfo.formState.errors.event_id.message}
+                          </p> : null}
                         </FormItem>
                         <FormItem className="flex-1">
                           {subEvents!.length > 0 ? (

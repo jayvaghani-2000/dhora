@@ -167,7 +167,7 @@ export const createAddOnGroupSchema = z.object({
 });
 
 export const createCallSchema = z.object({
-  event_id: z.string().min(6, { message: "Select an event" }),
+  event_id: z.string().refine(data => data?.trim().length > 0, { message: "Select an event" }),
   sub_event_id: z.string().array(),
   package_id: z.string().array().min(1, { message: "Select and packages" }),
   add_on_id: z.string().array(),

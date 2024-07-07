@@ -8,6 +8,7 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 import { createEventSchemaType } from "@/lib/schema";
 import { createPublicEventImgUrl } from "@/lib/minio";
 import { dateWithoutTime, trimRichEditor } from "@/lib/common";
+import { revalidate } from "@/actions/(public)/revalidate";
 
 type parmaTypes = {
   eventDetail: createEventSchemaType;
@@ -53,6 +54,15 @@ const handler = async (user: User, params: parmaTypes) => {
   }
 };
 
+const createEventHandler = async (user: User, values: parmaTypes) => {
+  const res = await handler(user, values);
+
+  if (res.success) {
+    await revalidate("/@me/marketplace");
+  }
+  return res;
+};
+
 export const createEvent: (
   params: parmaTypes
-) => Promise<Awaited<ReturnType<typeof handler>>> = validateToken(handler);
+) => Promise<Awaited<ReturnType<typeof createEventHandler>>> = validateToken(createEventHandler);

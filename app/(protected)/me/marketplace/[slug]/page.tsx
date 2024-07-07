@@ -38,6 +38,9 @@ export default async function BusinessProfile(props: propType) {
     return <div className="text-center">Unable to fetch business details</div>;
   }
 
+  if(myInfo.data?.business_id === props.params.slug) {
+    return <div className="text-center">Its your own business, can't hire your own business.</div>;
+  }
   const groupedPackages = groupPackagesByGroupId(business.data.packages);
 
   const groupedAddOns = groupAddOnsByGroupId(business.data.add_ons);
