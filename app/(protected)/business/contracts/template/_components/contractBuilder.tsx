@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { DocusealBuilder } from "@docuseal/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createContract } from "@/actions/(protected)/business/contracts/createContract";
-import { initiateContractResponseType } from "@/actions/_utils/types.type";
+import { getEmailAndEventType, initiateContractResponseType } from "@/actions/_utils/types.type";
 import { updateContract } from "@/actions/(protected)/business/contracts/updateContract";
 import { Button } from "@/components/ui/button";
 import SendTemplate from "./sendTemplate";
@@ -19,6 +19,7 @@ export enum PARAMS {
 
 type propType = {
   data: initiateContractResponseType["data"];
+  bookings: getEmailAndEventType["data"]
 };
 
 const ContractBuilder = (props: propType) => {
@@ -89,7 +90,7 @@ const ContractBuilder = (props: propType) => {
         />
       </div>
 
-      <SendTemplate open={sendContract} onClose={handleToggleSendContract} />
+      <SendTemplate open={sendContract} onClose={handleToggleSendContract} bookings={props.bookings} />
     </>
   );
 };

@@ -17,6 +17,7 @@ const handler = async (user: User, params: paramTypes) => {
     const data = await db.query.invoices.findMany({
       where: eq(invoices.event_id, event_id),
       orderBy: [desc(invoices.updated_at)],
+      with: { event: true },
     });
 
     return { success: true as true, data: data };

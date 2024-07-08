@@ -28,6 +28,7 @@ import { PARAMS } from "./contractBuilder";
 import { revalidate } from "@/actions/(public)/revalidate";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { getEmailAndEvent } from "@/actions/(protected)/business/contracts/getEmailAndEvent";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email." }),
@@ -37,28 +38,16 @@ const formSchema = z.object({
 type propType = {
   open: boolean;
   onClose: () => void;
+  bookings: getEmailAndEventType["data"]
 };
 
 const SendTemplate = (prop: propType) => {
-  const { onClose, open } = prop;
+  const { onClose, open, bookings } = prop;
   const navigate = useRouter();
   const params = useSearchParams();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [contract, setContract] = useState<getEmailAndEventType["data"]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getEmailAndEvent();
-        const data = response.data;
-        setContract(data!);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,16 +77,19 @@ const SendTemplate = (prop: propType) => {
       handleCloseSendTemplate();
       await revalidate("/business/contracts");
       navigate.replace("/business/contracts");
+      toast({
+        title: "Contract sent successfully.",
+      });
     }
     setLoading(false);
   }
 
   const handleSelectChange = (value: string) => {
-    const selectedEvent = contract!.find(item => item.id === value);
+    const selectedEvent = bookings!.find(item => item.id === value);
     if (selectedEvent) {
-      form.setValue("email", selectedEvent.customer.email);
+      form.setValue("email", selectedEvent.customer!.email);
+      form.setValue("eventId", selectedEvent.event.id);
     }
-    form.setValue("eventId", value);
   };
 
   return (
@@ -162,9 +154,9 @@ const SendTemplate = (prop: propType) => {
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    {contract!.map(items => (
-                      <SelectItem key={items.id} value={items.id}>
-                        {items.customer.email}({items.event?.title})
+                    {bookings!.map(items => (
+                      <SelectItem key={items!.id} value={items!.id as string}>
+                        {items.customer!.email}({items.event?.title})
                       </SelectItem>
                     ))}
                   </SelectContent>

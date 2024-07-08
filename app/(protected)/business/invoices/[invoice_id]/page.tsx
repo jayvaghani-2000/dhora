@@ -2,6 +2,7 @@ import { getInvoiceDetail } from "@/actions/(protected)/business/invoices/getInv
 import InvoiceForm from "../_components/invoice-form";
 import { me } from "@/actions/(auth)/me";
 import { invoiceSchemaType } from "@/lib/schema";
+import { getBookingCustomer } from "@/actions/(protected)/customer/booking/getBookingCustomer";
 
 type propType = {
   params: {
@@ -14,6 +15,7 @@ export default async function InvoicesPage(props: propType) {
     id: props.params.invoice_id,
     mode: "edit",
   });
+  const bookingCustomer = await getBookingCustomer();
   const user = await me();
 
   const invoiceDetail = {
@@ -38,6 +40,7 @@ export default async function InvoicesPage(props: propType) {
       user={user.data}
       mode="EDIT"
       invoiceData={invoiceDetail as invoiceSchemaType}
+      bookings={bookingCustomer.data!}
     />
   ) : null;
 }

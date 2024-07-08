@@ -14,16 +14,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { submitContract } from "@/actions/(protected)/business/contracts/submitContract";
 import { submitContractResponseType } from "@/actions/_utils/types.type";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { revalidate } from "@/actions/(public)/revalidate";
 import CustomDialog from "@/components/shared/custom-dialog";
-import { PARAMS } from "../../contracts/template/_components/contractBuilder";
+
 import { getContracts } from "@/actions/(protected)/business/contracts/getContracts";
 
 const formSchema = z.object({
@@ -50,7 +49,6 @@ type Contract = {
 const SendTemplate = (prop: propType) => {
   const { onClose, open, customer_data, event_data } = prop;
   const navigate = useRouter();
-  // const params = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [contract, setContract] = useState<Contract[]>([]);
   const [error, setError] = useState("");
@@ -117,6 +115,7 @@ const SendTemplate = (prop: propType) => {
           await onSubmit(form.getValues());
         }
       }}
+      disableAction={loading}
     >
       <div className="text-base font-normal mb-2">
         Please select the contract
