@@ -14,11 +14,12 @@ import {
 } from "@/components/ui/popover";
 import SettingsPopover from "./components/settingPopover";
 import CreateEvent from "../create-event";
-import { useState } from "react";
 import { profileType } from "@/actions/_utils/types.type";
 import { getInitial } from "@/lib/common";
 import { useAuthStore } from "@/provider/store/authentication";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAppDispatch } from "@/provider/store";
+import { setGlobalData } from "@/provider/store/global";
 
 type propType = {
   user: profileType;
@@ -29,7 +30,7 @@ const Primary = (props: propType) => {
   const isBusinessUser = !!user?.business_id;
   const path = usePathname();
   const { profile } = useAuthStore();
-  const [createEvent, setCreateEvent] = useState(false);
+  const dispatch = useAppDispatch();
 
   const userEvents = profile?.events ? profile?.events : user?.events;
 
@@ -97,7 +98,11 @@ const Primary = (props: propType) => {
             variant="ghost"
             className="h-[48px] w-[48px] p-0"
             onClick={() => {
-              setCreateEvent(true);
+              dispatch(
+                setGlobalData({
+                  createEvent: true,
+                })
+              )
             }}
           >
             <PiPlus size={32} />
@@ -127,7 +132,7 @@ const Primary = (props: propType) => {
           </Popover>
         </div>
       </div>
-      <CreateEvent open={createEvent} setOpen={setCreateEvent} />
+      <CreateEvent  />
     </>
   );
 };

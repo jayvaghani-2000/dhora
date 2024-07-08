@@ -56,10 +56,9 @@ const getBusinessDetailHandler = async (user: User, businessId?: string) => {
               name: true,
               image: true,
             },
-          }
-        }
+          },
+        },
       },
-
     },
   });
 
@@ -78,25 +77,25 @@ WHERE
 `);
   return businessDetail
     ? {
-      ...businessDetail,
-      rating_summary: (businessRatings[0] ?? {
-        total_ratings: 0,
-        average_rating: "0.0",
-        count_rating_1: 0,
-        count_rating_2: 0,
-        count_rating_3: 0,
-        count_rating_4: 0,
-        count_rating_5: 0,
-      }) as unknown as {
-        total_ratings: number;
-        average_rating: string;
-        count_rating_1: number;
-        count_rating_2: number;
-        count_rating_3: number;
-        count_rating_4: number;
-        count_rating_5: number;
-      },
-    }
+        ...businessDetail,
+        rating_summary: (businessRatings[0] ?? {
+          total_ratings: 0,
+          average_rating: "0.0",
+          count_rating_1: 0,
+          count_rating_2: 0,
+          count_rating_3: 0,
+          count_rating_4: 0,
+          count_rating_5: 0,
+        }) as unknown as {
+          total_ratings: number;
+          average_rating: string;
+          count_rating_1: number;
+          count_rating_2: number;
+          count_rating_3: number;
+          count_rating_4: number;
+          count_rating_5: number;
+        },
+      }
     : null;
 };
 
@@ -104,8 +103,16 @@ const handler = async (user: User, businessId?: string) => {
   try {
     const businessDetail = await getBusinessDetailHandler(user, businessId);
 
-    if (!businessDetail) {
-      throw new Error("Business not found!");
+    if (
+      !businessDetail ||
+      businessDetail.packages.length === 0 ||
+      businessDetail.assets.length === 0 ||
+      businessDetail.booking_types.length === 0 ||
+      businessDetail.id === user.business_id
+    ) {
+      throw new Error(
+        "Business not found or not eligible to list on marketplace!"
+      );
     }
     return { success: true as true, data: businessDetail! };
   } catch (err) {

@@ -35,7 +35,11 @@ export default async function BusinessProfile(props: propType) {
     await getBusinessDetails(props.params.slug),
   ]);
   if (!business.success || !business.data) {
-    return <div className="text-center">Unable to fetch business details</div>;
+    return (
+      <div className="text-center">
+        Business not found or not eligible to list on marketplace!
+      </div>
+    );
   }
 
   const groupedPackages = groupPackagesByGroupId(business.data.packages);
@@ -72,7 +76,10 @@ export default async function BusinessProfile(props: propType) {
                 />
               </div>
             ) : null}
-            <Reviews reviews={business.data.ratings ?? []} rating_summary={business.data.rating_summary}/>
+            <Reviews
+              reviews={business.data.ratings ?? []}
+              rating_summary={business.data.rating_summary}
+            />
           </div>
         </div>
       </div>

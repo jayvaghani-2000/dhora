@@ -23,16 +23,15 @@ import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch } from "@/provider/store";
 import { setAuthData } from "@/provider/store/authentication";
 import { me } from "@/actions/(auth)/me";
+import { setGlobalData, useGlobalStore } from "@/provider/store/global";
 
 const CreateEvent = (
-  props: Partial<React.ComponentProps<typeof CustomDialog>> & {
-    setOpen: Dispatch<SetStateAction<boolean>>;
-  }
+  props: Partial<React.ComponentProps<typeof CustomDialog>>
 ) => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitCount, setSubmitCount] = useState(0);
-  const { open = false, setOpen } = props;
+  const {createEvent: open} = useGlobalStore()
   const dispatch = useAppDispatch();
   const { toast } = useToast();
 
@@ -51,7 +50,7 @@ const CreateEvent = (
   });
 
   const handleCloseCreateEvent = () => {
-    setOpen(false);
+    dispatch(setGlobalData({createEvent: false}));
     setFile(null);
     form.reset();
   };
