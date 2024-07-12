@@ -52,7 +52,7 @@ const NewPackage = (
       name: "",
       package_group_id: undefined,
       fixed_priced: false,
-      unit: undefined,
+      unit: "hours",
       unit_rate: undefined,
       max_unit: undefined,
       min_unit: undefined,
@@ -181,215 +181,155 @@ const NewPackage = (
               )}
             />
 
-            <div>
+            <div className="space-y-2">
               <Label>Pricing</Label>
 
-              <FormField
-                control={form.control}
-                name="fixed_priced"
-                render={({ field }) => (
-                  <div className="flex gap-2 flex-col">
-                    <FormItem className="flex items-center gap-2">
-                      <FormLabel className="mt-2">Fixed rates</FormLabel>
-                      <FormControl className="mt-2">
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+              <div className="grid  grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 ">
+                <div className="md:col-span-2 flex gap-2 items-center">
+                  <FormField
+                    control={form.control}
+                    name={`unit_rate`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <IconInput
+                            type="number"
+                            placeholder="Unit Rate"
+                            {...field}
+                            prefix={
+                              <div className="h-4 w-4">
+                                <CgDollar className="h-full w-full" />
+                              </div>
+                            }
+                            onChange={e => {
+                              const value = parseFloat(e.target.value);
+                              if (isNaN(value)) {
+                                field.onChange(null);
+                              } else {
+                                field.onChange(value);
+                              }
+                            }}
+                            value={stringCasting(
+                              form.getValues(`unit_rate`) as unknown as number
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <p>/</p>
+                  <FormField
+                    control={form.control}
+                    name={`unit_qty`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input
+                            placeholder="Unit Quantity"
+                            type="number"
+                            {...field}
+                            value={field.value!}
+                            onChange={e => {
+                              const value = parseFloat(e.target.value);
+                              if (isNaN(value)) {
+                                field.onChange(null);
+                              } else {
+                                field.onChange(value);
+                              }
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="unit"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value!}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  <span className="text-muted-foreground ">
+                                    Select Unit
+                                  </span>
+                                }
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {unitTypeOptions.map(i => (
+                              <SelectItem key={i} value={i}>
+                                {i}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="min_unit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Minimum units"
+                          type="number"
+                          {...field}
+                          value={field.value!}
+                          onChange={e => {
+                            const value = parseFloat(e.target.value);
+                            if (isNaN(value)) {
+                              field.onChange(null);
+                            } else {
+                              field.onChange(value);
+                            }
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-
-                    {!field.value ? (
-                      <div className="grid  grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 ">
-                        <div className="md:col-span-2 flex gap-2 items-center">
-                          <FormField
-                            control={form.control}
-                            name={`unit_rate`}
-                            render={({ field }) => (
-                              <FormItem className="flex-1">
-                                <FormControl>
-                                  <IconInput
-                                    type="number"
-                                    placeholder="Unit Rate"
-                                    {...field}
-                                    prefix={
-                                      <div className="h-4 w-4">
-                                        <CgDollar className="h-full w-full" />
-                                      </div>
-                                    }
-                                    onChange={e => {
-                                      const value = parseFloat(e.target.value);
-                                      if (isNaN(value)) {
-                                        field.onChange(null);
-                                      } else {
-                                        field.onChange(value);
-                                      }
-                                    }}
-                                    value={stringCasting(
-                                      form.getValues(
-                                        `unit_rate`
-                                      ) as unknown as number
-                                    )}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <p>/</p>
-                          <FormField
-                            control={form.control}
-                            name={`unit_qty`}
-                            render={({ field }) => (
-                              <FormItem className="flex-1">
-                                <FormControl>
-                                  <Input
-                                    placeholder="Unit Quantity"
-                                    type="number"
-                                    {...field}
-                                    value={field.value!}
-                                    onChange={e => {
-                                      const value = parseFloat(e.target.value);
-                                      if (isNaN(value)) {
-                                        field.onChange(null);
-                                      } else {
-                                        field.onChange(value);
-                                      }
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="unit"
-                            render={({ field }) => (
-                              <FormItem className="flex-1">
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value!}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue
-                                        placeholder={
-                                          <span className="text-muted-foreground ">
-                                            Select Unit
-                                          </span>
-                                        }
-                                      />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {unitTypeOptions.map(i => (
-                                      <SelectItem key={i} value={i}>
-                                        {i}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-
-                        <FormField
-                          control={form.control}
-                          name="min_unit"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  placeholder="Minimum units"
-                                  type="number"
-                                  {...field}
-                                  value={field.value!}
-                                  onChange={e => {
-                                    const value = parseFloat(e.target.value);
-                                    if (isNaN(value)) {
-                                      field.onChange(null);
-                                    } else {
-                                      field.onChange(value);
-                                    }
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="max_unit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Maximum units"
+                          type="number"
+                          {...field}
+                          value={field.value!}
+                          onChange={e => {
+                            const value = parseFloat(e.target.value);
+                            if (isNaN(value)) {
+                              field.onChange(null);
+                            } else {
+                              field.onChange(value);
+                            }
+                          }}
                         />
-                        <FormField
-                          control={form.control}
-                          name="max_unit"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  placeholder="Maximum units"
-                                  type="number"
-                                  {...field}
-                                  value={field.value!}
-                                  onChange={e => {
-                                    const value = parseFloat(e.target.value);
-                                    if (isNaN(value)) {
-                                      field.onChange(null);
-                                    } else {
-                                      field.onChange(value);
-                                    }
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    ) : (
-                      <div className="grid  grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 ">
-                        <FormField
-                          control={form.control}
-                          name={`unit_rate`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <IconInput
-                                  type="number"
-                                  placeholder="Rates"
-                                  {...field}
-                                  prefix={
-                                    <div className="h-4 w-4">
-                                      <CgDollar className="h-full w-full" />
-                                    </div>
-                                  }
-                                  onChange={e => {
-                                    const value = parseFloat(e.target.value);
-                                    if (isNaN(value)) {
-                                      field.onChange(0);
-                                    } else {
-                                      field.onChange(value);
-                                    }
-                                  }}
-                                  value={stringCasting(
-                                    form.getValues(
-                                      `unit_rate`
-                                    ) as unknown as number
-                                  )}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             <FormField

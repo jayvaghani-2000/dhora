@@ -6,6 +6,7 @@ import { getTimeZones } from "@vvo/tzdb";
 import { invoiceStatusTypeEnum } from "@/db/schema";
 import { getAddOnsType, getPackagesType } from "@/actions/_utils/types.type";
 import dayjs from "dayjs";
+import { isNull, isUndefined } from "lodash";
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -66,7 +67,7 @@ export function searchTableData<T extends {}>(
 }
 
 export function stringCasting(value: number) {
-  if (isNaN(value)) {
+  if (isNaN(value) || isNull(value) || isUndefined(value)) {
     return "";
   }
   return String(value);

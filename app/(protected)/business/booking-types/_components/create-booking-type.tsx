@@ -18,6 +18,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomDialog from "@/components/shared/custom-dialog";
 import { createBookingType } from "@/actions/(protected)/business/booking-types/createBookingType";
+import { stringCasting } from "@/lib/common";
 
 const CreateBookingTypeModel = () => {
   const [openCreateBookingType, setOpenCreateBookingType] = useState(false);
@@ -118,11 +119,12 @@ const CreateBookingTypeModel = () => {
                         onChange={e => {
                           const value = parseFloat(e.target.value);
                           if (isNaN(value)) {
-                            field.onChange(0);
+                            field.onChange(null);
                           } else {
                             field.onChange(value);
                           }
                         }}
+                        value={stringCasting(field.value)}
                       />
                       <div className="h-8 lg:h-10 p-1 lg:p-2  border border-input border-l-0 rounded-r-md text-sm bg-divider">
                         Minutes

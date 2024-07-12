@@ -1,6 +1,7 @@
 import React from "react";
 import SelectedAddOn from "./selected-add-on";
 import { formatAmount } from "@/lib/common";
+import { isNumber } from "lodash";
 
 const Pricing = (props: React.ComponentProps<typeof SelectedAddOn>) => {
   const { selectedAddOn } = props;
@@ -18,7 +19,7 @@ const Pricing = (props: React.ComponentProps<typeof SelectedAddOn>) => {
           {unit_qty === 1 ? `/unit` : `/${unit_qty} unit`}
         </li>
 
-        <li>Maximum {max_unit} unit</li>
+        {isNumber(max_unit) && <li>Maximum {max_unit} unit</li>}
       </ul>
     </div>
   );

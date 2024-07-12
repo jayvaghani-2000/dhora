@@ -243,7 +243,7 @@ const EditAddOn = (props: propType) => {
                             }
                           }}
                           value={stringCasting(
-                            form.getValues(`unit_rate`) as unknown as number
+                            field.value as unknown as number
                           )}
                         />
                       </FormControl>
@@ -262,7 +262,9 @@ const EditAddOn = (props: propType) => {
                           placeholder="Unit Quantity"
                           type="number"
                           {...field}
-                          value={field.value!}
+                          value={stringCasting(
+                            field.value as unknown as number
+                          )}
                           suffix={<div className="mr-1">Unit</div>}
                           onChange={e => {
                             const value = parseFloat(e.target.value);
@@ -289,7 +291,7 @@ const EditAddOn = (props: propType) => {
                         placeholder="Maximum units"
                         type="number"
                         {...field}
-                        value={field.value!}
+                        value={stringCasting(field.value as unknown as number)}
                         onChange={e => {
                           const value = parseFloat(e.target.value);
                           if (isNaN(value)) {

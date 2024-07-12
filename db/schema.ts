@@ -14,7 +14,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { isNumber } from "lodash";
+import { isNull, isNumber } from "lodash";
 import { z } from "zod";
 
 export const businessTypeEnum = pgEnum("businessType", [
@@ -951,7 +951,12 @@ export const editPackageSchema = packageSchema
     data => {
       if (data.fixed_priced) {
         return true;
-      } else if (data.max_unit === undefined || data.min_unit === undefined) {
+      } else if (
+        data.max_unit === undefined ||
+        data.min_unit === undefined ||
+        data.max_unit === null ||
+        data.min_unit === null
+      ) {
         return true;
       } else if (
         isNumber(data.min_unit) &&
@@ -1052,7 +1057,7 @@ const addOnSchema = createInsertSchema(addOns)
         { message: "Description is required" }
       ),
       unit_rate: z.number().positive(),
-      max_unit: z.number().int().positive(),
+      max_unit: z.number().int().positive().nullable().optional(),
       unit_qty: z.number().int().positive(),
       add_on_group_id: z.string().optional().nullable(),
     })

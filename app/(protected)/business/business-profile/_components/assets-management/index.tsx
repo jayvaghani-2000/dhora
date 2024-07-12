@@ -16,7 +16,7 @@ const AssetsManagement = (props: propTypes) => {
   return (
     <div>
       <div className="text-secondary-light-gray font-semibold text-base ">
-        Assets Management
+        Multimedia
       </div>
 
       <div className="relative my-2 w-fit">
