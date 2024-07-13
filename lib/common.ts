@@ -5,8 +5,10 @@ import clsx from "clsx";
 import { getTimeZones } from "@vvo/tzdb";
 import { invoiceStatusTypeEnum } from "@/db/schema";
 import { getAddOnsType, getPackagesType } from "@/actions/_utils/types.type";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { isNull, isUndefined } from "lodash";
+
+export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export function getInitial(name: string) {
   const words = name.split(" ");
@@ -19,6 +21,12 @@ export function getInitial(name: string) {
 export function formatDate(date: Date) {
   return format(new Date(date), "MMM dd,yyyy");
 }
+
+export function formatDateWithTimeStamp(date: Date) {
+  const localTime = dayjs(date).utc().tz(timeZone).format("MMM D,YYYY h:mm a");
+  return localTime;
+}
+
 export function dateWithoutTime(date: Date | string) {
   return format(new Date(date), "yyyy-MM-dd");
 }
@@ -126,8 +134,6 @@ export const invoiceStatusColor = (
     "text-yellow-600 hover:text-yellow-600": status === "pending",
     "text-gray-400 hover:text-gray-400": status === "draft",
   });
-
-export const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const parseTimezone = (timeZone: string) => {
   const timeZonesWithUtc = getTimeZones({ includeUtc: true });
