@@ -55,7 +55,11 @@ const handler = async (user: User, params: paramsType) => {
       }),
     ]);
 
-    if (isAlreadyDefault.length && unDefaultAvailability) {
+    if (
+      isAlreadyDefault.length &&
+      unDefaultAvailability &&
+      unDefaultAvailability.length > 0
+    ) {
       await db
         .update(availability)
         .set({
