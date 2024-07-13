@@ -179,11 +179,11 @@ const BusinessDetailForm = (prop: propType) => {
                     name="contact"
                     render={({ field }) => (
                       <FormItem className="col-span-2 lg:col-span-1 ">
-                        <FormLabel>Business Contact</FormLabel>
+                        <FormLabel>Business Phone Number</FormLabel>
                         <FormControl>
                           <Input
                             className="h-9 disabled:opacity-100"
-                            placeholder="Business Contact"
+                            placeholder="Business Phone Number"
                             {...field}
                           />
                         </FormControl>

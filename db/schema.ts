@@ -684,7 +684,7 @@ export const createInvoiceSchema = createInsertSchema(invoices)
       ),
       customer_contact: z
         .string()
-        .refine(data => data.length > 0, { message: "Contact is required" }),
+        .refine(data => data.length > 0, { message: "Phone number is required" }),
       customer_name: z.string().refine(data => data.length > 0, {
         message: "Customer name is required",
       }),

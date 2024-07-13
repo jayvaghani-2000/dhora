@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup } from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -31,6 +31,7 @@ import { PiUser, PiUsersThree } from "react-icons/pi";
 import { register } from "@/actions/(auth)/register";
 import Spinner from "@/components/shared/spinner";
 import { Password } from "@/components/shared/password";
+import { Label } from "@/components/ui/label";
 
 export function RegisterForm() {
   const [loading, setLoading] = useState(false);
@@ -130,66 +131,71 @@ export function RegisterForm() {
           <FormField
             control={form.control}
             name="is_business"
-            render={({ field: { onChange, value } }) => (
-              <FormItem className="space-y-3 md:col-span-2  mt-4">
-                <FormControl>
-                  <RadioGroup className="flex flex-col md:flex-row gap-3">
-                    <FormItem
-                      className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
-                      onClick={() => onChange(false)}
+            render={({ field: { onChange, value } }) => {
+              return (
+                <FormItem className="space-y-3 md:col-span-2  mt-4">
+                  <FormControl>
+                    <RadioGroup
+                      className="flex flex-col md:flex-row gap-3"
+                      defaultValue={String(value)}
+                      onValueChange={value => {
+                        onChange(value === "false" ? false : true);
+                      }}
                     >
-                      <Card className="p-4 w-full">
-                        <div className="flex gap-4">
-                          <PiUser size={50} />
-                          <div className="relative w-full">
-                            <input
-                              type="radio"
-                              checked={value == false}
-                              onChange={() => {}}
-                              className="absolute right-0 accent-black"
-                            />
+                      <Label
+                        htmlFor="customerUser"
+                        className=" w-full flex-1 cursor-pointer"
+                      >
+                        <Card className="p-4 w-full relative">
+                          <div className="flex gap-4">
+                            <PiUser size={50} />
+                            <div className="relative w-full">
+                              <div className="absolute right-0 accent-black">
+                                <RadioGroupItem
+                                  value={"false"}
+                                  id="customerUser"
+                                />
+                              </div>
 
-                            <FormLabel className="font-normal">
-                              Regular User
-                            </FormLabel>
-                            <FormDescription className="text-xs my-1">
-                              For users that are not signing up as a business or
-                              service provider
-                            </FormDescription>
+                              <p className="font-normal">Regular User</p>
+                              <FormDescription className="text-xs my-1">
+                                For users that are not signing up as a business
+                                or service provider
+                              </FormDescription>
+                            </div>
                           </div>
-                        </div>
-                      </Card>
-                    </FormItem>
-                    <FormItem
-                      onClick={() => onChange(true)}
-                      className="flex w-full items-center space-x-3 space-y-0 cursor-pointer"
-                    >
-                      <Card className="p-4 w-full">
-                        <div className="flex gap-4">
-                          <PiUsersThree size={50} />
-                          <div className="relative w-full">
-                            <input
-                              type="radio"
-                              checked={value == true}
-                              onChange={() => {}}
-                              className="absolute right-0 accent-black"
-                            />
-                            <FormLabel className="font-normal">
-                              Business User
-                            </FormLabel>
-                            <FormDescription className="text-xs my-1">
-                              For users that are signing up as a business or
-                              service provider
-                            </FormDescription>
+                        </Card>
+                      </Label>
+                      <Label
+                        htmlFor="businessUser"
+                        className=" w-full flex-1 cursor-pointer"
+                      >
+                        <Card className="p-4 w-full  relative">
+                          <div className="flex gap-4">
+                            <PiUsersThree size={50} />
+                            <div className="relative w-full">
+                              <div className="absolute right-0 accent-black">
+                                <RadioGroupItem
+                                  value={"true"}
+                                  id="businessUser"
+                                />
+                              </div>
+
+                              <p className="font-normal">Business User</p>
+                              <FormDescription className="text-xs my-1">
+                                For users that are signing up as a business or
+                                service provider
+                              </FormDescription>
+                            </div>
                           </div>
-                        </div>
-                      </Card>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+                        </Card>
+                      </Label>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
 
           {form.getValues("is_business") == true && (

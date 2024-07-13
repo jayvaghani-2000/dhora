@@ -162,7 +162,7 @@ const ConnectToStripe = (props: propType) => {
                   <FormControl>
                     <Input
                       className="h-9 disabled:opacity-100"
-                      placeholder="Business Contact"
+                      placeholder="Business Phone Number"
                       {...field}
                     />
                   </FormControl>

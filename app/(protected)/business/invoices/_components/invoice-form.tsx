@@ -275,7 +275,7 @@ const InvoiceForm = (props: propType) => {
                       <FormControl>
                         <Input
                           className="h-9 disabled:opacity-100"
-                          placeholder="Business Contact"
+                          placeholder="Business Phone Number"
                           disabled
                           {...field}
                         />
@@ -401,7 +401,7 @@ const InvoiceForm = (props: propType) => {
                     <FormControl>
                       <Input
                         className="h-9"
-                        placeholder="Customer Contact"
+                        placeholder="Customer Phone Number"
                         {...field}
                       />
                     </FormControl>

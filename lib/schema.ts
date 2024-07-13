@@ -34,7 +34,7 @@ export const businessDetailSchema = z.object({
     .refine(data => data.trim().length > 0, { message: "Address is required" }),
   contact: z
     .string()
-    .refine(data => data.trim().length > 0, { message: "Contact is required" }),
+    .refine(data => data.trim().length > 0, { message: "Phone number is required" }),
   email: z.string().email({ message: "Enter valid email" }),
 });
 
