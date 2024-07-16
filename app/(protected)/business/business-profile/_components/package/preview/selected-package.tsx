@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { deletePackage } from "@/actions/(protected)/business/packages/deletePackage";
 import { useToast } from "@/components/ui/use-toast";
+import CustomDialog from "@/components/shared/custom-dialog";
 
 type propType = {
   selectedPackage: getPackagesType["data"];
@@ -23,6 +24,7 @@ const SelectedPackage = (prop: propType) => {
   const router = useRouter();
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);
+  const [confirmDeletePackage, setConfirmDeletePackage] = useState(false);
   const packageDetail = selectedPackage?.[0]!;
 
   const handleDeletePackage = async () => {
@@ -54,7 +56,7 @@ const SelectedPackage = (prop: propType) => {
               <Button
                 variant="ghost"
                 onClick={e => {
-                  handleDeletePackage();
+                  setConfirmDeletePackage(true);
                 }}
                 disabled={deleting}
                 className="p-1"
@@ -90,6 +92,23 @@ const SelectedPackage = (prop: propType) => {
       <TabsContent value="pricing" className="flex-1">
         <Pricing {...prop} />
       </TabsContent>
+      <CustomDialog
+        open={confirmDeletePackage}
+        title="Delete package"
+        className="w-[500px]"
+        onClose={() => {
+          setConfirmDeletePackage(false);
+        }}
+        saveText="Confirm!"
+        onSubmit={async () => {
+          await handleDeletePackage();
+        }}
+        saveVariant="destructive"
+        disableAction={deleting}
+      >
+        Are you sure, want to delete the package{" "}
+        <span className="font-bold">{packageDetail.name}</span>?
+      </CustomDialog>
     </Tabs>
   );
 };

@@ -39,6 +39,7 @@ import { Label } from "@/components/ui/label";
 import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import { stringCasting } from "@/lib/common";
+import CustomDialog from "@/components/shared/custom-dialog";
 
 type propType = {
   addOnDetail: getAddOnsDetailsType["data"];
@@ -50,6 +51,7 @@ const EditAddOn = (props: propType) => {
   const { addOnDetail, addOnGroups } = props;
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmDeleteAddOn, setConfirmDeleteAddOn] = useState(false);
   const { toast } = useToast();
   const { id, created_at, deleted, updated_at, ...addOnInfo } = addOnDetail!;
 
@@ -123,7 +125,7 @@ const EditAddOn = (props: propType) => {
             className="p-1 h-[28px]"
             disabled={loading || deleting}
             onClick={() => {
-              handleDeleteAddOn();
+              setConfirmDeleteAddOn(true);
             }}
           >
             <RiDeleteBin6Line size={18} color="#b6b6b6" />
@@ -310,6 +312,24 @@ const EditAddOn = (props: propType) => {
           </div>
         </div>
       </Form>
+
+      <CustomDialog
+        open={confirmDeleteAddOn}
+        title="Delete add on"
+        className="w-[500px]"
+        onClose={() => {
+          setConfirmDeleteAddOn(false);
+        }}
+        saveText="Confirm!"
+        onSubmit={async () => {
+          await handleDeleteAddOn();
+        }}
+        saveVariant="destructive"
+        disableAction={deleting}
+      >
+        Are you sure, want to delete the add on{" "}
+        <span className="font-bold">{addOnDetail.name}</span>?
+      </CustomDialog>
     </div>
   );
 };
