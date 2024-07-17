@@ -328,7 +328,7 @@ const EditAddOn = (props: propType) => {
         disableAction={deleting}
       >
         Are you sure, want to delete the add on{" "}
-        <span className="font-bold">{addOnDetail.name}</span>?
+        <span className="font-bold">{addOnDetail!.name}</span>?
       </CustomDialog>
     </div>
   );

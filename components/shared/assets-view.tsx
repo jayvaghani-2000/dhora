@@ -1,18 +1,40 @@
 import { assetsType } from "@/actions/_utils/types.type";
-import React from "react";
+import React, { useState } from "react";
 import ScreenSwipe from "./screen-swipe";
 import { Button } from "../ui/button";
 import { FaEye } from "react-icons/fa";
 import { allowedImageType } from "@/lib/constant";
 import { MotionImage } from "./MotionImage";
 import { IoMdPlayCircle } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { deleteAssets } from "@/actions/(protected)/business/assets/deleteAssets";
+import { useToast } from "../ui/use-toast";
+import Spinner from "./spinner";
 
 type propTypes = {
   assets: assetsType;
+  deletable?: boolean;
 };
 
 const AssetsView = (props: propTypes) => {
-  const { assets } = props;
+  const { assets, deletable = false } = props;
+  const { toast } = useToast();
+
+  const [deletingAssets, setDeletingAssets] = useState<string[]>([]);
+
+  const handleDeleteAssets = async (id: string) => {
+    setDeletingAssets(prev => [...prev, id]);
+    const res = await deleteAssets({
+      assetId: id,
+      path: "/business/business-profile/assets",
+    });
+    if (!res.success) {
+      toast({
+        title: "Unable to delete media!",
+      });
+      setDeletingAssets(prev => prev.filter(i => i !== id));
+    }
+  };
 
   return (
     <div className="relative max-h-[60dvh] aspect-video lg:aspect-auto rounded-lg  overflow-hidden">
@@ -81,6 +103,23 @@ const AssetsView = (props: propTypes) => {
                   aspectRatio: i.width && i.height ? i.width / i.height : 1,
                 }}
               >
+                {deletable ? (
+                  <Button
+                    size={"icon"}
+                    variant="destructive"
+                    className="absolute top-2 right-2 z-100 h-5 w-5 md:h-8 md:w-8 z-50"
+                    onClick={() => {
+                      handleDeleteAssets(i.id);
+                    }}
+                    disabled={deletingAssets.includes(i.id)}
+                  >
+                    {deletingAssets.includes(i.id) ? (
+                      <Spinner className="ml-0 " />
+                    ) : (
+                      <RiDeleteBin6Line className="h-3 w-3 md:h-5 md:w-5" />
+                    )}
+                  </Button>
+                ) : null}
                 <MotionImage
                   src={i.url ?? ""}
                   alt={i.id}
@@ -100,6 +139,23 @@ const AssetsView = (props: propTypes) => {
                   aspectRatio: i.width && i.height ? i.width / i.height : 1,
                 }}
               >
+                {deletable ? (
+                  <Button
+                    size={"icon"}
+                    variant="destructive"
+                    className="absolute top-2 right-2 z-100 h-5 w-5 md:h-8 md:w-8 z-50"
+                    onClick={() => {
+                      handleDeleteAssets(i.id);
+                    }}
+                    disabled={deletingAssets.includes(i.id)}
+                  >
+                    {deletingAssets.includes(i.id) ? (
+                      <Spinner className="ml-0" />
+                    ) : (
+                      <RiDeleteBin6Line className="h-3 w-3 md:h-5 md:w-5" />
+                    )}
+                  </Button>
+                ) : null}
                 <video
                   src={i.url ?? ""}
                   className="object-cover rounded-sm w-full h-full"

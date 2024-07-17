@@ -14,14 +14,8 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
 
-type propType = {
-  setAssets: React.Dispatch<
-    React.SetStateAction<getBusinessAssetsType["data"]>
-  >;
-};
 
-const UploadAssets = (prop: propType) => {
-  const { setAssets } = prop;
+const UploadAssets = () => {
   const ref = useRef<HTMLInputElement>(null!);
   const [assetsStr, setAssetsStr] = useState({
     base64: "",
@@ -63,8 +57,6 @@ const UploadAssets = (prop: propType) => {
             name: "",
             type: "",
           });
-          const assets = await getBusinessAssets();
-          setAssets(assets.data);
         }
         setLoading(false);
       }

@@ -14,6 +14,7 @@ import CustomSelect from "@/components/shared/custom-select";
 import { DateRangePicker } from "@/components/shared/range-picker";
 import { isWithinInterval } from "date-fns";
 import Actions from "./actions";
+import Link from "next/link";
 
 type propType = {
   templates:
@@ -28,6 +29,7 @@ export type recordType = {
   status: string;
   sent_on: Date;
   id: string;
+  template_id: number;
 };
 
 type extraFilterPropType = {
@@ -98,8 +100,11 @@ const SubmittedContract = (props: propType) => {
     submitter_email: i.submitters[0].email,
     status: i.submitters[0].status,
     sent_on: i.submitters[0].sent_at,
+    template_id: i.template.id,
     id: String(i.id),
   }));
+
+  console.log("parsedTemplate", parsedTemplate);
 
   const columns: ColumnDef<recordType>[] = [
     {
@@ -115,7 +120,16 @@ const SubmittedContract = (props: propType) => {
           </button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => {
+        return (
+          <Link
+            href={`/business/contracts/template?c_id=${row.original.template_id}`}
+            className="text-primary-blue"
+          >
+            {row.getValue("name")}
+          </Link>
+        );
+      },
     },
     {
       accessorKey: "submitter_email",

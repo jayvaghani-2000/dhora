@@ -4,15 +4,21 @@ import { validateToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { db } from "@/lib/db";
-import { inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { assets } from "@/db/schema";
 import { removeAsset } from "@/lib/minio";
+import { revalidate } from "@/actions/(public)/revalidate";
 
-const handler = async (user: User, assetId: string[]) => {
+type ParamsType = {
+  assetId: string;
+  path: string;
+};
+
+const handler = async (user: User, assetId: string) => {
   try {
     const deletedAssets = await db
       .delete(assets)
-      .where(inArray(assets.id, assetId))
+      .where(and(eq(assets.id, assetId), eq(assets.user_id, user.id)))
       .returning();
 
     await removeAsset(deletedAssets.map(i => i.url as string));
@@ -27,5 +33,15 @@ const handler = async (user: User, assetId: string[]) => {
   }
 };
 
-export const deleteAssets: () => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateToken(handler);
+const deleteAssetHandler = async (user: User, params: ParamsType) => {
+  const res = await handler(user, params.assetId);
+  if (res.success) {
+    await revalidate(params.path);
+  }
+  return res;
+};
+
+export const deleteAssets: (
+  params: ParamsType
+) => Promise<Awaited<ReturnType<typeof deleteAssetHandler>>> =
+  validateToken(deleteAssetHandler);

@@ -11,7 +11,7 @@ const Assets = (props: React.ComponentProps<typeof SelectedPackage>) => {
     </div>
   ) : (
     <div className="px-3 pt-2 pb-4">
-      <AssetsView assets={packageDetail.assets!} />
+      <AssetsView assets={packageDetail.assets!} deletable />
     </div>
   );
 };
