@@ -1,6 +1,6 @@
 "use client";
 
-import React, { HTMLProps, useRef } from "react";
+import React, { HTMLProps, useRef, useState } from "react";
 import {
   createInvoiceSchemaType,
   getInvoicesDetailResponseType,
@@ -17,6 +17,18 @@ import { IoPrintOutline } from "react-icons/io5";
 import { FiDownload } from "react-icons/fi";
 import { useReactToPrint } from "react-to-print";
 import BackButton from "@/components/shared/back-button";
+import { Label } from "@/components/ui/label";
+import { payViaTypeEnum } from "@/db/schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { updateInvoicePayMode } from "@/actions/(protected)/business/invoices/updateInvoicePaymentMode";
+import { useToast } from "@/components/ui/use-toast";
+import Spinner from "@/components/shared/spinner";
 
 const InvoicePreview = ({
   invoice,
@@ -30,11 +42,15 @@ const InvoicePreview = ({
     invoice?.platform_fee
   );
   const invoiceId = invoice?.id;
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const preview = useRef<HTMLDivElement>(null!);
   const handlePrint = useReactToPrint({
     content: () => preview.current,
   });
+
+  const payViaTypeOptions = payViaTypeEnum.enumValues;
 
   const isDraft = invoice?.status === "draft";
 
@@ -94,6 +110,43 @@ const InvoicePreview = ({
             <span>Download</span>
           </Button>
         </div>
+      </div>
+      <div className="  px-4 md:px-6  mb-2 lg:mb-4 flex  items-center gap-2">
+        <Label className="whitespace-nowrap">Pay via:</Label>
+
+        <Select
+          onValueChange={async (value: "stripe" | "cash" | "cheque") => {
+            setLoading(true);
+            const res = await updateInvoicePayMode({
+              value: value,
+              id: invoice!.id,
+            });
+            if (res.success) {
+              toast({ title: "Payment mode updated successfully!" });
+            } else {
+              toast({ title: "Error updating payment mode!" });
+            }
+            setLoading(false);
+          }}
+          value={invoice?.pay_via as string}
+        >
+          <SelectTrigger className="w-40">
+            <SelectValue
+              className="capitalize"
+              placeholder={
+                <span className="text-muted-foreground ">Pay via...</span>
+              }
+            />
+          </SelectTrigger>
+          <SelectContent>
+            {payViaTypeOptions.map(i => (
+              <SelectItem className="capitalize" key={i} value={i}>
+                {i}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {loading ? <Spinner type="inline" /> : null}
       </div>
       <div className="relative bg-background border border-gray1 p-2 lg:p-6 rounded-md bg my-4 mx-4 md:mx-6">
         <div

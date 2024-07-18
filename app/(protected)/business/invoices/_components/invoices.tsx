@@ -29,6 +29,7 @@ export type recordType = {
   id: string;
   status: (typeof statusMode)[number];
   event: string;
+  pay_vai: string;
 };
 
 type extraFilterPropType = {
@@ -175,6 +176,7 @@ const Invoices = (props: propType) => {
     due_date: formatDate(i.due_date),
     status: i.status,
     event: i.event?.title ?? "-",
+    pay_vai: i.pay_via as string,
   }));
 
   const columns: ColumnDef<recordType>[] = [
@@ -293,6 +295,23 @@ const Invoices = (props: propType) => {
       },
     },
     {
+      accessorKey: "pay_vai",
+      header: ({ column }) => {
+        return (
+          <button
+            className="flex items-center gap-1"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Pay mode
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </button>
+        );
+      },
+      cell: ({ row }) => {
+        return <div className="capitalize">{row.getValue("pay_vai")}</div>;
+      },
+    },
+    {
       accessorKey: "status",
       header: ({ column }) => {
         return (
@@ -340,7 +359,7 @@ const Invoices = (props: propType) => {
   {
     showAction && columns.push(actionColumn);
   }
-  
+
   return parsedInvoices.length > 0 ? (
     <CustomTable
       data={[...parsedInvoices]}
