@@ -2,7 +2,7 @@
 
 import { contracts } from "@/db/schema";
 import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
@@ -10,7 +10,10 @@ import { errorHandler } from "@/actions/_utils/errorHandler";
 const handler = async (user: User) => {
   try {
     const data = await db.query.contracts.findMany({
-      where: eq(contracts.business_id, user.business_id!),
+      where: and(
+        eq(contracts.business_id, user.business_id!),
+        eq(contracts.deleted, false)
+      ),
     });
 
     return { success: true as true, data: data };

@@ -28,6 +28,12 @@ export const businessTypeEnum = pgEnum("businessType", [
   "Other",
 ]);
 
+export const payViaTypeEnum = pgEnum("payViaType", [
+  "stripe",
+  "cash",
+  "cheque",
+]);
+
 export const invoiceStatusTypeEnum = pgEnum("invoiceStatusType", [
   "paid",
   "pending",
@@ -137,6 +143,7 @@ export const contracts = pgTable("contracts", {
   event_id: text("event_id").references(() => events.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted: boolean("deleted").default(false),
 });
 
 export const contractsRelations = relations(contracts, ({ one }) => ({
@@ -172,6 +179,7 @@ export const invoices = pgTable("invoices", {
   stripe_ref: text("stripe_ref"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
+  pay_via: payViaTypeEnum("pay_via").default("stripe"),
   invoice: text("invoice"),
   notes: text("notes"),
   event_id: text("event_id").references(() => events.id),
@@ -682,9 +690,9 @@ export const createInvoiceSchema = createInsertSchema(invoices)
           id: z.string(),
         })
       ),
-      customer_contact: z
-        .string()
-        .refine(data => data.length > 0, { message: "Phone number is required" }),
+      customer_contact: z.string().refine(data => data.length > 0, {
+        message: "Phone number is required",
+      }),
       customer_name: z.string().refine(data => data.length > 0, {
         message: "Customer name is required",
       }),

@@ -5,10 +5,26 @@ import { User } from "lucia";
 import { errorHandler } from "@/actions/_utils/errorHandler";
 import { config } from "@/config";
 import axios from "axios";
+import { db } from "@/lib/db";
+import { and, eq } from "drizzle-orm";
+import { contracts } from "@/db/schema";
 
 type paramsType = { templateId: string; email: string; event_id?: string };
 
 const handler = async (user: User, data: paramsType) => {
+  // check is template deleted
+
+  const contract = await db.query.contracts.findFirst({
+    where: and(
+      eq(contracts.template_id, Number(data.templateId)),
+      eq(contracts.deleted, false)
+    ),
+  });
+
+  if (contract) {
+    throw new Error("Contract is deleted!")
+  }
+
   let options = {
     method: "POST",
     url: "https://api.docuseal.co/submissions",

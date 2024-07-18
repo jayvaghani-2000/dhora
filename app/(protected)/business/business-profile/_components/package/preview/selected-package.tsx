@@ -17,6 +17,7 @@ type propType = {
   selectedPackage: getPackagesType["data"];
   readOnly: boolean;
   clearSelection: () => void;
+  
 };
 
 const SelectedPackage = (prop: propType) => {
