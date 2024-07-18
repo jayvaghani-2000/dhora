@@ -6,15 +6,15 @@ import {
   getSubmittedContractResponseType,
 } from "@/actions/_utils/types.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
-import { formatDate } from "@/lib/common";
+import { formatDateWithTimeStamp } from "@/lib/common";
 import clsx from "clsx";
 import { CustomTable } from "@/components/shared/custom-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown } from "lucide-react";
 import CustomSelect from "@/components/shared/custom-select";
 import { DateRangePicker } from "@/components/shared/range-picker";
 import { isWithinInterval } from "date-fns";
 import Actions from "./actions";
+import Link from "next/link";
 
 type propType = {
   templates:
@@ -27,8 +27,9 @@ export type recordType = {
   name: string;
   submitter_email: string;
   status: string;
-  sent_on: string;
+  sent_on: Date;
   id: string;
+  template_id: number;
 };
 
 type extraFilterPropType = {
@@ -98,9 +99,12 @@ const SubmittedContract = (props: propType) => {
     name: i.template.name,
     submitter_email: i.submitters[0].email,
     status: i.submitters[0].status,
-    sent_on: formatDate(i.submitters[0].sent_at),
+    sent_on: i.submitters[0].sent_at,
+    template_id: i.template.id,
     id: String(i.id),
   }));
+
+  console.log("parsedTemplate", parsedTemplate);
 
   const columns: ColumnDef<recordType>[] = [
     {
@@ -116,7 +120,16 @@ const SubmittedContract = (props: propType) => {
           </button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => {
+        return (
+          <Link
+            href={`/business/contracts/template?c_id=${row.original.template_id}`}
+            className="text-primary-blue"
+          >
+            {row.getValue("name")}
+          </Link>
+        );
+      },
     },
     {
       accessorKey: "submitter_email",
@@ -146,7 +159,9 @@ const SubmittedContract = (props: propType) => {
           </button>
         );
       },
-      cell: ({ row }) => <div>{row.getValue("sent_on")}</div>,
+      cell: ({ row }) => {
+        return <div>{formatDateWithTimeStamp(row.getValue("sent_on"))}</div>;
+      },
       filterFn: (row, column, filter) => {
         const filterObj = JSON.parse(filter);
         if (filterObj === "undefined") return true;
@@ -210,7 +225,9 @@ const SubmittedContract = (props: propType) => {
       columns={columns}
       extraFilters={ExtraFilters}
     />
-  ) : <p className="text-base text-center">No contract exist</p>;;
+  ) : (
+    <p className="text-base text-center">No contract exist</p>
+  );
 };
 
 export default SubmittedContract;

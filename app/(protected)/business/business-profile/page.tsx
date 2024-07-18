@@ -6,12 +6,12 @@ import Preview from "./_components/package/preview";
 import { groupPackagesByGroupId, groupAddOnsByGroupId } from "@/lib/common";
 import AddOnPreview from "./_components/add-ons/preview";
 import ScheduleCall from "./_components/schedule-call";
-import { getBusinessDetails } from "@/actions/(protected)/business/getBusinessDetails";
+import { getMyBusinessDetails } from "@/actions/(protected)/business/getMyBusinessDetail";
 
 export default async function BusinessProfile() {
   const [meInfo, business] = await Promise.all([
     await me(),
-    await getBusinessDetails(),
+    await getMyBusinessDetails(),
   ]);
 
   if (!business.success || !business.data) {
@@ -25,7 +25,7 @@ export default async function BusinessProfile() {
   return (
     <>
       <div className="flex flex-col gap-5 pb-[44px] md:pb-[52px]">
-        <Assets assets={business.data.assets} />
+        <Assets assets={business.data.assets} deletable />
 
         <div className="grid grid-cols-10 gap-5">
           <div className="col-span-10 flex flex-col gap-5">

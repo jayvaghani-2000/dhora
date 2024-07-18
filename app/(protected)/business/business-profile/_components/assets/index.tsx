@@ -5,10 +5,11 @@ import AssetsView from "@/components/shared/assets-view";
 
 type propTypes = {
   assets: getBusinessDetailsType["data"]["assets"];
+  deletable?: boolean;
 };
 
 const Assets = (props: propTypes) => {
-  return <AssetsView assets={props.assets!} />;
+  return <AssetsView {...props} />;
 };
 
 export default Assets;

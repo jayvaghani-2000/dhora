@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import UploadAssets from "./upload-assets";
 import { getBusinessAssetsType } from "@/actions/_utils/types.type";
 import AssetsView from "@/components/shared/assets-view";
@@ -9,21 +9,17 @@ type propTypes = {
 };
 
 const AssetsManagement = (props: propTypes) => {
-  const [assets, setAssets] = useState<getBusinessAssetsType["data"]>(
-    props.assets.data ?? []
-  );
-
   return (
     <div>
       <div className="text-secondary-light-gray font-semibold text-base ">
-        Assets Management
+        Multimedia
       </div>
 
       <div className="relative my-2 w-fit">
-        <UploadAssets setAssets={setAssets} />
+        <UploadAssets />
       </div>
 
-      <AssetsView assets={assets!} />
+      <AssetsView assets={props.assets.data ?? []} deletable/>
     </div>
   );
 };

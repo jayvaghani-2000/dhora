@@ -19,7 +19,7 @@ const AssetsManagement = (props: React.ComponentProps<typeof EditPackage>) => {
       <div className="relative mt-4 mb-2 w-fit">
         <UploadAssets setAssets={setAssets} />
       </div>
-      {assets ? <AssetsView assets={assets} /> : null}
+      {assets ? <AssetsView assets={assets} deletable/> : null}
     </div>
   );
 };

@@ -81,7 +81,7 @@ export const StaticOptions = [
         submenu: [
           {
             key: "business-profile/assets",
-            title: "Assets management",
+            title: "Multimedia",
             icon: <IoIosImage />,
             path: "/business/business-profile/assets",
           },

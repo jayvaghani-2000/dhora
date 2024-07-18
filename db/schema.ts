@@ -14,7 +14,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { isNumber } from "lodash";
+import { isNull, isNumber } from "lodash";
 import { z } from "zod";
 
 export const businessTypeEnum = pgEnum("businessType", [
@@ -26,6 +26,12 @@ export const businessTypeEnum = pgEnum("businessType", [
   "Apparel",
   "Health & Beauty",
   "Other",
+]);
+
+export const payViaTypeEnum = pgEnum("payViaType", [
+  "stripe",
+  "cash",
+  "cheque",
 ]);
 
 export const invoiceStatusTypeEnum = pgEnum("invoiceStatusType", [
@@ -137,6 +143,7 @@ export const contracts = pgTable("contracts", {
   event_id: text("event_id").references(() => events.id),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted: boolean("deleted").default(false),
 });
 
 export const contractsRelations = relations(contracts, ({ one }) => ({
@@ -172,6 +179,7 @@ export const invoices = pgTable("invoices", {
   stripe_ref: text("stripe_ref"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
+  pay_via: payViaTypeEnum("pay_via").default("stripe"),
   invoice: text("invoice"),
   notes: text("notes"),
   event_id: text("event_id").references(() => events.id),
@@ -682,9 +690,9 @@ export const createInvoiceSchema = createInsertSchema(invoices)
           id: z.string(),
         })
       ),
-      customer_contact: z
-        .string()
-        .refine(data => data.length > 0, { message: "Contact is required" }),
+      customer_contact: z.string().refine(data => data.length > 0, {
+        message: "Phone number is required",
+      }),
       customer_name: z.string().refine(data => data.length > 0, {
         message: "Customer name is required",
       }),
@@ -951,7 +959,12 @@ export const editPackageSchema = packageSchema
     data => {
       if (data.fixed_priced) {
         return true;
-      } else if (data.max_unit === undefined || data.min_unit === undefined) {
+      } else if (
+        data.max_unit === undefined ||
+        data.min_unit === undefined ||
+        data.max_unit === null ||
+        data.min_unit === null
+      ) {
         return true;
       } else if (
         isNumber(data.min_unit) &&
@@ -1052,7 +1065,7 @@ const addOnSchema = createInsertSchema(addOns)
         { message: "Description is required" }
       ),
       unit_rate: z.number().positive(),
-      max_unit: z.number().int().positive(),
+      max_unit: z.number().int().positive().nullable().optional(),
       unit_qty: z.number().int().positive(),
       add_on_group_id: z.string().optional().nullable(),
     })

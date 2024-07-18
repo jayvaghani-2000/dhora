@@ -21,6 +21,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { updatePackageDetail } from "@/actions/(protected)/business/packages/updatePackageDetail";
 import { deletePackage } from "@/actions/(protected)/business/packages/deletePackage";
 import { useParams } from "next/navigation";
+import CustomDialog from "@/components/shared/custom-dialog";
 
 type propType = {
   packageDetail: getPackageDetailsType["data"];
@@ -32,6 +33,7 @@ const EditPackage = (props: propType) => {
   const { packageDetail } = props;
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmDeletePackage, setConfirmDeletePackage] = useState(false);
   const { toast } = useToast();
   const { id, assets, created_at, deleted, updated_at, ...packageInfo } =
     packageDetail!;
@@ -110,7 +112,7 @@ const EditPackage = (props: propType) => {
             className="p-1 h-[28px]"
             disabled={loading || deleting}
             onClick={() => {
-              handleDeletePackage();
+              setConfirmDeletePackage(true);
             }}
           >
             <RiDeleteBin6Line size={18} color="#b6b6b6" />
@@ -134,6 +136,24 @@ const EditPackage = (props: propType) => {
       <TabsContent value="pricing">
         <Pricing form={form} {...props} />
       </TabsContent>
+
+      <CustomDialog
+        open={confirmDeletePackage}
+        title="Delete package"
+        className="w-[500px]"
+        onClose={() => {
+          setConfirmDeletePackage(false);
+        }}
+        saveText="Confirm!"
+        onSubmit={async () => {
+          await handleDeletePackage();
+        }}
+        saveVariant="destructive"
+        disableAction={deleting}
+      >
+        Are you sure, want to delete the package{" "}
+        <span className="font-bold">{packageInfo.name}</span>?
+      </CustomDialog>
     </Tabs>
   );
 };

@@ -39,6 +39,8 @@ import { Label } from "@/components/ui/label";
 import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import { stringCasting } from "@/lib/common";
+import CustomDialog from "@/components/shared/custom-dialog";
+import NewAddOnGroup from "../new-group";
 
 type propType = {
   addOnDetail: getAddOnsDetailsType["data"];
@@ -48,8 +50,10 @@ type propType = {
 const EditAddOn = (props: propType) => {
   const params = useParams();
   const { addOnDetail, addOnGroups } = props;
+  const [openNewGroup, setOpenNewGroup] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirmDeleteAddOn, setConfirmDeleteAddOn] = useState(false);
   const { toast } = useToast();
   const { id, created_at, deleted, updated_at, ...addOnInfo } = addOnDetail!;
 
@@ -123,7 +127,7 @@ const EditAddOn = (props: propType) => {
             className="p-1 h-[28px]"
             disabled={loading || deleting}
             onClick={() => {
-              handleDeleteAddOn();
+              setConfirmDeleteAddOn(true);
             }}
           >
             <RiDeleteBin6Line size={18} color="#b6b6b6" />
@@ -148,7 +152,14 @@ const EditAddOn = (props: propType) => {
                 <FormLabel>Group in</FormLabel>
                 <FormControl>
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={value => {
+                      if (value === "create") {
+                        field.onChange(null);
+                        setOpenNewGroup(true);
+                      } else {
+                        field.onChange(value);
+                      }
+                    }}
                     value={field.value as string}
                   >
                     <div className="flex gap-1 items-center">
@@ -182,6 +193,9 @@ const EditAddOn = (props: propType) => {
                           {i.name}
                         </SelectItem>
                       ))}
+                      <SelectItem key={"create"} value={"create"}>
+                        + Create new group
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -243,7 +257,7 @@ const EditAddOn = (props: propType) => {
                             }
                           }}
                           value={stringCasting(
-                            form.getValues(`unit_rate`) as unknown as number
+                            field.value as unknown as number
                           )}
                         />
                       </FormControl>
@@ -262,7 +276,9 @@ const EditAddOn = (props: propType) => {
                           placeholder="Unit Quantity"
                           type="number"
                           {...field}
-                          value={field.value!}
+                          value={stringCasting(
+                            field.value as unknown as number
+                          )}
                           suffix={<div className="mr-1">Unit</div>}
                           onChange={e => {
                             const value = parseFloat(e.target.value);
@@ -289,7 +305,7 @@ const EditAddOn = (props: propType) => {
                         placeholder="Maximum units"
                         type="number"
                         {...field}
-                        value={field.value!}
+                        value={stringCasting(field.value as unknown as number)}
                         onChange={e => {
                           const value = parseFloat(e.target.value);
                           if (isNaN(value)) {
@@ -308,6 +324,25 @@ const EditAddOn = (props: propType) => {
           </div>
         </div>
       </Form>
+
+      <CustomDialog
+        open={confirmDeleteAddOn}
+        title="Delete add on"
+        className="w-[500px]"
+        onClose={() => {
+          setConfirmDeleteAddOn(false);
+        }}
+        saveText="Confirm!"
+        onSubmit={async () => {
+          await handleDeleteAddOn();
+        }}
+        saveVariant="destructive"
+        disableAction={deleting}
+      >
+        Are you sure, want to delete the add on{" "}
+        <span className="font-bold">{addOnDetail!.name}</span>?
+      </CustomDialog>
+      <NewAddOnGroup open={openNewGroup} setOpen={setOpenNewGroup} />
     </div>
   );
 };

@@ -17,6 +17,7 @@ import { LiaPlusSolid } from "react-icons/lia";
 import { cloneDeep } from "lodash";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { editBookingTypeSchemaType } from "@/lib/schema";
+import { stringCasting } from "@/lib/common";
 
 type propType = {
   form: UseFormReturn<editBookingTypeSchemaType>;
@@ -70,11 +71,12 @@ const Event = (props: propType) => {
                     onChange={e => {
                       const value = parseFloat(e.target.value);
                       if (isNaN(value)) {
-                        field.onChange(0);
+                        field.onChange(null);
                       } else {
                         field.onChange(value);
                       }
                     }}
+                    value={stringCasting(field.value)}
                   />
                   <div className="h-8 lg:h-10 p-1 lg:p-2  border border-input border-l-0 rounded-r-md text-sm bg-divider">
                     Minutes

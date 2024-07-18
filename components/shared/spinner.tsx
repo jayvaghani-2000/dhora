@@ -1,13 +1,20 @@
 import clsx from "clsx";
 import React from "react";
 
-const Spinner = ({ type = "default" }: { type?: "inline" | "default" }) => {
+const Spinner = ({
+  type = "default",
+  className = "",
+}: {
+  type?: "inline" | "default";
+  className?: string;
+}) => {
   return (
     <div
       className={clsx({
         "absolute inset-0 flex justify-center items-center before:content-[''] before:absolute before:inset-0 before:bg-background before:opacity-50 z-50":
           type === "default",
         "ml-2": type === "inline",
+        [className]: !!className,
       })}
     >
       <svg

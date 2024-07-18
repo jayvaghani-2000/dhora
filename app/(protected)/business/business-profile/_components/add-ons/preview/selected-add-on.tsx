@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useToast } from "@/components/ui/use-toast";
 import { deleteAddOn } from "@/actions/(protected)/business/add-ons/deleteAddOn";
+import CustomDialog from "@/components/shared/custom-dialog";
 
 type propType = {
   selectedAddOn: getAddOnsType["data"];
@@ -22,6 +23,7 @@ const SelectedAddOn = (prop: propType) => {
   const router = useRouter();
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);
+  const [confirmDeleteAddOn, setConfirmDeleteAddOn] = useState(false);
   const addOnDetail = selectedAddOn?.[0]!;
 
   const handleDeleteAddOn = async () => {
@@ -52,7 +54,7 @@ const SelectedAddOn = (prop: propType) => {
               <Button
                 variant="ghost"
                 onClick={e => {
-                  handleDeleteAddOn();
+                  setConfirmDeleteAddOn(true);
                 }}
                 disabled={deleting}
                 className="p-1"
@@ -86,6 +88,23 @@ const SelectedAddOn = (prop: propType) => {
       <TabsContent value="pricing" className="flex-1">
         <Pricing {...prop} />
       </TabsContent>
+      <CustomDialog
+        open={confirmDeleteAddOn}
+        title="Delete add on"
+        className="w-[500px]"
+        onClose={() => {
+          setConfirmDeleteAddOn(false);
+        }}
+        saveText="Confirm!"
+        onSubmit={async () => {
+          await handleDeleteAddOn();
+        }}
+        saveVariant="destructive"
+        disableAction={deleting}
+      >
+        Are you sure, want to delete the add on{" "}
+        <span className="font-bold">{addOnDetail.name}</span>?
+      </CustomDialog>
     </Tabs>
   );
 };

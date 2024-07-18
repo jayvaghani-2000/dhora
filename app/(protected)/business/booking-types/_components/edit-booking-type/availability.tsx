@@ -115,7 +115,6 @@ const Availability = (props: propType) => {
         <div>{selectedAvailability?.timezone}</div>
         <Link
           className="flex gap-1 items-center"
-          target="_blank"
           href={`/business/availability/${selectedAvailability?.id}`}
         >
           Edit Availability
