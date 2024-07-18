@@ -40,6 +40,7 @@ import { IconInput } from "@/components/shared/icon-input";
 import { CgDollar } from "react-icons/cg";
 import { stringCasting } from "@/lib/common";
 import CustomDialog from "@/components/shared/custom-dialog";
+import NewAddOnGroup from "../new-group";
 
 type propType = {
   addOnDetail: getAddOnsDetailsType["data"];
@@ -49,6 +50,7 @@ type propType = {
 const EditAddOn = (props: propType) => {
   const params = useParams();
   const { addOnDetail, addOnGroups } = props;
+  const [openNewGroup, setOpenNewGroup] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmDeleteAddOn, setConfirmDeleteAddOn] = useState(false);
@@ -150,7 +152,14 @@ const EditAddOn = (props: propType) => {
                 <FormLabel>Group in</FormLabel>
                 <FormControl>
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={value => {
+                      if (value === "create") {
+                        field.onChange(null);
+                        setOpenNewGroup(true);
+                      } else {
+                        field.onChange(value);
+                      }
+                    }}
                     value={field.value as string}
                   >
                     <div className="flex gap-1 items-center">
@@ -184,6 +193,9 @@ const EditAddOn = (props: propType) => {
                           {i.name}
                         </SelectItem>
                       ))}
+                      <SelectItem key={"create"} value={"create"}>
+                        + Create new group
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -330,6 +342,7 @@ const EditAddOn = (props: propType) => {
         Are you sure, want to delete the add on{" "}
         <span className="font-bold">{addOnDetail!.name}</span>?
       </CustomDialog>
+      <NewAddOnGroup open={openNewGroup} setOpen={setOpenNewGroup} />
     </div>
   );
 };

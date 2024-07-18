@@ -17,11 +17,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { editPackageSchema } from "@/db/schema";
-import React from "react";
+import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { CiCircleRemove } from "react-icons/ci";
 import { z } from "zod";
 import EditPackage from ".";
+import NewPackageGroup from "../new-group";
 
 type propType = {
   form: UseFormReturn<z.infer<typeof editPackageSchema>>;
@@ -29,87 +30,101 @@ type propType = {
 
 const Description = (prop: propType) => {
   const { form, packagesGroups } = prop;
+  const [openNewGroup, setOpenNewGroup] = useState(false);
 
   return (
-    <Form {...form}>
-      <div className="flex gap-2 flex-col mt-4">
-        <FormField
-          control={form.control}
-          name="package_group_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Group in</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value as string}
-                >
-                  <div className="flex gap-1 items-center">
-                    <FormControl className="flex-1">
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            <span className="text-muted-foreground ">
-                              Select Group
-                            </span>
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      className="p-1 h-[32px] lg:h-[40px]  w-[32px] lg:w-[40px]"
-                      onClick={() => {
+    <>
+      <Form {...form}>
+        <div className="flex gap-2 flex-col mt-4">
+          <FormField
+            control={form.control}
+            name="package_group_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Group in</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={value => {
+                      if (value === "create") {
                         field.onChange(null);
-                      }}
-                    >
-                      <div className="h-6 w-6">
-                        <CiCircleRemove className="h-full w-full" />
-                      </div>
-                    </Button>
-                  </div>
-                  <SelectContent>
-                    {packagesGroups?.map(i => (
-                      <SelectItem key={i.id} value={i.id}>
-                        {i.name}
+                        setOpenNewGroup(true);
+                      } else {
+                        field.onChange(value);
+                      }
+                    }}
+                    value={field.value as string}
+                  >
+                    <div className="flex gap-1 items-center">
+                      <FormControl className="flex-1">
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={
+                              <span className="text-muted-foreground ">
+                                Select Group
+                              </span>
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        className="p-1 h-[32px] lg:h-[40px]  w-[32px] lg:w-[40px]"
+                        onClick={() => {
+                          field.onChange(null);
+                        }}
+                      >
+                        <div className="h-6 w-6">
+                          <CiCircleRemove className="h-full w-full" />
+                        </div>
+                      </Button>
+                    </div>
+                    <SelectContent>
+                      {packagesGroups?.map(i => (
+                        <SelectItem key={i.id} value={i.id}>
+                          {i.name}
+                        </SelectItem>
+                      ))}
+                      <SelectItem key={"create"} value={"create"}>
+                        + Create new group
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Title" autoComplete="off" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <RichEditor value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-    </Form>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Title" autoComplete="off" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <RichEditor value={field.value} onChange={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </Form>
+      <NewPackageGroup open={openNewGroup} setOpen={setOpenNewGroup} />
+    </>
   );
 };
 

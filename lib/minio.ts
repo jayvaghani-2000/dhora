@@ -16,15 +16,17 @@ export function generatePublicAccess(business_id: string) {
       AWS: ["*"],
     },
     Action: ["s3:GetObject", "s3:DeleteObject"],
-    Resource: [`arn:aws:s3:::stage/${business_id}/public/**`],
+    Resource: [`arn:aws:s3:::${config.env.NODE_ENV}/${business_id}/public/**`],
   };
 }
 
 export async function setPublicPolicy(business_id: string) {
-  const policyString = await mc.getBucketPolicy("stage".toLowerCase());
+  const policyString = await mc.getBucketPolicy(
+    config.env.NODE_ENV.toLowerCase()
+  );
   const policy = JSON.parse(policyString);
   policy.Statement.push(generatePublicAccess(business_id));
-  await mc.setBucketPolicy("stage", JSON.stringify(policy));
+  await mc.setBucketPolicy(config.env.NODE_ENV, JSON.stringify(policy));
 }
 
 export async function createPublicBusinessImgUrl(
@@ -36,9 +38,9 @@ export async function createPublicBusinessImgUrl(
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/${business_id}/logo/${id}.${metadata.type?.toLowerCase()}`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
-  return `https://cdn.dhora.app/stage/${filepath}`;
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
 export async function createPublicInvoicePdfUrl(
@@ -49,9 +51,9 @@ export async function createPublicInvoicePdfUrl(
   const buffer = Buffer.from(await file.arrayBuffer());
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/${business_id}/invoices/${id}.pdf`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
-  return `https://cdn.dhora.app/stage/${filepath}`;
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
 export async function createPublicProfileImgUrl(user_id: string, img: File) {
@@ -59,9 +61,9 @@ export async function createPublicProfileImgUrl(user_id: string, img: File) {
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/avatar/${id}.${metadata.type?.toLowerCase()}`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
-  return `https://cdn.dhora.app/stage/${filepath}`;
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
 export async function createPublicEventImgUrl(user_id: string, img: File) {
@@ -69,9 +71,9 @@ export async function createPublicEventImgUrl(user_id: string, img: File) {
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/events/${id}.${metadata.type?.toLowerCase()}`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
-  return `https://cdn.dhora.app/stage/${filepath}`;
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
 export async function createPublicBusinessAssetsImageUrl(
@@ -83,10 +85,10 @@ export async function createPublicBusinessAssetsImageUrl(
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/${business_id}/assets/${id}.${metadata.type?.toLowerCase()}`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
   return {
-    url: `https://cdn.dhora.app/stage/${filepath}`,
+    url: `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`,
     ...metadata,
   };
 }
@@ -99,9 +101,9 @@ export async function createPublicBusinessAssetsVideoUrl(
   const buffer = Buffer.from(await video.arrayBuffer());
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/${business_id}/assets/${id}.mp4`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
-  return `https://cdn.dhora.app/stage/${filepath}`;
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
 export async function createPublicPackageAssetsImageUrl(
@@ -116,10 +118,10 @@ export async function createPublicPackageAssetsImageUrl(
   const metadata = await assetsMetadata(buffer);
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/${business_id}/assets/${package_id}/${id}.${metadata.type?.toLowerCase()}`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
   return {
-    url: `https://cdn.dhora.app/stage/${filepath}`,
+    url: `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`,
     ...metadata,
   };
 }
@@ -135,15 +137,15 @@ export async function createPublicPackageAssetsVideoUrl(
   const buffer = Buffer.from(await video.arrayBuffer());
   const id = (await getBigIntId)[0].id_generator;
   const filepath = `${user_id}/public/${business_id}/assets/${package_id}/${id}.mp4`;
-  await mc.putObject("stage", filepath, buffer);
+  await mc.putObject(config.env.NODE_ENV, filepath, buffer);
   await setPublicPolicy(user_id);
-  return `https://cdn.dhora.app/stage/${filepath}`;
+  return `https://cdn.dhora.app/${config.env.NODE_ENV}/${filepath}`;
 }
 
 export async function removeAsset(urls: string[]) {
-  const domain = `https://cdn.dhora.app/stage`;
+  const domain = `https://cdn.dhora.app/${config.env.NODE_ENV}`;
   await mc.removeObjects(
-    "stage",
+    config.env.NODE_ENV,
     urls.map(url => url.replace(domain, ""))
   );
 }
