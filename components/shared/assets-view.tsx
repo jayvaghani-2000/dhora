@@ -48,6 +48,23 @@ const AssetsView = (props: propTypes) => {
                 aspectRatio: i.width && i.height ? i.width / i.height : 1,
               }}
             >
+              {deletable ? (
+                <Button
+                  size={"icon"}
+                  variant="destructive"
+                  className="absolute top-2 right-2 z-100 h-5 w-5 md:h-8 md:w-8 z-50"
+                  onClick={() => {
+                    handleDeleteAssets(i.id);
+                  }}
+                  disabled={deletingAssets.includes(i.id)}
+                >
+                  {deletingAssets.includes(i.id) ? (
+                    <Spinner className="ml-0 " />
+                  ) : (
+                    <RiDeleteBin6Line className="h-3 w-3 md:h-5 md:w-5" />
+                  )}
+                </Button>
+              ) : null}
               <MotionImage
                 src={i.url ?? ""}
                 alt={i.id}
@@ -67,6 +84,23 @@ const AssetsView = (props: propTypes) => {
                 aspectRatio: i.width && i.height ? i.width / i.height : 1,
               }}
             >
+              {deletable ? (
+                <Button
+                  size={"icon"}
+                  variant="destructive"
+                  className="absolute top-2 right-2 z-100 h-5 w-5 md:h-8 md:w-8 z-50"
+                  onClick={() => {
+                    handleDeleteAssets(i.id);
+                  }}
+                  disabled={deletingAssets.includes(i.id)}
+                >
+                  {deletingAssets.includes(i.id) ? (
+                    <Spinner className="ml-0 " />
+                  ) : (
+                    <RiDeleteBin6Line className="h-3 w-3 md:h-5 md:w-5" />
+                  )}
+                </Button>
+              ) : null}
               <div className="absolute inset-0 flex justify-center items-center">
                 <IoMdPlayCircle className="h-16 w-16" />
               </div>

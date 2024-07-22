@@ -51,7 +51,7 @@ const SelectedPackage = (prop: propType) => {
         </div>
         <TabsList className="lg:absolute overflow-auto flex items-start justify-start max-w-full w-fit scrollbar-hide   top-1/2 left-1/2 transform lg:-translate-x-1/2 lg:-translate-y-1/2">
           <TabsTrigger value="description">Description</TabsTrigger>
-          <TabsTrigger value="assets">Assets</TabsTrigger>
+          <TabsTrigger value="assets">Multimedia</TabsTrigger>
           <TabsTrigger value="pricing">Pricing</TabsTrigger>
         </TabsList>
         {!readOnly ? (
