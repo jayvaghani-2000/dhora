@@ -22,6 +22,7 @@ const handler = async (user: User, params: paramsType) => {
       .update(invoices)
       .set({
         pay_via: value,
+        status: "paid",
       })
       .where(
         and(eq(invoices.id, id), eq(invoices.business_id, user.business_id!))

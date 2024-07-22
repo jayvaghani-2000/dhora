@@ -39,6 +39,7 @@ export default async function BusinessProfile() {
                   packagesGroups={business.data.package_groups}
                   groupedPackages={groupedPackages}
                   readOnly
+                  assetsDeletable
                 />
               </div>
             ) : null}

@@ -19,67 +19,78 @@ type paramsType = {
 const handler = async (user: User, params: paramsType) => {
   const { availabilityId, values } = params;
 
-  if (values.default) {
-    await db
-      .update(availability)
-      .set({
-        default: false,
-      })
-      .where(
-        and(
-          eq(availability.business_id, user.business_id!),
-          eq(availability.default, true),
-          ne(availability.id, availabilityId)
-        )
-      );
-  } else {
-    const [isAlreadyDefault, unDefaultAvailability] = await Promise.all([
-      await db.query.availability.findMany({
-        where: and(
-          eq(availability.business_id, user.business_id!),
-          eq(availability.default, true),
-          ne(availability.deleted, true)
-        ),
-        orderBy: [asc(availability.created_at)],
-        limit: 1,
-      }),
-      await db.query.availability.findMany({
-        where: and(
-          eq(availability.business_id, user.business_id!),
-          eq(availability.default, false),
-          ne(availability.deleted, true),
-          ne(availability.id, availabilityId)
-        ),
-        orderBy: [asc(availability.created_at)],
-        limit: 1,
-      }),
-    ]);
+  try {
+    const getAvailability = await db.query.availability.findFirst({
+      where: and(
+        eq(availability.business_id, user.business_id!),
+        eq(availability.id, availabilityId),
+        ne(availability.deleted, true)
+      ),
+    });
 
-    if (
-      isAlreadyDefault.length &&
-      unDefaultAvailability &&
-      unDefaultAvailability.length > 0
-    ) {
-      await db
-        .update(availability)
-        .set({
-          default: true,
-        })
-        .where(
-          and(
-            eq(availability.business_id, user.business_id!),
-            eq(availability.id, unDefaultAvailability[0].id)
-          )
-        );
-    } else {
+    if (!getAvailability) {
       return {
         success: false,
-        error: "Availability needs to be default as is only one availability.",
+        error: "Availability not found!",
       };
     }
-  }
 
-  try {
+    if (getAvailability.default !== values.default) {
+      if (values.default) {
+        await db
+          .update(availability)
+          .set({
+            default: false,
+          })
+          .where(
+            and(
+              eq(availability.business_id, user.business_id!),
+              eq(availability.default, true),
+              ne(availability.id, availabilityId),
+              ne(availability.deleted, true)
+            )
+          );
+      } else {
+        const nonDefault = await db.query.availability.findMany({
+          where: and(
+            eq(availability.business_id, user.business_id!),
+            eq(availability.default, false),
+            ne(availability.deleted, true),
+            ne(availability.id, availabilityId)
+          ),
+          orderBy: [asc(availability.created_at)],
+          limit: 1,
+        });
+        if (nonDefault.length > 0) {
+          const data = await db
+            .update(availability)
+            .set({
+              default: true,
+            })
+            .where(
+              and(
+                eq(availability.business_id, user.business_id!),
+                eq(availability.id, nonDefault[0].id)
+              )
+            );
+
+          if (!data) {
+            return {
+              success: false,
+              error:
+                "Availability needs to be default as is only one availability.",
+            };
+          }
+        } else {
+          return {
+            success: false,
+            error:
+              "Availability needs to be default as is only one availability.",
+          };
+        }
+      }
+    }
+
     const data = await db
       .update(availability)
       .set({
