@@ -102,7 +102,7 @@ const EditPackage = (props: propType) => {
           </div>
           <TabsList className="overflow-auto flex items-start justify-start max-w-full w-fit scrollbar-hide">
             <TabsTrigger value="description">Description</TabsTrigger>
-            <TabsTrigger value="assets">Assets</TabsTrigger>
+            <TabsTrigger value="assets">Multimedia</TabsTrigger>
             <TabsTrigger value="pricing">Pricing</TabsTrigger>
           </TabsList>
         </div>
