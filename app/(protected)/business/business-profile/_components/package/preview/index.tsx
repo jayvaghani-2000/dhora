@@ -21,10 +21,12 @@ type propType = {
   }[];
   packagesGroups: getPackageGroupsType["data"];
   readOnly?: boolean;
+  assetsDeletable?: boolean;
 };
 
 const Preview = (prop: propType) => {
-  const { groupedPackages, packagesGroups, readOnly = false } = prop;
+  const { groupedPackages, packagesGroups, readOnly = false, assetsDeletable = false } = prop;
+
   const [selectedPackage, setSelectedPackage] = useState<
     null | getPackagesType["data"]
   >(groupedPackages.length > 0 ? [groupedPackages[0].package![0]] : null);
@@ -129,6 +131,7 @@ const Preview = (prop: propType) => {
               selectedPackage={selectedPackage}
               readOnly={readOnly}
               clearSelection={clearSelection}
+              assetsDeletable={assetsDeletable}
             />
           ) : (
             <div className="text-center my-2 text-white font-medium text-base">

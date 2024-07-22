@@ -15,15 +15,22 @@ const ReviewPage = async (prop: propType) => {
   const data = response.data;
   const businessIdsInReviews = new Set(data.map(review => review.business_id));
 
-  const filteredEventBusinessData = eventBusinessData.data!.filter(
-    business => !businessIdsInReviews.has(business.id)
-  );
+  const filteredEventBusinessData =
+    eventBusinessData.data?.filter(
+      business => !businessIdsInReviews.has(business.id)
+    ) ?? [];
 
-  if(!eventDetails.success) {
+  if (!eventDetails.success) {
     return <div className="text-center">Unable to fetch event details</div>;
   }
 
-  return <Reviews reviews={data} businessData={filteredEventBusinessData} eventDetails={eventDetails.data} />;
+  return (
+    <Reviews
+      reviews={data}
+      businessData={filteredEventBusinessData}
+      eventDetails={eventDetails.data}
+    />
+  );
 };
 
 export default ReviewPage;

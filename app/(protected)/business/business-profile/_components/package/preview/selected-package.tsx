@@ -17,11 +17,14 @@ type propType = {
   selectedPackage: getPackagesType["data"];
   readOnly: boolean;
   clearSelection: () => void;
+  assetsDeletable: boolean
   
 };
 
 const SelectedPackage = (prop: propType) => {
-  const { selectedPackage, readOnly, clearSelection } = prop;
+  
+  const { selectedPackage, readOnly, clearSelection, assetsDeletable } = prop;
+
   const router = useRouter();
   const { toast } = useToast();
   const [deleting, setDeleting] = useState(false);

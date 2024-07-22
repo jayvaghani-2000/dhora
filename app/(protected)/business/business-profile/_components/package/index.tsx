@@ -53,6 +53,7 @@ const Package = (props: propType) => {
       <Preview
         groupedPackages={groupedPackages}
         packagesGroups={packagesGroups}
+        assetsDeletable={true}
       />
 
       <NewPackage
