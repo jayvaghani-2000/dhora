@@ -68,9 +68,10 @@ const Event = (props: propType) => {
                     className="rounded-r-none"
                     type="number"
                     {...field}
+                    min="0"
                     onChange={e => {
                       const value = parseFloat(e.target.value);
-                      if (isNaN(value)) {
+                      if (isNaN(value) || Number(value) < 0) {
                         field.onChange(null);
                       } else {
                         field.onChange(value);

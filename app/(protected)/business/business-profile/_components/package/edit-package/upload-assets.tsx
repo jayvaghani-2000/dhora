@@ -127,7 +127,9 @@ const UploadAssets = (prop: propType) => {
         ) : (
           <>
             <LiaPlusSolid size={60} />
-            <div className="font-bold text-xs md:text-base">Upload Assets</div>
+            <div className="font-bold text-xs text-center">
+              Upload Multimedia
+            </div>
           </>
         )}
         <input

@@ -53,16 +53,17 @@ const Pricing = (props: React.ComponentProps<typeof SelectedPackage>) => {
           )}
         </>
       )}
-      <div className=" text-white font-medium text-base mt-4">Deposit</div>
+
       {deposit ? (
-        <ul className="list-disc pl-5">
-          <li>
-            {deposit_type === "fixed" ? formatAmount(deposit) : `${deposit}%`}
-          </li>
-        </ul>
-      ) : (
-        <div>-</div>
-      )}
+        <>
+          <div className=" text-white font-medium text-base mt-4">Deposit</div>
+          <ul className="list-disc pl-5">
+            <li>
+              {deposit_type === "fixed" ? formatAmount(deposit) : `${deposit}%`}
+            </li>
+          </ul>
+        </>
+      ) : null}
     </div>
   );
 };

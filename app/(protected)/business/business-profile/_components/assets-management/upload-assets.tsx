@@ -14,7 +14,6 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
 
-
 const UploadAssets = () => {
   const ref = useRef<HTMLInputElement>(null!);
   const [assetsStr, setAssetsStr] = useState({
@@ -109,7 +108,9 @@ const UploadAssets = () => {
         ) : (
           <>
             <LiaPlusSolid size={60} />
-            <div className="font-bold text-xs md:text-base">Upload Assets</div>
+            <div className="font-bold text-xs text-center">
+              Upload Multimedia
+            </div>
           </>
         )}
         <input

@@ -21,8 +21,8 @@ const handler = async (user: User, data: paramsType) => {
     ),
   });
 
-  if (contract) {
-    throw new Error("Contract is deleted!")
+  if (!contract) {
+    throw new Error("Contract not found")
   }
 
   let options = {
