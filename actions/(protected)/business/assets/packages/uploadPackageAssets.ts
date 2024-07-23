@@ -9,6 +9,7 @@ import {
 } from "@/lib/minio";
 import { db } from "@/lib/db";
 import { assets } from "@/db/schema";
+import { revalidate } from "@/actions/(public)/revalidate";
 
 type paramsType = { file: FormData; metadata?: unknown; packageId: string };
 
@@ -78,7 +79,15 @@ const handler = async (
   }
 };
 
+const uploadPackageAssetsHandler = async (user: User, params: paramsType) => {
+  const res = await handler(user, params);
+  if (res.success) {
+    await revalidate("/business/business-profile/packages");
+  }
+  return res;
+};
+
 export const uploadPackageAssets: (
   params: paramsType
-) => Promise<Awaited<ReturnType<typeof handler>>> =
-  validateBusinessToken(handler);
+) => Promise<Awaited<ReturnType<typeof uploadPackageAssetsHandler>>> =
+  validateBusinessToken(uploadPackageAssetsHandler);

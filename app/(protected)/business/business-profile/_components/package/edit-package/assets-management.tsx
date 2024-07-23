@@ -8,18 +8,14 @@ import AssetsView from "@/components/shared/assets-view";
 const AssetsManagement = (props: React.ComponentProps<typeof EditPackage>) => {
   const { packageDetail } = props;
   const packageInfo = packageDetail!;
-  const { assets: savedAssets } = packageInfo;
-
-  const [assets, setAssets] = useState<getPackageAssetsType["data"]>(
-    savedAssets ?? []
-  );
+  const { assets } = packageInfo;
 
   return (
     <div>
       <div className="relative mt-4 mb-2 w-fit">
-        <UploadAssets setAssets={setAssets} />
+        <UploadAssets />
       </div>
-      {assets ? <AssetsView assets={assets} deletable/> : null}
+      {assets ? <AssetsView assets={assets} deletable /> : null}
     </div>
   );
 };

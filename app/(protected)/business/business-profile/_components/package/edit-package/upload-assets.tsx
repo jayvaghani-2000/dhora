@@ -18,13 +18,8 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { LiaPlusSolid } from "react-icons/lia";
 
-type propType = {
-  setAssets: React.Dispatch<React.SetStateAction<getPackageAssetsType["data"]>>;
-};
-
-const UploadAssets = (prop: propType) => {
+const UploadAssets = () => {
   const params = useParams();
-  const { setAssets } = prop;
   const ref = useRef<HTMLInputElement>(null!);
   const [assetsStr, setAssetsStr] = useState({
     base64: "",
@@ -73,8 +68,6 @@ const UploadAssets = (prop: propType) => {
             name: "",
             type: "",
           });
-          const assets = await getPackageAssets(params.slug as string);
-          setAssets(assets.data);
         }
         setLoading(false);
       }
