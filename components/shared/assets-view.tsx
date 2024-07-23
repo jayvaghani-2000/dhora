@@ -10,6 +10,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { deleteAssets } from "@/actions/(protected)/business/assets/deleteAssets";
 import { useToast } from "../ui/use-toast";
 import Spinner from "./spinner";
+import { usePathname } from "next/navigation";
 
 type propTypes = {
   assets: assetsType;
@@ -18,6 +19,7 @@ type propTypes = {
 
 const AssetsView = (props: propTypes) => {
   const { assets, deletable = false } = props;
+  const location = usePathname();
   const { toast } = useToast();
 
   const [deletingAssets, setDeletingAssets] = useState<string[]>([]);
@@ -26,7 +28,7 @@ const AssetsView = (props: propTypes) => {
     setDeletingAssets(prev => [...prev, id]);
     const res = await deleteAssets({
       assetId: id,
-      path: "/business/business-profile/assets",
+      path: location,
     });
     if (!res.success) {
       toast({
