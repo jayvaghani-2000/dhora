@@ -19,7 +19,7 @@ const AssetsManagement = (props: propTypes) => {
         <UploadAssets />
       </div>
 
-      <AssetsView assets={props.assets.data ?? []} deletable/>
+      <AssetsView assets={props.assets.data ?? []} deletable />
     </div>
   );
 };

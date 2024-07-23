@@ -1,3 +1,4 @@
+"use client";
 import { assetsType } from "@/actions/_utils/types.type";
 import React, { useState } from "react";
 import ScreenSwipe from "./screen-swipe";
@@ -10,7 +11,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { deleteAssets } from "@/actions/(protected)/business/assets/deleteAssets";
 import { useToast } from "../ui/use-toast";
 import Spinner from "./spinner";
-import { usePathname } from "next/navigation";
+import { revalidate } from "@/actions/(public)/revalidate";
 
 type propTypes = {
   assets: assetsType;
@@ -19,7 +20,6 @@ type propTypes = {
 
 const AssetsView = (props: propTypes) => {
   const { assets, deletable = false } = props;
-  const location = usePathname();
   const { toast } = useToast();
 
   const [deletingAssets, setDeletingAssets] = useState<string[]>([]);
@@ -28,8 +28,9 @@ const AssetsView = (props: propTypes) => {
     setDeletingAssets(prev => [...prev, id]);
     const res = await deleteAssets({
       assetId: id,
-      path: location,
+      path: window.location.pathname,
     });
+    revalidate(window.location.pathname);
     if (!res.success) {
       toast({
         title: "Unable to delete media!",
