@@ -910,6 +910,7 @@ export const createFieldSchema = createSelectSchema(fields).pick({
   recipient_id: true,
   fieldMeta: true,
   signerEmail: true,
+  id: true,
 });
 
 export const deleteFieldSchema = createSelectSchema(fields).pick({
