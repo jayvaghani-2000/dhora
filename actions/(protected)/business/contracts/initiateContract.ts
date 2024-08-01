@@ -14,7 +14,7 @@ const handler = async (user: User, templateId?: string) => {
     if (templateId) {
       const contract = await db.query.contracts.findFirst({
         where: and(
-          eq(contracts.template_id, Number(templateId)),
+          eq(contracts.template_id, templateId),
           eq(contracts.business_id, user.business_id!)
         ),
       });

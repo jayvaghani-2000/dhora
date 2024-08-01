@@ -6,7 +6,6 @@ import { contracts, createContractSchema } from "@/db/schema";
 import { db } from "@/lib/db";
 import { validateBusinessToken } from "@/actions/_utils/validateToken";
 import { errorHandler } from "@/actions/_utils/errorHandler";
-
 const handler = async (
   user: User,
   values: z.infer<typeof createContractSchema>
@@ -16,7 +15,7 @@ const handler = async (
       .insert(contracts)
       .values({
         business_id: user.business_id!,
-        template_id: values.template_id,
+        template_id: Math.floor(Math.random() * 100000).toString(),
         name: values.name,
       })
       .returning();

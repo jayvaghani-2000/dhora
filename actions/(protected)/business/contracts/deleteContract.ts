@@ -9,7 +9,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
 
-const handler = async (user: User, templateId: number) => {
+const handler = async (user: User, templateId: string) => {
   try {
     await db
       .update(contracts)
@@ -29,7 +29,7 @@ const handler = async (user: User, templateId: number) => {
   }
 };
 
-const deleteContractHandler = async (user: User, templateId: number) => {
+const deleteContractHandler = async (user: User, templateId: string) => {
   const res = await handler(user, templateId);
 
   if (res.success) {

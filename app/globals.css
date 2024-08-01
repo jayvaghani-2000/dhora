@@ -45,6 +45,13 @@
     --gray1: 0 0% 44%; /* #707070 */
     --secondary-light-gray: 240 5% 65%; /* #A1A1AA */
     --primary-background: 224 64% 33%; /* #1e3b8a */
+
+    --signer-green: 100 48% 55%;
+    --signer-blue: 212 56% 50%;
+    --signer-purple: 266 100% 64%;
+    --signer-orange: 36 92% 54%;
+    --signer-yellow: 51 100% 43%;
+    --signer-pink: 313 65% 57%;
   }
 
   .dark {
@@ -75,6 +82,13 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%; /* #1e293b */
     --ring: 212.7 26.8% 83.9%;
+
+    --signer-green: 100 48% 55%;
+    --signer-blue: 212 56% 50%;
+    --signer-purple: 266 100% 64%;
+    --signer-orange: 36 92% 54%;
+    --signer-yellow: 51 100% 43%;
+    --signer-pink: 313 65% 57%;
   }
 }
 

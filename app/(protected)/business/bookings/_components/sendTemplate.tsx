@@ -43,7 +43,7 @@ type Contract = {
   created_at: Date;
   updated_at: Date;
   event_id: string | null;
-  template_id: number;
+  template_id: string;
 };
 
 const SendTemplate = (prop: propType) => {

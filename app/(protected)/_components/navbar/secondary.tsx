@@ -6,6 +6,7 @@ import SecondaryNavbarHeader from "./components/secondaryNavbarHeader";
 import SecondaryNavbarSearch from "./components/secondaryNavbarSearch";
 import { Separator } from "@/components/ui/separator";
 import { BsShop } from "react-icons/bs";
+import { FaRegFileAlt } from "react-icons/fa";
 import {
   LiaFileContractSolid,
   LiaFileInvoiceDollarSolid,
@@ -48,6 +49,12 @@ export const StaticOptions = [
         title: "Contracts",
         icon: <LiaFileContractSolid />,
         path: "/business/contracts",
+      },
+      {
+        key: "templates",
+        title: "Templates",
+        icon: <FaRegFileAlt />,
+        path: "/business/templates",
       },
       {
         key: "invoices",

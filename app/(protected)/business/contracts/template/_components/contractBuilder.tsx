@@ -45,7 +45,6 @@ const ContractBuilder = (props: propType) => {
     if (contractId && data.id === Number(contractId)) return;
 
     const response = await createContract({
-      template_id: data.id,
       name: data.name,
     });
 

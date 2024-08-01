@@ -16,13 +16,13 @@ const handler = async (user: User, data: paramsType) => {
 
   const contract = await db.query.contracts.findFirst({
     where: and(
-      eq(contracts.template_id, Number(data.templateId)),
+      eq(contracts.template_id, data.templateId),
       eq(contracts.deleted, false)
     ),
   });
 
   if (!contract) {
-    throw new Error("Contract not found")
+    throw new Error("Contract not found");
   }
 
   let options = {

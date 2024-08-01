@@ -1,4 +1,5 @@
-import { trimRichEditor } from "@/lib/common";
+import { timeZone, trimRichEditor } from "@/lib/common";
+import { FieldType } from "@/lib/types/field-type";
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
@@ -14,7 +15,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { isNull, isNumber } from "lodash";
+import { isNumber } from "lodash";
 import { z } from "zod";
 
 export const businessTypeEnum = pgEnum("businessType", [
@@ -52,6 +53,19 @@ export const packageUnitTypeEnum = pgEnum("packageUnitType", [
 ]);
 
 export const depositTypeEnum = pgEnum("depositType", ["fixed", "percentage"]);
+
+export const fieldsTypeEnum = pgEnum("fieldsType", [
+  "SIGNATURE",
+  "FREE_SIGNATURE",
+  "NAME",
+  "EMAIL",
+  "DATE",
+  "TEXT",
+  "NUMBER",
+  "RADIO",
+  "CHECKBOX",
+  "DROPDOWN",
+]);
 
 export const users = pgTable("users", {
   id: text("id")
@@ -130,12 +144,146 @@ export const businessRelations = relations(businesses, ({ many }) => ({
   ratings: many(ratings),
 }));
 
+export const templates = pgTable("templates", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  name: text("name").notNull(),
+  data: text("data").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted: boolean("deleted").default(false),
+  business_id: text("business_id")
+    .references(() => businesses.id)
+    .notNull(),
+  globalAccessAuth: text("global_access_auth"),
+  externalId: text("external_id").default("").notNull(),
+});
+
+export const templatesRelations = relations(templates, ({ one, many }) => ({
+  business: one(businesses, {
+    fields: [templates.business_id],
+    references: [businesses.id],
+  }),
+  contracts: many(contracts),
+  fields: many(fields),
+  signatures: many(signatures),
+  templateMeta: one(templateMeta),
+  recipients: many(recipients),
+}));
+
+export const fields = pgTable("fields", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  type: fieldsTypeEnum("type").notNull(),
+  pageX: doublePrecision("pageX").notNull(),
+  pageY: doublePrecision("pageY").notNull(),
+  pageWidth: doublePrecision("pageWidth").notNull(),
+  pageHeight: doublePrecision("pageHeight").notNull(),
+  pageNumber: integer("pageNumber").notNull(),
+  customText: text("customText"),
+  inserted: boolean("inserted").default(true),
+  required: boolean("required").default(false),
+  deleted: boolean("deleted").default(false),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  template_id: text("template_id")
+    .references(() => templates.id, { onDelete: "cascade" })
+    .notNull(),
+  recipient_id: text("recipient_id")
+    .references(() => recipients.id)
+    .notNull(),
+  fieldMeta: jsonb("fieldMeta").default({}),
+  signerEmail: text("signerEmail"),
+});
+
+export const fieldsRelations = relations(fields, ({ one, many }) => ({
+  template: one(templates, {
+    fields: [fields.template_id],
+    references: [templates.id],
+  }),
+  recipient: one(recipients, {
+    fields: [fields.recipient_id],
+    references: [recipients.id],
+  }),
+  signatures: many(signatures),
+}));
+
+export const signatures = pgTable("signatures", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  signature: text("signature").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  recipient_id: text("recipient_id")
+    .references(() => recipients.id)
+    .notNull(),
+  contract_id: text("contract_id")
+    .references(() => contracts.id)
+    .notNull(),
+  fields_id: text("fields_id")
+    .references(() => fields.id)
+    .notNull(),
+  signatureImageAsBase64: text("signature_image_as_base64").notNull(),
+  template_id: text("template_id")
+    .references(() => templates.id, { onDelete: "cascade" })
+    .notNull(),
+});
+
+export const signaturesRelations = relations(signatures, ({ one }) => ({
+  recipient: one(recipients, {
+    fields: [signatures.recipient_id],
+    references: [recipients.id],
+  }),
+  contract: one(contracts, {
+    fields: [signatures.contract_id],
+    references: [contracts.id],
+  }),
+  fields: one(fields, {
+    fields: [signatures.fields_id],
+    references: [fields.id],
+  }),
+  template: one(templates, {
+    fields: [signatures.template_id],
+    references: [templates.id],
+  }),
+}));
+
+export const templateMeta = pgTable("template_meta", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  subject: text("subject"),
+  message: text("message"),
+  timezone: text("timezone").default(
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  ),
+  password: text("password"),
+  dateFormat: text("dateFormat").default("yyyy-MM-dd hh:mm a"),
+  template_id: text("template_id")
+    .references(() => templates.id, { onDelete: "cascade" })
+    .notNull(),
+  redirectUrl: text("redirectUrl"),
+});
+
+export const templateMetaRelations = relations(templateMeta, ({ one }) => ({
+  template: one(templates, {
+    fields: [templateMeta.template_id],
+    references: [templates.id],
+  }),
+}));
+
 export const contracts = pgTable("contracts", {
   id: text("id")
     .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
-  template_id: integer("template_id").notNull().unique(),
   name: text("name").default("New Contract"),
   business_id: text("business_id")
     .references(() => businesses.id)
@@ -144,9 +292,16 @@ export const contracts = pgTable("contracts", {
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted: boolean("deleted").default(false),
+  deletedAt: timestamp("deletedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt").defaultNow().notNull(),
+  status: text("status").default("DRAFT").notNull(),
+  template_id: text("template_id")
+    .notNull()
+    .unique()
+    .references(() => templates.id, { onDelete: "cascade" }),
 });
 
-export const contractsRelations = relations(contracts, ({ one }) => ({
+export const contractsRelations = relations(contracts, ({ one, many }) => ({
   business: one(businesses, {
     fields: [contracts.business_id],
     references: [businesses.id],
@@ -155,6 +310,47 @@ export const contractsRelations = relations(contracts, ({ one }) => ({
     fields: [contracts.event_id],
     references: [events.id],
   }),
+  recipients: many(recipients),
+  fields: many(fields),
+  template: one(templates, {
+    fields: [contracts.template_id],
+    references: [templates.id],
+  }),
+}));
+
+export const recipients = pgTable("recipients", {
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .default(sql`public.id_generator()`),
+  contracts_id: text("contracts_id").references(() => contracts.id),
+  template_id: text("template_id").references(() => templates.id, {
+    onDelete: "cascade",
+  }),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  contractDeletedAt: timestamp("contract_deleted_at"),
+  expiredAt: timestamp("expired_at"),
+  signedAt: timestamp("signed_at"),
+  role: text("role").notNull(),
+  readStatus: boolean("read_status").default(false),
+  signingStatus: boolean("signing_status").default(false),
+  sendStatus: boolean("send_status").default(false),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const recipientsRelations = relations(recipients, ({ one, many }) => ({
+  contracts: one(contracts, {
+    fields: [recipients.contracts_id],
+    references: [contracts.id],
+  }),
+  template: one(templates, {
+    fields: [recipients.template_id],
+    references: [templates.id],
+  }),
+  fields: many(fields),
+  signatures: many(signatures),
 }));
 
 export const invoices = pgTable("invoices", {
@@ -659,6 +855,65 @@ export const mailVerificationUserSchema = createSelectSchema(users).pick({
 
 export const meUserSchema = createSelectSchema(users).pick({
   email: true,
+});
+
+export const createTemplateSchema = createSelectSchema(templates).pick({
+  name: true,
+  data: true,
+  id: true,
+  globalAccessAuth: true,
+  externalId: true,
+});
+
+export const deleteTemplateSchema = createSelectSchema(templates).pick({
+  id: true,
+});
+
+export const createTemplateMetaSchema = createSelectSchema(templateMeta).pick({
+  subject: true,
+  message: true,
+  timezone: true,
+  dateFormat: true,
+  redirectUrl: true,
+  id: true,
+});
+
+export const createRecipientSchema = createSelectSchema(recipients).pick({
+  name: true,
+  email: true,
+  role: true,
+  template_id: true,
+});
+
+export const updateRecipientSchema = createSelectSchema(recipients).pick({
+  name: true,
+  email: true,
+  role: true,
+  id: true,
+});
+
+export const deleteRecipientSchema = createSelectSchema(recipients).pick({
+  id: true,
+});
+
+export const createFieldSchema = createSelectSchema(fields).pick({
+  type: true,
+  pageNumber: true,
+  pageX: true,
+  pageY: true,
+  pageWidth: true,
+  pageHeight: true,
+  customText: true,
+  inserted: true,
+  required: true,
+  template_id: true,
+  recipient_id: true,
+  fieldMeta: true,
+  signerEmail: true,
+});
+
+export const deleteFieldSchema = createSelectSchema(fields).pick({
+  id: true,
 });
 
 export const createContractSchema = createSelectSchema(contracts).pick({

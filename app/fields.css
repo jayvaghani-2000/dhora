@@ -1,0 +1,256 @@
+:root {
+  --signer-green: 100 48% 55%;
+  --signer-blue: 212 56% 50%;
+  --signer-purple: 266 100% 64%;
+  --signer-orange: 36 92% 54%;
+  --signer-yellow: 51 100% 43%;
+  --signer-pink: 313 65% 57%;
+}
+
+.signer-green-background {
+  background-color: hsl(var(--signer-green));
+}
+
+.signer-green-base {
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 0 5px hsl(var(--signer-green) / 10%),
+    0 0 0 2px hsl(var(--signer-green) / 60%),
+    0 0 0 0.5px hsl(var(--signer-green));
+}
+
+.signer-green-field-item {
+  padding: 0.5rem;
+  border: none;
+  ring: none;
+}
+
+.signer-green-field-item:hover {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--signer-green)) / 10%,
+    hsl(var(--signer-green)) / 10%
+  );
+}
+
+.signer-green-field-item-initials {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.signer-green-field-item:hover .signer-green-field-item-initials {
+  opacity: 100%;
+  background-color: hsl(var(--signer-green));
+}
+
+.signer-green-combobox-item:hover,
+.signer-green-combobox-item:active {
+  background-color: hsl(var(--signer-green) / 15%);
+}
+
+.signer-blue-background {
+  background-color: hsl(var(--signer-blue));
+}
+
+.signer-blue-base {
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 0 5px hsl(var(--signer-blue) / 10%),
+    0 0 0 2px hsl(var(--signer-blue) / 60%),
+    0 0 0 0.5px hsl(var(--signer-blue));
+}
+
+.signer-blue-field-item {
+  padding: 0.5rem;
+  border: none;
+  ring: none;
+}
+
+.signer-blue-field-item:hover {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--signer-blue)) / 10%,
+    hsl(var(--signer-blue)) / 10%
+  );
+}
+
+.signer-blue-field-item-initials {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.signer-blue-field-item:hover .signer-blue-field-item-initials {
+  opacity: 100%;
+  background-color: hsl(var(--signer-blue));
+}
+
+.signer-blue-combobox-item:hover,
+.signer-blue-combobox-item:active {
+  background-color: hsl(var(--signer-blue) / 15%);
+}
+/* purple */
+.signer-purple-background {
+  background-color: hsl(var(--signer-purple));
+}
+
+.signer-purple-base {
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 0 5px hsl(var(--signer-purple) / 10%),
+    0 0 0 2px hsl(var(--signer-purple) / 60%),
+    0 0 0 0.5px hsl(var(--signer-purple));
+}
+
+.signer-purple-field-item {
+  padding: 0.5rem;
+  border: none;
+  ring: none;
+}
+
+.signer-purple-field-item:hover {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--signer-purple)) / 10%,
+    hsl(var(--signer-purple)) / 10%
+  );
+}
+
+.signer-purple-field-item-initials {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.signer-purple-field-item:hover .signer-purple-field-item-initials {
+  opacity: 100%;
+  background-color: hsl(var(--signer-purple));
+}
+
+.signer-purple-combobox-item:hover,
+.signer-purple-combobox-item:active {
+  background-color: hsl(var(--signer-purple) / 15%);
+}
+
+/* orange */
+
+.signer-orange-background {
+  background-color: hsl(var(--signer-orange));
+}
+
+.signer-orange-base {
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 0 5px hsl(var(--signer-orange) / 10%),
+    0 0 0 2px hsl(var(--signer-orange) / 60%),
+    0 0 0 0.5px hsl(var(--signer-orange));
+}
+
+.signer-orange-field-item {
+  padding: 0.5rem;
+  border: none;
+  ring: none;
+}
+
+.signer-orange-field-item:hover {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--signer-orange)) / 10%,
+    hsl(var(--signer-orange)) / 10%
+  );
+}
+
+.signer-orange-field-item-initials {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.signer-orange-field-item:hover .signer-orange-field-item-initials {
+  opacity: 100%;
+  background-color: hsl(var(--signer-orange));
+}
+
+.signer-orange-combobox-item:hover,
+.signer-orange-combobox-item:active {
+  background-color: hsl(var(--signer-orange) / 15%);
+}
+/* yellow */
+.signer-yellow-background {
+  background-color: hsl(var(--signer-yellow));
+}
+
+.signer-yellow-base {
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 0 5px hsl(var(--signer-yellow) / 10%),
+    0 0 0 2px hsl(var(--signer-yellow) / 60%),
+    0 0 0 0.5px hsl(var(--signer-yellow));
+}
+
+.signer-yellow-field-item {
+  padding: 0.5rem;
+  border: none;
+  ring: none;
+}
+
+.signer-yellow-field-item:hover {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--signer-yellow)) / 10%,
+    hsl(var(--signer-yellow)) / 10%
+  );
+}
+
+.signer-yellow-field-item-initials {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.signer-yellow-field-item:hover .signer-yellow-field-item-initials {
+  opacity: 100%;
+  background-color: hsl(var(--signer-yellow));
+}
+
+.signer-yellow-combobox-item:hover,
+.signer-yellow-combobox-item:active {
+  background-color: hsl(var(--signer-yellow) / 15%);
+}
+/* pink */
+.signer-pink-background {
+  background-color: hsl(var(--signer-pink));
+}
+
+.signer-pink-base {
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 0 5px hsl(var(--signer-pink) / 10%),
+    0 0 0 2px hsl(var(--signer-pink) / 60%),
+    0 0 0 0.5px hsl(var(--signer-pink));
+}
+
+.signer-pink-field-item {
+  padding: 0.5rem;
+  border: none;
+  ring: none;
+}
+
+.signer-pink-field-item:hover {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--signer-pink)) / 10%,
+    hsl(var(--signer-pink)) / 10%
+  );
+}
+
+.signer-pink-field-item-initials {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.signer-pink-field-item:hover .signer-pink-field-item-initials {
+  opacity: 100%;
+  background-color: hsl(var(--signer-pink));
+}
+
+.signer-pink-combobox-item:hover,
+.signer-pink-combobox-item:active {
+  background-color: hsl(var(--signer-pink) / 15%);
+}

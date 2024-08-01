@@ -38,7 +38,7 @@ const formSchema = z.object({
 type propType = {
   open: boolean;
   onClose: () => void;
-  bookings: getEmailAndEventType["data"]
+  bookings: getEmailAndEventType["data"];
 };
 
 const SendTemplate = (prop: propType) => {
