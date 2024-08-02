@@ -38,7 +38,7 @@ const formSchema = z.object({
 type propType = {
   open: boolean;
   onClose: () => void;
-  bookings: getEmailAndEventType["data"]
+  bookings: getEmailAndEventType["data"];
 };
 
 const SendTemplate = (prop: propType) => {
@@ -67,7 +67,7 @@ const SendTemplate = (prop: propType) => {
 
     setLoading(true);
     const res: submitContractResponseType = await submitContract({
-      templateId: contractId!,
+      id: contractId!,
       email: values.email,
       event_id: values.eventId!.toString(),
     });

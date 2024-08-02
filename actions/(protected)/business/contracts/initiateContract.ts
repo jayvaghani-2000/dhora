@@ -9,12 +9,12 @@ import { db } from "@/lib/db";
 import { contracts } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
-const handler = async (user: User, templateId?: string) => {
+const handler = async (user: User, id?: string) => {
   try {
-    if (templateId) {
+    if (id) {
       const contract = await db.query.contracts.findFirst({
         where: and(
-          eq(contracts.template_id, Number(templateId)),
+          eq(contracts.id, id),
           eq(contracts.business_id, user.business_id!)
         ),
       });
@@ -25,7 +25,6 @@ const handler = async (user: User, templateId?: string) => {
             user_email: config.env.DOCU_SEAL_EMAIL,
             name: "New Contract",
             folder_name: String(user.business_id),
-            template_id: templateId,
           },
           config.env.DOCU_SEAL
         );
@@ -53,6 +52,6 @@ const handler = async (user: User, templateId?: string) => {
 };
 
 export const initiateContract: (
-  templateId?: string
+  id?: string
 ) => Promise<Awaited<ReturnType<typeof handler>>> =
   validateBusinessToken(handler);

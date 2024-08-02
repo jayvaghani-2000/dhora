@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./fields.css";
 import StoreProvider from "@/provider";
 import WithAuth from "@/components/hoc/with-auth";
 import { me } from "@/actions/(auth)/me";

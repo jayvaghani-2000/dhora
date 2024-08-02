@@ -9,7 +9,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidate } from "@/actions/(public)/revalidate";
 import { redirect } from "next/navigation";
 
-const handler = async (user: User, templateId: number) => {
+const handler = async (user: User, id: string) => {
   try {
     await db
       .update(contracts)
@@ -17,10 +17,7 @@ const handler = async (user: User, templateId: number) => {
         deleted: true,
       })
       .where(
-        and(
-          eq(contracts.template_id, templateId),
-          eq(contracts.business_id, user.business_id!)
-        )
+        and(eq(contracts.id, id), eq(contracts.business_id, user.business_id!))
       );
 
     return { success: true as true, data: "Contract deleted successfully!" };
@@ -29,8 +26,8 @@ const handler = async (user: User, templateId: number) => {
   }
 };
 
-const deleteContractHandler = async (user: User, templateId: number) => {
-  const res = await handler(user, templateId);
+const deleteContractHandler = async (user: User, id: string) => {
+  const res = await handler(user, id);
 
   if (res.success) {
     await revalidate("/business/contracts/template");
@@ -40,6 +37,6 @@ const deleteContractHandler = async (user: User, templateId: number) => {
 };
 
 export const deleteContract: (
-  templateId: number
+  id: string
 ) => Promise<Awaited<ReturnType<typeof deleteContractHandler>>> =
   validateBusinessToken(deleteContractHandler);
