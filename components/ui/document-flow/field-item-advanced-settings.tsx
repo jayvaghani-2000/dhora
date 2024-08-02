@@ -2,9 +2,6 @@
 
 import { forwardRef, useEffect, useState } from "react";
 
-import { useParams } from "next/navigation";
-import { usePathname } from "next/navigation";
-
 import { match } from "ts-pattern";
 
 import {
@@ -118,61 +115,18 @@ export const FieldAdvancedSettings = forwardRef<
       onAdvancedSettings,
       isDocumentPdfLoaded = true,
       onSave,
-      teamId,
     },
     ref
   ) => {
     const { toast } = useToast();
-    const params = useParams();
-    const pathname = usePathname();
-    const id = params?.id;
-    const isTemplatePage = pathname?.includes("template");
-    const isDocumentPage = pathname?.includes("document");
     const [errors, setErrors] = useState<string[]>([]);
 
-    // get template
-    // const { data: template } = trpc.template.getTemplateWithDetailsById.useQuery(
-    //   {
-    //     id: Number(id),
-    //   },
-    //   {
-    //     enabled: isTemplatePage,
-    //   },
-    // );
-    // get document
-    // const { data: document } = trpc.document.getDocumentById.useQuery(
-    //   {
-    //     id: Number(id),
-    //     teamId,
-    //   },
-    //   {
-    //     enabled: isDocumentPage,
-    //   },
-    // );
-
-    const doesFieldExist = false;
-
-    // const { data: fieldData } = trpc.field.getField.useQuery(
-    //   {
-    //     fieldId: Number(field.nativeId),
-    //     teamId,
-    //   },
-    //   {
-    //     enabled: doesFieldExist,
-    //   },
-    // );
-
     const fieldMeta = undefined;
-
-    const localStorageKey = `field_${field.formId}_${field.type}`;
 
     const defaultState: FieldMeta = getDefaultState(field.type);
 
     const [fieldState, setFieldState] = useState(() => {
-      const savedState = localStorage.getItem(localStorageKey);
-      return savedState
-        ? { ...defaultState, ...JSON.parse(savedState) }
-        : defaultState;
+      return field ? { ...defaultState, ...field?.fieldMeta } : defaultState;
     });
 
     useEffect(() => {
@@ -224,10 +178,8 @@ export const FieldAdvancedSettings = forwardRef<
         if (errors.length > 0) {
           return;
         } else {
-          localStorage.setItem(localStorageKey, JSON.stringify(fieldState));
-
-          onSave?.(fieldState);
-          onAdvancedSettings?.();
+          onSave && onSave(fieldState);
+          onAdvancedSettings && onAdvancedSettings();
         }
       } catch (error) {
         console.error("Failed to save to localStorage:", error);

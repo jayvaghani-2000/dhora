@@ -4,7 +4,7 @@ import { TemplateDataContext } from "@/lib/client-only/providers/template-data-p
 
 const TemplatesDataContainer = () => {
   const { data } = useContext(TemplateDataContext);
-  console.log(data);
+
   return (
     <div className="mt-10">
       <TemplatesDataTable

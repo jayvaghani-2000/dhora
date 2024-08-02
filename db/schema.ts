@@ -296,7 +296,6 @@ export const contracts = pgTable("contracts", {
   completedAt: timestamp("completedAt").defaultNow().notNull(),
   status: text("status").default("DRAFT").notNull(),
   template_id: text("template_id")
-    .notNull()
     .unique()
     .references(() => templates.id, { onDelete: "cascade" }),
 });
@@ -918,8 +917,12 @@ export const deleteFieldSchema = createSelectSchema(fields).pick({
 });
 
 export const createContractSchema = createSelectSchema(contracts).pick({
-  template_id: true,
   name: true,
+});
+
+export const updateContractSchema = createSelectSchema(contracts).pick({
+  name: true,
+  id: true,
 });
 
 export const createInvoiceSchema = createInsertSchema(invoices)

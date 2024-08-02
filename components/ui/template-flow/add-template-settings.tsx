@@ -117,7 +117,7 @@ export const AddTemplateSettingsFormPartial = ({
       );
     }
   }, [form, form.setValue, form.formState.touchedFields.meta?.timezone]);
-  console.log(fields, isDocumentPdfLoaded);
+
   return (
     <>
       <DocumentFlowFormContainerHeader

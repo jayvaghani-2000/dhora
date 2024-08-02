@@ -59,10 +59,8 @@ export const DeleteTemplateDialog = ({
             disabled={isLoading}
             onClick={async () => {
               setIsLoading(true);
-              console.log(id);
               try {
                 const result = await deleteTemplate({ id });
-                console.log(result);
                 toast({
                   title: "Success",
                   description: "Template deleted successfully.",

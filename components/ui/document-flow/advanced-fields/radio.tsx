@@ -50,7 +50,9 @@ export const RadioField = ({ field }: RadioFieldProps) => {
                 id={`option-${index}`}
                 checked={item.checked}
               />
-              <Label htmlFor={`option-${index}`}>{item.value}</Label>
+              <Label className="text-primary-black" htmlFor={`option-${index}`}>
+                {item.value}
+              </Label>
             </div>
           ))}
         </RadioGroup>

@@ -105,6 +105,7 @@ export const AddTemplateFieldsFormPartial = ({
         pageWidth: Number(field.pageWidth),
         pageHeight: Number(field.pageHeight),
         recipient_id: field.recipient_id ?? -1,
+        fieldMeta: field.fieldMeta,
         signerEmail:
           recipients.find(recipient => recipient.id === field.recipient_id)
             ?.email ?? "",
@@ -379,7 +380,6 @@ export const AddTemplateFieldsFormPartial = ({
           fields={localFields}
           onAdvancedSettings={handleAdvancedSettings}
           onSave={handleSavedFieldSettings}
-          teamId={teamId}
         />
       ) : (
         <>

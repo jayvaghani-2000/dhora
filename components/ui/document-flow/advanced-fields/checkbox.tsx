@@ -14,7 +14,6 @@ export type CheckboxFieldProps = {
 
 export const CheckboxField = ({ field }: CheckboxFieldProps) => {
   let parsedFieldMeta: TCheckboxFieldMeta | undefined = undefined;
-
   if (field.fieldMeta) {
     parsedFieldMeta = ZCheckboxFieldMeta.parse(field.fieldMeta);
   }
@@ -49,7 +48,12 @@ export const CheckboxField = ({ field }: CheckboxFieldProps) => {
                 id={`checkbox-${index}`}
                 checked={item.checked}
               />
-              <Label htmlFor={`checkbox-${index}`}>{item.value}</Label>
+              <Label
+                className="text-primary-black"
+                htmlFor={`checkbox-${index}`}
+              >
+                {item.value}
+              </Label>
             </div>
           )
         )

@@ -45,16 +45,16 @@ export const StaticOptions = [
     key: "business",
     options: [
       {
-        key: "contracts",
-        title: "Contracts",
-        icon: <LiaFileContractSolid />,
-        path: "/business/contracts",
-      },
-      {
         key: "templates",
         title: "Templates",
         icon: <FaRegFileAlt />,
         path: "/business/templates",
+      },
+      {
+        key: "contracts",
+        title: "Contracts",
+        icon: <LiaFileContractSolid />,
+        path: "/business/contracts",
       },
       {
         key: "invoices",

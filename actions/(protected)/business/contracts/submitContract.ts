@@ -9,16 +9,13 @@ import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { contracts } from "@/db/schema";
 
-type paramsType = { templateId: string; email: string; event_id?: string };
+type paramsType = { id: string; email: string; event_id?: string };
 
 const handler = async (user: User, data: paramsType) => {
   // check is template deleted
 
   const contract = await db.query.contracts.findFirst({
-    where: and(
-      eq(contracts.template_id, data.templateId),
-      eq(contracts.deleted, false)
-    ),
+    where: and(eq(contracts.id, data.id), eq(contracts.deleted, false)),
   });
 
   if (!contract) {
@@ -33,7 +30,7 @@ const handler = async (user: User, data: paramsType) => {
       "content-type": "application/json",
     },
     data: {
-      template_id: Number(data.templateId),
+      id: data.id,
       send_email: true,
       submitters: [
         {

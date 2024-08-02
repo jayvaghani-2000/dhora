@@ -43,7 +43,6 @@ type Contract = {
   created_at: Date;
   updated_at: Date;
   event_id: string | null;
-  template_id: string;
 };
 
 const SendTemplate = (prop: propType) => {
@@ -89,7 +88,7 @@ const SendTemplate = (prop: propType) => {
     setLoading(true);
     const res: submitContractResponseType = await submitContract({
       email: customer_data.email!.toString(),
-      templateId: selectedContract.template_id!.toString(),
+      id: selectedContract.id,
       event_id: event_data.id!.toString(),
     });
     if (!res.success) {

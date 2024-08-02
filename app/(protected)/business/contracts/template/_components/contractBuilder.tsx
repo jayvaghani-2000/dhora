@@ -58,7 +58,7 @@ const ContractBuilder = (props: propType) => {
   const handleUpdateContract = async (data: any) => {
     if (contract && data.name !== contract.name) {
       await updateContract({
-        template_id: data.id,
+        id: data.id,
         name: data.name,
       });
       await revalidate("/business/contracts");
@@ -93,18 +93,20 @@ const ContractBuilder = (props: propType) => {
                 variant="outline"
                 className="p-1"
                 onClick={async () => {
-                  setLoading(true);
-                  const res = await deleteContract(Number(contractId));
-                  if (res && !res.success) {
-                    toast({
-                      title: res.error,
-                    });
-                  } else {
-                    toast({
-                      title: "Contract deleted successfully!",
-                    });
+                  if (contractId) {
+                    setLoading(true);
+                    const res = await deleteContract(contractId);
+                    if (res && !res.success) {
+                      toast({
+                        title: res.error,
+                      });
+                    } else {
+                      toast({
+                        title: "Contract deleted successfully!",
+                      });
+                    }
+                    setLoading(false);
                   }
-                  setLoading(false);
                 }}
                 disabled={loading || (contract?.deleted as boolean)}
               >

@@ -40,7 +40,6 @@ export const TemplatesDataTable = ({
   page,
   totalPages,
 }: TemplatesDataTableProps) => {
-  console.log(templates);
   const [isPending, startTransition] = useTransition();
 
   const updateSearchParams = useUpdateSearchParams();

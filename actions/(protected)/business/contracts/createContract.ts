@@ -15,7 +15,6 @@ const handler = async (
       .insert(contracts)
       .values({
         business_id: user.business_id!,
-        template_id: Math.floor(Math.random() * 100000).toString(),
         name: values.name,
       })
       .returning();

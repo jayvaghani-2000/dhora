@@ -67,7 +67,7 @@ const SendTemplate = (prop: propType) => {
 
     setLoading(true);
     const res: submitContractResponseType = await submitContract({
-      templateId: contractId!,
+      id: contractId!,
       email: values.email,
       event_id: values.eventId!.toString(),
     });

@@ -27,7 +27,7 @@ const handler = async (
     const duplicateTemplate = await db
       .insert(templates)
       .values({
-        name: findTemplate.name,
+        name: findTemplate.name + "copy",
         data: findTemplate.data,
         business_id: user.business_id!,
         globalAccessAuth: findTemplate.globalAccessAuth,
