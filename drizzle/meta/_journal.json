@@ -330,6 +330,13 @@
       "when": 1722529408133,
       "tag": "0046_pink_spitfire",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "5",
+      "when": 1722581070912,
+      "tag": "0047_equal_magus",
+      "breakpoints": true
     }
   ]
 }

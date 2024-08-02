@@ -24,10 +24,23 @@ const handler = async (
       return { success: false as false, error: "Template not found" };
     }
 
+    let uniqueTemplateName = findTemplate.name + " copy";
+
+    while (
+      await db.query.templates.findFirst({
+        where: and(
+          eq(templates.name, uniqueTemplateName),
+          eq(templates.business_id, user.business_id!)
+        ),
+      })
+    ) {
+      uniqueTemplateName += " copy";
+    }
+
     const duplicateTemplate = await db
       .insert(templates)
       .values({
-        name: findTemplate.name + "copy",
+        name: uniqueTemplateName,
         data: findTemplate.data,
         business_id: user.business_id!,
         globalAccessAuth: findTemplate.globalAccessAuth,

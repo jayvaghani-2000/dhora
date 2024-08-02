@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 import { TemplateDataContext } from "@/lib/client-only/providers/template-data-provider";
-import { useGetTemplates } from "@/lib/hook/useGetTemplates";
 import { useContext, useState } from "react";
 
 type DuplicateTemplateDialogProps = {

@@ -1,0 +1,1 @@
+ALTER TABLE "templates" ADD CONSTRAINT "templates_name_unique" UNIQUE("name");

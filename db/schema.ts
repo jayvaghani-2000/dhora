@@ -149,7 +149,7 @@ export const templates = pgTable("templates", {
     .notNull()
     .primaryKey()
     .default(sql`public.id_generator()`),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   data: text("data").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),

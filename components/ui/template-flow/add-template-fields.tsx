@@ -70,7 +70,6 @@ export type AddTemplateFieldsFormProps = {
   recipients: any[];
   fields: any[];
   onSubmit: (_data: TAddTemplateFieldsFormSchema) => void;
-  teamId?: number;
 };
 
 export const AddTemplateFieldsFormPartial = ({
@@ -79,7 +78,6 @@ export const AddTemplateFieldsFormPartial = ({
   recipients,
   fields,
   onSubmit,
-  teamId,
 }: AddTemplateFieldsFormProps) => {
   const { isWithinPageBounds, getFieldPosition, getPage } =
     useDocumentElement();

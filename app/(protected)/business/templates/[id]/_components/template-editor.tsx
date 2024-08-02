@@ -113,7 +113,6 @@ const TemplateEditor = ({
               setTemplate(getTemplate);
               navigate.push("/business/templates");
             }}
-            teamId={undefined}
           />
         </Stepper>
       </DocumentFlowFormContainer>
