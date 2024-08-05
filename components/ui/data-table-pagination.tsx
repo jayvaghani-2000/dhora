@@ -1,9 +1,20 @@
-import type { Table } from '@tanstack/react-table';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { match } from 'ts-pattern';
+import type { Table } from "@tanstack/react-table";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+import { match } from "ts-pattern";
 
-import { Button } from './button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
+import { Button } from "./button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -13,41 +24,41 @@ interface DataTablePaginationProps<TData> {
    *
    * Defaults to 'VisibleCount'.
    */
-  additionalInformation?: 'SelectedCount' | 'VisibleCount' | 'None';
+  additionalInformation?: "SelectedCount" | "VisibleCount" | "None";
 }
 
 export function DataTablePagination<TData>({
   table,
-  additionalInformation = 'VisibleCount',
+  additionalInformation = "VisibleCount",
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-4 px-2">
       <div className="text-muted-foreground flex-1 text-sm">
         {match(additionalInformation)
-          .with('SelectedCount', () => (
+          .with("SelectedCount", () => (
             <span>
-              {table.getFilteredSelectedRowModel().rows.length} of{' '}
+              {table.getFilteredSelectedRowModel().rows.length} of{" "}
               {table.getFilteredRowModel().rows.length} row(s) selected.
             </span>
           ))
-          .with('VisibleCount', () => {
+          .with("VisibleCount", () => {
             const visibleRows = table.getFilteredRowModel().rows.length;
 
             return (
               <span data-testid="data-table-count">
-                Showing {visibleRows} result{visibleRows > 1 && 's'}.
+                Showing {visibleRows} result{visibleRows > 1 && "s"}.
               </span>
             );
           })
-          .with('None', () => null)
+          .with("None", () => null)
           .exhaustive()}
       </div>
 
       <div className="flex items-center gap-x-2">
         <p className="whitespace-nowrap text-sm font-medium">Rows per page</p>
         <Select
-          value={`${table.getState().pagination.pageSize}`}
-          onValueChange={(value) => {
+          value={`${table.getState().pagination?.pageSize}`}
+          onValueChange={value => {
             table.setPageSize(Number(value));
           }}
         >
@@ -55,7 +66,7 @@ export function DataTablePagination<TData>({
             <SelectValue placeholder={table.getState().pagination.pageSize} />
           </SelectTrigger>
           <SelectContent side="top">
-            {[10, 20, 30, 40, 50].map((pageSize) => (
+            {[10, 20, 30, 40, 50].map(pageSize => (
               <SelectItem key={pageSize} value={`${pageSize}`}>
                 {pageSize}
               </SelectItem>
@@ -65,7 +76,8 @@ export function DataTablePagination<TData>({
       </div>
       <div className="flex flex-wrap items-center gap-x-6 gap-y-4 lg:gap-x-8">
         <div className="flex items-center text-sm font-medium md:justify-center">
-          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount() || 1}
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount() || 1}
         </div>
 
         <div className="flex items-center gap-x-2">
